@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI算力产业链 · 技术路线图</title>
+<style>
+:root{
+  --bg:#f8f9fa;--card:#fff;--border:#e9ecef;--text:#212529;--text2:#6c757d;
+  --accent:#2563eb;--sh:0 1px 3px rgba(0,0,0,.08);
+  --LW:160px;--CW:68px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{overflow-x:auto}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;background:var(--bg);color:var(--text);font-size:14px;min-width:2260px}
+
+.hdr{background:var(--card);border-bottom:1px solid var(--border);padding:11px 24px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:var(--sh)}
+.hdr-l{display:flex;align-items:center;gap:10px}
+.hdr-title{font-size:16px;font-weight:700}
+.hdr-sub{font-size:10px;color:var(--text2)}
+.back-link{display:inline-flex;align-items:center;gap:4px;font-size:11px;color:var(--text2);text-decoration:none;padding:3px 9px;border:1px solid var(--border);border-radius:5px;background:var(--bg)}
+.back-link:hover{color:var(--accent);border-color:#bfdbfe}
+.today-badge{display:inline-flex;align-items:center;gap:4px;padding:2px 10px;border-radius:10px;font-size:10px;font-weight:700;background:#fff7ed;color:#ea580c;border:1px solid #fed7aa}
+
+.wrap{padding:12px 24px 32px}
+
+/* Legend */
+.legend{display:flex;flex-wrap:wrap;gap:8px 16px;margin-bottom:10px;font-size:10px;align-items:center}
+.leg{display:flex;align-items:center;gap:5px}
+.leg-dot{width:10px;height:10px;border-radius:2px;flex-shrink:0}
+
+/* Roadmap outer — overflow:clip 视觉裁剪圆角但不阻断 sticky */
+.rm-outer{border:1px solid var(--border);border-radius:10px;overflow:clip;background:var(--card);box-shadow:var(--sh)}
+
+/* Year header — top 由 JS 动态设置 */
+.yr-row{display:flex;background:#f8fafc;border-bottom:1px solid var(--border);position:sticky;top:0;z-index:50}
+.yr-label{width:var(--LW);flex-shrink:0;padding:4px 10px;font-size:10px;font-weight:700;color:var(--text2);border-right:1px solid var(--border);background:#f8fafc;position:sticky;left:0;z-index:52}
+.yr-cell{flex-shrink:0;font-size:10px;font-weight:700;color:var(--text2);text-align:center;border-right:1px solid #e9ecef;padding:4px 0;display:flex;align-items:center;justify-content:center}
+
+/* Quarter header — top 由 JS 动态设置 */
+.qtr-row{display:flex;background:#f1f5f9;border-bottom:2px solid var(--border);position:sticky;top:0;z-index:50}
+.qtr-label{width:var(--LW);flex-shrink:0;padding:5px 10px;font-size:10px;font-weight:700;color:var(--text2);border-right:1px solid var(--border);background:#f1f5f9;position:sticky;left:0;z-index:52}
+.qtr-cell{width:var(--CW);flex-shrink:0;font-size:9px;font-weight:600;color:var(--text2);text-align:center;padding:5px 0;border-right:1px solid #e2e8f0}
+.qtr-cell.now{background:#fff7ed;color:#ea580c;font-weight:800}
+
+/* Group header */
+.grp{display:flex;align-items:center;gap:8px;padding:6px 10px;font-size:11px;font-weight:700;border-bottom:1px solid var(--border);border-left:3px solid;cursor:pointer;user-select:none;width:100%}
+.grp-arrow{margin-left:auto;font-size:10px;color:var(--text2);transition:transform .2s;flex-shrink:0}
+.grp.open .grp-arrow{transform:rotate(0deg)}
+.grp.closed .grp-arrow{transform:rotate(-90deg)}
+.grp-desc{font-size:9px;font-weight:400;color:var(--text2)}
+
+/* Data rows */
+.rm-row{display:flex;border-bottom:1px solid #f1f5f9;align-items:stretch}
+.rm-row.hidden{display:none}
+.rm-row:hover{background:#fafbfc}
+.rm-lbl{width:var(--LW);flex-shrink:0;padding:0 10px;font-size:10px;color:var(--text2);border-right:1px solid var(--border);display:flex;align-items:center;position:sticky;left:0;background:var(--card);z-index:10}
+.rm-row:hover .rm-lbl{background:#fafbfc}
+.rm-lbl.sub{color:#94a3b8;font-size:9px}
+.rm-track{flex-shrink:0;width:calc(28 * var(--CW));position:relative}
+
+.rm-row{min-height:34px}
+
+/* Column grid */
+.col-line{position:absolute;top:0;bottom:0;width:1px;pointer-events:none}
+
+/* TODAY line */
+.now-line{position:absolute;top:0;bottom:0;width:2px;background:linear-gradient(180deg,#f97316,#ea580c);z-index:8;pointer-events:none}
+
+/* Chips */
+.chip{position:absolute;top:50%;transform:translateY(-50%);border-radius:4px;padding:1px 5px;font-size:9px;font-weight:600;border:1px solid transparent;white-space:nowrap;cursor:default;z-index:5;line-height:1.5;max-width:calc(var(--CW) - 2px);overflow:hidden;text-overflow:ellipsis}
+.chip:hover{z-index:20;max-width:none;overflow:visible;box-shadow:0 2px 8px rgba(0,0,0,.15)}
+
+/* future chips slightly dimmed */
+.chip.future{opacity:.75;border-style:dashed}
+
+/* note text in track */
+.note-txt{position:absolute;top:50%;transform:translateY(-50%);font-size:8px;font-weight:500;white-space:nowrap;pointer-events:none}
+
+.hint{margin-top:8px;font-size:10px;color:var(--text2);text-align:right}
+</style>
+</head>
+<body>
+
+<header class="hdr">
+  <div class="hdr-l">
+    <a class="back-link" href="行业基本面入口.html">← 行业基本面入口</a>
+    <div>
+      <div class="hdr-title">AI算力产业链 · 技术路线图</div>
+      <div class="hdr-sub">GPU代际 · 集群规格 · 交换机 · 光模块 · PCB · 散热 · 2022–2028</div>
+    </div>
+    <span class="today-badge">◉ 当前：2Q26</span>
+  </div>
+  <div style="font-size:10px;color:var(--text2)">数据来源：内部路线图 260323 · 2026-05-25 · 悬停查看注释 · 橙线右侧为预测</div>
+</header>
+
+<div class="wrap">
+  <div class="legend" id="legend"></div>
+  <div class="rm-outer" id="rm-outer"></div>
+  <div class="hint">* 点击分组标题可展开/折叠详细行 · 橙色虚线为当前时间 2Q26 · 虚线边框节点为预测值</div>
+</div>
+
+<script>
+const N=28, CW=68, LW=160, TODAY=17;
+const QTRS=['1Q22','2Q22','3Q22','4Q22','1Q23','2Q23','3Q23','4Q23','1Q24','2Q24','3Q24','4Q24','1Q25','2Q25','3Q25','4Q25','1Q26','2Q26','3Q26','4Q26','1Q27','2Q27','3Q27','4Q27','1Q28','2Q28','3Q28','4Q28'];
+const YEARS=[{y:'2022',n:4},{y:'2023',n:4},{y:'2024',n:4},{y:'2025',n:4},{y:'2026',n:4},{y:'2027',n:4},{y:'2028',n:4}];
+
+/* Color palette per group */
+const G={
+  ai:   {color:'#4f46e5',bg:'#eef2ff',bar:'#c7d2fe',gbar:'#818cf8',name:'AI 模型'},
+  nv:   {color:'#059669',bg:'#ecfdf5',bar:'#6ee7b7',gbar:'#34d399',name:'英伟达 GPU'},
+  spec: {color:'#64748b',bg:'#f8fafc',bar:'#e2e8f0',gbar:'#94a3b8',name:'集群规格'},
+  sw:   {color:'#ea580c',bg:'#fff7ed',bar:'#fed7aa',gbar:'#fb923c',name:'网络交换机'},
+  opt:  {color:'#2563eb',bg:'#eff6ff',bar:'#bfdbfe',gbar:'#60a5fa',name:'光模块'},
+  pcb:  {color:'#0891b2',bg:'#ecfeff',bar:'#a5f3fc',gbar:'#22d3ee',name:'PCB'},
+  cool: {color:'#0d9488',bg:'#f0fdfa',bar:'#99f6e4',gbar:'#2dd4bf',name:'散热液冷'},
+};
+
+
+/* Groups: id, label, desc, collapsible(default closed) */
+const GROUPS=[
+  {id:'ai',   label:'AI 模型层',        desc:'主流大模型发布里程碑', coll:false},
+  {id:'nv',   label:'英伟达 GPU 代际',   desc:'芯片发布 & 量产节点', coll:false},
+  {id:'spec', label:'集群规格演进',       desc:'（点击展开）',        coll:true},
+  {id:'sw',   label:'网络交换机',        desc:'Broadcom & NV Quantum', coll:false},
+  {id:'opt',  label:'光模块 · 价值量演进',desc:'规格升级节点 & 每GPU价值', coll:false},
+  {id:'pcb',  label:'PCB · 价值量演进',  desc:'（点击展开）',        coll:true},
+  {id:'cool', label:'散热 · 液冷演进',   desc:'（点击展开）',        coll:true},
+];
+
+/* Rows: id,label,group,sub,isEra,milestones[{idx,text,tip,future?}] */
+const ROWS=[
+  /* AI 模型 */
+  {id:'oai',   label:'OpenAI',  group:'ai', milestones:[
+    {idx:4,  text:'GPT-4',    tip:'2023Q1 | GPT-4 发布，LLM商业化里程碑，支持多模态'},
+    {idx:7,  text:'GPT-4T',   tip:'2023Q4 | GPT-4 Turbo，上下文扩至128K'},
+    {idx:8,  text:'Sora',     tip:'2024Q1 | Sora 文生视频发布'},
+    {idx:9,  text:'GPT-4o',   tip:'2024Q2 | GPT-4o 多模态统一架构，免费开放'},
+    {idx:11, text:'GPT-o1',   tip:'2024Q4 | o1 推理模型，思维链大幅提升推理能力'},
+    {idx:12, text:'GPT-4.5',  tip:'2025Q1 | GPT-4.5 发布'},
+    {idx:13, text:'GPT-o3',   tip:'2025Q2 | o3 推理模型，多项基准超越人类'},
+    {idx:15, text:'GPT-5.1',  tip:'2025Q4 | GPT-5.1 预期发布',future:1},
+  ]},
+  {id:'gm',    label:'Google', group:'ai', milestones:[
+    {idx:7,  text:'Gemini 1.0', tip:'2023Q4 | Gemini 1.0 发布，多模态旗舰，对标GPT-4'},
+    {idx:8,  text:'Gemini 1.5', tip:'2024Q1 | Gemini 1.5 Pro，100万token超长上下文（MoE架构）'},
+    {idx:9,  text:'1.5 Flash',  tip:'2024Q2 | Gemini 1.5 Flash，Google I/O发布，速度/成本优化版'},
+    {idx:11, text:'Gemini 2.0', tip:'2024Q4 | Gemini 2.0 Flash，实时音视频API，集成Google Search'},
+    {idx:12, text:'2.0 Pro',    tip:'2025Q1 | Gemini 2.0 Pro，代码与推理能力大幅提升'},
+    {idx:13, text:'Gemini 2.5', tip:'2025Q2 | Gemini 2.5 Pro/Flash GA，Think模式深度推理'},
+    {idx:15, text:'Gemini 3.0', tip:'2025Q4 | Gemini 3 Pro + Deep Think 发布，替代2.5系列',future:1},
+  ]},
+  /* Anthropic Claude */
+  {id:'ant', label:'Anthropic', group:'ai', milestones:[
+    {idx:4,  text:'Claude 1',      tip:'2023Q1 | Claude 1 & Claude Instant 发布（API），首款商业Claude，对话安全性为核心',                c:'#b45309',bg:'#fef3c7'},
+    {idx:6,  text:'Claude 2',      tip:'2023Q3 | Claude 2 发布，100K上下文，claude.ai公开上线，代码/分析能力大幅提升',                    c:'#b45309',bg:'#fef3c7'},
+    {idx:7,  text:'Claude 2.1',    tip:'2023Q4 | Claude 2.1，20万token上下文，幻觉率下降50%，Function Calling支持',                     c:'#b45309',bg:'#fef3c7'},
+    {idx:8,  text:'Claude 3',      tip:'2024Q1 | Claude 3 三档（Haiku/Sonnet/Opus）发布，首次多模态视觉，200K上下文，MMLU 86.8%（Opus）', c:'#b45309',bg:'#fef3c7'},
+    {idx:9,  text:'C3.5 Sonnet',   tip:'2024Q2 | Claude 3.5 Sonnet 发布，以低80%成本超越Opus，MMLU 90.4%，成业界首选编码模型',           c:'#b45309',bg:'#fef3c7'},
+    {idx:11, text:'Computer Use',  tip:'2024Q4 | Claude 3.5 Sonnet v2 + 3.5 Haiku，首发Computer Use（AI操控桌面），增强图表/文字识别视觉', c:'#b45309',bg:'#fef3c7'},
+    {idx:13, text:'Claude 4',      tip:'2025Q2 | Claude Opus 4 & Sonnet 4 发布，Extended Thinking推理，SWE-bench 72.5%（Opus），终端任务43.2%',c:'#b45309',bg:'#fef3c7'},
+    {idx:14, text:'C4.1 / 4.5',   tip:'2025Q3 | Claude Opus 4.1 & Sonnet 4.5 发布，推理进一步迭代，Haiku 4.5同步发布',                  c:'#b45309',bg:'#fef3c7'},
+    {idx:15, text:'C4.5 全系列',   tip:'2025Q4 | Claude Opus 4.5 + Haiku 4.5 发布，200K上下文标配，多智能体场景优化',                    c:'#b45309',bg:'#fef3c7'},
+    {idx:16, text:'Claude 4.6/4.7',tip:'2026Q1 | Claude Opus 4.6 & 4.7 发布，上下文突破至100万token，Adaptive Thinking动态推理深度',      c:'#b45309',bg:'#fef3c7'},
+  ]},
+  /* Meta Llama — 开源大模型里程碑 */
+  {id:'meta', label:'Meta / Llama', group:'ai', milestones:[
+    {idx:4,  text:'Llama 1',      tip:'2023Q1 | Llama 1 发布（仅限研究），7B-65B参数，开源LLM元年里程碑',                                 c:'#1d4ed8',bg:'#eff6ff'},
+    {idx:6,  text:'Llama 2',      tip:'2023Q3 | Llama 2 开源+商用许可，7B/13B/70B，RLHF对齐，推动开源LLM生态爆发',                       c:'#1d4ed8',bg:'#eff6ff'},
+    {idx:9,  text:'Llama 3',      tip:'2024Q2 | Llama 3 发布，8B/70B，Llama Guard安全工具，MMLU 82%，工具调用能力',                      c:'#1d4ed8',bg:'#eff6ff'},
+    {idx:10, text:'Llama 3.1 405B',tip:'2024Q3 | Llama 3.1 最大405B参数，128K上下文，首次开源追平GPT-4级别，多语言+工具链完善',           c:'#1d4ed8',bg:'#eff6ff'},
+    {idx:11, text:'Llama 3.3',    tip:'2024Q4 | Llama 3.3 70B，以70B算力实现405B级别推理性能，效率革命',                                  c:'#1d4ed8',bg:'#eff6ff'},
+    {idx:13, text:'Llama 4',      tip:'2025Q2 | Llama 4 系列发布，原生多模态（文本/图像/视频），Scout 17B激活/109B总参，10M上下文',        c:'#1d4ed8',bg:'#eff6ff'},
+  ]},
+  /* NV GPU代际 — 每代各占一行，eraBand 作全高背景色带，逐层向右错开 */
+  {id:'nvh', label:'Hooper',   group:'nv',
+   eraBand:{s:0, e:10, c:'#dcfce7', tc:'#166534'},
+   milestones:[
+    {idx:0,  text:'H100 发布', tip:'2022Q1 | H100 GTC发布，HBM3，32PFLOPS FP8'},
+    {idx:3,  text:'H100 量产', tip:'2022Q4 | H100 量产交付'},
+    {idx:7,  text:'H200 发布', tip:'2023Q4 | H200，HBM3e带宽+60%'},
+    {idx:9,  text:'H200 量产', tip:'2024Q2 | H200 量产'},
+  ]},
+  {id:'nvb', label:'Blackwell',group:'nv',
+   eraBand:{s:8, e:17, c:'#ccfbf1', tc:'#0f766e'},
+   milestones:[
+    {idx:8,  text:'B200 发布',  tip:'2024Q1 | B200/GB200 GTC发布，NVL72机柜，1440PFLOPS FP4'},
+    {idx:11, text:'B200 小批量',tip:'2024Q4 | B200 小批量出货'},
+    {idx:12, text:'B300 发布',  tip:'2025Q1 | B300/GB300 Ultra 发布，HBM3e 12Hi'},
+    {idx:13, text:'B200 放量',  tip:'2025Q2 | B200 大规模放量，GB200 NVL72成主流'},
+    {idx:15, text:'B300 量产',  tip:'2025Q4 | B300 量产，21TB显存，57.6Tbps机柜带宽'},
+  ]},
+  {id:'nvr', label:'Rubin',    group:'nv',
+   eraBand:{s:16, e:23, c:'#dbeafe', tc:'#1e40af'},
+   milestones:[
+    {idx:9,  text:'Rubin 官宣', tip:'2024Q2 | Rubin架构GTC官宣，NVLink6.0，HBM4'},
+    {idx:12, text:'R100 发布',  tip:'2025Q1 | R100 NVL144发布'},
+    {idx:18, text:'R100 量产',  tip:'2026Q3 | R100量产，115.2Tbps机柜带宽，CX-9 1.6T',future:1},
+  ]},
+  {id:'nvf', label:'Feynman',  group:'nv',
+   eraBand:{s:20, e:27, c:'#ede9fe', tc:'#5b21b6'},
+   milestones:[
+    {idx:16, text:'Feynman 官宣',tip:'2026Q1 | Feynman GTC2026官宣（预期）',future:1},
+    {idx:22, text:'Feynman 量产',tip:'2027Q3 | Feynman 量产（预测）',future:1},
+  ]},
+  /* 集群规格 (collapsible) */
+  {id:'form',  label:'物理形态',   group:'spec',sub:1, milestones:[
+    {idx:0,  text:'6U服务器',   tip:'H100 | 6U机架，8颗GPU，传统服务器形态'},
+    {idx:11, text:'单机柜×18托盘',tip:'GB200 NVL72 | 单机柜18托盘，36×Grace+72×B200'},
+    {idx:15, text:'机柜(优化)',  tip:'GB300 NVL72 | 优化散热形态',future:1},
+    {idx:18, text:'高密机柜',   tip:'R200 NVL144 | 高密度单机柜',future:1},
+    {idx:22, text:'8机柜集群',  tip:'Rubin Ultra NVL576 | 8机柜集群单元，576×R300',future:1},
+  ]},
+  {id:'gpun',  label:'GPU数量',   group:'spec',sub:1, milestones:[
+    {idx:0,  text:'8×H100',         tip:'H100/H200 机架：8颗GPU'},
+    {idx:11, text:'72×B200',         tip:'GB200 NVL72：72×B200，36×Grace CPU'},
+    {idx:15, text:'72×B300U',        tip:'GB300 NVL72：72×B300 Ultra',future:1},
+    {idx:18, text:'72×R200(144Die)', tip:'R200 NVL144：72×R200，每颗2 Die（Chiplet）',future:1},
+    {idx:22, text:'576×R300',        tip:'Rubin Ultra NVL576：576×R300，8机柜集群',future:1},
+  ]},
+  {id:'flops', label:'稀疏算力',   group:'spec',sub:1, milestones:[
+    {idx:0,  text:'32 PFLOPS',   tip:'H100机架 | FP8精度'},
+    {idx:11, text:'1440 PFLOPS', tip:'GB200 NVL72 | FP4精度，AI算力提升45×'},
+    {idx:15, text:'~1800 PFLOPS',tip:'GB300 NVL72 | FP4精度',future:1},
+  ]},
+  {id:'mem',   label:'显存容量',   group:'spec',sub:1, milestones:[
+    {idx:0,  text:'640GB HBM3',     tip:'H100机架 | 8×80GB HBM3'},
+    {idx:11, text:'13.5TB HBM3e',   tip:'GB200 NVL72 | 大幅提升KV-cache'},
+    {idx:15, text:'21TB HBM3e 12Hi',tip:'GB300 | 12Hi叠层技术',future:1},
+    {idx:18, text:'~36TB HBM4',     tip:'R200 NVL144 | HBM4首代',future:1},
+  ]},
+  {id:'tdp',   label:'功耗(TDP)',   group:'spec',sub:1, milestones:[
+    {idx:0,  text:'~10.5 kW', tip:'H100机架'},
+    {idx:11, text:'~120 kW',  tip:'GB200 NVL72 | 需液冷'},
+    {idx:15, text:'~135 kW',  tip:'GB300 NVL72',future:1},
+    {idx:18, text:'>160 kW',  tip:'R200 NVL144',future:1},
+    {idx:22, text:'~1.5 MW',  tip:'Rubin Ultra NVL576 集群总功耗',future:1},
+  ]},
+  {id:'nvlink',label:'互联技术',   group:'spec',sub:1, milestones:[
+    {idx:0,  text:'NVLink4 900GB/s', tip:'H100 | NVLink 4.0'},
+    {idx:11, text:'NVLink5 1.8TB/s', tip:'GB200 | NVLink 5.0'},
+    {idx:15, text:'NVLink5+',        tip:'GB300 | NVLink 5.0+',future:1},
+    {idx:18, text:'NVLink6 3.6TB/s', tip:'R200 | NVLink 6.0',future:1},
+  ]},
+  {id:'bwrack',label:'机柜总带宽', group:'spec',sub:1, milestones:[
+    {idx:0,  text:'12.8 Tbps', tip:'H100机架对外带宽'},
+    {idx:11, text:'28.8 Tbps', tip:'GB200 NVL72'},
+    {idx:15, text:'57.6 Tbps', tip:'GB300 NVL72',future:1},
+    {idx:18, text:'115.2 Tbps',tip:'R200 NVL144',future:1},
+  ]},
+  /* 交换机 */
+  {id:'bc',    label:'Broadcom',  group:'sw', milestones:[
+    {idx:0,  text:'TH4 · 25.6T',  tip:'Tomahawk 4，64×400G，56G PAM4'},
+    {idx:4,  text:'TH5 · 51.2T',  tip:'Tomahawk 5，64×800G，100G PAM4'},
+    {idx:13, text:'TH6 · 102.4T', tip:'Tomahawk 6，64×1.6T，200G PAM4（512通道）'},
+    {idx:20, text:'TH7 · 204.8T', tip:'Tomahawk 7，64×3.2T，200G PAM4（1024通道）',future:1},
+  ]},
+  {id:'qm',    label:'NV Quantum',group:'sw', milestones:[
+    {idx:0,  text:'Q2 NDR 发布', tip:'Quantum-2 NDR，25.6Tbps，64×400G，2021Q4发布'},
+    {idx:3,  text:'Q2 量产',     tip:'Quantum-2 NDR 量产，配套H100集群'},
+    {idx:8,  text:'X800 发布',   tip:'Quantum-X800（Q3400），51.2Tbps，144×800G，GTC2024'},
+    {idx:13, text:'X800 量产',   tip:'Quantum-X800 量产 2025Q2，配套GB200集群'},
+    {idx:18, text:'X1600?',      tip:'Quantum-X1600 预期，对应R200集群1.6T时代',future:1},
+  ]},
+  /* 光模块 */
+  {id:'om-spec',label:'规格演进', group:'opt', milestones:[
+    {idx:3,  text:'400G主流', tip:'CX-7 400G | 1GPU:1NIC，机柜12.8Tbps对外带宽'},
+    {idx:11, text:'800G主流', tip:'CX-7 800G | GB200配套，机柜28.8Tbps'},
+    {idx:13, text:'1.6T起量', tip:'1.6T 小批量验证后开始起量，主要用于H200→B200过渡期',future:1},
+    {idx:15, text:'800G/1.6T',tip:'CX-8 800G | 800G仍主流，1.6T小批量导入，机柜57.6Tbps',future:1},
+    {idx:18, text:'1.6T放量', tip:'CX-9 1.6T | 1.6T成主流，机柜115.2Tbps，CPO开始渗透',future:1},
+    {idx:18, text:'3.2T送样', tip:'3.2T光模块送样测试（R200 NVL144时代）',future:1},
+  ]},
+  {id:'om-chip',label:'光芯片',   group:'opt', milestones:[
+    {idx:12, text:'EML全年缺货', tip:'2025Q1 | 200G EML全年缺货，制约1.6T放量节奏'},
+    {idx:14, text:'硅光解EML',   tip:'2025Q3 | 硅光+CW激光器方案解决200G EML缺货问题，旭创/新易盛主导',future:1},
+    {idx:21, text:'硅光配合CPO', tip:'2027Q2 | 硅光超高集成度，配合CPO方案演进',future:1},
+  ]},
+  {id:'om-cpo', label:'CPO 进展', group:'opt', milestones:[
+    {idx:11, text:'小批量验证', tip:'2024Q4 | 1.6T CPO路线小批量验证'},
+    {idx:21, text:'CPO导入',    tip:'2027Q2 | 解决400G SerDes铜互联绝缘问题，CPO开始商用',future:1},
+  ]},
+  {id:'om-val', label:'每GPU价值', group:'opt', milestones:[
+    {idx:11, text:'$800/GPU',   tip:'GB200 NVL72 | 800G光模块时代，每GPU约$800'},
+    {idx:15, text:'$1600/GPU',  tip:'GB300 | 1.6T导入，每GPU约$1600（vs H100提升4×）',future:1},
+    {idx:18, text:'$3200/GPU',  tip:'R200 NVL144 | 1.6T主流+CPO，每GPU约$3200（8×提升）',future:1},
+  ]},
+  {id:'om-rack',label:'机柜光模块价值',group:'opt', milestones:[
+    {idx:11, text:'$5.76万',  tip:'GB200 NVL72 | 72×$800=$57,600/机柜'},
+    {idx:15, text:'$11.52万', tip:'GB300 | 72×$1,600=$115,200/机柜',future:1},
+    {idx:18, text:'$23.04万', tip:'R200 NVL144 | 72×$3,200=$230,400/机柜',future:1},
+  ]},
+  /* PCB */
+  {id:'pcb-spec',label:'工艺演进', group:'pcb',sub:1, milestones:[
+    {idx:8,  text:'5+8+5 HDI',    tip:'2024Q1 | H100 OAM板：5+8+5 HDI，M6基材'},
+    {idx:9,  text:'24L UBB',      tip:'2024Q2 | UBB主板：24层PCB，M7基材'},
+    {idx:11, text:'5+12+5 HDI',   tip:'2024Q4 | GB200 Compute：5+12+5 HDI，M8+M4，HVLP3铜箔'},
+    {idx:12, text:'6+12+6 HDI',   tip:'2025Q1 | GB200 Switch：6+12+6 HDI，M7+M2，HVLP2'},
+    {idx:15, text:'5+12+5升级',   tip:'2025Q4 | GB300 Compute板升级版',future:1},
+    {idx:18, text:'6+14+6 HDI',   tip:'2026Q3 | R200 Compute：6+14+6 HDI，M8+M4，HVLP4',future:1},
+    {idx:21, text:'Mid-plane',    tip:'2027Q1 | Rubin Ultra新增Mid-plane板',future:1},
+    {idx:22, text:'44L正交背板',  tip:'2027Q2 | 44层正交背板，M9基材，超快激光钻孔',future:1},
+  ]},
+  {id:'pcb-val', label:'每GPU价值', group:'pcb',sub:1, milestones:[
+    {idx:11, text:'$420/GPU',  tip:'GB200 NVL72 | PCB每GPU价值量约$420'},
+    {idx:18, text:'$600/GPU',  tip:'R200 NVL144 | PCB每GPU价值量约$600',future:1},
+  ]},
+  {id:'pcb-rack',label:'机柜PCB价值',group:'pcb',sub:1, milestones:[
+    {idx:11, text:'$2.9-3万',  tip:'GB200 NVL72 | PCB机柜价值量$2.9-3万（美元）'},
+    {idx:18, text:'$4.6万',    tip:'R200 NVL144 | PCB机柜价值量$4.6万（美元）',future:1},
+  ]},
+  /* 散热液冷 */
+  {id:'cool-sol',label:'散热方案', group:'cool',sub:1, milestones:[
+    {idx:0,  text:'风冷(3DVC)', tip:'H100机架 | 3D蒸汽腔风冷，TDP~10.5kW'},
+    {idx:11, text:'单相冷板液冷',tip:'GB200 NVL72 | 单相冷板，TDP~120kW，液冷渗透率大幅提升'},
+    {idx:18, text:'双相?/融合?', tip:'R200 NVL144 | 冷板+浸没融合方案，TDP>160kW',future:1},
+    {idx:22, text:'浸没式液冷',  tip:'Rubin Ultra NVL576 | 全浸没，机柜~1.5MW',future:1},
+  ]},
+  {id:'cool-val',label:'每GPU价值', group:'cool',sub:1, milestones:[
+    {idx:11, text:'$1088/GPU', tip:'GB200 NVL72 | 液冷每GPU价值量$1088（一次侧$300/kW+二次侧$700/kW）'},
+    {idx:15, text:'$1306/GPU', tip:'GB300 | 散热价值量$1306/GPU',future:1},
+  ]},
+  {id:'cool-rack',label:'机柜散热价值',group:'cool',sub:1, milestones:[
+    {idx:11, text:'$78,370',   tip:'GB200 NVL72 | 液冷机柜价值量$78,370（美元）'},
+    {idx:15, text:'$94,030',   tip:'GB300 | $94,030/机柜',future:1},
+  ]},
+];
+
+/* ─── Render functions ─────────────────────────────────── */
+const CW_PX = `${CW}px`;
+
+function todayX(){ return TODAY * CW + CW/2; }
+
+function colLines(){
+  let s='';
+  for(let i=0;i<N;i++){
+    const yr = i%4===0;
+    s+=`<div class="col-line" style="left:${i*CW}px;background:${yr?'#e2e8f0':'#f1f5f9'}"></div>`;
+  }
+  s+=`<div class="now-line" style="left:${todayX()}px"></div>`;
+  return s;
+}
+
+function renderChip(m, gid){
+  const g=G[gid];
+  const c  = m.c  || g.color;
+  const bg = m.bg || g.bg;
+  const x=m.idx*CW+1;
+  const cls=m.future?'chip future':'chip';
+  const border=m.future?`border-color:${c}55`:`border-color:${c}40`;
+  return `<div class="${cls}" style="left:${x}px;background:${bg};color:${c};${border}" title="${m.tip}">${m.text}</div>`;
+}
+
+function renderRow(row){
+  const g=G[row.group];
+  const isSub=!!row.sub;
+  const grpDef=GROUPS.find(gg=>gg.id===row.group);
+  const hidden=(isSub && grpDef.coll)?'hidden':'';
+
+  let track=colLines();
+
+  // 代际背景色带：全高，从 eraBand.s 列延伸到 eraBand.e 列
+  if(row.eraBand){
+    const b=row.eraBand;
+    const l=b.s*CW, w=(b.e-b.s+1)*CW;
+    track+=`<div style="position:absolute;top:0;bottom:0;left:${l}px;width:${w}px;background:${b.c};z-index:1;pointer-events:none;border-radius:2px"></div>`;
+  }
+
+  row.milestones.forEach(m=>{ track+=renderChip(m,row.group); });
+
+  const lblCls=isSub?'rm-lbl sub':'rm-lbl';
+  const prefix=isSub?'<span style="margin-right:3px;color:#cbd5e1">└</span>':'';
+
+  // 有 eraBand 的行：左侧 label 加对应颜色细线
+  const lblStyle=row.eraBand?`border-left:3px solid ${row.eraBand.tc};`:'';
+
+  return `<div class="rm-row ${hidden}" id="${row.id}" data-group="${row.group}" data-sub="${isSub?1:0}">
+    <div class="${lblCls}" style="${lblStyle}">${prefix}${row.label}</div>
+    <div class="rm-track">${track}</div>
+  </div>`;
+}
+
+function renderGrpHdr(grp){
+  const g=G[grp.id];
+  const open=grp.coll?'closed':'open';
+  const arrow=grp.coll?'▸':'▾';
+  return `<div class="grp ${open}" id="grp-${grp.id}" style="border-left-color:${g.color};background:${g.bar}18" onclick="toggleGrp('${grp.id}')">
+    <span style="color:${g.color};font-size:12px">●</span>
+    <span>${grp.label}</span>
+    <span class="grp-desc">${grp.desc}</span>
+    <span class="grp-arrow" id="arr-${grp.id}">${arrow}</span>
+  </div>`;
+}
+
+/* Build year + quarter header */
+function buildHeader(){
+  let yr=`<div class="yr-row"><div class="yr-label">赛道</div>`;
+  YEARS.forEach(({y,n})=>{ yr+=`<div class="yr-cell" style="width:${n*CW}px">${y}</div>`; });
+  yr+='</div>';
+
+  let qtr=`<div class="qtr-row"><div class="qtr-label">年份/季度</div>`;
+  QTRS.forEach((q,i)=>{ qtr+=`<div class="qtr-cell${i===TODAY?' now':''}">${q}</div>`; });
+  qtr+='</div>';
+
+  return yr+qtr;
+}
+
+/* Assemble */
+let html=buildHeader();
+let lastGrp=null;
+ROWS.forEach(row=>{
+  if(row.group!==lastGrp){
+    const grp=GROUPS.find(g=>g.id===row.group);
+    if(grp) html+=renderGrpHdr(grp);
+    lastGrp=row.group;
+  }
+  html+=renderRow(row);
+});
+document.getElementById('rm-outer').innerHTML=html;
+
+/* Toggle */
+function toggleGrp(gid){
+  const grp=GROUPS.find(g=>g.id===gid);
+  if(!grp||!grp.coll) return;
+  if(grp.collapsed===undefined) grp.collapsed=true; // starts collapsed
+  grp.collapsed=!grp.collapsed;
+  const newCollapsed=grp.collapsed;
+  document.querySelectorAll(`.rm-row[data-group="${gid}"][data-sub="1"]`).forEach(el=>{
+    el.classList.toggle('hidden',newCollapsed);
+  });
+  const hdrEl=document.getElementById('grp-'+gid);
+  const arrEl=document.getElementById('arr-'+gid);
+  if(hdrEl) hdrEl.className=`grp ${newCollapsed?'closed':'open'}`;
+  if(arrEl) arrEl.textContent=newCollapsed?'▸':'▾';
+}
+
+/* 动态计算 sticky top，避免被页面 header 遮挡 */
+(function setStickyTops(){
+  const hdrH = document.querySelector('.hdr').offsetHeight;
+  const yrEl  = document.querySelector('.yr-row');
+  const qtrEl = document.querySelector('.qtr-row');
+  if(yrEl)  yrEl.style.top  = hdrH + 'px';
+  if(qtrEl && yrEl) qtrEl.style.top = (hdrH + yrEl.offsetHeight) + 'px';
+})();
+
+/* Legend */
+document.getElementById('legend').innerHTML=Object.entries(G).map(([k,v])=>`
+  <div class="leg"><div class="leg-dot" style="background:${v.bar}"></div>
+  <span style="color:${v.color};font-weight:600;font-size:10px">${v.name}</span></div>`).join('')+`
+  <div class="leg" style="margin-left:10px">
+    <div style="width:14px;height:10px;border-radius:2px;background:linear-gradient(90deg,#f97316,#ea580c)"></div>
+    <span style="color:#ea580c;font-weight:600;font-size:10px">当前时间点</span>
+  </div>
+  <div class="leg">
+    <div style="width:14px;height:10px;border-radius:2px;border:1px dashed #94a3b8;background:#f8fafc"></div>
+    <span style="color:#94a3b8;font-size:10px">预测节点（虚线边框）</span>
+  </div>`;
+</script>
+</body>
+</html>

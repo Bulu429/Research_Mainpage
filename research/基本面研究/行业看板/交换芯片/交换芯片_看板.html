@@ -1,0 +1,1506 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>交换芯片 研究看板</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+:root{
+  --bg:#f8f9fa;--card:#fff;--border:#e9ecef;--text:#212529;--text2:#6c757d;
+  --accent:#ea580c;--accent2:#fed7aa;--accent-bg:#fff7ed;
+  --up:#16a34a;--dn:#dc2626;--warn:#d97706;
+  --up-bg:#f0fdf4;--dn-bg:#fef2f2;--warn-bg:#fffbeb;
+  --sh:0 1px 3px rgba(0,0,0,.08),0 1px 2px rgba(0,0,0,.04);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;background:var(--bg);color:var(--text);font-size:14px;line-height:1.55}
+a{color:var(--accent);text-decoration:none}
+a:hover{text-decoration:underline}
+
+/* Header */
+.hdr{background:var(--card);border-bottom:1px solid var(--border);padding:18px 32px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:var(--sh)}
+.hdr-l{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.hdr-title{font-size:22px;font-weight:800;letter-spacing:-.3px}
+.hdr-sub{font-size:12px;color:var(--text2)}
+.back-link{display:inline-flex;align-items:center;gap:4px;font-size:11px;color:var(--text2);text-decoration:none;padding:4px 10px;border:1px solid var(--border);border-radius:6px;background:var(--bg);white-space:nowrap}.back-link:hover{color:var(--accent);border-color:var(--accent)}
+.badge{display:inline-flex;align-items:center;gap:5px;padding:3px 10px;border-radius:12px;font-size:11px;font-weight:700}
+.b-up{background:var(--up-bg);color:var(--up);border:1px solid #86efac}
+.b-warn{background:var(--warn-bg);color:var(--warn);border:1px solid #fcd34d}
+.b-orange{background:var(--accent-bg);color:var(--accent);border:1px solid var(--accent2)}
+.hdr-meta{font-size:11px;color:var(--text2);text-align:right;line-height:1.7}
+
+/* Layout */
+.wrap{max-width:1280px;margin:0 auto;padding:20px 32px 40px}
+
+/* TOC / 逻辑动线 */
+.toc{background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--sh);padding:14px 18px;margin-bottom:22px}
+.toc-head{display:flex;align-items:center;gap:8px;margin-bottom:12px;padding-bottom:10px;border-bottom:1px dashed var(--border)}
+.toc-head .t{font-size:13px;font-weight:800;color:var(--text)}
+.toc-head .s{font-size:11px;color:var(--text2)}
+.toc-rows{display:flex;flex-direction:column;gap:8px}
+.toc-row{display:flex;align-items:center;gap:10px}
+.toc-stage{flex:0 0 92px;display:flex;align-items:center;gap:6px;font-size:12px;font-weight:800;color:var(--accent)}
+.toc-stage .n{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:50%;background:var(--accent);color:#fff;font-size:11px;font-weight:800;flex-shrink:0}
+.toc-chips{display:flex;flex-wrap:wrap;gap:7px;flex:1}
+.toc-chip{font-size:12px;font-weight:600;color:var(--text);background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:5px 12px;cursor:pointer;transition:all .15s;white-space:nowrap}
+.toc-chip:hover{color:#fff;border-color:var(--accent);background:var(--accent);transform:translateY(-1px)}
+.toc-rail{flex:0 0 92px}
+.toc-rail-line{width:2px;height:8px;background:var(--accent2);margin-left:9px}
+
+/* Section */
+.sec{margin-bottom:24px;background:var(--card);border:1px solid var(--border);border-radius:10px;box-shadow:var(--sh);overflow:hidden;scroll-margin-top:78px}
+.sec-hd{padding:12px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;cursor:pointer;background:#fafbfc}
+.sec-hd:hover{background:#f1f3f5}
+.sec-ttl{font-size:14px;font-weight:700;display:flex;align-items:center;gap:8px}
+.sec-ttl .icon{font-size:16px}
+.sec-arrow{font-size:12px;color:var(--text2);transition:transform .2s}
+.sec-hd.collapsed .sec-arrow{transform:rotate(-90deg)}
+.sec-body{padding:18px}
+.sec-body.collapsed{display:none}
+
+/* KPI */
+.kpi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.kpi{padding:14px 16px;border:1px solid var(--border);border-radius:8px;background:#fafbfc}
+.kpi-label{font-size:11px;color:var(--text2);margin-bottom:6px}
+.kpi-val{font-size:20px;font-weight:800;color:var(--accent);margin-bottom:3px}
+.kpi-note{font-size:11px;color:var(--text2);line-height:1.5}
+
+/* Table */
+.ctable{width:100%;border-collapse:collapse;font-size:12.5px}
+.ctable th{background:#f1f3f5;padding:8px 10px;text-align:left;font-weight:700;border-bottom:2px solid var(--border);font-size:12px;color:var(--text2);white-space:nowrap}
+.ctable td{padding:8px 10px;border-bottom:1px solid #f1f3f5;vertical-align:top}
+.ctable tr:hover{background:#fafbfc}
+.ctable td strong{white-space:nowrap}
+.ctable .num{text-align:right;font-variant-numeric:tabular-nums}
+.tag{display:inline-block;padding:1px 6px;border-radius:4px;font-size:10px;font-weight:700;background:var(--accent-bg);color:var(--accent);border:1px solid var(--accent2);white-space:nowrap}
+.tag-up{background:var(--up-bg);color:var(--up);border-color:#86efac}
+.tag-warn{background:var(--warn-bg);color:var(--warn);border-color:#fcd34d}
+.tag-dn{background:var(--dn-bg);color:var(--dn);border-color:#fca5a5}
+.tag-gray{background:#f1f5f9;color:var(--text2);border-color:#cbd5e1}
+
+/* Tab */
+.tabs{display:flex;gap:4px;margin-bottom:14px;border-bottom:1px solid var(--border);flex-wrap:wrap}
+.tab-btn{padding:7px 14px;font-size:12.5px;font-weight:600;color:var(--text2);background:transparent;border:none;border-bottom:2px solid transparent;cursor:pointer;transition:all .15s}
+.tab-btn:hover{color:var(--accent)}
+.tab-btn.active{color:var(--accent);border-bottom-color:var(--accent)}
+.tab-pane{display:none}
+.tab-pane.active{display:block}
+
+/* Tech route compare cards */
+.tech-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:14px}
+.tech-card{padding:14px;border:1px solid var(--border);border-radius:8px;background:#fafbfc}
+.tech-card.dom{border-color:var(--accent);background:var(--accent-bg)}
+.tech-h{font-size:13px;font-weight:800;margin-bottom:8px;color:var(--text)}
+.tech-row{font-size:11.5px;color:var(--text2);margin-bottom:4px}
+.tech-row strong{color:var(--text);font-weight:700}
+
+/* Generation timeline */
+.gen-line{display:flex;gap:0;margin:8px 0 14px;align-items:stretch;border-radius:8px;overflow:hidden;border:1px solid var(--border)}
+.gen-node{flex:1;padding:10px 8px;text-align:center;border-right:1px solid var(--border);background:#fafbfc;font-size:11px}
+.gen-node:last-child{border-right:none}
+.gen-node.now{background:var(--accent-bg);color:var(--accent);font-weight:800}
+.gen-node.past{opacity:.5;flex:0.5}
+.gen-node.past .gen-rate{font-size:12px}
+.gen-node.past .gen-year{font-size:9px}
+.gen-node.future{background:#f0f9ff;color:#0891b2}
+.gen-rate{font-size:14px;font-weight:800;display:block;margin-bottom:2px}
+.gen-year{font-size:10px;color:var(--text2)}
+
+/* 三轨对标矩阵 (容量/SerDes/光模块) */
+.gen-matrix{border:1px solid var(--border);border-radius:8px;overflow:hidden;margin:8px 0 4px}
+.gen-mrow{display:flex;align-items:stretch;border-bottom:1px solid var(--border)}
+.gen-mrow:last-child{border-bottom:none}
+.gen-mlabel{flex:0 0 58px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:var(--text2);background:#fafbfc;border-right:1px solid var(--border);text-align:center;line-height:1.3}
+.gen-mcell{flex:1;padding:8px 6px;text-align:center;border-right:1px solid var(--border);font-size:11px;display:flex;flex-direction:column;justify-content:center;gap:2px}
+.gen-mcell:last-child{border-right:none}
+.gen-mcell.past{flex:.62;opacity:.5}
+.gen-mcell .cap{font-size:15px;font-weight:800;color:var(--text)}
+.gen-mcell.past .cap{font-size:12px}
+.gen-mcell .yr{font-size:9px;color:var(--text2);line-height:1.3}
+/* 列高亮：当前节点垂直带 */
+.gen-col-now{background:#fffaf5}
+.gen-col-now.cap-cell{background:var(--accent-bg)}
+.gen-col-edge{background:#fff7ed}
+.gen-col-edge.cap-cell{background:#ffedd5;box-shadow:inset 0 0 0 1.5px var(--accent2)}
+.gen-col-future{background:#f0f9ff}
+.gen-col-future.cap-cell{background:#e0f2fe;color:#0891b2}
+.gen-mcell .sd{font-weight:700;color:#0891b2}
+.gen-mcell .om{font-weight:700;color:#16a34a}
+
+/* Industry chain */
+.chain{display:flex;align-items:stretch;gap:6px;overflow-x:auto;padding:6px 2px}
+.chain-node{flex:0 0 auto;min-width:135px;padding:8px 10px;border:1px solid var(--border);border-radius:6px;background:#fafbfc;font-size:11px;text-align:center}
+.chain-node strong{display:block;font-size:11.5px;color:var(--text);margin-bottom:2px;white-space:nowrap}
+.chain-node .stk{font-size:10px;color:var(--accent);font-weight:600}
+.chain-arrow{flex:0 0 auto;align-self:center;color:var(--text2);font-size:14px;padding:0 2px}
+
+/* ── Data Center Map (交换芯片定位拓扑图) ── */
+.dcm{background:linear-gradient(180deg,#f0fdf4 0%,#eef2ff 100%);border:1px solid var(--border);border-radius:10px;padding:20px 22px}
+.dcm-lbl{margin-bottom:4px}
+.dcm-lbl-t{font-size:13px;font-weight:800;color:var(--text)}
+.dcm-lbl-s{display:block;font-size:11px;color:var(--text2);margin-top:1px}
+.dcm-node{border-radius:8px;padding:9px 14px;text-align:center;box-shadow:var(--sh);font-size:12px;line-height:1.4}
+.dcm-node-t{font-weight:800}
+.dcm-node-s{font-size:10px;opacity:.85;margin-top:1px}
+.dcm-spine{background:#d1fae5;border:1px solid #6ee7b7;color:#065f46;display:inline-block;min-width:200px}
+.dcm-leaf{background:#ecfdf5;border:1px solid #a7f3d0;color:#047857;min-width:150px}
+.dcm-nvsw{background:linear-gradient(180deg,#fef3c7,#fde68a);border:1px solid #f59e0b;color:#92400e;font-weight:800;width:100%}
+.dcm-gpu{background:#dbeafe;border:1px solid #93c5fd;color:#1e40af;border-radius:6px;padding:7px 0;font-size:11px;font-weight:700;flex:1;text-align:center}
+/* org-tree connectors (green, scale-out) */
+.dcm-tree-top{display:flex;justify-content:center;position:relative;padding-bottom:20px}
+.dcm-tree-top::after{content:'';position:absolute;left:50%;bottom:0;width:2px;height:20px;background:#34d399}
+.dcm-tree-kids{display:flex}
+.dcm-tree-kid{flex:1;position:relative;display:flex;justify-content:center;padding-top:20px}
+.dcm-tree-kid::before{content:'';position:absolute;top:0;left:50%;width:2px;height:20px;background:#34d399}
+.dcm-tree-kid::after{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:#34d399}
+.dcm-tree-kid:first-child::after{left:50%}
+.dcm-tree-kid:last-child::after{right:50%}
+/* divider */
+.dcm-div{border-top:2px dashed #cbd5e1;margin:20px 0 16px;position:relative}
+.dcm-div span{position:absolute;top:-9px;left:50%;transform:translateX(-50%);background:#f3f1fb;padding:0 10px;font-size:10px;color:var(--text2)}
+/* rack row (scale-up) */
+.dcm-rack-row{display:flex;gap:32px;justify-content:center}
+.dcm-rack-col{flex:1;max-width:300px;position:relative;padding-top:22px}
+.dcm-rack-col::before{content:'';position:absolute;top:0;left:50%;width:0;height:22px;border-left:2px dashed #94a3b8}
+.dcm-rack{background:#ede9fe;border:1.5px solid #c4b5fd;border-radius:10px;padding:12px}
+.dcm-rack-t{font-size:11.5px;font-weight:800;color:#5b21b6;text-align:center;margin-bottom:9px}
+.dcm-nvsw-wrap{position:relative;padding-bottom:16px}
+.dcm-nvsw-wrap::after{content:'';position:absolute;left:50%;bottom:0;width:2px;height:16px;background:#f59e0b}
+.dcm-gpu-row{display:flex;gap:8px}
+.dcm-note{font-size:10px;color:#6d5bb0;text-align:center;margin-top:9px;line-height:1.5}
+
+/* 盛科弹性测算计算器 */
+.calc{display:grid;grid-template-columns:repeat(4,1fr);gap:9px 12px;margin:12px 0}
+.calc label{display:flex;flex-direction:column;font-size:10.5px;color:var(--text2);gap:3px}
+.calc input{padding:6px 9px;border:1px solid #6ee7b7;border-radius:6px;font-size:13px;font-weight:700;color:var(--text);width:100%;font-family:inherit;background:#fff}
+.calc input:focus{outline:none;border-color:#16a34a;box-shadow:0 0 0 2px rgba(22,163,74,.15)}
+.calc-flow{display:flex;align-items:stretch;gap:6px;flex-wrap:wrap;margin-top:6px}
+.calc-cell{flex:1;min-width:96px;background:#fff;border:1px solid var(--border);border-radius:8px;padding:9px 8px;text-align:center}
+.calc-cell .lbl{font-size:10px;color:var(--text2);margin-bottom:2px}
+.calc-cell .val{font-size:15px;font-weight:800;color:var(--text)}
+.calc-cell.hl{background:#16a34a;border-color:#16a34a}
+.calc-cell.hl .lbl,.calc-cell.hl .val{color:#fff}
+.calc-cell.up{background:var(--dn-bg);border-color:#fca5a5}
+.calc-cell.up .val{color:var(--dn)}
+.calc-op{align-self:center;font-size:15px;font-weight:800;color:var(--accent)}
+.scn-btn{padding:5px 14px;border:1px solid #6ee7b7;border-radius:16px;background:#fff;font-size:12px;font-weight:700;color:var(--text2);cursor:pointer;font-family:inherit;transition:all .15s}
+.scn-btn:hover{border-color:#16a34a;color:#16a34a}
+.scn-btn.scn-active{background:#16a34a;color:#fff;border-color:#16a34a}
+
+/* 返回首页按钮 */
+.hdr-back{display:inline-flex;align-items:center;gap:5px;padding:6px 12px;border:1px solid var(--accent2);border-radius:8px;background:var(--accent-bg);color:var(--accent);font-size:12px;font-weight:700;text-decoration:none;white-space:nowrap;transition:all .15s}
+.hdr-back:hover{background:var(--accent);color:#fff;text-decoration:none}
+
+/* Footer */
+.foot{text-align:center;font-size:11px;color:var(--text2);padding:14px;margin-top:20px}
+</style>
+</head>
+<body>
+
+<header class="hdr">
+  <div class="hdr-l">
+    <a class="back-link" href="../行业基本面入口.html">← 行业基本面入口</a>
+    <div>
+      <div class="hdr-title">🔀 交换芯片</div>
+      <div class="hdr-sub">Switch ASIC · 全球口径 · 数据中心/AI · 园区企业 · 光电协同</div>
+    </div>
+    <span class="badge b-up">🟢 上行</span>
+    <span class="badge b-orange">102.4T 已量产爬坡</span>
+    <span class="badge b-orange">200G SerDes 出货中</span>
+  </div>
+  <div class="hdr-meta">
+    更新：2026-06-01<br>
+    底稿：<a href="交换芯片_看板.md">交换芯片_看板.md</a>
+  </div>
+</header>
+
+<div class="wrap">
+
+<!-- ====== 逻辑动线 / 目录 ====== -->
+<nav class="toc">
+  <div class="toc-head">
+    <span class="t">🧭 逻辑动线</span>
+    <span class="s">是什么 → 怎么演进 → 谁在赢 → 怎么投（点击跳转）</span>
+  </div>
+  <div class="toc-rows">
+    <div class="toc-row">
+      <span class="toc-stage" style="color:var(--accent)"><span class="n">★</span>速览</span>
+      <div class="toc-chips">
+        <span class="toc-chip" onclick="navTo(0)">📌 备选标的</span>
+      </div>
+    </div>
+    <div class="toc-row"><span class="toc-rail"><span class="toc-rail-line"></span></span></div>
+    <div class="toc-row">
+      <span class="toc-stage"><span class="n">1</span>是什么</span>
+      <div class="toc-chips">
+        <span class="toc-chip" onclick="navTo(1)">🗺️ 定位</span>
+        <span class="toc-chip" onclick="navTo(2)">🔁 两类芯片</span>
+        <span class="toc-chip" onclick="navTo(3)">📊 量价链条</span>
+        <span class="toc-chip" onclick="navTo(4)">🔗 产业链</span>
+      </div>
+    </div>
+    <div class="toc-row"><span class="toc-rail"><span class="toc-rail-line"></span></span></div>
+    <div class="toc-row">
+      <span class="toc-stage"><span class="n">2</span>怎么演进</span>
+      <div class="toc-chips">
+        <span class="toc-chip" onclick="navTo(5)">⏱️ 容量代际</span>
+        <span class="toc-chip" onclick="navTo(6)">⚙️ 技术路线</span>
+      </div>
+    </div>
+    <div class="toc-row"><span class="toc-rail"><span class="toc-rail-line"></span></span></div>
+    <div class="toc-row">
+      <span class="toc-stage"><span class="n">3</span>谁在赢</span>
+      <div class="toc-chips">
+        <span class="toc-chip" onclick="navTo(7)">🧱 核心能力</span>
+        <span class="toc-chip" onclick="navTo(8)">🏆 竞争格局</span>
+        <span class="toc-chip" onclick="navTo(9)">🇨🇳 国产</span>
+        <span class="toc-chip" onclick="navTo(10)">🏗️ 量价模型</span>
+      </div>
+    </div>
+    <div class="toc-row"><span class="toc-rail"><span class="toc-rail-line"></span></span></div>
+    <div class="toc-row">
+      <span class="toc-stage"><span class="n">4</span>怎么投</span>
+      <div class="toc-chips">
+        <span class="toc-chip" onclick="navTo(11)">🚀 催化剂</span>
+        <span class="toc-chip" onclick="navTo(12)">🎯 判断</span>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- ====== 备选标的 ====== -->
+<section class="sec">
+  <div class="sec-hd" onclick="toggleSec(this)">
+    <div class="sec-ttl"><span class="icon">📌</span>备选标的</div>
+    <span class="sec-arrow">▼</span>
+  </div>
+  <div class="sec-body">
+    <table class="ctable">
+      <thead>
+        <tr>
+          <th style="width:90px">公司</th>
+          <th style="width:62px;text-align:right">市值(亿)</th>
+          <th style="width:26%">公司产品定位</th>
+          <th>最新产品参数</th>
+          <th style="width:27%">交换芯片出货量 / 营收</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>盛科通信-U</strong><br><span style="font-size:10px;color:var(--text2)">688702</span></td>
+          <td class="num" style="font-weight:800;color:var(--accent)">1,154</td>
+          <td>国产<strong>以太网交换龙头</strong>，25.6T 独家量产，<strong>Scale-out</strong> 为主，向 Scale-up 延伸</td>
+          <td><strong>Arctic 25.6T</strong> 已量产（对标博通 TH4，国产唯一）；<strong>51.2T 在研</strong>，2026/5-6 月回片 → 2026H2 小批量（对标 TH5）；TsingMa.MX 2.4T / GoldenGate 1.2T 成熟创收</td>
+          <td>2025 营收 11.51 亿（+6.35%），26Q1 2.48 亿（+11.4%）；<strong>阿里 3 万颗 25.6T 订单约 9 亿元</strong>；2026 三大云厂 25.6T 需求 ~8 万颗（盛科独供）；预付款 3.96 亿（环比+82%）</td>
+        </tr>
+        <tr>
+          <td><strong>中兴通讯</strong><br><span style="font-size:10px;color:var(--text2)">000063</span></td>
+          <td class="num" style="font-weight:800;color:var(--accent)">1,757</td>
+          <td>中兴微电子<strong>全栈自研</strong>，<strong>Scale-up 先行者</strong>；凌云（私有协议）+ 天屹（以太网）双线</td>
+          <td><strong>凌云 51.2T</strong>（国内首款 51.2T AI 交换，对标 NVSwitch，OLink 私有协议，端到端时延降至百纳秒级）；天屹 S501 12.8T / S301 2.8T（Scale-out）</td>
+          <td>芯片为体系内业务，<strong>未独立披露</strong>；预计 2027 Scale-up 芯片份额 ~10 万颗；支撑 Nebula 超节点（万卡~十万卡级）</td>
+        </tr>
+        <tr>
+          <td><strong>万通发展</strong><br><span style="font-size:10px;color:var(--text2)">600246</span></td>
+          <td class="num" style="font-weight:800;color:var(--accent)">314</td>
+          <td>收购<strong>数渡科技</strong>切入 <strong>PCIe 5.0 交换芯片</strong>（Scale-up 机内 GPU 互联），国产唯一量产</td>
+          <td><strong>SD85104</strong>（104 通道 PCIe5.0，12nm，延迟 &lt;100ns，独创 FabricLink GPU 直连绕开 CPU，功耗低海外 15%）；SD85144（144 通道）已投片</td>
+          <td>2025Q4 首次并表芯片业务 4568 万元（净利 -3884 万）；<strong>26Q1 新增订单 &gt;2 亿</strong>；产能 5 万→15 万颗/月；业绩对赌 26/27/28 营收 ≥6/12/16 亿</td>
+        </tr>
+        <tr>
+          <td><strong>裕太微-U</strong><br><span style="font-size:10px;color:var(--text2)">688515</span></td>
+          <td class="num" style="font-weight:800;color:var(--accent)">153</td>
+          <td>国产<strong>以太网 PHY 龙头</strong>向交换延伸；<span class="tag">中低端本盘</span> + <span class="tag tag-warn">高端期权</span></td>
+          <td><strong>YT9230 千兆级</strong>交换（MAC+PHY 集成，全国产）已量产；<strong>25.6T 高端在研</strong>，预计 2027 推出（跨界跳跃，存疑）</td>
+          <td>2025 营收 6.17 亿（+55.62%），网通类产品 ~1.4 亿颗；拟募资 13.6 亿（其中 4.42 亿投数据中心高速互联芯片研发）</td>
+        </tr>
+      </tbody>
+    </table>
+    <div style="margin-top:10px;font-size:10.5px;color:var(--text2);line-height:1.6">
+      📎 <strong>间接/联动标的</strong>（非纯芯片）：整机 ODM — 紫光股份 000938（新华三）· 锐捷网络 301165（绑定盛科）· 工业富联 601138；光电协同 — 中际旭创 300308 · 新易盛 300502（1.6T 光模块联动 102.4T 交换）。<br>
+      💡 市值为约数，仅供相对比较；纯交换芯片弹性看盛科/万通（数渡），中兴/华为偏体系内，裕太微高端交换属期权（详见「🧱 厂商核心能力拆解」）。
+    </div>
+
+    <!-- 盛科弹性测算计算器（副本） -->
+    <div class="centec-calc" style="border:1.5px solid #6ee7b7;border-radius:10px;background:#f0fdf4;padding:14px 16px;margin-top:14px">
+      <div style="font-size:13px;font-weight:800;color:#047857;margin-bottom:4px;display:flex;align-items:center;gap:6px;flex-wrap:wrap">
+        🧮 盛科通信 688702 · 弹性测算计算器（2028E）<span class="tag tag-warn" style="font-weight:700">参数可调</span>
+      </div>
+      <div style="font-size:11.5px;color:var(--text);line-height:1.7;margin-bottom:8px">
+        <strong>国内稀缺的纯高端交换芯片龙头</strong>：2026 年 25.6T 放量，51.2T 逐步出货，2027 年 51.2T 持续放量。<span style="color:var(--text2)">↓ 选场景或手动改参数，实时更新（量价推演详见「🏗️ 国产交换芯片量价模型」）。</span>
+      </div>
+
+      <!-- 场景切换 -->
+      <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:6px">
+        <span style="font-size:11px;font-weight:700;color:var(--text2)">预设场景：</span>
+        <button class="scn-btn" data-scn="bear" onclick="setScn('bear',this)">🐻 悲观</button>
+        <button class="scn-btn" data-scn="base" onclick="setScn('base',this)">⚖️ 中性</button>
+        <button class="scn-btn scn-active" data-scn="bull" onclick="setScn('bull',this)">🚀 乐观</button>
+      </div>
+
+      <!-- 输入区 -->
+      <div class="calc">
+        <label>① 国内 GPU/ASIC 出货(万颗)<input data-f="gpu" type="number" value="1200" oninput="calcCentec(this.closest('.centec-calc'))"></label>
+        <label>② 超节点渗透率(%)<input data-f="pen" type="number" value="50" oninput="calcCentec(this.closest('.centec-calc'))"></label>
+        <label>③ 超节点配比(1颗交换:N GPU)<input data-f="ratio" type="number" value="6" oninput="calcCentec(this.closest('.centec-calc'))"></label>
+        <label>④ 交换芯片单价(万元/颗)<input data-f="price" type="number" value="6" step="0.1" oninput="calcCentec(this.closest('.centec-calc'))"></label>
+        <label>⑤ 盛科市占率(%)<input data-f="share" type="number" value="30" oninput="calcCentec(this.closest('.centec-calc'))"></label>
+        <label>⑥ 盛科净利率(%)<input data-f="margin" type="number" value="40" oninput="calcCentec(this.closest('.centec-calc'))"></label>
+        <label>⑦ PE 倍数<input data-f="pe" type="number" value="30" oninput="calcCentec(this.closest('.centec-calc'))"></label>
+        <label>⑧ 当前市值(亿元)<input data-f="mcap" type="number" value="1200" oninput="calcCentec(this.closest('.centec-calc'))"></label>
+      </div>
+
+      <!-- 中间过程 -->
+      <div class="calc-flow" style="margin-bottom:8px">
+        <div class="calc-cell"><div class="lbl">超节点 GPU</div><div class="val"><span data-o="snGpu">—</span> 万颗</div></div>
+        <span class="calc-op">→</span>
+        <div class="calc-cell"><div class="lbl">超节点交换芯片</div><div class="val"><span data-o="chips">—</span> 万颗</div></div>
+        <span class="calc-op">→</span>
+        <div class="calc-cell"><div class="lbl">盛科销量(市占)</div><div class="val"><span data-o="skChips">—</span> 万颗</div></div>
+        <span class="calc-op">→</span>
+        <div class="calc-cell"><div class="lbl">盛科营收</div><div class="val"><span data-o="rev">—</span> 亿</div></div>
+      </div>
+
+      <!-- 结果区 -->
+      <div class="calc-flow">
+        <div class="calc-cell"><div class="lbl">盛科净利润</div><div class="val" style="color:#047857"><span data-o="profit">—</span> 亿</div></div>
+        <span class="calc-op">× PE =</span>
+        <div class="calc-cell hl"><div class="lbl">目标市值</div><div class="val"><span data-o="target">—</span> 亿</div></div>
+        <span class="calc-op">vs 当前</span>
+        <div class="calc-cell up"><div class="lbl">上行空间</div><div class="val"><span data-o="upside">—</span></div></div>
+      </div>
+
+      <div style="margin-top:10px;font-size:10px;color:var(--text2);line-height:1.5">
+        ⚠️ 弹性/上行情景测算，非中性预期。公式：GPU出货 × 渗透率 ÷ 配比 × 市占率 × 单价 = 营收；× 净利率 = 净利润；× PE = 目标市值。默认乐观场景（单价 6 万 / PE 30）≈ 72 亿利润 / 2160 亿市值 / +80% 空间。
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ====== 〇、交换芯片在数据中心中的位置 ====== -->
+<section class="sec">
+  <div class="sec-hd" onclick="toggleSec(this)">
+    <div class="sec-ttl"><span class="icon">🗺️</span>交换芯片在数据中心中的位置</div>
+    <span class="sec-arrow">▼</span>
+  </div>
+  <div class="sec-body">
+    <div class="dcm">
+
+      <!-- Scale-out 层 -->
+      <div class="dcm-lbl">
+        <span class="dcm-lbl-t">🌐 Scale-out 层（机柜间）</span>
+        <span class="dcm-lbl-s">以太网 / InfiniBand 交换芯片，把成百上千个机柜连成一个 AI 训练集群</span>
+      </div>
+
+      <div class="dcm-tree-top">
+        <div class="dcm-node dcm-spine">
+          <div class="dcm-node-t">Spine 交换芯片</div>
+          <div class="dcm-node-s">如 Broadcom Tomahawk 6 / Nvidia Spectrum-X（102.4T）</div>
+        </div>
+      </div>
+
+      <div class="dcm-tree-kids">
+        <div class="dcm-tree-kid">
+          <div class="dcm-node dcm-leaf">
+            <div class="dcm-node-t">Leaf 交换</div>
+            <div class="dcm-node-s">机柜 1 出口（光模块 800G/1.6T）</div>
+          </div>
+        </div>
+        <div class="dcm-tree-kid">
+          <div class="dcm-node dcm-leaf">
+            <div class="dcm-node-t">Leaf 交换</div>
+            <div class="dcm-node-s">机柜 2 出口（光模块 800G/1.6T）</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 分层虚线 -->
+      <div class="dcm-div"><span>机柜内 ↑ Scale-up　｜　机柜间 ↓ Scale-out</span></div>
+
+      <!-- Scale-up 层 -->
+      <div class="dcm-lbl">
+        <span class="dcm-lbl-t">🔗 Scale-up 层（机柜内 / 超节点）</span>
+        <span class="dcm-lbl-s">NVSwitch / NVLink（或 UALink）交换芯片，把机柜内 GPU 全互联成一台「大 GPU」</span>
+      </div>
+
+      <div class="dcm-rack-row">
+        <div class="dcm-rack-col">
+          <div class="dcm-rack">
+            <div class="dcm-rack-t">机柜 1（超节点 / NVL72 级）</div>
+            <div class="dcm-nvsw-wrap">
+              <div class="dcm-node dcm-nvsw">NVSwitch 交换芯片</div>
+            </div>
+            <div class="dcm-gpu-row">
+              <span class="dcm-gpu">GPU</span>
+              <span class="dcm-gpu">GPU</span>
+              <span class="dcm-gpu">GPU</span>
+              <span class="dcm-gpu">GPU</span>
+            </div>
+            <div class="dcm-note">每个 GPU 直连 NVSwitch（全互联）<br>… 共数十张 GPU（NVL72 = 72 卡）</div>
+          </div>
+        </div>
+        <div class="dcm-rack-col">
+          <div class="dcm-rack">
+            <div class="dcm-rack-t">机柜 2（超节点 / NVL72 级）</div>
+            <div class="dcm-nvsw-wrap">
+              <div class="dcm-node dcm-nvsw">NVSwitch 交换芯片</div>
+            </div>
+            <div class="dcm-gpu-row">
+              <span class="dcm-gpu">GPU</span>
+              <span class="dcm-gpu">GPU</span>
+              <span class="dcm-gpu">GPU</span>
+              <span class="dcm-gpu">GPU</span>
+            </div>
+            <div class="dcm-note">每个 GPU 直连 NVSwitch（全互联）<br>… 共数十张 GPU（NVL72 = 72 卡）</div>
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-top:14px;padding:10px 12px;background:#fff;border:1px solid var(--border);border-radius:6px;font-size:11px;color:var(--text2);line-height:1.6">
+        💡 <strong style="color:var(--text)">一句话定位</strong>：交换芯片是 AI 数据中心的「神经网络」—— <strong style="color:#047857">Scale-out（Leaf/Spine）</strong>决定集群能连多少 GPU、跨柜带宽多大；<strong style="color:#92400e">Scale-up（NVSwitch）</strong>决定单个超节点内 GPU 协同效率。两层都依赖高端交换芯片，且共同拉动 <strong style="color:#1d4ed8">光模块（Leaf↔Spine 光互联）</strong>需求。
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ====== 一、Scale-out vs Scale-up ====== -->
+<section class="sec">
+  <div class="sec-hd" onclick="toggleSec(this)">
+    <div class="sec-ttl"><span class="icon">🔁</span>Scale-out vs Scale-up：两种交换芯片的本质区别</div>
+    <span class="sec-arrow">▼</span>
+  </div>
+  <div class="sec-body">
+
+    <!-- 一句话定位 -->
+    <div style="padding:12px 14px;background:var(--accent-bg);border-left:3px solid var(--accent);border-radius:0 6px 6px 0;margin-bottom:14px;font-size:12px;line-height:1.7;color:var(--text)">
+      AI 集群网络分两层：<strong>Scale-up</strong> 解决"<strong>柜内 GPU 怎么连</strong>"（超低延迟、超高带宽、内存语义）；<strong>Scale-out</strong> 解决"<strong>跨柜 GPU 怎么连</strong>"（高基数、可扩展、拓扑灵活）。两类交换芯片的设计目标、协议、玩家都完全不同。
+    </div>
+
+    <!-- 合并对比表 -->
+    <table class="ctable" style="margin-bottom:14px">
+      <thead>
+        <tr>
+          <th style="width:96px">维度</th>
+          <th style="width:42%;background:#eff6ff;color:#1d4ed8">🌐 Scale-out（横向 · 跨柜）</th>
+          <th style="width:42%;background:#fef2f2;color:#b91c1c">🔗 Scale-up（纵向 · 柜内）</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>解决问题</strong></td><td>把几千张 GPU 串成一个训练集群</td><td>让柜内 GPU 像一台大 GPU 协同</td></tr>
+        <tr><td><strong>类比</strong></td><td>"GPU 之间的互联网"</td><td>"GPU 之间的总线"</td></tr>
+        <tr style="background:#fffbeb"><td><strong>衡量口径</strong></td><td><strong>聚合交换容量（Tbps）</strong><br>51.2T / 102.4T —— radix × 端口速率，越大越能连更多 GPU</td><td><strong>每 GPU 带宽（TB/s）+ 域规模 + 延迟</strong><br>1.8 TB/s/GPU、NVL72=72 卡 —— 不看"总 T"</td></tr>
+        <tr><td><strong>单端口带宽</strong></td><td>100s Gb/s（比特口径，800G→1.6T 光模块）</td><td>1000s GB/s（字节口径，NVLink5 1.8 TB/s/GPU，约 10 倍）</td></tr>
+        <tr><td><strong>延迟</strong></td><td>μs 级（数十-数百微秒）</td><td>ns 级（数百纳秒，低 100-1000 倍）</td></tr>
+        <tr><td><strong>距离</strong></td><td>几米 ~ 几百米（跨机柜、跨 Pod）</td><td>&lt;5 米（柜内直连/铜缆）</td></tr>
+        <tr><td><strong>介质</strong></td><td>光模块（800G/1.6T）+ 光纤</td><td>铜缆 / 短距铜背板 / 部分光</td></tr>
+        <tr><td><strong>拓扑</strong></td><td>Clos / Spine-Leaf / Dragonfly</td><td>Fully-Meshed / NVLink Fabric</td></tr>
+        <tr style="background:#f0fdf4"><td><strong>交换芯片 : GPU 配比</strong></td><td><strong>~1 : 数十张</strong>（leaf+spine Clos，随 radix / 收敛比变化）<br><span style="color:var(--text2)">用芯稀疏——一颗大 radix 交换接很多 GPU</span></td><td><strong>~1 : 4 张</strong>（NVL72 = 18 颗 NVSwitch : 72 GPU）<br><span style="color:var(--text2)">用芯密集——每卡都要全带宽全互联</span></td></tr>
+        <tr><td><strong>协议 / 生态</strong></td><td>以太网（UEC 联盟）/ InfiniBand —— <strong>开放标准化</strong></td><td>NVLink（私有）/ UALink（联盟）/ Tomahawk-Ultra —— <strong>封闭</strong></td></tr>
+        <tr><td><strong>关键特性</strong></td><td>高基数（radix，256 × 200G = 51.2T）</td><td>内存语义（load/store）、相干访问</td></tr>
+        <tr><td><strong>主导者</strong></td><td><strong>Broadcom</strong>（~70%）</td><td><strong>Nvidia NVLink</strong>（GPU 集群 ~100%）</td></tr>
+        <tr><td><strong>挑战者</strong></td><td>Nvidia Spectrum-X 抢份额</td><td>UALink 联盟（AMD+Broadcom+Intel+Google）反 NV 锁定</td></tr>
+        <tr><td><strong>光模块联动</strong></td><td><span class="tag tag-up">强</span>（直接拉动 800G/1.6T）</td><td><span class="tag tag-gray">弱</span>（以铜为主，CPO/LPO 远期才介入）</td></tr>
+        <tr>
+          <td><strong>代表芯片</strong></td>
+          <td>· Broadcom <strong>Tomahawk 5/6</strong>（以太）<br>· Broadcom <strong>Jericho 3-AI</strong>（深缓存长距）<br>· Nvidia <strong>Spectrum-X4</strong>（以太）<br>· Nvidia <strong>Quantum-X</strong>（InfiniBand）<br>· Marvell <strong>Teralynx 10</strong>　· Cisco <strong>Silicon One G200</strong></td>
+          <td>· Nvidia <strong>NVSwitch</strong>（GB200/GB300 NVL72 核心）<br>· Broadcom <strong>Tomahawk-Ultra</strong>（挑战者）<br>· AMD + Astera Labs <strong>UALink Switch</strong>（联盟）<br>· Marvell 定制 ASIC（云厂自研）<br>· Google <strong>OCS</strong>（光交换，特殊路线）</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- 口径提醒 -->
+    <div style="padding:11px 14px;background:#eef2ff;border:1px solid #c7d2fe;border-radius:8px;margin-bottom:14px;font-size:11.5px;color:var(--text);line-height:1.7">
+      ⚠️ <strong style="color:#3730a3">别拿 102.4T 去硬比 NVLink</strong>：<strong>"XX T" 是 Scale-out 的擂台</strong>（聚合交换容量，单位比特 Tbps）；<strong>Scale-up 换了一套讲究</strong>——比的是<strong>每 GPU 带宽（TB/s，字节）+ 域能塞多少卡 + 延迟多低</strong>。NVSwitch 也有聚合带宽（换算成比特同样上百 Tbps 量级），但 Nvidia 不拿它当卖点——因为客户买 Scale-up 不是为了"接更多线"，而是为了"让这 72 张卡协同得像一张卡"。
+    </div>
+
+    <!-- 投资视角 -->
+    <div style="padding:12px 14px;background:#fef3c7;border-radius:6px;font-size:11.5px;color:#78350f;line-height:1.7">
+      💡 <strong>投资视角</strong>：
+      <ul style="margin:6px 0 0 18px;padding:0">
+        <li><strong>Scale-out 赛道</strong>：Broadcom 主导，催化看 102.4T 时间表 + Nvidia Spectrum-X 渗透速度 → 直接联动<strong>光模块（中际旭创/新易盛）</strong>。</li>
+        <li><strong>Scale-up 赛道</strong>：Nvidia 凭 NVLink 独占 GPU 集群柜内市场，<strong>UALink 联盟</strong>是非 NV 阵营反击的关键 —— Broadcom Tomahawk-Ultra 进展、AMD MI 系列 + UALink 集群部署节奏是核心观察点。</li>
+        <li><strong>关键分叉</strong>：当 Scale-up 域规模扩大（如 NVL576），柜内距离突破 5 米 → 可能转向 <strong>CPO/LPO 光互联</strong>，那时 Scale-up 也会拉动光模块需求 —— 这是 2027+ 的远期看点。</li>
+      </ul>
+    </div>
+
+  </div>
+</section>
+
+<!-- ====== 量价链条 ====== -->
+<section class="sec">
+  <div class="sec-hd" onclick="toggleSec(this)">
+    <div class="sec-ttl"><span class="icon">📊</span>量价链条：GPU 出货 → 交换芯片 → 营收（产业链验真）</div>
+    <span class="sec-arrow">▼</span>
+  </div>
+  <div class="sec-body">
+
+    <!-- 链条流程图 -->
+    <div style="display:flex;align-items:stretch;gap:6px;overflow-x:auto;padding:4px 2px 12px">
+      <div style="flex:1;min-width:150px;padding:12px;border:1px solid #93c5fd;border-radius:8px;background:#eff6ff;text-align:center">
+        <div style="font-size:11px;color:#1d4ed8;font-weight:800;margin-bottom:4px">① 全球 AI 加速器出货</div>
+        <div style="font-size:18px;font-weight:800;color:var(--text)">~1500 万颗</div>
+        <div style="font-size:10px;color:var(--text2);margin-top:3px">2026E（含 GPU+ASIC）<br>英伟达 ~60-80% 份额</div>
+      </div>
+      <div style="align-self:center;color:var(--accent);font-size:18px;font-weight:800">×</div>
+      <div style="flex:1;min-width:150px;padding:12px;border:1px solid #c4b5fd;border-radius:8px;background:#f5f3ff;text-align:center">
+        <div style="font-size:11px;color:#5b21b6;font-weight:800;margin-bottom:4px">② 网络硅 attach</div>
+        <div style="font-size:18px;font-weight:800;color:var(--text)">~$3,000/GPU</div>
+        <div style="font-size:10px;color:var(--text2);margin-top:3px">已核实区间 $2,500-4,000<br>占集群 CapEx 10-15%</div>
+      </div>
+      <div style="align-self:center;color:var(--accent);font-size:18px;font-weight:800">=</div>
+      <div style="flex:1;min-width:150px;padding:12px;border:1px solid #fcd34d;border-radius:8px;background:#fffbeb;text-align:center">
+        <div style="font-size:11px;color:#92400e;font-weight:800;margin-bottom:4px">③ AI 网络硅 TAM</div>
+        <div style="font-size:18px;font-weight:800;color:var(--accent)">~$45B</div>
+        <div style="font-size:10px;color:var(--text2);margin-top:3px">2026E 估算<br>（交换芯片 + NVLink + NIC + 光互联）</div>
+      </div>
+      <div style="align-self:center;color:var(--up);font-size:18px;font-weight:800">≈</div>
+      <div style="flex:1;min-width:150px;padding:12px;border:1px solid #6ee7b7;border-radius:8px;background:#f0fdf4;text-align:center">
+        <div style="font-size:11px;color:#047857;font-weight:800;margin-bottom:4px">④ 对照两家营收</div>
+        <div style="font-size:13px;font-weight:800;color:var(--text);line-height:1.4">NVDA $20B<br>+ AVGO $17B<br>+ 其他 ~$8B</div>
+        <div style="font-size:10px;color:var(--up);margin-top:3px;font-weight:700">✓ 自洽对上</div>
+      </div>
+    </div>
+
+    <!-- 配比拆分 -->
+    <div style="font-size:13px;font-weight:800;color:var(--text);margin:6px 0 8px;padding-left:8px;border-left:3px solid var(--accent)">▍ 用配比拆分：同一批 GPU 拉动两类交换硅</div>
+    <table class="ctable" style="margin-bottom:14px">
+      <thead><tr><th style="width:120px">环节</th><th>🔗 Scale-up（柜内）</th><th>🌐 Scale-out（跨柜）</th></tr></thead>
+      <tbody>
+        <tr><td><strong>配比</strong></td><td>~1 颗交换 : 4 GPU（NVL72=18:72）<strong>用芯密集</strong></td><td>~1 颗交换 : 数十 GPU <strong>用芯稀疏</strong></td></tr>
+        <tr><td><strong>载体</strong></td><td>NVLink / NVSwitch（私有）</td><td>以太网交换（Tomahawk/Spectrum-X）</td></tr>
+        <tr><td><strong>主要计入</strong></td><td>英伟达网络营收 $20B 的<strong>大头</strong></td><td>博通 AI 网络 $17B 的<strong>主体</strong></td></tr>
+        <tr><td><strong>驱动逻辑</strong></td><td><span class="tag">≈ GPU 出货的函数</span>（每卡都要全互联，绑死 GPU 量）</td><td><span class="tag">≈ 集群规模的函数</span>（建多大 fabric，偏 CapEx/拓扑）</td></tr>
+      </tbody>
+    </table>
+
+    <!-- 关键输入(已核实) -->
+    <div style="font-size:13px;font-weight:800;color:var(--text);margin:6px 0 8px;padding-left:8px;border-left:3px solid var(--accent)">▍ 关键输入（2026E，已联网核实）</div>
+    <table class="ctable" style="margin-bottom:14px">
+      <thead><tr><th>输入项</th><th>数值</th><th>口径 / 来源</th></tr></thead>
+      <tbody>
+        <tr><td>全球 AI 加速器出货</td><td><strong>~1500-2000 万颗</strong></td><td>含 GPU+ASIC；英伟达 Blackwell 2025 ~520 万→2026 目标 ~1200-2000 万（~1M/月）</td></tr>
+        <tr><td>GPU ASP</td><td>B200 <strong>$3-4 万</strong>/颗</td><td>GB200(2 GPU 超芯) $6-7 万｜Modal/TrendForce</td></tr>
+        <tr><td>网络硅 attach</td><td><strong>~$2,500-4,000</strong>/GPU</td><td>硅级（NIC+互联）；占集群 CapEx 10-15%｜Uvation</td></tr>
+        <tr><td>以太交换 ASIC ASP</td><td>Tomahawk5 <strong>$1-1.5 万</strong>/颗</td><td>裸芯；整机 64×800G $5.1-7 万｜Colfax/NADDOD</td></tr>
+        <tr><td>英伟达 网络营收</td><td><strong>~$20B</strong>/yr</td><td>$5B/季 run-rate（Spectrum-X+NVLink/NVSwitch）</td></tr>
+        <tr><td>博通 AI 网络营收</td><td><strong>~$17B</strong>/yr</td><td>$4.3B/季（占 AI 营收 40%）</td></tr>
+      </tbody>
+    </table>
+
+    <!-- 口径陷阱提醒 -->
+    <div style="padding:11px 14px;background:#fef2f2;border:1px solid #fca5a5;border-radius:8px;margin-bottom:10px;font-size:11.5px;color:var(--text);line-height:1.7">
+      ⚠️ <strong style="color:#b91c1c">三个口径不能混</strong>：① <strong>裸交换芯片</strong> TAM 仅 ~$4B（以太 merchant 芯片）；② <strong>英伟达/博通"网络"营收</strong>（$17-20B 各）= 交换芯片 + NVLink/NVSwitch + NIC + retimer + 光互联，口径宽得多；③ 上面 $45B 是<strong>广义 AI 网络硅</strong>。<strong>不能拿 GPU 出货 × 单颗交换 ASP 去对 $20B</strong>——裸交换芯片只是其中一小块。
+    </div>
+
+    <!-- 核心结论 -->
+    <div style="padding:12px 14px;background:#f5f3ff;border:1px solid #c4b5fd;border-radius:8px;font-size:11.5px;color:var(--text);line-height:1.8">
+      <div style="font-size:12px;font-weight:800;color:#5b21b6;margin-bottom:6px">🎯 链条揭示的两条投资主线</div>
+      <strong>① 英伟达网络 ≈ GPU 出货的函数</strong>：scale-up 用芯密集（1:4），NVLink/NVSwitch 硅含量死绑 GPU 量 → GPU 卖得越多，这块弹性越直接。<br>
+      <strong>② 博通 AI 网络 ≈ 集群规模的函数</strong>：scale-out 用芯稀疏（1:数十），跟的是"建多大 fabric" → 偏云厂 CapEx 与组网拓扑。<br>
+      <span style="color:var(--text2)">→ 想跟踪交换芯片景气：盯 <strong>GPU 出货量</strong>（驱动 scale-up）+ <strong>云厂 CapEx 指引</strong>（驱动 scale-out）两个前置指标。</span>
+    </div>
+
+  </div>
+</section>
+
+<!-- ====== 二、产业链结构 ====== -->
+<section class="sec">
+  <div class="sec-hd" onclick="toggleSec(this)">
+    <div class="sec-ttl"><span class="icon">🔗</span>产业链结构</div>
+    <span class="sec-arrow">▼</span>
+  </div>
+  <div class="sec-body">
+    <div class="chain">
+      <div class="chain-node">
+        <strong>SerDes IP</strong>
+        <div class="stk">Synopsys / Cadence</div>
+      </div>
+      <div class="chain-arrow">→</div>
+      <div class="chain-node">
+        <strong>交换芯片设计</strong>
+        <div class="stk">Broadcom · Marvell · Nvidia · Cisco · 盛科</div>
+      </div>
+      <div class="chain-arrow">→</div>
+      <div class="chain-node">
+        <strong>晶圆代工</strong>
+        <div class="stk">TSMC 5nm/3nm</div>
+      </div>
+      <div class="chain-arrow">→</div>
+      <div class="chain-node">
+        <strong>先进封装</strong>
+        <div class="stk">CoWoS-S/L · InFO</div>
+      </div>
+      <div class="chain-arrow">→</div>
+      <div class="chain-node">
+        <strong>整机/白盒</strong>
+        <div class="stk">Arista · Cisco · 工业富联 · 锐捷 · 紫光</div>
+      </div>
+      <div class="chain-arrow">→</div>
+      <div class="chain-node">
+        <strong>云厂/运营商</strong>
+        <div class="stk">AWS · Azure · GCP · Meta · 字节 · 阿里</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ====== 四、容量代际时间线 ====== -->
+<section class="sec">
+  <div class="sec-hd" onclick="toggleSec(this)">
+    <div class="sec-ttl"><span class="icon">⏱️</span>单芯片容量代际时间线</div>
+    <span class="sec-arrow">▼</span>
+  </div>
+  <div class="sec-body">
+    <div class="gen-matrix">
+      <!-- 容量轨 -->
+      <div class="gen-mrow">
+        <div class="gen-mlabel">交换<br>容量</div>
+        <div class="gen-mcell past cap-cell"><span class="cap">12.8T</span><span class="yr">2019-20｜TH3</span></div>
+        <div class="gen-mcell past cap-cell"><span class="cap">25.6T</span><span class="yr">2021-22｜TH4</span></div>
+        <div class="gen-mcell gen-col-now cap-cell"><span class="cap">51.2T</span><span class="yr">2023-25 主流<br>TH5/Spectrum-X4/Teralynx10/G200</span></div>
+        <div class="gen-mcell gen-col-edge cap-cell"><span class="cap">102.4T</span><span class="yr">2025/6 量产爬坡<br>TH6（含 CPO Davisson）</span></div>
+        <div class="gen-mcell gen-col-future cap-cell"><span class="cap">204.8T</span><span class="yr">2027+ 规划</span></div>
+      </div>
+      <!-- SerDes 轨 -->
+      <div class="gen-mrow">
+        <div class="gen-mlabel">SerDes<br>(每 lane)</div>
+        <div class="gen-mcell past"><span class="sd">50G PAM4</span></div>
+        <div class="gen-mcell past"><span class="sd">50G PAM4</span></div>
+        <div class="gen-mcell gen-col-now"><span class="sd">100G PAM4</span></div>
+        <div class="gen-mcell gen-col-edge"><span class="sd">200G PAM4</span></div>
+        <div class="gen-mcell gen-col-future"><span class="sd">400G (224→448G)</span></div>
+      </div>
+      <!-- 光模块轨 -->
+      <div class="gen-mrow">
+        <div class="gen-mlabel">配套<br>光模块</div>
+        <div class="gen-mcell past"><span class="om">100G/400G</span></div>
+        <div class="gen-mcell past"><span class="om">400G</span></div>
+        <div class="gen-mcell gen-col-now"><span class="om">400G/800G</span></div>
+        <div class="gen-mcell gen-col-edge"><span class="om">800G / 1.6T</span></div>
+        <div class="gen-mcell gen-col-future"><span class="om">3.2T / CPO</span></div>
+      </div>
+    </div>
+    <div style="display:flex;gap:14px;margin:8px 0 2px;font-size:10px;color:var(--text2);flex-wrap:wrap">
+      <span>📐 容量 = SerDes 速率 × lane 数（约 512 lane）</span>
+      <span style="color:var(--accent)">▍ 当前边缘：102.4T / 200G SerDes / 1.6T 光模块</span>
+    </div>
+    <div style="margin-top:12px;font-size:11.5px;color:var(--text2);line-height:1.7">
+      <strong>关键观察</strong>：每代切换催化整条链 —— SerDes 速率（112G→200G→224G）→ 光模块带宽（800G→1.6T）→ CoWoS 封装面积（更大）→ 云厂 AI 集群部署成本拐点。<strong>当前节点</strong>：102.4T（Tomahawk 6）已于 2025/6 起量产出货，200G SerDes + 1.6T 端口落地，1.6T 光模块进入放量窗口。
+    </div>
+  </div>
+</section>
+
+<!-- ====== 五、技术路线对比 ====== -->
+<section class="sec">
+  <div class="sec-hd" onclick="toggleSec(this)">
+    <div class="sec-ttl"><span class="icon">⚙️</span>技术路线对比（全球三大主流）</div>
+    <span class="sec-arrow">▼</span>
+  </div>
+  <div class="sec-body">
+    <div class="tech-grid">
+      <div class="tech-card dom">
+        <div class="tech-h">Broadcom Tomahawk <span class="tag" style="margin-left:6px">主导 ~70%</span></div>
+        <div class="tech-row"><strong>当代旗舰</strong>：Tomahawk 6 (102.4T)，2025/6 起量产</div>
+        <div class="tech-row"><strong>在产</strong>：Tomahawk 5 (51.2T) 仍为出货主力</div>
+        <div class="tech-row"><strong>SerDes</strong>：200G PAM4（在产）→ 224G</div>
+        <div class="tech-row"><strong>工艺</strong>：TSMC 3nm</div>
+        <div class="tech-row"><strong>封装</strong>：CoWoS-S（CPO 版 Davisson）</div>
+        <div class="tech-row"><strong>客户</strong>：AWS / Meta / 字节 / 阿里</div>
+      </div>
+      <div class="tech-card">
+        <div class="tech-h">Nvidia Spectrum-X <span class="tag tag-up" style="margin-left:6px">抢份额 ~10-15%</span></div>
+        <div class="tech-row"><strong>当代旗舰</strong>：Spectrum-X（800G 主流）</div>
+        <div class="tech-row"><strong>新增</strong>：Spectrum-XGS + CPO Photonics（百万 GPU 级）</div>
+        <div class="tech-row"><strong>SerDes</strong>：200G PAM4 → 224G</div>
+        <div class="tech-row"><strong>工艺</strong>：TSMC 3nm</div>
+        <div class="tech-row"><strong>封装</strong>：CoWoS-S/L</div>
+        <div class="tech-row"><strong>战略</strong>：GPU + 网络捆绑销售</div>
+      </div>
+      <div class="tech-card">
+        <div class="tech-h">Marvell Teralynx <span class="tag tag-gray" style="margin-left:6px">追赶 ~10-15%</span></div>
+        <div class="tech-row"><strong>当代旗舰</strong>：Teralynx 10 (51.2T)，量产</div>
+        <div class="tech-row"><strong>下一代</strong>：102.4T + 1.6T 产品筹备中</div>
+        <div class="tech-row"><strong>差异化</strong>：sub-600ns 延迟｜radix 512｜SONiC</div>
+        <div class="tech-row"><strong>工艺</strong>：TSMC 5nm</div>
+        <div class="tech-row"><strong>封装</strong>：CoWoS-S</div>
+        <div class="tech-row"><strong>客户</strong>：云厂多供应商分散化采购</div>
+      </div>
+    </div>
+    <div style="margin-top:10px;padding:10px 12px;background:var(--warn-bg);border-left:3px solid var(--warn);border-radius:0 6px 6px 0;font-size:11.5px;color:var(--text);line-height:1.6">
+      <strong>核心分歧点</strong>：以太网（Broadcom + UEC 联盟）vs InfiniBand（Nvidia）vs NVLink/UALink（Scale-up 内网） → 决定后续 5 年份额拉锯<strong style="color:var(--dn)"> —— 协议生态</strong>。
+    </div>
+
+    <!-- 协议生态科普 -->
+    <div style="margin-top:16px;padding:14px 16px;background:#f5f3ff;border:1px solid #c4b5fd;border-radius:8px">
+      <div style="font-size:13px;font-weight:800;color:#5b21b6;margin-bottom:8px;display:flex;align-items:center;gap:6px">
+        🧬 什么是"协议生态"？为什么投资人必须看懂
+      </div>
+
+      <div style="font-size:12px;color:var(--text);line-height:1.7;margin-bottom:12px">
+        <strong>协议生态</strong> = 交换芯片"说哪种语言"。同样是搬数据，不同协议规定了帧格式、寻址方式、流控、重传、容错、内存语义 —— <em>协议决定了哪些芯片/设备能互联，也决定了谁是规则制定者</em>。AI 算力时代有 6 大协议生态并存。
+      </div>
+
+      <!-- 六大协议生态表 -->
+      <table class="ctable" style="margin-bottom:12px">
+        <thead>
+          <tr>
+            <th style="width:110px">协议</th>
+            <th style="width:72px">阵营</th>
+            <th>主导/玩家</th>
+            <th>定位</th>
+            <th>状态</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>以太网 Ethernet</strong></td>
+            <td><span class="tag tag-up">开放</span></td>
+            <td>IEEE 标准 / Broadcom 主导芯片</td>
+            <td>Scale-out 通用，AI/园区/企业全场景</td>
+            <td><span class="tag tag-up">主流</span></td>
+          </tr>
+          <tr>
+            <td><strong>UEC（Ultra Ethernet）</strong></td>
+            <td><span class="tag tag-up">开放联盟</span></td>
+            <td>AMD/Arista/Broadcom/Cisco/Meta/Microsoft</td>
+            <td>为 AI 优化的以太网，对抗 IB/NVLink 锁定</td>
+            <td><span class="tag">2025 标准落地</span></td>
+          </tr>
+          <tr>
+            <td><strong>InfiniBand</strong></td>
+            <td><span class="tag tag-warn">半封闭</span></td>
+            <td>Nvidia（收购 Mellanox）独占</td>
+            <td>HPC + AI 训练首选 Scale-out</td>
+            <td><span class="tag tag-up">高端主流</span></td>
+          </tr>
+          <tr>
+            <td><strong>NVLink / NVSwitch</strong></td>
+            <td><span class="tag tag-dn">私有锁定</span></td>
+            <td>Nvidia 完全私有</td>
+            <td>Scale-up 柜内 GPU 互联</td>
+            <td><span class="tag tag-up">独占</span></td>
+          </tr>
+          <tr style="background:#fff7ed">
+            <td><strong>UALink</strong></td>
+            <td><span class="tag tag-up">开放联盟</span></td>
+            <td>AMD/Broadcom/Cisco/Google/HPE/Intel/Meta/Microsoft</td>
+            <td>对标 NVLink 的 Scale-up 开放协议</td>
+            <td><span class="tag">1.0 已发，2026 量产</span></td>
+          </tr>
+          <tr>
+            <td><strong>CXL / PCIe</strong></td>
+            <td><span class="tag tag-up">开放</span></td>
+            <td>Intel/AMD/Arm + CXL 联盟</td>
+            <td>内存池化、CPU-加速器互联</td>
+            <td><span class="tag tag-warn">配角，仅小范围 Scale-up</span></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- 协议生态会引发什么 -->
+      <div style="font-size:12px;font-weight:700;color:var(--text);margin-bottom:8px">📌 协议生态会引发什么差异</div>
+      <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:10px">
+        <div style="padding:10px 12px;background:#fff;border:1px solid var(--border);border-left:3px solid #16a34a;border-radius:0 6px 6px 0">
+          <div style="font-size:11px;font-weight:800;color:#16a34a;margin-bottom:3px">① 客户议价能力</div>
+          <div style="font-size:11px;line-height:1.55">开放协议（以太/UEC/UALink）→ 多供应商竞争 → 云厂可砍价、可二供。<br>私有协议（NVLink/IB）→ Nvidia 锁定 → 高溢价、高粘性。</div>
+        </div>
+        <div style="padding:10px 12px;background:#fff;border:1px solid var(--border);border-left:3px solid #dc2626;border-radius:0 6px 6px 0">
+          <div style="font-size:11px;font-weight:800;color:#dc2626;margin-bottom:3px">② 性能 vs 通用性</div>
+          <div style="font-size:11px;line-height:1.55">私有协议为特定硬件深度优化 → 延迟/带宽更极致。<br>开放协议为兼容性妥协 → 性能略低但生态广。</div>
+        </div>
+        <div style="padding:10px 12px;background:#fff;border:1px solid var(--border);border-left:3px solid #0891b2;border-radius:0 6px 6px 0">
+          <div style="font-size:11px;font-weight:800;color:#0891b2;margin-bottom:3px">③ 站队效应</div>
+          <div style="font-size:11px;line-height:1.55">选 NVLink = 绑死 Nvidia GPU。<br>选 UALink = 拥抱 AMD/Intel + 多家芯片厂商。<br>云厂自研 GPU（Trainium/TPU）→ 倾向开放协议。</div>
+        </div>
+        <div style="padding:10px 12px;background:#fff;border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:0 6px 6px 0">
+          <div style="font-size:11px;font-weight:800;color:var(--accent);margin-bottom:3px">④ 谁定标准谁吃肉</div>
+          <div style="font-size:11px;line-height:1.55">Nvidia 凭 NVLink 收"协议税"。<br>Broadcom 主推 UEC/UALink 想"去 Nvidia 化"，把交换价值从 GPU 厂手里抢回来 —— 这是当前最大博弈。</div>
+        </div>
+      </div>
+
+      <!-- 投资角度 -->
+      <div style="padding:10px 12px;background:#ede9fe;border-radius:6px;font-size:11.5px;color:#4c1d95;line-height:1.7">
+        💎 <strong>核心博弈</strong>：<strong>Nvidia（NVLink + IB 双护城河）</strong> vs <strong>反 Nvidia 联盟（UEC + UALink）</strong>。前者代表客户：Microsoft、Oracle 大规模采买 GB200/GB300；后者代表客户：AWS、Meta、Google 自研 GPU + 拥抱开放协议。<br>
+        <strong>跟踪信号</strong>：① UALink 1.0 量产芯片首发时间　② AWS/Meta 自研 GPU + UEC 集群部署比例　③ Microsoft 是否从纯 NV 阵营转向"NV+UALink"双轨。
+      </div>
+    </div>
+
+    <!-- SerDes 与交换芯片关系科普 -->
+    <div style="margin-top:18px;padding:14px 16px;background:#f8f9ff;border:1px solid #c7d2fe;border-radius:8px">
+      <div style="font-size:13px;font-weight:800;color:#3730a3;margin-bottom:10px;display:flex;align-items:center;gap:6px">
+        📚 SerDes × 交换芯片：物理基础与代际跃迁
+      </div>
+
+      <div style="font-size:12px;color:var(--text);line-height:1.7;margin-bottom:12px">
+        <strong>SerDes = Serializer/Deserializer（串行器/解串器）</strong>，是位于交换芯片<strong>边缘</strong>的高速 I/O 模块，负责把芯片内部的并行数据转换成串行电信号送到光模块/铜缆 —— <em>它是交换芯片"对外吞吐"的物理通道</em>。
+      </div>
+
+      <!-- 容量公式可视化 -->
+      <div style="background:#fff;border:1px solid var(--border);border-radius:6px;padding:12px 14px;margin-bottom:12px">
+        <div style="font-size:11px;color:var(--text2);margin-bottom:8px;font-weight:600">📐 总容量公式</div>
+        <div style="font-size:14px;font-weight:700;text-align:center;color:var(--text);padding:8px 0;font-family:Consolas,Monaco,monospace">
+          <span style="color:var(--accent)">交换芯片总容量</span>
+          &nbsp;=&nbsp;
+          <span style="color:#0891b2">单 SerDes 速率</span>
+          &nbsp;×&nbsp;
+          <span style="color:#16a34a">SerDes 数量</span>
+        </div>
+        <div style="font-size:11px;color:var(--text2);text-align:center;margin-top:6px">
+          例：Tomahawk 5 → <strong>100G × 512 lane ≈ 51.2T</strong>　｜　Tomahawk 6 → <strong>200G × 512 lane ≈ 102.4T</strong>
+        </div>
+      </div>
+
+      <!-- SerDes 代际对照表 -->
+      <table class="ctable" style="margin-bottom:12px">
+        <thead>
+          <tr>
+            <th>SerDes 代际</th>
+            <th>物理速率</th>
+            <th>调制</th>
+            <th>对应交换芯片容量</th>
+            <th>对应光模块</th>
+            <th>状态</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr style="opacity:.6">
+            <td><strong>56G SerDes</strong></td>
+            <td>56 Gbps/lane</td>
+            <td>NRZ → PAM4</td>
+            <td>12.8T</td>
+            <td>100G / 400G</td>
+            <td>历史</td>
+          </tr>
+          <tr>
+            <td><strong>100G PAM4</strong></td>
+            <td>100 Gbps/lane</td>
+            <td>PAM4</td>
+            <td><strong>51.2T</strong>（512 lane）</td>
+            <td>400G / 800G</td>
+            <td><span class="tag tag-up">主流存量</span></td>
+          </tr>
+          <tr style="background:#fff7ed">
+            <td><strong>200G PAM4</strong></td>
+            <td>200 Gbps/lane</td>
+            <td>PAM4 (高 Baud)</td>
+            <td><strong>102.4T</strong>（512 lane）</td>
+            <td>800G / <strong>1.6T</strong></td>
+            <td><span class="tag tag-up">出货中 ✓（TH6）</span></td>
+          </tr>
+          <tr style="background:#f0f9ff;color:#0c4a6e">
+            <td><strong>224G / 448G</strong></td>
+            <td>224→448 Gbps/lane</td>
+            <td>PAM4/PAM6 / 相干</td>
+            <td>204.8T+</td>
+            <td>3.2T / CPO</td>
+            <td><span class="tag tag-gray">2027+ 路线分叉</span></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- 三个关键 takeaway -->
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:10px">
+        <div style="padding:10px 12px;background:#fff;border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:0 6px 6px 0">
+          <div style="font-size:11px;font-weight:800;color:var(--accent);margin-bottom:4px">① 物理基础</div>
+          <div style="font-size:11px;color:var(--text);line-height:1.55">SerDes 速率翻倍 → 芯片总容量翻倍。没有 224G SerDes 就没有 102.4T 交换芯片。</div>
+        </div>
+        <div style="padding:10px 12px;background:#fff;border:1px solid var(--border);border-left:3px solid #0891b2;border-radius:0 6px 6px 0">
+          <div style="font-size:11px;font-weight:800;color:#0891b2;margin-bottom:4px">② 光模块联动</div>
+          <div style="font-size:11px;color:var(--text);line-height:1.55">交换芯片 SerDes 速率 = 光模块电口速率。224G SerDes 落地 → 1.6T 光模块（中际旭创/新易盛）放量。</div>
+        </div>
+        <div style="padding:10px 12px;background:#fff;border:1px solid var(--border);border-left:3px solid #16a34a;border-radius:0 6px 6px 0">
+          <div style="font-size:11px;font-weight:800;color:#16a34a;margin-bottom:4px">③ IP 护城河</div>
+          <div style="font-size:11px;color:var(--text);line-height:1.55">高速 SerDes IP 极少数厂商掌握：Synopsys / Cadence / Broadcom 自研 / Marvell（收购 Inphi）。是设计端壁垒。</div>
+        </div>
+      </div>
+
+      <div style="margin-top:12px;padding:8px 12px;background:#fef3c7;border-radius:6px;font-size:11px;color:#78350f;line-height:1.6">
+        💡 <strong>投资视角</strong>：研究交换芯片代际不能只看"总容量"，要看 <strong>SerDes 代际是否到位</strong> —— 这是判断 102.4T 何时真正量产、1.6T 光模块何时放量的<strong>领先指标</strong>。例如 Broadcom 224G SerDes 客户出样进度，比 Tomahawk 6 流片新闻更早反映节奏。
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ====== 五点五、厂商核心能力拆解 ====== -->
+<section class="sec">
+  <div class="sec-hd" onclick="toggleSec(this)">
+    <div class="sec-ttl"><span class="icon">🧱</span>厂商核心能力拆解：SerDes 是关键吗？</div>
+    <span class="sec-arrow">▼</span>
+  </div>
+  <div class="sec-body">
+
+    <!-- 核心论点 -->
+    <div style="padding:12px 14px;background:var(--accent-bg);border-left:3px solid var(--accent);border-radius:0 6px 6px 0;margin-bottom:16px;font-size:12px;line-height:1.7;color:var(--text)">
+      <strong>一句话</strong>：<strong style="color:var(--accent)">SerDes 是"必要不充分"</strong> —— 它是入场券和能力天花板，但不是护城河本身。交换芯片厂商真正的核心能力，是几个"难的东西"叠在一起的<strong>系统级整合</strong>。
+    </div>
+
+    <!-- 必要不充分：反例 -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px">
+      <div style="padding:11px 13px;border:1px solid #93c5fd;border-radius:8px;background:#eff6ff">
+        <div style="font-size:12px;font-weight:800;color:#1d4ed8;margin-bottom:4px">✅ 为什么"必要"</div>
+        <div style="font-size:11px;color:var(--text);line-height:1.6">到 200G/224G 这代，SerDes 决定你<strong>能不能做到 102.4T、信号能不能干净打出去</strong>。做不出领先 SerDes，连牌桌都上不了。</div>
+      </div>
+      <div style="padding:11px 13px;border:1px solid #fca5a5;border-radius:8px;background:#fef2f2">
+        <div style="font-size:12px;font-weight:800;color:#b91c1c;margin-bottom:4px">❌ 为什么"不充分"</div>
+        <div style="font-size:11px;color:var(--text);line-height:1.6"><strong>Credo / Alphawave</strong> 有世界级 SerDes，却<strong>不是交换龙头</strong>——只有 I/O，没有交换架构和软件生态，最后只能卖 IP / 做 chiplet。</div>
+      </div>
+    </div>
+
+    <!-- 五大核心能力拆解表 -->
+    <div style="font-size:13px;font-weight:800;color:var(--text);margin:6px 0 8px;padding-left:8px;border-left:3px solid var(--accent)">▍ 核心能力拆解（按护城河深浅排序）</div>
+    <table class="ctable" style="margin-bottom:18px">
+      <thead><tr><th style="width:90px">能力</th><th>是什么</th><th style="width:60px">护城河</th><th>谁强</th></tr></thead>
+      <tbody>
+        <tr style="background:#f0fdf4"><td><strong>① 软件 / 生态</strong></td><td>SDK、SONiC、网络 OS 集成、可编程(P4)、遥测</td><td><span class="tag tag-up">最深</span></td><td>换芯片要重写一堆软件，客户极不愿动 → <strong>博通碾压</strong></td></tr>
+        <tr style="background:#f0fdf4"><td><strong>⑤ 客户绑定</strong></td><td>design win 多年锁定，进了集群难替换</td><td><span class="tag tag-up">深</span></td><td>在位者通吃</td></tr>
+        <tr><td><strong>② 交换架构</strong></td><td>buffer 架构、调度、拥塞控制、自适应路由、无损网络</td><td><span class="tag tag-warn">深</span></td><td>AI fabric 丢包/负载均衡硬功夫 → 博通(TH+Jericho)、中兴微(OLink)</td></tr>
+        <tr><td><strong>③ SerDes</strong></td><td>高速 I/O、信号完整性</td><td><span class="tag">中</span></td><td>是天花板，但可买 IP 追赶 → 博通、Marvell、Nvidia</td></tr>
+        <tr><td><strong>④ 制程+封装+规模</strong></td><td>拿 TSMC 3nm/CoWoS 产能、每代 R&D 烧几十亿</td><td><span class="tag">中</span></td><td>靠体量 → 博通、Nvidia</td></tr>
+      </tbody>
+    </table>
+    <div style="margin:-8px 0 18px;font-size:11px;color:var(--text2);line-height:1.6">
+      💡 <strong>真正的胜负手是 ①软件生态 + ⑤客户绑定</strong> —— 这才是博通守住 ~70% 份额的根本。SerDes 强只是让你"有资格被考虑"。
+    </div>
+
+    <!-- 商业模式分类 -->
+    <div style="font-size:13px;font-weight:800;color:var(--text);margin:6px 0 8px;padding-left:8px;border-left:3px solid var(--accent)">▍ 核心能力因商业模式而异（别一把尺子量所有人）</div>
+    <table class="ctable" style="margin-bottom:16px">
+      <thead><tr><th style="width:130px">厂商 / 模式</th><th>核心能力命脉</th></tr></thead>
+      <tbody>
+        <tr><td><strong>博通 / Marvell</strong><br><span style="color:var(--text2);font-size:11px">商用芯片</span></td><td>卖给所有人 → <strong>SDK 软件生态 + SerDes + 架构 + 规模</strong></td></tr>
+        <tr><td><strong>Nvidia</strong><br><span style="color:var(--text2);font-size:11px">搭 GPU 卖</span></td><td>交换芯片是 GPU 全家桶的一环 → 核心是 <strong>GPU 主导力 + NVLink 生态锁定</strong>，不靠单卖交换取胜</td></tr>
+        <tr><td><strong>思科</strong><br><span style="color:var(--text2);font-size:11px">搭系统卖</span></td><td><strong>整机系统 + 企业渠道 + 软件</strong>，自研芯片为系统服务</td></tr>
+        <tr><td><strong>盛科 / 中兴微</strong><br><span style="color:var(--text2);font-size:11px">国产替代</span></td><td><strong>国产替代卡位 + 客户深绑 + 追赶速度</strong>，博通供应受限窗口期"能量产+进得了阿里供应链"比"性能对标"更重要</td></tr>
+      </tbody>
+    </table>
+
+    <!-- 三层投资框架 -->
+    <div style="padding:12px 14px;background:#f5f3ff;border:1px solid #c4b5fd;border-radius:8px;font-size:11.5px;color:var(--text);line-height:1.8">
+      <div style="font-size:12px;font-weight:800;color:#5b21b6;margin-bottom:6px">🎯 三层投资判断框架</div>
+      看一家交换芯片厂商，<strong>别只盯 SerDes 速率</strong>（那只是性能参数），要问三层：<br>
+      <strong>① 技术够不够格</strong>（SerDes + 架构）—— 入场券<br>
+      <strong>② 软件生态 / 客户有没有绑死</strong> —— 真护城河<br>
+      <strong>③ 商业模式决定它靠什么赚钱</strong>（单卖芯片 / 搭 GPU / 搭系统 / 国产替代）
+    </div>
+
+  </div>
+</section>
+
+<!-- ====== 六、竞争格局 5 Tab ====== -->
+<section class="sec">
+  <div class="sec-hd" onclick="toggleSec(this)">
+    <div class="sec-ttl"><span class="icon">🏆</span>竞争格局（5 厂商）</div>
+    <span class="sec-arrow">▼</span>
+  </div>
+  <div class="sec-body">
+    <div class="tabs">
+      <button class="tab-btn active" onclick="switchTab('sw','avgo',this)">① Broadcom 统治者</button>
+      <button class="tab-btn" onclick="switchTab('sw','mrvl',this)">② Marvell 追赶 #1</button>
+      <button class="tab-btn" onclick="switchTab('sw','nvda',this)">③ Nvidia 抢份额</button>
+      <button class="tab-btn" onclick="switchTab('sw','csco',this)">④ Cisco 守成</button>
+      <button class="tab-btn" onclick="switchTab('sw','sk',this)">⑤ 盛科通信 国产追赶</button>
+    </div>
+
+    <div id="sw-avgo" class="tab-pane active">
+      <table class="ctable">
+        <thead><tr><th>产品线</th><th>定位</th><th>容量</th><th>状态</th><th>关键客户</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Tomahawk 6</strong></td><td>Scale-out 旗舰</td><td>102.4T</td><td><span class="tag tag-up">2025/6 起量产</span></td><td>首颗 1.6T 端口 + 200G SerDes</td></tr>
+          <tr><td><strong>TH6 / Davisson</strong></td><td>CPO 共封装版</td><td>102.4T</td><td><span class="tag tag-up">出货中</span></td><td>超大规模 hyperscaler 验证</td></tr>
+          <tr><td><strong>Tomahawk 5</strong></td><td>上代 Scale-out</td><td>51.2T</td><td><span class="tag tag-up">出货主力</span></td><td>AWS · Meta · 字节</td></tr>
+          <tr><td><strong>Jericho 3-AI</strong></td><td>深缓存/长距 AI</td><td>14.4T (per chip)</td><td><span class="tag tag-up">量产</span></td><td>AI Fabric 大规模集群</td></tr>
+          <tr><td><strong>Tomahawk-Ultra</strong></td><td>Scale-up 内网</td><td>—</td><td><span class="tag tag-warn">挑战 NVLink</span></td><td>非 Nvidia 阵营</td></tr>
+          <tr><td><strong>Trident</strong></td><td>园区/企业</td><td>12.8T 级别</td><td>存量</td><td>企业网络</td></tr>
+        </tbody>
+      </table>
+      <div style="margin-top:10px;font-size:11.5px;color:var(--text2);line-height:1.6">
+        <strong>FY26Q2 指引</strong>：AI 半导体营收 ~$107 亿（+140% YoY），其中 AI 网络约占 40% ≈ $43 亿/季；全季总营收 ~$220 亿。<strong>2027 展望</strong>：AI 芯片营收破 $1000 亿。<strong>看点</strong>：Tomahawk 6 放量斜率、AWS/Anthropic 定制 ASIC 节奏、UALink 进展。
+      </div>
+    </div>
+
+    <div id="sw-mrvl" class="tab-pane">
+      <table class="ctable">
+        <thead><tr><th>产品线</th><th>定位</th><th>容量</th><th>状态</th><th>备注</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Teralynx 10</strong></td><td>Scale-out 数据中心</td><td>51.2T</td><td><span class="tag tag-up">量产</span></td><td>sub-600ns 延迟｜radix 512｜SONiC</td></tr>
+          <tr><td><strong>102.4T / 1.6T</strong></td><td>下一代</td><td>102.4T (筹备)</td><td><span class="tag tag-warn">追赶 Tomahawk 6</span></td><td>AI 基建竞速中推进</td></tr>
+          <tr><td><strong>Prestera</strong></td><td>企业/园区</td><td>—</td><td>存量</td><td>—</td></tr>
+        </tbody>
+      </table>
+      <div style="margin-top:10px;font-size:11.5px;color:var(--text2);line-height:1.6">
+        <strong>份额</strong>：数据中心交换芯片 ~10-15%，Broadcom 之外主要替代者｜51.2T 年出货量预计冲向 180 万颗（650 Group）｜<strong>看点</strong>：多供应商分散化采购红利、102.4T 产品落地节奏。
+      </div>
+    </div>
+
+    <div id="sw-nvda" class="tab-pane">
+      <table class="ctable">
+        <thead><tr><th>产品线</th><th>定位</th><th>容量</th><th>状态</th><th>备注</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Spectrum-X</strong></td><td>以太网 Scale-out</td><td>800G 主流</td><td><span class="tag tag-up">量产放量</span></td><td>GPU 集群专配</td></tr>
+          <tr><td><strong>Spectrum-XGS</strong></td><td>跨域扩展变体</td><td>—</td><td><span class="tag tag-up">已推出</span></td><td>跨数据中心 scale-across</td></tr>
+          <tr><td><strong>Spectrum-X Photonics</strong></td><td>CPO 共封装光学</td><td>—</td><td><span class="tag">导入中</span></td><td>支撑百万 GPU 级集群</td></tr>
+          <tr><td><strong>Quantum-X</strong></td><td>InfiniBand</td><td>—</td><td>量产</td><td>HPC + AI 训练首选</td></tr>
+          <tr><td><strong>NVLink Switch</strong></td><td>Scale-up 内网</td><td>—</td><td><span class="tag tag-up">独占</span></td><td>柜内 GPU 互联</td></tr>
+        </tbody>
+      </table>
+      <div style="margin-top:10px;font-size:11.5px;color:var(--text2);line-height:1.6">
+        <strong>战略</strong>：GPU + 网络捆绑销售 → 凭 GPU 主导力反向渗透网络。<strong>实际</strong>：网络营收已达 ~$50 亿/季（FY26Q1，环比 +64%、同比 +56%），年化 run-rate 接近 $200 亿，由 Spectrum-X 以太 + NVLink fabric 共同驱动。
+      </div>
+    </div>
+
+    <div id="sw-csco" class="tab-pane">
+      <table class="ctable">
+        <thead><tr><th>产品线</th><th>定位</th><th>容量</th><th>状态</th><th>备注</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Silicon One G200</strong></td><td>Scale-out 数据中心</td><td>51.2T</td><td><span class="tag tag-up">量产</span></td><td>自研，从外购转向内核</td></tr>
+          <tr><td><strong>Silicon One Q200</strong></td><td>路由+交换融合</td><td>—</td><td>量产</td><td>—</td></tr>
+        </tbody>
+      </table>
+      <div style="margin-top:10px;font-size:11.5px;color:var(--text2);line-height:1.6">
+        <strong>看点</strong>：从依赖外购转向自研；但 AI 数据中心份额持续被 Broadcom/Nvidia 蚕食；企业网络基本盘稳固。
+      </div>
+    </div>
+
+    <div id="sw-sk" class="tab-pane">
+      <table class="ctable">
+        <thead><tr><th>产品线</th><th>定位</th><th>容量</th><th>状态</th><th>备注</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Arctic 25.6T</strong></td><td>数据中心/AI 集群</td><td>25.6T</td><td><span class="tag tag-up">量产推广</span></td><td>国产唯一可量产 25.6T，对标博通 TH4</td></tr>
+          <tr><td><strong>51.2T（在研）</strong></td><td>超大规模/AI 超节点</td><td>51.2T</td><td><span class="tag tag-warn">2026H2 小批量</span></td><td>2026/5-6 月回片，对标 TH5，国内领先</td></tr>
+          <tr><td><strong>TsingMa.MX / GoldenGate</strong></td><td>运营商/企业网</td><td>2.4T / 1.2T</td><td><span class="tag tag-up">规模量产</span></td><td>SRv6/FlexE/TSN，成熟创收产品线</td></tr>
+        </tbody>
+      </table>
+      <div style="margin-top:10px;font-size:11.5px;color:var(--text2);line-height:1.6">
+        <strong>大单</strong>：阿里 3 万颗 25.6T 订单约 9 亿元（~3 万元/颗）；2026 三大云厂 25.6T 总需求 ~8 万颗，盛科独供。｜<strong>财务（2026Q1）</strong>：营收 2.48 亿元（+11.4%），预付款 3.96 亿（环比 +82%，订单先行指标）｜<strong>2025 全年</strong>：营收 11.51 亿元（+6.35%），研发 6.79 亿元（占营收 ~59%），归母净利 -1.50 亿元。
+      </div>
+      <div style="margin-top:8px;padding:10px 12px;background:var(--accent-bg);border-left:3px solid var(--accent);border-radius:0 6px 6px 0;font-size:11.5px;color:var(--text);line-height:1.6">
+        <strong>📌 定位</strong>：国产以太网交换龙头，<strong>25.6T 已量产</strong>（对标博通 TH4，代际落后全球 TH6 约 1-2 代但持续追赶）；51.2T 2026H2 小批量是关键里程碑。详见下方 <strong>🇨🇳 国产交换芯片</strong> 模块。
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ====== 六点五、国产交换芯片 ====== -->
+<section class="sec">
+  <div class="sec-hd" onclick="toggleSec(this)">
+    <div class="sec-ttl"><span class="icon">🇨🇳</span>国产交换芯片：十大厂商进展与竞争格局</div>
+    <span class="sec-arrow">▼</span>
+  </div>
+  <div class="sec-body">
+
+    <!-- 驱动力 3 卡片 -->
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px">
+      <div style="padding:12px 14px;border:1px solid #fca5a5;border-radius:8px;background:#fef2f2">
+        <div style="font-size:12px;font-weight:800;color:#b91c1c;margin-bottom:5px">🔥 AI 超节点量产元年</div>
+        <div style="font-size:11px;color:var(--text);line-height:1.6">2026 是国产 AI 超节点量产元年；阿里 / 腾讯 / 字节三家超节点建设计划合计 <strong>&gt;6000 台</strong>，交换芯片是网络「中枢神经」。</div>
+      </div>
+      <div style="padding:12px 14px;border:1px solid #fcd34d;border-radius:8px;background:#fffbeb">
+        <div style="font-size:12px;font-weight:800;color:#92400e;margin-bottom:5px">⛔ 博通供应瓶颈倒逼</div>
+        <div style="font-size:11px;color:var(--text);line-height:1.6">博通 51.2T/102.4T 交期延长至 <strong>52 周以上</strong>；供国内为「残缺版」丢包率高 —— 国产替代核心推力。</div>
+      </div>
+      <div style="padding:12px 14px;border:1px solid #6ee7b7;border-radius:8px;background:#f0fdf4">
+        <div style="font-size:12px;font-weight:800;color:#047857;margin-bottom:5px">📈 三年 CAGR ~96%</div>
+        <div style="font-size:11px;color:var(--text);line-height:1.6">2028 年国产交换芯片市场规模有望达 <strong>242 亿元</strong>，2026-2028 年均复合增速近 <strong>100%</strong>。</div>
+      </div>
+    </div>
+
+    <!-- 竞争梯队总览 -->
+    <div style="font-size:13px;font-weight:800;color:var(--text);margin:6px 0 8px;padding-left:8px;border-left:3px solid var(--accent)">▍ 竞争梯队总览</div>
+    <table class="ctable" style="margin-bottom:18px">
+      <thead><tr><th>梯队</th><th>厂商</th><th>核心产品线</th><th>最高容量<br>(量产/在研)</th><th>状态</th><th>核心客户/生态</th><th>技术路线</th></tr></thead>
+      <tbody>
+        <tr style="background:#f0fdf4"><td rowspan="2" style="font-weight:800;color:#047857;vertical-align:middle">第一梯队</td><td><strong>盛科通信</strong> 688702</td><td>Arctic · TsingMa.MX</td><td>25.6T / 51.2T</td><td><span class="tag tag-up">25.6T 量产推广</span></td><td>阿里·腾讯·字节</td><td>以太网 (Scale out/up)</td></tr>
+        <tr style="background:#f0fdf4"><td><strong>中兴微电子</strong> 000063</td><td>凌云 · 天屹</td><td>51.2T / —</td><td><span class="tag tag-up">51.2T 量产商用</span></td><td>中兴体系内 + 部分外部</td><td>以太网/私有协议 (Scale up)</td></tr>
+        <tr style="background:#f5f3ff"><td style="font-weight:800;color:#5b21b6;vertical-align:middle">特殊</td><td><strong>华为</strong>(自研自用)</td><td>CloudEngine · UB Switch</td><td>51.2T / 102.4T</td><td><span class="tag">自研自用</span></td><td>华为昇腾体系</td><td>以太网/私有协议 (Scale out/up)</td></tr>
+        <tr style="background:#eff6ff"><td rowspan="4" style="font-weight:800;color:#1d4ed8;vertical-align:middle">第二梯队</td><td><strong>数渡科技</strong> 600246</td><td>SD85000 系列</td><td>PCIe5.0 104→144 通道</td><td><span class="tag tag-up">104 通道量产</span></td><td>华为昇腾·阿里云磐久</td><td>PCIe (Scale up)</td></tr>
+        <tr style="background:#eff6ff"><td><strong>云合智网</strong>(未上市)</td><td>CLX86 · CLX84</td><td>12.8T / 25.6T</td><td><span class="tag tag-up">12.8T 量产</span></td><td>菲菱科思等设备商</td><td>以太网 (Scale out)</td></tr>
+        <tr style="background:#eff6ff"><td><strong>楠菲微电子</strong>(未上市)</td><td>ES8000 系列</td><td>8.0T / 28.8T</td><td><span class="tag tag-up">8.0T 量产</span></td><td>运营商·企业网</td><td>以太网/UALink (Scale up)</td></tr>
+        <tr style="background:#eff6ff"><td><strong>芯动科技</strong>(未上市)</td><td>PCIe Gen5 Switch</td><td>PCIe5.0 120 通道</td><td><span class="tag tag-warn">已发布适配中</span></td><td>国产服务器厂商</td><td>PCIe (Scale up)</td></tr>
+        <tr style="background:#f8fafc"><td rowspan="3" style="font-weight:800;color:var(--text2);vertical-align:middle">第三梯队</td><td><strong>裕太微</strong> 688515</td><td>YT9230 系列</td><td>千兆级 / 25.6T</td><td><span class="tag tag-up">千兆级量产</span></td><td>运营商·企业·工业</td><td>以太网 (中低端)</td></tr>
+        <tr style="background:#f8fafc"><td><strong>篆芯半导体</strong>(未上市)</td><td>兰亭系列</td><td>— / 12.8T</td><td><span class="tag tag-warn">流片中</span></td><td>锐捷网络等</td><td>以太网 (Scale out)</td></tr>
+        <tr style="background:#f8fafc"><td><strong>众星微</strong>(未上市)</td><td>— </td><td>— / 32T (IB-like)</td><td><span class="tag tag-gray">研发中</span></td><td>—</td><td>IB-like/PCIe/UALink (Scale up)</td></tr>
+      </tbody>
+    </table>
+
+    <!-- 参数对照表 -->
+    <div style="font-size:13px;font-weight:800;color:var(--text);margin:6px 0 8px;padding-left:8px;border-left:3px solid var(--accent)">▍ 国产交换芯片参数对照（截至 2026-06）</div>
+    <table class="ctable" style="margin-bottom:18px">
+      <thead><tr><th>厂商 · 型号</th><th>类型</th><th>容量</th><th>端口速率</th><th>制程</th><th>状态</th><th>对标 / 备注</th></tr></thead>
+      <tbody>
+        <tr style="background:#fff7ed"><td colspan="7" style="font-size:11px;font-weight:700;color:var(--accent);padding:5px 8px">🟢 盛科通信 688702 — 国产以太网交换龙头</td></tr>
+        <tr><td><strong>Arctic 25.6T</strong></td><td>以太网</td><td>25.6T</td><td>800G</td><td>先进制程</td><td><span class="tag tag-up">量产推广</span></td><td>对标 TH4/TL8/G100｜国产 25.6T 独家</td></tr>
+        <tr><td><strong>Arctic 12.8T</strong></td><td>以太网</td><td>12.8T</td><td>800G</td><td>先进制程</td><td><span class="tag tag-up">量产</span></td><td>对标 Tomahawk 3｜安全/可视/可编程</td></tr>
+        <tr><td><strong>TsingMa.MX CTC8180</strong></td><td>以太网</td><td>2.4T</td><td>400G</td><td>—</td><td><span class="tag tag-up">规模量产</span></td><td>对标 BCM56770｜SRv6/FlexE/TSN</td></tr>
+        <tr><td><strong>GoldenGate CTC8096</strong></td><td>以太网</td><td>1.2T</td><td>100G</td><td>—</td><td><span class="tag tag-up">规模量产</span></td><td>可视化 + 无损网络</td></tr>
+        <tr><td><strong>51.2T（在研）</strong></td><td>以太网</td><td>51.2T</td><td>800G</td><td>—</td><td><span class="tag tag-warn">2026H2 小批量</span></td><td>对标 TH5｜2026/5-6 月回片，国内领先</td></tr>
+        <tr style="background:#eff6ff"><td colspan="7" style="font-size:11px;font-weight:700;color:#1d4ed8;padding:5px 8px">🔵 中兴微电子 000063 — 全栈自研，Scale up 先行</td></tr>
+        <tr><td><strong>凌云 (Scale up)</strong></td><td>AI 交换(私有)</td><td>51.2T</td><td>800G</td><td>先进制程</td><td><span class="tag tag-up">量产商用</span></td><td>对标 NVSwitch｜国内首款 51.2T AI 交换，万卡级</td></tr>
+        <tr><td><strong>天屹 S501 (Scale out)</strong></td><td>以太网</td><td>12.8T</td><td>400G</td><td>—</td><td><span class="tag tag-up">批量出货</span></td><td>对标 Tomahawk 3</td></tr>
+        <tr><td><strong>天屹 S301 (Scale out)</strong></td><td>以太网</td><td>2.8T</td><td>—</td><td>—</td><td><span class="tag tag-up">批量出货</span></td><td>中低端数据中心</td></tr>
+        <tr style="background:#f5f3ff"><td colspan="7" style="font-size:11px;font-weight:700;color:#5b21b6;padding:5px 8px">🟣 华为 — 自研自用，生态封闭</td></tr>
+        <tr><td><strong>51.2T 交换芯片</strong></td><td>以太网</td><td>51.2T</td><td>400G</td><td>—</td><td><span class="tag">自研自用</span></td><td>对标 TH5｜CloudEngine XH9230 液冷｜128×400GE</td></tr>
+        <tr><td><strong>UB Switch (Scale up)</strong></td><td>AI 互联</td><td>19.2T</td><td>400G</td><td>—</td><td><span class="tag">自研自用</span></td><td>对标 NVSwitch｜CM384 超节点｜384 GPU 互联</td></tr>
+        <tr style="background:#f0fdf4"><td colspan="7" style="font-size:11px;font-weight:700;color:#047857;padding:5px 8px">🟢 PCIe Switch（Scale up 柜内）</td></tr>
+        <tr><td><strong>数渡 SD85104</strong> 600246</td><td>PCIe 5.0</td><td>128GT/s · 104 lane</td><td>32GT/s/Lane</td><td>12nm</td><td><span class="tag tag-up">量产商用</span></td><td>对标博通 PEX｜国内唯一量产 PCIe5.0｜延迟&lt;100ns</td></tr>
+        <tr><td><strong>数渡 SD85144</strong> 600246</td><td>PCIe 5.0</td><td>144 lane</td><td>32GT/s/Lane</td><td>—</td><td><span class="tag tag-warn">已投片</span></td><td>FabricLink｜绑定华为昇腾/阿里云</td></tr>
+        <tr><td><strong>芯动 120 通道</strong></td><td>PCIe 5.0</td><td>120 lane</td><td>32GT/s/Lane</td><td>—</td><td><span class="tag tag-warn">已发布</span></td><td>对标博通 PEX｜全球首款 120 通道 Gen5｜延迟 115ns</td></tr>
+        <tr style="background:#f8fafc"><td colspan="7" style="font-size:11px;font-weight:700;color:var(--text2);padding:5px 8px">⚪ 其他厂商</td></tr>
+        <tr><td><strong>云合 CLX850128</strong></td><td>以太网</td><td>12.8T</td><td>400G</td><td>—</td><td><span class="tag tag-up">量产</span></td><td>支持 SONiC｜25.6T 在研（2026 底流片）</td></tr>
+        <tr><td><strong>楠菲 ES8000</strong></td><td>以太网</td><td>8.0T</td><td>400G</td><td>14nm</td><td><span class="tag tag-up">量产</span></td><td>FCBGA｜基于 UALink 研发 28.8T（在研）</td></tr>
+        <tr><td><strong>众星微 32T IB 方案</strong></td><td>类 InfiniBand</td><td>32T</td><td>400G</td><td>—</td><td><span class="tag tag-gray">研发完成</span></td><td>112G PAM4｜同时布局 PCIe/UALink</td></tr>
+        <tr><td><strong>裕太微 YT9230</strong> 688515</td><td>以太网(集成PHY)</td><td>千兆级</td><td>1GE</td><td>国产制程</td><td><span class="tag tag-up">量产</span></td><td>MAC+PHY 全国产｜25.6T 在研（2027）</td></tr>
+        <tr><td><strong>篆芯 兰亭</strong></td><td>以太网</td><td>12.8T</td><td>—</td><td>—</td><td><span class="tag tag-warn">流片中</span></td><td>锐捷网络参股</td></tr>
+      </tbody>
+    </table>
+
+    <!-- 重点公司速览 -->
+    <div style="font-size:13px;font-weight:800;color:var(--text);margin:6px 0 8px;padding-left:8px;border-left:3px solid var(--accent)">▍ 重点公司速览</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:18px">
+      <div style="padding:12px 14px;border:1px solid #6ee7b7;border-radius:8px;background:#f0fdf4">
+        <div style="font-size:13px;font-weight:800;color:#047857;margin-bottom:6px">盛科通信 688702 <span class="tag tag-up" style="margin-left:4px">龙头</span></div>
+        <div style="font-size:11px;color:var(--text);line-height:1.7">
+          · <strong>独家卡位</strong>：国内唯一可量产 25.6T 商用交换芯片<br>
+          · <strong>大单</strong>：阿里 3 万颗 25.6T 订单，约 <strong>9 亿元</strong>（~3 万元/颗）<br>
+          · <strong>市场</strong>：2026 三大云厂 25.6T 总需求 ~8 万颗，盛科独供<br>
+          · <strong>财务</strong>：2025 营收 11.51 亿(+6.35%)，研发 6.79 亿(占营收 59%)，净利 -1.50 亿；26Q1 营收 2.48 亿(+11.4%)，预付款 3.96 亿环比+82%（订单先行指标）<br>
+          · <strong>券商预测</strong>：2026-28 营收 18.3/26.7/39.6 亿，2026 盈利拐点；买方看 2027 目标市值 1500 亿+
+        </div>
+      </div>
+      <div style="padding:12px 14px;border:1px solid #93c5fd;border-radius:8px;background:#eff6ff">
+        <div style="font-size:13px;font-weight:800;color:#1d4ed8;margin-bottom:6px">中兴微电子 000063 <span class="tag" style="margin-left:4px">Scale up 先行</span></div>
+        <div style="font-size:11px;color:var(--text);line-height:1.7">
+          · <strong>旗舰</strong>：凌云 51.2T，国内首款 51.2T AI 交换，量产商用<br>
+          · <strong>架构</strong>：自研 OLink 私有协议，端到端时延降至百纳秒级，对标 NVSwitch<br>
+          · <strong>系统</strong>：支撑中兴 Nebula 超节点，万卡~十万卡级<br>
+          · <strong>份额</strong>：预计 2027 Scale up 芯片 ~10 万颗<br>
+          · <strong>风险</strong>：整机与互联网大厂竞争，限制对外独立销售空间
+        </div>
+      </div>
+      <div style="padding:12px 14px;border:1px solid #c4b5fd;border-radius:8px;background:#f5f3ff">
+        <div style="font-size:13px;font-weight:800;color:#5b21b6;margin-bottom:6px">数渡科技 600246 <span class="tag tag-warn" style="margin-left:4px">PCIe 唯一量产</span></div>
+        <div style="font-size:11px;color:var(--text);line-height:1.7">
+          · <strong>稀缺</strong>：国内唯一量产 PCIe 5.0 交换芯片（SD85104）<br>
+          · <strong>技术</strong>：FabricLink GPU 直连绕开 CPU，功耗低海外 15%<br>
+          · <strong>客户</strong>：华为昇腾 950 + 阿里云磐久 AL128<br>
+          · <strong>订单</strong>：26Q1 新增 &gt;2 亿，产能 5 万→15 万颗/月<br>
+          · <strong>对赌</strong>：2026/27/28 营收不低于 6/12/16 亿；治理风险需注意
+        </div>
+      </div>
+      <div style="padding:12px 14px;border:1px solid #fcd34d;border-radius:8px;background:#fffbeb">
+        <div style="font-size:13px;font-weight:800;color:#92400e;margin-bottom:6px">华为 <span class="tag" style="margin-left:4px">自研自用</span></div>
+        <div style="font-size:11px;color:var(--text);line-height:1.7">
+          · <strong>技术</strong>：51.2T 已量产 + 102.4T 盒式交换机已发布，代际领先<br>
+          · <strong>Scale up</strong>：UB Switch 19.2T，CM384 超节点 384 GPU 互联<br>
+          · <strong>模式</strong>：芯片完全自研自用，不对外供应，靠整机 + 昇腾生态<br>
+          · <strong>挑战</strong>：先进制程获取仍是长期约束
+        </div>
+      </div>
+    </div>
+
+    <!-- 催化节点时间表 -->
+    <div style="font-size:13px;font-weight:800;color:var(--text);margin:6px 0 8px;padding-left:8px;border-left:3px solid var(--accent)">▍ 2026 关键催化节点</div>
+    <table class="ctable" style="margin-bottom:16px">
+      <thead><tr><th style="width:90px">时间</th><th>厂商</th><th>事件</th><th>影响</th></tr></thead>
+      <tbody>
+        <tr><td>2026 Q2</td><td>数渡科技</td><td>产能提升至 15 万颗/月</td><td>验证下游需求强度与交付能力</td></tr>
+        <tr><td>2026 H1</td><td>盛科通信</td><td>51.2T 芯片回片测试</td><td>国产最高速率以太网芯片关键里程碑</td></tr>
+        <tr><td>2026 H2</td><td>盛科通信</td><td>51.2T 芯片小批量供货</td><td>开始贡献收入，拉开与追赶者差距</td></tr>
+        <tr><td>2026 底</td><td>云合智网</td><td>25.6T 芯片流片</td><td>国产 25.6T 市场迎来第二家供应商</td></tr>
+        <tr><td>2026 全年</td><td>全行业</td><td>阿里/腾讯/字节超节点规模化部署</td><td>验证国产芯片真实大规模场景性能与稳定性</td></tr>
+      </tbody>
+    </table>
+
+    <!-- 风险提示 -->
+    <div style="padding:11px 14px;background:#fef2f2;border:1px solid #fca5a5;border-radius:8px;font-size:11px;color:var(--text);line-height:1.7">
+      ⚠️ <strong style="color:#b91c1c">风险提示</strong>：① <strong>技术代差</strong> —— 与海外仍差约 1-2 代（博通 TH6 已 102.4T）；② <strong>先进制程依赖</strong> —— 25.6T+ 普遍需 7nm 及以下，仍依赖台积电；③ <strong>商业化进度</strong> —— 流片成功到大规模应用需漫长验证；④ <strong>竞争加剧</strong> —— 高端涌入或引发价格竞争。
+    </div>
+
+  </div>
+</section>
+
+<!-- ====== 国产交换芯片量价模型 ====== -->
+<section class="sec">
+  <div class="sec-hd" onclick="toggleSec(this)">
+    <div class="sec-ttl"><span class="icon">🏗️</span>国产交换芯片量价模型</div>
+    <span class="sec-arrow">▼</span>
+  </div>
+  <div class="sec-body">
+
+    <!-- 一句话 -->
+    <div style="padding:12px 14px;background:var(--accent-bg);border-left:3px solid var(--accent);border-radius:0 6px 6px 0;margin-bottom:12px;font-size:12px;line-height:1.7;color:var(--text)">
+      <strong>超节点是国产交换芯片最直接的需求方</strong>：每台超节点 = 固定数量的交换芯片（= 交换节点数）。<strong>超节点台数 × 单台交换芯片数 = 交换芯片需求</strong>。模型从超节点出发，再外推到非超节点 GPU，得到国产交换芯片全口径量价。
+    </div>
+
+    <!-- 单价 + 假设 -->
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px">
+      <div style="padding:8px 14px;background:#fff7ed;border:1px solid var(--accent2);border-radius:8px;font-size:11.5px"><strong style="color:var(--accent)">25.6T</strong> = <strong>3 万元/颗</strong></div>
+      <div style="padding:8px 14px;background:#fff7ed;border:1px solid var(--accent2);border-radius:8px;font-size:11.5px"><strong style="color:var(--accent)">51.2T</strong> = <strong>6.6 万元/颗</strong></div>
+      <div style="padding:8px 14px;background:#eff6ff;border:1px solid #93c5fd;border-radius:8px;font-size:11.5px">假设 <strong>国产 GPU 全年出货 400 万颗</strong></div>
+    </div>
+
+    <!-- 三大厂商超节点对比 -->
+    <div style="font-size:13px;font-weight:800;color:var(--text);margin:6px 0 8px;padding-left:8px;border-left:3px solid var(--accent)">▍ 三大厂商超节点规划（2026）</div>
+    <table class="ctable" style="margin-bottom:16px">
+      <thead><tr><th>厂商</th><th>超节点（GPU 数）</th><th>组网方案</th><th>交换芯片</th><th>2026 量产</th><th>2027 演进</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><strong>阿里</strong></td>
+          <td>盘古 128（<strong>128 卡</strong>）</td>
+          <td>32 计算节点（4 卡/节点）+ <strong>16 交换节点</strong>（400G 组网）</td>
+          <td>51.2T → <span class="tag tag-warn">2×25.6T 拼接</span>（博通缺货）</td>
+          <td><strong>1800-2000 台</strong></td>
+          <td>256 卡超节点</td>
+        </tr>
+        <tr>
+          <td><strong>腾讯</strong></td>
+          <td>ETH-64（<strong>64 卡</strong>）</td>
+          <td><strong>12 交换节点</strong>（现散热限制启用 8，5 月后满配 12）</td>
+          <td>51.2T → <span class="tag tag-warn">25.6T 拼接</span></td>
+          <td><strong>2300-2400 台</strong></td>
+          <td>72 卡 / 144 卡并行</td>
+        </tr>
+        <tr>
+          <td><strong>字节</strong></td>
+          <td>大禹整机柜(<strong>72 卡</strong>)</td>
+          <td>18 计算节点（4 卡/节点）+ <strong>12 交换节点</strong></td>
+          <td>51.2T 标配</td>
+          <td><strong>1800 台</strong></td>
+          <td>144 卡 / 168 卡</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- 量价测算 -->
+    <div style="font-size:13px;font-weight:800;color:var(--text);margin:6px 0 8px;padding-left:8px;border-left:3px solid var(--accent)">▍ 量价测算：超节点 → 交换芯片需求（2026E）</div>
+    <table class="ctable" style="margin-bottom:14px">
+      <thead><tr><th>厂商</th><th class="num">2026 台数</th><th class="num">单台 GPU</th><th class="num">= GPU 需求</th><th class="num">单台交换芯片</th><th class="num">= 交换芯片需求</th><th class="num">GPU:交换芯片</th></tr></thead>
+      <tbody>
+        <tr><td><strong>阿里</strong></td><td class="num">~1,900</td><td class="num">128</td><td class="num"><strong>~24.3 万</strong></td><td class="num">16</td><td class="num"><strong>~30,400</strong></td><td class="num">8:1</td></tr>
+        <tr><td><strong>腾讯</strong></td><td class="num">~2,350</td><td class="num">64</td><td class="num"><strong>~15.0 万</strong></td><td class="num">12（满配）</td><td class="num"><strong>~28,200</strong></td><td class="num">≈5:1</td></tr>
+        <tr><td><strong>字节</strong></td><td class="num">~1,800</td><td class="num">72</td><td class="num"><strong>~13.0 万</strong></td><td class="num">12</td><td class="num"><strong>~21,600</strong></td><td class="num">6:1</td></tr>
+        <tr style="background:#fff7ed;font-weight:700"><td>合计</td><td class="num">~6,050 台</td><td class="num">—</td><td class="num" style="color:#1d4ed8">~52.3 万颗 GPU</td><td class="num">—</td><td class="num" style="color:var(--accent)">~8 万颗</td><td class="num">—</td></tr>
+      </tbody>
+    </table>
+    <div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:16px">
+      <div style="flex:1;min-width:200px;padding:11px 13px;border:1px solid #6ee7b7;border-radius:8px;background:#f0fdf4">
+        <div style="font-size:11px;font-weight:800;color:#047857;margin-bottom:3px">✓ 与公开数据对照</div>
+        <div style="font-size:11px;line-height:1.6">推算 ~8 万颗 ≈ 公开"2026 三大云厂 25.6T 需求 ~8 万颗"，<strong>自洽对上</strong>。</div>
+      </div>
+      <div style="flex:1;min-width:200px;padding:11px 13px;border:1px solid var(--accent2);border-radius:8px;background:var(--accent-bg)">
+        <div style="font-size:11px;font-weight:800;color:var(--accent);margin-bottom:3px">💰 超节点价值量</div>
+        <div style="font-size:11px;line-height:1.6">~8 万颗 × 3 万元（25.6T 拼接）≈ <strong>24 亿元</strong>；若用 51.2T：4 万颗 × 6.6 万 ≈ 26.4 亿元（拼接使国产颗数翻倍）。</div>
+      </div>
+    </div>
+
+    <!-- 全口径：超节点 + 非超节点 -->
+    <div style="font-size:13px;font-weight:800;color:var(--text);margin:6px 0 8px;padding-left:8px;border-left:3px solid var(--accent)">▍ 全口径外推：从 400 万颗国产 GPU 看交换芯片总盘</div>
+    <table class="ctable" style="margin-bottom:8px">
+      <thead><tr><th>口径</th><th class="num">GPU(万颗)</th><th class="num">占比</th><th class="num">配比(GPU:交换)</th><th class="num">交换芯片(万颗)</th><th class="num">芯片占比</th><th class="num">价值量(25.6T 口径)</th></tr></thead>
+      <tbody>
+        <tr style="background:#fef2f2"><td><strong>超节点</strong>（密集 scale-up）</td><td class="num">52.3</td><td class="num">13%</td><td class="num">~6.5:1</td><td class="num"><strong>~8.0</strong></td><td class="num" style="color:#b91c1c;font-weight:700">~40%</td><td class="num">~24 亿</td></tr>
+        <tr style="background:#eff6ff"><td><strong>非超节点</strong>（稀疏 scale-out）</td><td class="num">347.7</td><td class="num">87%</td><td class="num">~30:1（估）</td><td class="num"><strong>~11.6</strong></td><td class="num">~60%</td><td class="num">~35 亿（估）</td></tr>
+        <tr style="background:#fff7ed;font-weight:700"><td>合计</td><td class="num" style="color:#1d4ed8">400</td><td class="num">100%</td><td class="num">~20:1</td><td class="num" style="color:var(--accent)">~20</td><td class="num">100%</td><td class="num" style="color:var(--accent)">~59 亿</td></tr>
+      </tbody>
+    </table>
+    <div style="padding:11px 13px;background:#f5f3ff;border:1px solid #c4b5fd;border-radius:8px;margin-bottom:16px;font-size:11.5px;color:var(--text);line-height:1.7">
+      🔑 <strong style="color:#5b21b6">核心反差</strong>：超节点只占 <strong>13% 的 GPU，却贡献 ~40% 的交换芯片需求</strong>——用芯密集度是普通部署的 ~5 倍。<br>
+      → <strong>交换芯片弹性主要看超节点渗透率，而非 GPU 总量</strong>：同样 400 万颗 GPU，若超节点占比从 13% 提到 30%，交换芯片需求显著跳升。这也是盛科卡位"超节点 25.6T 独供"价值最大的原因（吃最密集、单价最高的那块）。
+    </div>
+
+    <!-- 盛科弹性测算计算器 -->
+    <div class="centec-calc" style="border:1.5px solid #6ee7b7;border-radius:10px;background:#f0fdf4;padding:14px 16px;margin-bottom:16px">
+      <div style="font-size:13px;font-weight:800;color:#047857;margin-bottom:4px;display:flex;align-items:center;gap:6px;flex-wrap:wrap">
+        🧮 盛科通信 688702 · 弹性测算计算器（2028E）<span class="tag tag-warn" style="font-weight:700">参数可调</span>
+      </div>
+      <div style="font-size:11.5px;color:var(--text);line-height:1.7;margin-bottom:8px">
+        <strong>国内稀缺的纯高端交换芯片龙头</strong>：2026 年 25.6T 放量，51.2T 逐步出货，2027 年 51.2T 持续放量。<span style="color:var(--text2)">↓ 选场景或手动改参数，实时更新。</span>
+      </div>
+
+      <!-- 场景切换 -->
+      <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:6px">
+        <span style="font-size:11px;font-weight:700;color:var(--text2)">预设场景：</span>
+        <button class="scn-btn" data-scn="bear" onclick="setScn('bear',this)">🐻 悲观</button>
+        <button class="scn-btn" data-scn="base" onclick="setScn('base',this)">⚖️ 中性</button>
+        <button class="scn-btn scn-active" data-scn="bull" onclick="setScn('bull',this)">🚀 乐观</button>
+      </div>
+
+      <!-- 输入区 -->
+      <div class="calc">
+        <label>① 国内 GPU/ASIC 出货(万颗)<input data-f="gpu" type="number" value="1200" oninput="calcCentec(this.closest('.centec-calc'))"></label>
+        <label>② 超节点渗透率(%)<input data-f="pen" type="number" value="50" oninput="calcCentec(this.closest('.centec-calc'))"></label>
+        <label>③ 超节点配比(1颗交换:N GPU)<input data-f="ratio" type="number" value="6" oninput="calcCentec(this.closest('.centec-calc'))"></label>
+        <label>④ 交换芯片单价(万元/颗)<input data-f="price" type="number" value="6" step="0.1" oninput="calcCentec(this.closest('.centec-calc'))"></label>
+        <label>⑤ 盛科市占率(%)<input data-f="share" type="number" value="30" oninput="calcCentec(this.closest('.centec-calc'))"></label>
+        <label>⑥ 盛科净利率(%)<input data-f="margin" type="number" value="40" oninput="calcCentec(this.closest('.centec-calc'))"></label>
+        <label>⑦ PE 倍数<input data-f="pe" type="number" value="30" oninput="calcCentec(this.closest('.centec-calc'))"></label>
+        <label>⑧ 当前市值(亿元)<input data-f="mcap" type="number" value="1200" oninput="calcCentec(this.closest('.centec-calc'))"></label>
+      </div>
+
+      <!-- 中间过程 -->
+      <div class="calc-flow" style="margin-bottom:8px">
+        <div class="calc-cell"><div class="lbl">超节点 GPU</div><div class="val"><span data-o="snGpu">—</span> 万颗</div></div>
+        <span class="calc-op">→</span>
+        <div class="calc-cell"><div class="lbl">超节点交换芯片</div><div class="val"><span data-o="chips">—</span> 万颗</div></div>
+        <span class="calc-op">→</span>
+        <div class="calc-cell"><div class="lbl">盛科销量(市占)</div><div class="val"><span data-o="skChips">—</span> 万颗</div></div>
+        <span class="calc-op">→</span>
+        <div class="calc-cell"><div class="lbl">盛科营收</div><div class="val"><span data-o="rev">—</span> 亿</div></div>
+      </div>
+
+      <!-- 结果区 -->
+      <div class="calc-flow">
+        <div class="calc-cell"><div class="lbl">盛科净利润</div><div class="val" style="color:#047857"><span data-o="profit">—</span> 亿</div></div>
+        <span class="calc-op">× PE =</span>
+        <div class="calc-cell hl"><div class="lbl">目标市值</div><div class="val"><span data-o="target">—</span> 亿</div></div>
+        <span class="calc-op">vs 当前</span>
+        <div class="calc-cell up"><div class="lbl">上行空间</div><div class="val"><span data-o="upside">—</span></div></div>
+      </div>
+
+      <div style="margin-top:10px;font-size:10px;color:var(--text2);line-height:1.5">
+        ⚠️ 弹性/上行情景测算，非中性预期。公式：GPU出货 × 渗透率 ÷ 配比 × 市占率 × 单价 = 营收；× 净利率 = 净利润；× PE = 目标市值。默认乐观场景（单价 6 万 / PE 30）≈ 72 亿利润 / 2160 亿市值 / +80% 空间。配比默认 6（超节点 1 颗交换芯片对应 ~6 GPU，源自本模型）。
+      </div>
+    </div>
+
+    <!-- 关键洞察 -->
+    <div style="font-size:13px;font-weight:800;color:var(--text);margin:6px 0 8px;padding-left:8px;border-left:3px solid var(--accent)">▍ 三个量价关键点</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:6px">
+      <div style="padding:11px 13px;background:#fff;border:1px solid var(--border);border-left:3px solid #dc2626;border-radius:0 6px 6px 0">
+        <div style="font-size:11px;font-weight:800;color:#dc2626;margin-bottom:3px">① 拼接反而利好国产</div>
+        <div style="font-size:11px;line-height:1.55">博通 51.2T 缺货 → <strong>2 颗 25.6T 替 1 颗 51.2T</strong> → 芯片用量翻倍 → 盛科 25.6T 独家直接受益（阿里 3 万颗/9 亿订单已落地）。</div>
+      </div>
+      <div style="padding:11px 13px;background:#fff;border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:0 6px 6px 0">
+        <div style="font-size:11px;font-weight:800;color:var(--accent);margin-bottom:3px">② 2027 演进再上台阶</div>
+        <div style="font-size:11px;line-height:1.55">256 卡（阿里）/ 144-168 卡（字节）/ 72-144 卡（腾讯）→ <strong>单超节点 GPU 翻倍</strong> → 交换芯片需求再上一个台阶。</div>
+      </div>
+      <div style="padding:11px 13px;background:#fff;border:1px solid var(--border);border-left:3px solid #16a34a;border-radius:0 6px 6px 0">
+        <div style="font-size:11px;font-weight:800;color:#16a34a;margin-bottom:3px">③ 万卡 → 10 万卡</div>
+        <div style="font-size:11px;line-height:1.55">三大厂已启动万卡集群，后续按大模型需求向 <strong>10 万卡级</strong>演进，超节点是核心需求方，交换芯片量价齐升。</div>
+      </div>
+    </div>
+    <div style="margin-top:10px;font-size:10.5px;color:var(--text2);line-height:1.6">
+      📎 <strong>假设与口径</strong>：① 国产 GPU 全年 400 万颗为假设值；② 超节点台数为厂商 2026 规划，颗数按"交换节点数 × 台数"推算（~8 万颗与公开 25.6T 需求吻合）；③ <strong>非超节点 1:30 配比为估算</strong>（scale-out 稀疏区间 1:20~50，是最大不确定项，实际随训练/推理结构变化）；④ 价值量按 25.6T=3 万元/颗（盛科阿里订单单价）测算，非超节点若用低端芯片实际更低；⑤ 超节点 GPU:交换芯片（5-8:1）高于 NVL72 的 4:1，因国产用 400G 以太组网，单卡网络含硅量低于 NVLink。
+    </div>
+
+  </div>
+</section>
+
+<!-- ====== 催化剂跟踪 ====== -->
+<section class="sec">
+  <div class="sec-hd" onclick="toggleSec(this)">
+    <div class="sec-ttl"><span class="icon">🚀</span>催化剂跟踪</div>
+    <span class="sec-arrow">▼</span>
+  </div>
+  <div class="sec-body">
+    <table class="ctable">
+      <thead><tr><th style="width:120px">时间</th><th>催化事件</th><th>影响标的</th></tr></thead>
+      <tbody>
+        <tr style="opacity:.6"><td>2025/6 ✓</td><td>Broadcom Tomahawk 6（102.4T）量产出货（含 CPO 版 Davisson）<span class="tag tag-up" style="margin-left:4px">已兑现</span></td><td>AVGO · 中际旭创 · 新易盛</td></tr>
+        <tr><td>2026H2</td><td>Tomahawk 6 放量斜率 + 1.6T 光模块进入放量窗口</td><td>AVGO · 光模块全链</td></tr>
+        <tr><td>2026H2</td><td>Nvidia Spectrum-X Photonics（CPO）规模导入</td><td>NVDA · 光模块全链</td></tr>
+        <tr><td>持续</td><td>AVGO / MRVL / NVDA 季报网络业务收入和指引</td><td>对标标的估值</td></tr>
+        <tr><td>持续</td><td>UALink 1.0 量产芯片首发、AWS/Meta 自研 GPU + UEC 集群部署比例</td><td>反 Nvidia 联盟进展</td></tr>
+        <tr><td>持续</td><td>盛科通信季报（26Q1 营收 2.48 亿）、新品发布</td><td>688702</td></tr>
+        <tr><td>政策</td><td>美对华高端交换芯片出口管制是否扩围</td><td>国产替代催化</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ====== 九、当前判断 ====== -->
+<section class="sec">
+  <div class="sec-hd" onclick="toggleSec(this)">
+    <div class="sec-ttl"><span class="icon">🎯</span>当前判断 + 证伪清单</div>
+    <span class="sec-arrow">▼</span>
+  </div>
+  <div class="sec-body">
+    <h4 style="font-size:13px;font-weight:800;margin-bottom:10px">三种情景</h4>
+    <table class="ctable" style="margin-bottom:14px">
+      <thead><tr><th style="width:80px">情景</th><th>触发条件</th><th>投资含义</th></tr></thead>
+      <tbody>
+        <tr><td><span class="tag">基准</span></td><td>102.4T（Tomahawk 6）顺利放量，51.2T 仍贡献主力出货</td><td>Broadcom 持续受益，光模块 1.6T 联动放量</td></tr>
+        <tr><td><span class="tag tag-up">乐观</span></td><td>Nvidia 网络 run-rate 突破 $200 亿持续加速 + CPO 规模导入</td><td>NVDA 网络+GPU 全家桶估值再上</td></tr>
+        <tr><td><span class="tag tag-dn">悲观</span></td><td>云厂自研 ASIC（AWS Trainium 等）rack 层去 Broadcom 化，AI 营收预期下修（已现 $62.5B→$55B 苗头）</td><td>AVGO 估值收缩</td></tr>
+      </tbody>
+    </table>
+
+    <h4 style="font-size:13px;font-weight:800;margin-bottom:10px">证伪清单</h4>
+    <table class="ctable">
+      <thead><tr><th style="width:60px">编号</th><th>证伪条件</th><th>严重程度</th></tr></thead>
+      <tbody>
+        <tr><td>F1</td><td>AVGO 网络部门收入连续两季 QoQ 下滑</td><td><span class="tag tag-warn">🟡 警示</span></td></tr>
+        <tr><td>F2</td><td>Nvidia Spectrum-X 增速跌破 30%</td><td><span class="tag tag-warn">🟡 警示</span></td></tr>
+        <tr><td>F3</td><td>Tomahawk 6 放量斜率不及预期，1.6T 光模块联动滞后</td><td><span class="tag tag-dn">🟠 较强</span></td></tr>
+        <tr><td>F4</td><td>盛科营收停滞、亏损扩大，下一代代际突破失败</td><td><span class="tag tag-dn">🟠 较强</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+</div>
+
+<div class="foot">
+  TMT 研究看板系统 · 交换芯片版块 · 2026-06-01 · <a href="../行业基本面入口.html">← 行业基本面入口</a>
+</div>
+
+<script>
+function toggleSec(el){
+  el.classList.toggle('collapsed');
+  el.parentElement.querySelector('.sec-body').classList.toggle('collapsed');
+}
+function switchTab(prefix, id, btn){
+  const tabs = btn.parentElement;
+  tabs.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  const body = tabs.parentElement;
+  body.querySelectorAll('.tab-pane').forEach(p=>p.classList.remove('active'));
+  body.querySelector('#'+prefix+'-'+id).classList.add('active');
+}
+function navTo(i){
+  const secs = document.querySelectorAll('.wrap > section.sec');
+  const s = secs[i]; if(!s) return;
+  const hd = s.querySelector('.sec-hd'), body = s.querySelector('.sec-body');
+  if(hd && hd.classList.contains('collapsed')){ hd.classList.remove('collapsed'); body.classList.remove('collapsed'); }
+  s.scrollIntoView({behavior:'smooth', block:'start'});
+}
+function calcCentec(root){
+  if(!root) return;
+  const v = f => parseFloat(root.querySelector('[data-f="'+f+'"]').value) || 0;
+  const gpu=v('gpu'), pen=v('pen')/100, ratio=v('ratio'),
+        price=v('price'), share=v('share')/100, margin=v('margin')/100,
+        pe=v('pe'), mcap=v('mcap');
+  const snGpu = gpu * pen;                       // 万颗
+  const chips = ratio>0 ? snGpu/ratio : 0;       // 万颗（交换芯片总量）
+  const skChips = chips * share;                 // 万颗（盛科销量）
+  const rev = skChips * price;                   // 亿元（万颗×万元=亿元）
+  const profit = rev * margin;                   // 亿元
+  const target = profit * pe;                    // 亿元
+  const upside = mcap>0 ? (target/mcap - 1)*100 : 0;
+  const set=(o,val)=>{const e=root.querySelector('[data-o="'+o+'"]'); if(e) e.textContent=val;};
+  set('snGpu', snGpu.toFixed(0));
+  set('chips', chips.toFixed(1));
+  set('skChips', skChips.toFixed(1));
+  set('rev', rev.toFixed(0));
+  set('profit', profit.toFixed(0));
+  set('target', target.toFixed(0));
+  set('upside', (upside>=0?'+':'') + upside.toFixed(0) + '%（' + (mcap>0?(target/mcap).toFixed(2):'—') + '倍）');
+}
+const CENTEC_SCN = {
+  bear: {gpu:900,  pen:30, ratio:6, price:6, share:22, margin:32, pe:30, mcap:1200},
+  base: {gpu:1050, pen:40, ratio:6, price:6, share:27, margin:37, pe:30, mcap:1200},
+  bull: {gpu:1200, pen:50, ratio:6, price:6, share:30, margin:40, pe:30, mcap:1200}
+};
+function setScn(name, btn){
+  const root = btn.closest('.centec-calc'); if(!root) return;
+  const s = CENTEC_SCN[name]; if(!s) return;
+  for(const k in s){ const e=root.querySelector('[data-f="'+k+'"]'); if(e) e.value=s[k]; }
+  root.querySelectorAll('.scn-btn').forEach(b=>b.classList.toggle('scn-active', b.dataset.scn===name));
+  calcCentec(root);
+}
+document.querySelectorAll('.centec-calc').forEach(calcCentec);
+</script>
+
+</body>
+</html>

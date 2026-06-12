@@ -1,0 +1,16 @@
+# Keep the public dashboard repo static and lightweight.
+*.xlsx
+*.xls
+*.csv
+*.parquet
+*.pptx
+*.docx
+*.py
+*.js
+*.log
+__pycache__/
+**/.gitignore
+*_看板.md
+AGENT_HANDOFF.md
+项目接手记录.md
+research/基本面研究/美股映射研究/index.html

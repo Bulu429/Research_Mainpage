@@ -1,0 +1,2519 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PCB 研究看板</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+:root {
+  --bg:#f8f9fa; --card:#fff; --border:#e9ecef;
+  --text:#212529; --text2:#6c757d;
+  --accent:#0891b2; --up:#16a34a; --dn:#dc2626; --warn:#d97706;
+  --up-bg:#f0fdf4; --dn-bg:#fef2f2; --warn-bg:#fffbeb;
+  --tag-bg:#ecfeff; --tag:#0e7490;
+  --sh: 0 1px 3px rgba(0,0,0,.08),0 1px 2px rgba(0,0,0,.04);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;background:var(--bg);color:var(--text);font-size:14px;line-height:1.6}
+
+/* header */
+.hdr{background:var(--card);border-bottom:1px solid var(--border);padding:14px 28px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:var(--sh)}
+.hdr-l{display:flex;align-items:center;gap:12px}
+.hdr-title{font-size:19px;font-weight:700}
+.hdr-sub{font-size:11px;color:var(--text2)}
+.back-link{display:inline-flex;align-items:center;gap:4px;font-size:11px;color:var(--text2);text-decoration:none;padding:4px 10px;border:1px solid var(--border);border-radius:6px;background:var(--bg);white-space:nowrap}.back-link:hover{color:var(--accent);border-color:var(--accent)}
+.badge-up{display:inline-flex;align-items:center;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600;background:var(--up-bg);color:var(--up);border:1px solid #86efac}
+.badge-tag{display:inline-flex;align-items:center;padding:3px 10px;border-radius:12px;font-size:11px;background:var(--tag-bg);color:var(--tag);border:1px solid #a5f3fc}
+.hdr-meta{font-size:11px;color:var(--text2);text-align:right}
+
+/* layout */
+.wrap{max-width:1360px;margin:0 auto;padding:20px 28px}
+
+/* section title */
+.st{font-size:13px;font-weight:700;margin-bottom:11px;padding-bottom:6px;border-bottom:2px solid var(--accent);display:flex;align-items:center;gap:6px}
+
+/* card */
+.card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:16px 18px;box-shadow:var(--sh)}
+
+/* kpi grid */
+.kpi-g{display:grid;grid-template-columns:repeat(4,1fr);gap:11px;margin-bottom:20px}
+.kpi .lbl{font-size:10px;color:var(--text2);text-transform:uppercase;letter-spacing:.4px;margin-bottom:4px}
+.kpi .val{font-size:19px;font-weight:700;margin-bottom:3px}
+.kpi .note{font-size:10px;color:var(--text2)}
+.c-up{color:var(--up)} .c-warn{color:var(--warn)} .c-dn{color:var(--dn)}
+
+/* criteria */
+.crit-g{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:20px}
+.crit .cl{font-size:10px;font-weight:700;color:var(--text2);text-transform:uppercase;margin-bottom:3px}
+.crit .cv{font-size:12px;font-weight:600;margin-bottom:2px}
+.crit .cn{font-size:10px;color:var(--text2)}
+
+/* ── TABS ── */
+.tab-nav{display:flex;gap:0;border-bottom:2px solid var(--border);margin-bottom:14px}
+.tab-btn{padding:8px 16px;font-size:12px;font-weight:600;color:var(--text2);background:none;border:none;cursor:pointer;white-space:nowrap;border-bottom:2px solid transparent;margin-bottom:-2px;transition:color .15s,border-color .15s}
+.tab-btn:hover{color:var(--accent)}
+.tab-btn.active{color:var(--accent);border-bottom-color:var(--accent)}
+.tab-pane{display:none}
+.tab-pane.active{display:block}
+
+/* company table */
+.ctable{width:100%;border-collapse:collapse;margin-bottom:14px;font-size:12px}
+.ctable th{text-align:left;padding:6px 8px;font-size:10px;font-weight:600;color:var(--text2);background:var(--bg);border-bottom:1px solid var(--border);white-space:nowrap}
+.ctable td{padding:8px 8px;border-bottom:1px solid var(--border);vertical-align:middle}
+.ctable tr:last-child td{border-bottom:none}
+.ctable tr:hover td{background:#fafbfc}
+.ctable td strong{white-space:nowrap}
+.tab-step-hd{display:flex;align-items:center;gap:10px;font-size:13px;font-weight:700;color:var(--text);padding:8px 12px;background:var(--bg);border-left:3px solid var(--accent);border-radius:0 6px 6px 0;margin-bottom:12px}
+.tab-step-hd .step-num{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:50%;background:var(--accent);color:#fff;font-size:11px;font-weight:800;flex-shrink:0}
+.tab-step-hd .step-note{margin-left:auto;font-size:10px;font-weight:400;color:var(--text2)}
+
+/* assessment badges */
+.a-super{display:inline-block;padding:1px 7px;border-radius:3px;font-size:10px;font-weight:700;background:var(--up-bg);color:var(--up);border:1px solid #86efac}
+.a-meet{display:inline-block;padding:1px 7px;border-radius:3px;font-size:10px;font-weight:700;background:var(--tag-bg);color:var(--tag);border:1px solid #a5f3fc}
+.a-miss{display:inline-block;padding:1px 7px;border-radius:3px;font-size:10px;font-weight:700;background:var(--warn-bg);color:var(--warn);border:1px solid #fcd34d}
+.a-na{display:inline-block;padding:1px 7px;border-radius:3px;font-size:10px;color:var(--text2);background:var(--bg);border:1px solid var(--border)}
+
+/* yoy numbers */
+.yp{color:var(--up);font-weight:600} .yn{color:var(--dn);font-weight:600}
+code{font-size:10px;background:var(--tag-bg);color:var(--tag);padding:1px 5px;border-radius:3px}
+
+/* segment summary */
+.seg-sum{font-size:12px;color:var(--text2);background:var(--bg);border-radius:6px;padding:10px 12px;border-left:3px solid var(--accent);margin-top:8px}
+
+/* charts row */
+.chart-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px}
+.chart-box{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:14px 16px}
+.chart-box h4{font-size:10px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:.4px;margin-bottom:10px}
+.chart-wrap{position:relative;height:180px}
+
+/* summary table */
+.sum-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;margin-bottom:20px}
+.sum-item{padding:10px 12px;border-radius:8px;background:var(--card);border:1px solid var(--border)}
+.sum-seg{font-size:10px;font-weight:700;color:var(--text2);margin-bottom:3px}
+.sum-val{font-size:12px;font-weight:600}
+.sum-note{font-size:10px;color:var(--text2);margin-top:2px}
+
+/* bottom grids */
+.b-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px}
+.tl-item{display:flex;gap:10px;padding:8px 0;border-bottom:1px solid var(--border)}
+.tl-item:last-child{border-bottom:none}
+.tl-dot{width:8px;height:8px;border-radius:50%;margin-top:5px;flex-shrink:0}
+.tl-d-p{background:var(--warn)} .tl-d-t{background:var(--accent)} .tl-d-r{background:var(--dn)}
+.tl-date{font-size:10px;color:var(--text2);white-space:nowrap;min-width:60px;margin-top:2px}
+.tl-evt{font-size:12px;font-weight:500}
+.tl-meta{font-size:10px;color:var(--text2);margin-top:1px}
+.tl-st{font-size:10px;padding:1px 6px;border-radius:3px;white-space:nowrap;align-self:flex-start;margin-top:2px}
+.st-p{background:var(--warn-bg);color:var(--warn)}
+.st-t{background:var(--tag-bg);color:var(--tag)}
+.st-r{background:var(--dn-bg);color:var(--dn)}
+
+.j-grid{display:grid;grid-template-columns:2fr 1fr;gap:12px;margin-bottom:20px}
+.logic-box{font-size:13px;line-height:1.8;background:var(--bg);border-radius:6px;padding:12px 14px;border-left:3px solid var(--accent);margin-bottom:10px}
+.strat-g{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.strat-i{padding:7px 9px;border-radius:6px;font-size:11px}
+.s-core{background:var(--up-bg);border:1px solid #86efac}
+.s-atk{background:var(--tag-bg);border:1px solid #a5f3fc}
+.s-wch{background:var(--warn-bg);border:1px solid #fcd34d}
+.strat-l{font-size:10px;font-weight:700;margin-bottom:2px}
+.risk-i{display:flex;gap:6px;margin-bottom:6px;font-size:12px}
+.rn{background:var(--dn-bg);color:var(--dn);font-size:10px;font-weight:700;padding:1px 5px;border-radius:3px;flex-shrink:0;margin-top:2px}
+
+@media(max-width:900px){.kpi-g{grid-template-columns:repeat(2,1fr)}.chart-row{grid-template-columns:1fr}.crit-g{grid-template-columns:1fr}.b-grid{grid-template-columns:1fr}.j-grid{grid-template-columns:1fr}.sum-grid{grid-template-columns:repeat(2,1fr)}}
+
+/* ── 折叠功能 ── */
+.st {
+  cursor: pointer;
+  user-select: none;
+  justify-content: space-between;
+}
+.st-arrow {
+  font-size: 13px;
+  color: var(--text2);
+  transition: transform 0.25s ease;
+  display: inline-block;
+  flex-shrink: 0;
+}
+.sec-body {
+  overflow: hidden;
+  transition: max-height 0.35s cubic-bezier(0.4,0,0.2,1), opacity 0.25s ease;
+  max-height: 9999px;
+  opacity: 1;
+}
+.sec-body.collapsed {
+  max-height: 0 !important;
+  opacity: 0;
+}
+.st.collapsed .st-arrow {
+  transform: rotate(-90deg);
+}
+
+/* ── Tooltip（修订历史 / 数据冲突）── */
+.tip-host {
+  border-bottom: 1px dashed var(--accent);
+  cursor: help;
+  display: inline;
+}
+.tip-host::after {
+  content: '▲';
+  font-size: 7px;
+  color: var(--accent);
+  vertical-align: super;
+  margin-left: 2px;
+  opacity: 0.65;
+}
+.tip-bubble {
+  display: none;
+  position: fixed;
+  z-index: 9999;
+  background: #1e293b;
+  color: #f1f5f9;
+  border-radius: 8px;
+  padding: 10px 13px;
+  font-size: 11px;
+  line-height: 1.5;
+  min-width: 240px;
+  max-width: 320px;
+  box-shadow: 0 6px 20px rgba(0,0,0,.3);
+  pointer-events: none;
+}
+.tip-bubble.visible { display: block; }
+.tip-title {
+  font-size: 10px;
+  font-weight: 700;
+  color: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: .5px;
+  margin-bottom: 7px;
+  padding-bottom: 5px;
+  border-bottom: 1px solid rgba(255,255,255,.1);
+}
+.tip-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 0;
+  border-bottom: 1px solid rgba(255,255,255,.05);
+}
+.tip-row:last-of-type { border-bottom: none; }
+.tip-date { color: #94a3b8; white-space: nowrap; min-width: 44px; font-size: 10px; }
+.tip-val  { font-weight: 600; flex: 1; }
+.tip-delta-up { color: #4ade80; font-size: 10px; }
+.tip-delta-dn { color: #f87171; font-size: 10px; }
+.tip-delta-eq { color: #94a3b8; font-size: 10px; }
+.tip-src  { color: #64748b; font-size: 10px; white-space: nowrap; }
+.tip-note {
+  font-size: 10px;
+  color: #94a3b8;
+  margin-top: 7px;
+  padding-top: 6px;
+  border-top: 1px solid rgba(255,255,255,.1);
+  line-height: 1.6;
+}
+.tip-conflict-row { display: flex; flex-direction: column; gap: 3px; padding: 4px 0; border-bottom: 1px solid rgba(255,255,255,.05); }
+.tip-conflict-row:last-of-type { border-bottom: none; }
+.tip-conflict-src { color: #fbbf24; font-size: 10px; }
+.tip-conflict-val { font-size: 11px; }
+.tip-chosen { color: #4ade80; font-size: 10px; margin-top: 5px; padding-top: 5px; border-top: 1px solid rgba(255,255,255,.1); }
+</style>
+</head>
+<body>
+
+<header class="hdr">
+  <div class="hdr-l">
+    <a class="back-link" href="../行业基本面入口.html">← 行业基本面入口</a>
+    <span class="hdr-title">PCB 产业链</span>
+    <span class="hdr-sub">CCL · PCB · 铜箔 · 电子布 · 钻针 · 设备</span>
+    <span class="badge-up">🟢 景气上行</span>
+    <span class="badge-tag">第二阶段：利润兑现</span>
+  </div>
+  <div class="hdr-meta">研究看板 · TMT 产业链<br>数据截至 2026Q1 财报</div>
+</header>
+
+<div class="wrap">
+
+<!-- ── 当前判断速览 ── -->
+<div style="background:#1e293b;border-radius:10px;padding:14px 18px;margin-bottom:16px;display:flex;align-items:center;gap:24px;flex-wrap:wrap">
+  <div style="flex:1;min-width:280px">
+    <div style="font-size:10px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:.5px;margin-bottom:5px">⚡ 当前判断速览（2026-05-20 调研更新）</div>
+    <div style="font-size:13px;color:#f1f5f9;line-height:1.6">
+      AI PCB 已进入<strong style="color:#fb923c">第二阶段：利润兑现</strong>。2026Q1六环节全线超预期——钻针（鼎泰毛利率53%）、电子布（宏和55%）、设备（大族/芯碁+100%）均已验证。<br>
+      核心策略：<strong style="color:#4ade80">不买"扩产最多"，买"客户切换成本最高"</strong>。<br>
+      <span style="color:#fbbf24;font-size:12px">🔴 260520新增：鹏鼎CapEx 70-80亿→<strong style="color:#fbbf24">300亿</strong>（约4倍），是当前最大行业alpha；芯碁下周港交所聆讯。</span>
+    </div>
+  </div>
+  <div style="display:flex;gap:8px;flex-shrink:0">
+    <div style="background:#14532d;border:1px solid #166534;border-radius:7px;padding:8px 12px;text-align:center">
+      <div style="font-size:9px;font-weight:700;color:#4ade80;margin-bottom:3px">🟢 核心仓</div>
+      <div style="font-size:11px;color:#f1f5f9;font-weight:600">胜宏科技<br>沪电股份</div>
+    </div>
+    <div style="background:#0c4a6e;border:1px solid #075985;border-radius:7px;padding:8px 12px;text-align:center">
+      <div style="font-size:9px;font-weight:700;color:#38bdf8;margin-bottom:3px">🔵 进攻仓</div>
+      <div style="font-size:11px;color:#f1f5f9;font-weight:600">生益科技</div>
+    </div>
+    <div style="background:#431407;border:1px solid #7c2d12;border-radius:7px;padding:8px 12px;text-align:center">
+      <div style="font-size:9px;font-weight:700;color:#fb923c;margin-bottom:3px">🟡 观察仓</div>
+      <div style="font-size:11px;color:#f1f5f9;font-weight:600">鼎泰高科<br>宏和科技</div>
+    </div>
+  </div>
+</div>
+
+<!-- ── 标的汇总 ── -->
+<div class="st" onclick="toggleSec(this)" style="cursor:pointer">📋 标的汇总（全产业链）<span class="st-arrow" style="font-size:13px;color:var(--text2);transition:transform .25s;display:inline-block;flex-shrink:0">▾</span></div>
+<div class="sec-body" style="margin-bottom:16px">
+<div class="card">
+  <table class="ctable">
+    <thead>
+      <tr><th>公司</th><th>代码</th><th>子赛道</th><th>资产类型</th><th>当前核心看点</th><th style="min-width:160px">近期边际变化</th></tr>
+    </thead>
+    <tbody>
+      <!-- ── PCB制造 ── -->
+      <tr style="background:#f5f3ff;border-top:2px solid var(--accent)">
+        <td colspan="6" style="font-size:11px;font-weight:700;color:var(--accent);padding:5px 8px;letter-spacing:.3px">🖥️ PCB制造</td>
+      </tr>
+      <tr style="background:#f0fdf4">
+        <td><strong>胜宏科技</strong></td><td><code>300476</code></td><td>PCB主板（HLC纯弹性）</td>
+        <td><span class="a-super">🟢核心仓</span></td>
+        <td style="font-size:11px">AI主板多平台认证，HLC占比58%；已进报表，经营现金流✓</td>
+        <td><span style="background:#fff7ed;color:#c2410c;font-size:9px;font-weight:700;padding:2px 6px;border-radius:3px;display:inline-block;margin-bottom:3px">🟡 关注</span><br><span style="font-size:10px;color:var(--text2)">260520：购买日本设备被海关卡，国产化替代逻辑强化；仍是第一大客户</span></td>
+      </tr>
+      <tr style="background:#f0fdf4">
+        <td><strong>沪电股份</strong></td><td><code>002463</code></td><td>PCB主板（AI+网络）</td>
+        <td><span class="a-super">🟢核心仓</span></td>
+        <td style="font-size:11px">1.6T交换已出货，客户认证纯度高，订单能见度至2027</td>
+        <td><span style="font-size:10px;color:var(--text2)">—</span></td>
+      </tr>
+      <tr>
+        <td><strong>深南电路</strong></td><td><code>002916</code></td><td>PCB / IC载板</td>
+        <td><span class="a-miss">🟡观察仓</span></td>
+        <td style="font-size:11px">ABF载板国产替代逻辑，2027年是主弹性；模型待验</td>
+        <td><span style="background:#fff7ed;color:#c2410c;font-size:9px;font-weight:700;padding:2px 6px;border-radius:3px;display:inline-block;margin-bottom:3px">🟡 关注</span><br><span style="font-size:10px;color:var(--text2)">260520：芯碁第三大客户；与鹏鼎300亿CapEx联动</span></td>
+      </tr>
+
+      <!-- ── CCL覆铜板 ── -->
+      <tr style="background:#eff6ff;border-top:2px solid #2563eb">
+        <td colspan="6" style="font-size:11px;font-weight:700;color:#2563eb;padding:5px 8px;letter-spacing:.3px">🟦 CCL覆铜板</td>
+      </tr>
+      <tr>
+        <td><strong>生益科技</strong></td><td><code>600183</code></td><td>CCL覆铜板（国产龙头）</td>
+        <td><span class="a-meet" style="background:#dbeafe;color:#1d4ed8;border-color:#bfdbfe">🔵进攻仓</span></td>
+        <td style="font-size:11px">M8 ASP+2.4倍，涨价最快进报表；M9年底导入海外</td>
+        <td><span style="font-size:10px;color:var(--text2)">—</span></td>
+      </tr>
+      <tr>
+        <td><strong>南亚新材</strong></td><td><code>688519</code></td><td>CCL（跟随者）</td>
+        <td><span class="a-miss">🟡观察仓</span></td>
+        <td style="font-size:11px">M10率先推出；首批送样全球NV客户；PE&lt;40倍</td>
+        <td><span style="font-size:10px;color:var(--text2)">—</span></td>
+      </tr>
+      <tr>
+        <td><strong>华正新材</strong></td><td><code>002972</code></td><td>CCL（黑马，H客户）</td>
+        <td><span class="a-miss">🟡观察仓</span></td>
+        <td style="font-size:11px">AI产品占比14%→30%，毛利14%→18%；PE仅23倍</td>
+        <td><span style="font-size:10px;color:var(--text2)">—</span></td>
+      </tr>
+
+      <!-- ── 铜箔 ── -->
+      <tr style="background:#fff7ed;border-top:2px solid #d97706">
+        <td colspan="6" style="font-size:11px;font-weight:700;color:#d97706;padding:5px 8px;letter-spacing:.3px">🟠 铜箔</td>
+      </tr>
+      <tr>
+        <td><strong>铜冠铜箔</strong></td><td><code>301217</code></td><td>铜箔（HVLP）</td>
+        <td><span class="a-miss">观察仓</span></td>
+        <td style="font-size:11px">HVLP四代铜箔即将放量；供需缺口35-40%</td>
+        <td><span style="font-size:10px;color:var(--text2)">—</span></td>
+      </tr>
+
+      <!-- ── 电子布 ── -->
+      <tr style="background:#f0fdf4;border-top:2px solid #16a34a">
+        <td colspan="6" style="font-size:11px;font-weight:700;color:#16a34a;padding:5px 8px;letter-spacing:.3px">🟩 电子布</td>
+      </tr>
+      <tr>
+        <td><strong>宏和科技</strong></td><td><code>603256</code></td><td>电子布（纯标的）</td>
+        <td><span class="a-miss">🟡观察仓</span></td>
+        <td style="font-size:11px">毛利率55%创新高；AI fabric e-glass布供给瓶颈</td>
+        <td><span style="font-size:10px;color:var(--text2)">—</span></td>
+      </tr>
+      <tr>
+        <td><strong>中材科技</strong></td><td><code>002080</code></td><td>电子布（玻纤+AI布）</td>
+        <td><span class="a-miss">观察仓</span></td>
+        <td style="font-size:11px">AI电子布步入放量周期；织机扩产中</td>
+        <td><span style="font-size:10px;color:var(--text2)">—</span></td>
+      </tr>
+      <tr>
+        <td><strong>菲利华</strong></td><td><code>300395</code></td><td>电子布（Q布/石英）</td>
+        <td><span class="a-miss" style="background:#faf5ff;color:#6b21a8;border-color:#e9d5ff">2027期权</span></td>
+        <td style="font-size:11px">2026Q3-Q4起量；Rubin Ultra最大场景；当前体量小</td>
+        <td><span style="font-size:10px;color:var(--text2)">—</span></td>
+      </tr>
+
+      <!-- ── 钻针 ── -->
+      <tr style="background:#f8fafc;border-top:2px solid #64748b">
+        <td colspan="6" style="font-size:11px;font-weight:700;color:#475569;padding:5px 8px;letter-spacing:.3px">⚫ 钻针</td>
+      </tr>
+      <tr>
+        <td><strong>鼎泰高科</strong></td><td><code>301377</code></td><td>钻针耗材（纯弹性）</td>
+        <td><span class="a-miss">🟡观察仓</span></td>
+        <td style="font-size:11px">毛利率53%同比+15pct；AI钻针供不应求，产能持续扩张</td>
+        <td><span style="font-size:10px;color:var(--text2)">—</span></td>
+      </tr>
+      <tr>
+        <td><strong>中钨高新</strong></td><td><code>000657</code></td><td>钻针（金洲子公司）</td>
+        <td><span class="a-miss">观察仓</span></td>
+        <td style="font-size:11px">金洲月出货9000万支，均价1.8元，毛利47-48%</td>
+        <td><span style="font-size:10px;color:var(--text2)">—</span></td>
+      </tr>
+
+      <!-- ── PCB设备 ── -->
+      <tr style="background:#fef2f2;border-top:2px solid #dc2626">
+        <td colspan="6" style="font-size:11px;font-weight:700;color:#dc2626;padding:5px 8px;letter-spacing:.3px">🔴 PCB设备（前置指标）</td>
+      </tr>
+      <tr style="background:#fef2f2">
+        <td><strong>芯碁微装</strong></td><td><code>688630</code></td><td>PCB直写光刻设备</td>
+        <td><span class="a-meet">前置指标</span></td>
+        <td style="font-size:11px">26Q1+113%；先进封装第二曲线；全年订单超30亿</td>
+        <td><span style="background:#fef2f2;color:#dc2626;font-size:9px;font-weight:700;padding:2px 6px;border-radius:3px;border:1px solid #fecaca;display:inline-block;margin-bottom:3px">🔴 重大</span><br><span style="font-size:10px;color:var(--text)"><strong>260520实地调研：</strong><br>鹏鼎CapEx 70-80亿→300亿（4倍）<br>4月单月3亿，排产排到7月<br>先进封装今年≥20台，下周港交所聆讯</span></td>
+      </tr>
+      <tr>
+        <td><strong>大族数控</strong></td><td><code>301200</code></td><td>PCB钻孔设备</td>
+        <td><span class="a-meet">前置指标</span></td>
+        <td style="font-size:11px">26Q1+104%，设备是AI PCB扩产的前置验证指标</td>
+        <td><span style="background:#fff7ed;color:#c2410c;font-size:9px;font-weight:700;padding:2px 6px;border-radius:3px;display:inline-block;margin-bottom:3px">🟡 关注</span><br><span style="font-size:10px;color:var(--text2)">260520：鹏鼎300亿CapEx间接利好；钻孔设备月出货50-60台</span></td>
+      </tr>
+    </tbody>
+  </table>
+  <div style="display:flex;gap:12px;align-items:center;margin-top:6px;font-size:10px;color:var(--text2)">
+    <span><span style="background:#fef2f2;color:#dc2626;padding:1px 5px;border-radius:2px;font-weight:700;border:1px solid #fecaca">🔴 重大</span> 近期有重要新信息，建议优先关注</span>
+    <span><span style="background:#fff7ed;color:#c2410c;padding:1px 5px;border-radius:2px;font-weight:700">🟡 关注</span> 有间接边际影响</span>
+    <span>— 暂无近期变化</span>
+    <span style="margin-left:auto">⚠️ 研究性判断，不构成投资建议。详情见下方竞争格局 Tab</span>
+  </div>
+</div>
+</div>
+
+
+<!-- ══════════════════════════════════════
+     AI需求量分析
+══════════════════════════════════════ -->
+<div class="st">🔢 静态供需分析</div>
+
+<!-- Demand KPIs -->
+<div class="kpi-g" style="margin-bottom:14px">
+  <div class="card kpi"><div class="lbl">2026E AI PCB市场规模</div><div class="val c-up">$120亿</div><div class="note">↑ +114% YoY；2024-2027 CAGR 100%</div></div>
+  <div class="card kpi"><div class="lbl">2026E GPU出货量</div><div class="val c-up">1,606万颗</div><div class="note">↑ +59% YoY（NV 676 + ASIC 930万颗）</div></div>
+  <div class="card kpi"><div class="lbl">2026E M8 CCL需求</div><div class="val c-up">407万张</div><div class="note">↑ +85% YoY；M9首年规模化（33万张）</div></div>
+  <div class="card kpi"><div class="lbl">台耀TUC月收趋势（2025全年）</div><div class="val c-up">+61%</div><div class="note">↑ Dec/Jan：782 vs 487百万台币</div></div>
+</div>
+
+<!-- Main charts -->
+<div class="chart-row" style="margin-bottom:14px">
+  <div class="chart-box">
+    <h4>① 单GPU对应PCB价值量升级路径（元/颗）</h4>
+    <div class="chart-wrap" style="height:230px"><canvas id="c-gpu-val"></canvas></div>
+    <div style="font-size:10px;color:var(--text2);margin-top:5px">* VR200/VR300引入Midplane/正交背板，价值量结构性跃迁；VR300单柜PCB总价值≈¥282万</div>
+  </div>
+  <div class="chart-box">
+    <h4>② AI PCB市场规模分解（百万美元）</h4>
+    <div class="chart-wrap" style="height:230px"><canvas id="c-mkt-size"></canvas></div>
+  </div>
+</div>
+
+<!-- Secondary chart: GPU shipment only -->
+<div class="chart-row" style="margin-bottom:20px">
+  <div class="chart-box">
+    <h4>③ GPU出货量趋势（万颗，NV vs ASIC）</h4>
+    <div class="chart-wrap" style="height:200px"><canvas id="c-gpu-ship"></canvas></div>
+  </div>
+  <div class="chart-box">
+    <h4>③ CCL M8/M9 需求量预测（万张）</h4>
+    <div class="chart-wrap" style="height:200px"><canvas id="c-ccl-demand"></canvas></div>
+    <div style="font-size:10px;color:var(--text2);margin-top:5px">M8：2025E 220 → 2026E 407 → 2027E 571 万张　M9：2026E 33 → 2027E 492 万张（Rubin驱动）</div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     CCL材料代际时间轴
+══════════════════════════════════════ -->
+<div class="st">📐 CCL材料代际演进时间轴</div>
+<div class="card" style="margin-bottom:20px">
+  <div style="font-size:10px;color:var(--text2);margin-bottom:14px">非量化信息追踪：各代材料商用进度 · 应用平台 · A股受益标的　｜　更新规则：每次收到新纪要时在里程碑栏追加 <code>[YYMMDD] 来源→事件</code></div>
+
+  <!-- 时间轴可视化条 -->
+  <div style="display:flex;align-items:flex-start;gap:0;margin-bottom:20px;padding:0 4px">
+
+    <!-- M6 -->
+    <div style="flex:1;text-align:center;opacity:0.45">
+      <div style="display:flex;align-items:center;margin-bottom:8px">
+        <div style="flex:1;height:2px;background:#cbd5e1"></div>
+        <div style="width:28px;height:28px;border-radius:50%;background:#94a3b8;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:#fff;flex-shrink:0">M6</div>
+        <div style="flex:1;height:2px;background:#cbd5e1"></div>
+      </div>
+      <div style="font-size:10px;font-weight:700;color:#64748b">28Gbps</div>
+      <div style="font-size:9px;color:#94a3b8;margin-top:3px;padding:1px 6px;background:#f1f5f9;border-radius:3px;display:inline-block">⚫ 退出</div>
+      <div style="font-size:9px;color:#94a3b8;margin-top:4px">A100前标准</div>
+    </div>
+
+    <!-- M7 -->
+    <div style="flex:1;text-align:center;opacity:0.6">
+      <div style="display:flex;align-items:center;margin-bottom:8px">
+        <div style="flex:1;height:2px;background:#cbd5e1"></div>
+        <div style="width:28px;height:28px;border-radius:50%;background:#64748b;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:#fff;flex-shrink:0">M7</div>
+        <div style="flex:1;height:2px;background:#cbd5e1"></div>
+      </div>
+      <div style="font-size:10px;font-weight:700;color:#64748b">56Gbps</div>
+      <div style="font-size:9px;color:#64748b;margin-top:3px;padding:1px 6px;background:#f1f5f9;border-radius:3px;display:inline-block">🔵 存量</div>
+      <div style="font-size:9px;color:#94a3b8;margin-top:4px">消费/传统服务器</div>
+    </div>
+
+    <!-- M8 ★ 当前核心 -->
+    <div style="flex:1.4;text-align:center">
+      <div style="display:flex;align-items:center;margin-bottom:8px">
+        <div style="flex:1;height:3px;background:#16a34a"></div>
+        <div style="width:38px;height:38px;border-radius:50%;background:#16a34a;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;flex-shrink:0;box-shadow:0 0 0 4px #dcfce7">M8</div>
+        <div style="flex:1;height:3px;background:#16a34a"></div>
+      </div>
+      <div style="font-size:11px;font-weight:700;color:#16a34a">112Gbps</div>
+      <div style="font-size:9px;color:#fff;margin-top:3px;padding:2px 8px;background:#16a34a;border-radius:3px;display:inline-block;font-weight:700">🟢 量产主流</div>
+      <div style="font-size:9px;color:#15803d;margin-top:4px;font-weight:600">GB300 / B200<br>1.6T交换机</div>
+      <div style="font-size:9px;color:#14532d;margin-top:3px;background:#dcfce7;padding:2px 5px;border-radius:3px">生益 · 南亚新材 · 华正</div>
+    </div>
+
+    <!-- M9 -->
+    <div style="flex:1.2;text-align:center">
+      <div style="display:flex;align-items:center;margin-bottom:8px">
+        <div style="flex:1;height:2px;background:#0891b2"></div>
+        <div style="width:32px;height:32px;border-radius:50%;background:#0891b2;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#fff;flex-shrink:0">M9</div>
+        <div style="flex:1;height:2px;background:#0891b2"></div>
+      </div>
+      <div style="font-size:10px;font-weight:700;color:#0891b2">224Gbps</div>
+      <div style="font-size:9px;color:#fff;margin-top:3px;padding:1px 7px;background:#0891b2;border-radius:3px;display:inline-block;font-weight:600">🟡 导入中</div>
+      <div style="font-size:9px;color:#0e7490;margin-top:4px">Rubin系列<br>2026H2</div>
+      <div style="font-size:9px;color:#164e63;margin-top:3px;background:#ecfeff;padding:2px 5px;border-radius:3px">生益 · 南亚新材</div>
+    </div>
+
+    <!-- M10 -->
+    <div style="flex:1;text-align:center;opacity:0.85">
+      <div style="display:flex;align-items:center;margin-bottom:8px">
+        <div style="flex:1;height:2px;background:#d97706;border-style:dashed"></div>
+        <div style="width:28px;height:28px;border-radius:50%;background:#d97706;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:#fff;flex-shrink:0">M10</div>
+        <div style="flex:1;height:2px;background:#d97706;border-style:dashed"></div>
+      </div>
+      <div style="font-size:10px;font-weight:700;color:#d97706">~400Gbps</div>
+      <div style="font-size:9px;color:#d97706;margin-top:3px;padding:1px 6px;background:#fffbeb;border-radius:3px;display:inline-block">🟠 送样</div>
+      <div style="font-size:9px;color:#92400e;margin-top:4px">2027H2量产<br>（8-9个月送样周期）</div>
+      <div style="font-size:9px;color:#78350f;margin-top:3px;background:#fef3c7;padding:2px 5px;border-radius:3px">南亚新材 · 华正</div>
+    </div>
+
+    <!-- PTFE -->
+    <div style="flex:1;text-align:center;opacity:0.5">
+      <div style="display:flex;align-items:center;margin-bottom:8px">
+        <div style="flex:1;height:2px;background:#e2e8f0;border-top:2px dashed #cbd5e1"></div>
+        <div style="width:28px;height:28px;border-radius:50%;border:2px dashed #94a3b8;display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:700;color:#94a3b8;flex-shrink:0;background:#f8fafc">PTFE</div>
+        <div style="flex:1;height:2px;background:#e2e8f0"></div>
+      </div>
+      <div style="font-size:10px;font-weight:700;color:#94a3b8">400Gbps+</div>
+      <div style="font-size:9px;color:#94a3b8;margin-top:3px;padding:1px 6px;background:#f1f5f9;border-radius:3px;display:inline-block">⚪ 研发/评估</div>
+      <div style="font-size:9px;color:#94a3b8;margin-top:4px">Rubin Ultra<br>（可能混压M9）</div>
+    </div>
+  </div>
+
+  <!-- 详情对照表 -->
+  <table class="ctable" style="font-size:11px">
+    <thead>
+      <tr><th>代次</th><th>速率</th><th>商用状态</th><th>成本（vs M8）</th><th>核心A股</th><th>关键里程碑</th></tr>
+    </thead>
+    <tbody>
+      <tr style="color:var(--text2)"><td>M6</td><td>28Gbps</td><td>⚫ 退出</td><td>0.5×</td><td>—</td><td>已被M7替代，仅存量消化</td></tr>
+      <tr style="color:var(--text2)"><td>M7</td><td>56Gbps</td><td>🔵 存量</td><td>0.8×</td><td>生益科技（存量）</td><td>B200导入后开始降价去化，AI前主流</td></tr>
+      <tr style="background:#f0fdf4"><td><strong>M8</strong></td><td><strong>112Gbps</strong></td><td><strong style="color:var(--up)">🟢 量产主流</strong></td><td><strong>1.0×（基准）</strong></td><td><strong>生益科技 ✦ 南亚新材 ✦ 华正新材</strong></td><td>GB300/B200核心材料；26Q1 ASP同比+2.4倍；国产化率12%→28%（2026E）；常熟新厂Q2满产后M8产能翻倍</td></tr>
+      <tr style="background:#ecfeff"><td><strong>M9</strong></td><td><strong>224Gbps</strong></td><td><strong style="color:var(--accent)">🟡 导入中（2026H2）</strong></td><td><strong>1.5× M8</strong></td><td><strong>生益科技（年底海外导入）✦ 南亚新材（全球首批送样）</strong></td><td>Rubin系列确定采用；深南/健鼎/方正/鹏鼎已交付M9板；需分3-4次钻孔；钻针寿命仅100-200孔</td></tr>
+      <tr><td>M10</td><td>~400Gbps</td><td>🟠 送样（2027H2量产）</td><td>~2× M8</td><td>南亚新材（领先国内1季度）✦ 华正新材（910B项目）</td><td>[251101] 南亚新材推出M10；[260201] 向海外客户送样；送样→量产约3个季度（8-9个月）</td></tr>
+      <tr style="color:var(--text2)"><td>PTFE</td><td>400Gbps+</td><td>⚪ 研发/评估</td><td>~3× M8+</td><td>生益科技（远期）</td><td>300℃+耐温，损耗最低；Rubin Ultra可能与M9混压（非全面替代）；量产时间待定；工艺良率低</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ══════════════════════════════════════
+     高频供需信息
+══════════════════════════════════════ -->
+<div class="st">📡 高频供需信息</div>
+<div style="font-size:11px;color:var(--text2);background:var(--tag-bg);padding:8px 14px;border-radius:6px;border-left:3px solid var(--accent);margin-bottom:14px">
+  更新节奏：台股月营收 <strong>每月10日</strong>前后 ｜ CCL/铜箔价格 <strong>每月</strong>追加一行 ｜ PCB交期 <strong>草根追踪</strong>
+</div>
+
+<!-- 台股月营收 + 追踪表 -->
+<div class="chart-row" style="margin-bottom:16px">
+  <div class="chart-box" style="flex:2">
+    <h4>台股月度营收高频指标（百万台币，2025年全年）</h4>
+    <div class="chart-wrap" style="height:220px"><canvas id="c-tw-monthly"></canvas></div>
+    <div style="font-size:10px;color:var(--text2);margin-top:5px">
+      台耀TUC(CCL) ↑+61%　台光(CCL) ↑+25%　欣兴(ABF) ↑+25%　尖点(钻针×10) ↑+63%
+    </div>
+  </div>
+  <div class="chart-box" style="flex:1">
+    <h4>景气追踪指标（每月更新）</h4>
+    <table class="ctable" style="font-size:11px">
+      <thead><tr><th>指标</th><th>最新值</th><th>趋势</th><th>更新</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><strong>M8高速CCL</strong></td>
+          <td>860-900元/张</td>
+          <td><span class="yp">↑涨价中</span></td>
+          <td style="color:var(--text2)">2026-05</td>
+        </tr>
+        <tr>
+          <td><strong>M9 CCL</strong></td>
+          <td>1500-2000元/张</td>
+          <td><span class="yp">↑导入初期</span></td>
+          <td style="color:var(--text2)">2026-05</td>
+        </tr>
+        <tr>
+          <td>电解铜箔</td>
+          <td style="color:var(--text2)">待更新</td>
+          <td>→</td>
+          <td style="color:var(--text2)">—</td>
+        </tr>
+        <tr>
+          <td>HVLP4铜箔</td>
+          <td style="color:var(--text2)">待更新</td>
+          <td>→</td>
+          <td style="color:var(--text2)">—</td>
+        </tr>
+        <tr>
+          <td><strong>AI高多层交期</strong></td>
+          <td><strong>18-24周</strong></td>
+          <td><span class="yp">↑偏紧</span></td>
+          <td style="color:var(--text2)">2026-05</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- CCL价格走势图 -->
+<div class="card" style="margin-bottom:20px">
+  <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:10px;flex-wrap:wrap;gap:8px">
+    <span style="font-size:12px;font-weight:700">📈 CCL价格走势（海关月度进出口均价，美元/吨）</span>
+    <span style="font-size:10px;color:var(--text2)">数据来源：iFinD EDB 海关总署 ｜ 2020年1月 — 2026年3月</span>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px">
+    <div style="background:var(--up-bg);border:1px solid #86efac;border-radius:8px;padding:10px 12px">
+      <div style="font-size:10px;color:var(--text2);margin-bottom:3px">2026-03 出口均价（国产CCL）</div>
+      <div style="font-size:18px;font-weight:700;color:var(--up)">$11,043/吨</div>
+      <div style="font-size:10px;color:var(--up)">✅ 超越2021年历史高点 $9,779/吨</div>
+    </div>
+    <div style="background:var(--tag-bg);border:1px solid #a5f3fc;border-radius:8px;padding:10px 12px">
+      <div style="font-size:10px;color:var(--text2);margin-bottom:3px">2026-03 进口均价（台日高端M8+）</div>
+      <div style="font-size:18px;font-weight:700;color:var(--tag)">$37,620/吨</div>
+      <div style="font-size:10px;color:var(--text2)">进出口价差 3.4× → 国产化率提升空间</div>
+    </div>
+    <div style="background:var(--warn-bg);border:1px solid #fcd34d;border-radius:8px;padding:10px 12px">
+      <div style="font-size:10px;color:var(--text2);margin-bottom:3px">国产CCL距2021峰值后的本轮涨幅</div>
+      <div style="font-size:18px;font-weight:700;color:var(--warn)">+96.8%</div>
+      <div style="font-size:10px;color:var(--text2)">从2023-07低点 $5,613 起算至今</div>
+    </div>
+  </div>
+  <div style="position:relative;height:260px">
+    <canvas id="c-ccl-price"></canvas>
+  </div>
+  <div style="font-size:10px;color:var(--text2);margin-top:6px">
+    出口均价 = 国产CCL（M6-M8混合，反映国内市场定价） ｜ 进口均价 = 台湾/日本高端CCL（M8+/M9，AI专用）｜ 虚线 = 2021年出口均价历史峰值
+  </div>
+</div>
+
+<!-- 电子布价格走势图 -->
+<div class="card" style="margin-bottom:20px">
+  <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:10px;flex-wrap:wrap;gap:8px">
+    <span style="font-size:12px;font-weight:700">🧵 电子布价格走势（海关月度出口均价 + 宏和科技公告年均价）</span>
+    <span style="font-size:10px;color:var(--text2)">数据来源：iFinD EDB 海关总署 / 上市公司公告 ｜ 2020年1月 — 2026年3月</span>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px">
+    <div style="background:var(--up-bg);border:1px solid #86efac;border-radius:8px;padding:10px 12px">
+      <div style="font-size:10px;color:var(--text2);margin-bottom:3px">2026-03 海关出口均价</div>
+      <div style="font-size:18px;font-weight:700;color:var(--up)">$7.97/kg</div>
+      <div style="font-size:10px;color:var(--up)">✅ 超越2021峰值 $6.88/kg（+16%）</div>
+    </div>
+    <div style="background:var(--up-bg);border:1px solid #86efac;border-radius:8px;padding:10px 12px">
+      <div style="font-size:10px;color:var(--text2);margin-bottom:3px">宏和科技 2026Q1 年均价</div>
+      <div style="font-size:18px;font-weight:700;color:var(--up)">9.78 元/米</div>
+      <div style="font-size:10px;color:var(--up)">✅ 超2021峰值+60%，超2023低谷+165%</div>
+    </div>
+    <div style="background:var(--warn-bg);border:1px solid #fcd34d;border-radius:8px;padding:10px 12px">
+      <div style="font-size:10px;color:var(--text2);margin-bottom:3px">价格弹性 vs CCL</div>
+      <div style="font-size:18px;font-weight:700;color:var(--warn)">更大</div>
+      <div style="font-size:10px;color:var(--text2)">AI fabric单机产出仅普通布35-40%，织机是真瓶颈</div>
+    </div>
+  </div>
+  <div style="position:relative;height:250px">
+    <canvas id="c-cloth-price"></canvas>
+  </div>
+  <div style="font-size:10px;color:var(--text2);margin-top:6px">
+    蓝线 = 海关出口均价（美元/千克，月度，玻纤布浸胶制品&lt;450g） ｜ 橙点 = 宏和科技年均价（元/米，右轴，公司公告）｜ 红虚线 = 2021年峰值
+  </div>
+</div>
+
+<!-- 铜箔价格走势图 -->
+<div class="card" style="margin-bottom:20px">
+  <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:10px;flex-wrap:wrap;gap:8px">
+    <span style="font-size:12px;font-weight:700">🔩 铜箔价格走势 — 加工费周期（海关出口均价 vs LME铜成本拆解，美元/吨）</span>
+    <span style="font-size:10px;color:var(--text2)">数据来源：iFinD EDB 海关总署 + LME ｜ 2021年4月 — 2026年3月</span>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px">
+    <div style="background:var(--up-bg);border:1px solid #86efac;border-radius:8px;padding:10px 12px">
+      <div style="font-size:10px;color:var(--text2);margin-bottom:3px">隐含加工费 2026-03</div>
+      <div style="font-size:18px;font-weight:700;color:var(--up)">$5,638/吨</div>
+      <div style="font-size:10px;color:var(--up)">✅ 超越2021峰值 $4,171/吨（+35%）</div>
+    </div>
+    <div style="background:var(--dn-bg);border:1px solid #fca5a5;border-radius:8px;padding:10px 12px">
+      <div style="font-size:10px;color:var(--text2);margin-bottom:3px">加工费最低点 2026-01</div>
+      <div style="font-size:18px;font-weight:700;color:var(--dn)">$1,645/吨</div>
+      <div style="font-size:10px;color:var(--dn)">铜价暴涨快于铜箔 → 铜冠/德福亏损</div>
+    </div>
+    <div style="background:var(--warn-bg);border:1px solid #fcd34d;border-radius:8px;padding:10px 12px">
+      <div style="font-size:10px;color:var(--text2);margin-bottom:3px">⚠️ 铜箔 vs CCL/电子布的差异</div>
+      <div style="font-size:16px;font-weight:700;color:var(--warn)">加工费周期</div>
+      <div style="font-size:10px;color:var(--text2)">非供给瓶颈；HVLP AI级加工费3-5x普通</div>
+    </div>
+  </div>
+  <div style="position:relative;height:250px">
+    <canvas id="c-foil-price"></canvas>
+  </div>
+  <div style="font-size:10px;color:var(--text2);margin-top:6px">
+    橙色面积 = LME铜×0.95（铜箔铜含量成本）｜ 蓝线 = 铜箔出口均价 ｜ 两者之差 = 隐含加工费（蓝色填充区域）｜ 红虚线 = 2021年加工费峰值水平
+  </div>
+</div>
+
+<!-- 钻针景气走势图 -->
+<div class="card" style="margin-bottom:20px">
+  <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:10px;flex-wrap:wrap;gap:8px">
+    <span style="font-size:12px;font-weight:700">🔩 钻针景气走势（尖点科技月营收 + 鼎泰高科季度毛利率）</span>
+    <span style="font-size:10px;color:var(--text2)">数据来源：iFinD EDB 台湾证交所 / A股季报 ｜ 2020年1月 — 2026年4月</span>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px">
+    <div style="background:var(--up-bg);border:1px solid #86efac;border-radius:8px;padding:10px 12px">
+      <div style="font-size:10px;color:var(--text2);margin-bottom:3px">尖点科技 2026-04 月营收</div>
+      <div style="font-size:18px;font-weight:700;color:var(--up)">525 百万NTD</div>
+      <div style="font-size:10px;color:var(--up)">✅ 历史新高，+47% vs 2021峰值（358M）</div>
+    </div>
+    <div style="background:var(--up-bg);border:1px solid #86efac;border-radius:8px;padding:10px 12px">
+      <div style="font-size:10px;color:var(--text2);margin-bottom:3px">鼎泰高科 2026Q1 毛利率</div>
+      <div style="font-size:18px;font-weight:700;color:var(--up)">53.3%</div>
+      <div style="font-size:10px;color:var(--up)">✅ +15.3pct YoY，PCB产业链最高，供不应求</div>
+    </div>
+    <div style="background:var(--tag-bg);border:1px solid #a5f3fc;border-radius:8px;padding:10px 12px">
+      <div style="font-size:10px;color:var(--text2);margin-bottom:3px">钻针 vs CCL/电子布/铜箔的差异</div>
+      <div style="font-size:16px;font-weight:700;color:var(--tag)">纯耗材弹性</div>
+      <div style="font-size:10px;color:var(--text2)">无认证壁垒，随AI PCB扩产直接受益，弹性最纯粹</div>
+    </div>
+  </div>
+  <div style="position:relative;height:250px">
+    <canvas id="c-drill-price"></canvas>
+  </div>
+  <div style="font-size:10px;color:var(--text2);margin-top:6px">
+    蓝线 = 尖点科技月营收（百万NTD，台湾钻针龙头，高频领先指标）｜ 橙点 = 鼎泰高科季度毛利率（%，右轴，A股议价能力代理）｜ 红虚线 = 2021年峰值
+  </div>
+</div>
+
+<!-- 毛利率验证表 -->
+<div class="card" style="margin-bottom:20px">
+  <div style="display:flex;align-items:baseline;gap:12px;margin-bottom:10px">
+    <span style="font-size:12px;font-weight:700">📐 关键公司毛利率验证（季度）</span>
+    <span style="font-size:11px;color:var(--text2)">核心测试：收入↑ 且 毛利率↑ = 利润池重分配 ✅　仅收入↑ = 成本转嫁 ⚠</span>
+  </div>
+  <table class="ctable">
+    <thead>
+      <tr>
+        <th>公司</th><th>类型</th>
+        <th>25Q1</th><th>25Q2</th><th>25Q3</th><th>25Q4</th>
+        <th style="background:#ecfeff;color:#0e7490">26Q1</th>
+        <th>趋势</th><th>验证结论</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>台耀 TUC</strong></td>
+        <td><span style="font-size:10px;background:#f0fdf4;color:#16a34a;padding:1px 6px;border-radius:3px;border:1px solid #86efac">台股 CCL</span></td>
+        <td style="color:var(--text2)">—</td><td style="color:var(--text2)">—</td><td style="color:var(--text2)">—</td><td style="color:var(--text2)">—</td>
+        <td style="background:#ecfeff;font-weight:600">超预期</td>
+        <td><span class="yp">↑</span></td>
+        <td style="font-size:11px;color:var(--text2)">✅ 核心利润超预期13-15%，"this is just the start"</td>
+      </tr>
+      <tr>
+        <td><strong>生益科技</strong></td>
+        <td><span style="font-size:10px;background:var(--tag-bg);color:var(--tag);padding:1px 6px;border-radius:3px;border:1px solid #a5f3fc">A股 CCL</span></td>
+        <td>24.6%</td><td>26.9%</td><td>28.1%</td><td>25.8%</td>
+        <td style="background:#ecfeff;font-weight:600;color:#0e7490">28.1%</td>
+        <td><span class="yp">↑</span></td>
+        <td style="font-size:11px;color:var(--text2)">✅ 收入+毛利双升，高速CCL涨价进报表确认</td>
+      </tr>
+      <tr>
+        <td><strong>鼎泰高科</strong></td>
+        <td><span style="font-size:10px;background:var(--tag-bg);color:var(--tag);padding:1px 6px;border-radius:3px;border:1px solid #a5f3fc">A股 钻针</span></td>
+        <td>38.0%</td><td>40.3%</td><td>42.9%</td><td>46.0%</td>
+        <td style="background:#ecfeff;font-weight:700;color:var(--up)">53.3%</td>
+        <td><span class="yp" style="font-weight:700">↑↑</span></td>
+        <td style="font-size:11px;color:var(--text2)">✅ 供不应求，+15.3pct 是本轮产业链最强毛利信号</td>
+      </tr>
+      <tr>
+        <td>深南电路</td>
+        <td><span style="font-size:10px;background:var(--tag-bg);color:var(--tag);padding:1px 6px;border-radius:3px;border:1px solid #a5f3fc">A股 PCB</span></td>
+        <td>24.7%</td><td>27.6%</td><td>31.4%</td><td>28.6%</td>
+        <td style="background:#ecfeff;color:#0e7490">29.2%</td>
+        <td><span class="yp">↑</span></td>
+        <td style="font-size:11px;color:var(--text2)">✔ 随收入小幅改善，节奏稳健</td>
+      </tr>
+      <tr>
+        <td>胜宏科技</td>
+        <td><span style="font-size:10px;background:var(--tag-bg);color:var(--tag);padding:1px 6px;border-radius:3px;border:1px solid #a5f3fc">A股 PCB</span></td>
+        <td>33.4%</td><td>38.8%</td><td>35.2%</td><td>33.5%</td>
+        <td style="background:#ecfeff;color:var(--warn)">34.5%</td>
+        <td style="color:var(--warn)">→</td>
+        <td style="font-size:11px;color:var(--text2)">⚠ 毛利率未见改善，低于预期，2Q26是关键观察季</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ══════════════════════════════════════
+     竞争格局（6环节分Tab）
+══════════════════════════════════════ -->
+<div class="st">🏭 竞争格局 — 分环节（2026Q1实际业绩）</div>
+<div class="card" style="margin-bottom:20px">
+  <div class="tab-nav" id="tabNav">
+    <button class="tab-btn active" data-tab="pcb">① PCB制造</button>
+    <button class="tab-btn" data-tab="ccl">② CCL覆铜板</button>
+    <button class="tab-btn" data-tab="foil">③ 铜箔</button>
+    <button class="tab-btn" data-tab="cloth">④ 电子布</button>
+    <button class="tab-btn" data-tab="drill">⑤ 钻针</button>
+    <button class="tab-btn" data-tab="equip">⑥ PCB设备</button>
+  </div>
+
+  <!-- ① PCB制造 -->
+  <div class="tab-pane active" id="tab-pcb">
+    <table class="ctable">
+      <thead><tr><th>公司</th><th>代码</th><th>业绩</th><th>26Q1收入</th><th>收入YoY</th><th>26Q1毛利率</th><th>毛利率YoY</th><th>26Q1扣非</th><th>扣非YoY</th><th>核心看点</th></tr></thead>
+      <tbody>
+        <tr><td><strong>沪电股份</strong></td><td><code>002463</code></td><td><span class="a-super">✅超预期</span></td><td>62.1亿</td><td><span class="yp">+54%</span></td><td>35.6%</td><td><span class="yp">+2.8pct</span></td><td>11.6亿</td><td><span class="yp">+55%</span></td><td style="color:var(--text2)">AI算力持续验证，高端产能释放；超一致预期</td></tr>
+        <tr><td><strong>胜宏科技</strong></td><td><code>300476</code></td><td><span class="a-miss">⚠低于预期</span></td><td>55.2亿</td><td><span class="yp">+28%</span></td><td>34.5%</td><td><span class="yp">+1.1pct</span></td><td>12.6亿</td><td><span class="yp">+36%</span></td><td style="color:var(--text2)">AI需求景气，高端占比提升；但低于预期</td></tr>
+        <tr><td><strong>深南电路</strong></td><td><code>002916</code></td><td><span class="a-meet">✔符合预期</span></td><td>66.0亿</td><td><span class="yp">+38%</span></td><td>29.2%</td><td><span class="yp">+4.5pct</span></td><td>8.5亿</td><td><span class="yp">+75%</span></td><td style="color:var(--text2)">AI PCB+封装基板需求强劲，双线驱动</td></tr>
+        <tr><td><strong>生益电子</strong></td><td><code>688183</code></td><td><span class="a-meet">✔符合预期</span></td><td>24.1亿</td><td><span class="yp">+53%</span></td><td>35.2%</td><td><span class="yp">+5.4pct</span></td><td>4.4亿</td><td><span class="yp">+123%</span></td><td style="color:var(--text2)">AI订单拉货旺季，产品结构环比大幅增长</td></tr>
+        <tr><td>景旺电子</td><td><code>603228</code></td><td><span class="a-miss">⚠低于预期</span></td><td>38.9亿</td><td><span class="yp">+17%</span></td><td>18.8%</td><td><span class="yn">-2.0pct</span></td><td>1.9亿</td><td><span class="yn">-18%</span></td><td style="color:var(--text2)">收入+16%但归母-28%，上游材料成本拖累</td></tr>
+        <tr><td>鹏鼎控股</td><td><code>002938</code></td><td><span class="a-miss">⚠低于预期</span></td><td>79.9亿</td><td><span class="yn">-1%</span></td><td>22.9%</td><td><span class="yp">+5.1pct</span></td><td>3.3亿</td><td><span class="yn">-32%</span></td><td style="color:var(--text2)">营收-1%归母-5%；加大研发投入聚焦AI新赛道</td></tr>
+      </tbody>
+    </table>
+    <div class="seg-sum">HLC产能：胜宏58% > 沪电42% > 深南35%；沪电1.6T交换机板已出货（44/54层），全年AI订单锁定85亿。鹏鼎/景旺AI纯度低，受材料成本压制。</div>
+    <div class="chart-row" style="margin-top:14px">
+      <div class="chart-box"><h4>PCB制造 — 季度收入（亿元）</h4><div class="chart-wrap"><canvas id="c-pcb-rev"></canvas></div></div>
+      <div class="chart-box"><h4>PCB制造 — 毛利率（%）</h4><div class="chart-wrap"><canvas id="c-pcb-gm"></canvas></div></div>
+    </div>
+  </div>
+
+  <!-- ② CCL -->
+  <div class="tab-pane" id="tab-ccl">
+    <table class="ctable">
+      <thead><tr><th>公司</th><th>代码</th><th>业绩</th><th>26Q1收入</th><th>收入YoY</th><th>26Q1毛利率</th><th>毛利率YoY</th><th>26Q1扣非</th><th>扣非YoY</th><th>核心看点</th></tr></thead>
+      <tbody>
+        <tr><td><strong>生益科技</strong></td><td><code>600183</code></td><td><span class="a-super">✅超预期</span></td><td>81.4亿</td><td><span class="yp">+45%</span></td><td>28.1%</td><td><span class="yp">+3.5pct</span></td><td>10.8亿</td><td><span class="yp">+93%</span></td><td style="color:var(--text2)">CCL涨价+生益电子高增，归母+105%，大超预期</td></tr>
+        <tr><td><strong>南亚新材</strong></td><td><code>688519</code></td><td><span class="a-super">✅超预期</span></td><td>18.3亿</td><td><span class="yp">+93%</span></td><td>15.2%</td><td><span class="yp">+5.2pct</span></td><td>1.5亿</td><td><span class="yp">扭亏</span></td><td style="color:var(--text2)">M6/M7国产化加速，无卤无铅CCL涨价传导</td></tr>
+        <tr><td>建滔积层板</td><td><code>1888.HK</code></td><td><span class="a-na">— 港股</span></td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td style="color:var(--text2)">港股未披露Q报；全球CCL第一，花旗目标价65港元</td></tr>
+      </tbody>
+    </table>
+    <div style="font-size:11px;padding:8px 10px;background:#ecfeff;border-radius:6px;border:1px solid #a5f3fc;margin-top:8px;margin-bottom:4px">
+      📈 <strong>FR-4 CCL价格走势：</strong><span data-tip="ccl-fr4-price" style="font-weight:600">2025初100元→年中120-130元→2026年Q1 150-200元/张</span>（2021年高点210-220元，本轮接近但未超）；建滔2025年涨价4轮，2026年已涨2轮，日本龙头2026年1月宣布3月起涨30%
+    </div>
+    <div class="seg-sum">生益是A股M8 CCL绝对龙头，常熟Q2满产后M8产能翻倍；南亚新材规模小但高速放量（全球首批NV M5代送样，4-5月关键窗口）；建滔积层板为全球最大CCL厂（全球~20%份额），CCL涨价最直接受益方。<strong>M9成本是M8的1.5倍，PTFE是M9的2倍+</strong>，材料迭代带来CCL ASP持续上台阶。</div>
+    <div class="chart-row" style="margin-top:14px">
+      <div class="chart-box"><h4>CCL — 季度收入（亿元）</h4><div class="chart-wrap"><canvas id="c-ccl-rev"></canvas></div></div>
+      <div class="chart-box"><h4>CCL — 毛利率（%）</h4><div class="chart-wrap"><canvas id="c-ccl-gm"></canvas></div></div>
+    </div>
+  </div>
+
+  <!-- ③ 铜箔 -->
+  <div class="tab-pane" id="tab-foil">
+    <table class="ctable">
+      <thead><tr><th>公司</th><th>代码</th><th>业绩</th><th>26Q1收入</th><th>收入YoY</th><th>26Q1毛利率</th><th>毛利率YoY</th><th>26Q1扣非</th><th>扣非YoY</th><th>核心看点</th></tr></thead>
+      <tbody>
+        <tr><td><strong>铜冠铜箔</strong></td><td><code>301217</code></td><td><span class="a-super">✅超预期</span></td><td>18.4亿</td><td><span class="yp">+32%</span></td><td>8.8%</td><td><span class="yp">+6.1pct</span></td><td>1.0亿</td><td><span class="yp">扭亏</span></td><td style="color:var(--text2)">高端铜箔放量超预期，HVLP铜箔爆发式放量在即</td></tr>
+        <tr><td><strong>德福科技</strong></td><td><code>301511</code></td><td><span class="a-super">✅超预期</span></td><td>43.4亿</td><td><span class="yp">+74%</span></td><td>9.1%</td><td><span class="yp">+2.6pct</span></td><td>1.5亿</td><td><span class="yp">+2424%</span></td><td style="color:var(--text2)">锂电盈利修复，高端标箔&载体铜箔放量，超预期</td></tr>
+      </tbody>
+    </table>
+    <div style="font-size:11px;padding:8px 10px;background:#fef2f2;border-radius:6px;border:1px solid #fecaca;margin-top:8px;margin-bottom:4px">
+      ⚠️ <strong>HVLP四代供需缺口：</strong>加工费阶梯：一代5万→二代7万→三代12万→<strong>四代20万元/吨</strong>（是标箔的10倍）；四代全球年供给仅1-2万吨，2026年需求5-6万吨，<strong>缺口约67%</strong>；铜冠26年目标1,000吨+/月，仍只能满足20%市场需求
+    </div>
+    <div class="seg-sum">铜箔端毛利率仍偏低（8-9%），但已从深度亏损转盈利，是产业链中景气边际改善最明显的环节。HVLP四代加工费高达20万元/吨，供需缺口67%，是A股唯一两家量产标的（铜冠/德福）的核心护城河。铜价高位对普通铜箔成本有压制，但HVLP高端产品加工费占比高，受影响较小。</div>
+    <div class="chart-row" style="margin-top:14px">
+      <div class="chart-box"><h4>铜箔 — 季度收入（亿元）</h4><div class="chart-wrap"><canvas id="c-foil-rev"></canvas></div></div>
+      <div class="chart-box"><h4>铜箔 — 毛利率（%）</h4><div class="chart-wrap"><canvas id="c-foil-gm"></canvas></div></div>
+    </div>
+  </div>
+
+  <!-- ④ 电子布 -->
+  <div class="tab-pane" id="tab-cloth">
+    <table class="ctable">
+      <thead><tr><th>公司</th><th>代码</th><th>业绩</th><th>26Q1收入</th><th>收入YoY</th><th>26Q1毛利率</th><th>毛利率YoY</th><th>26Q1扣非</th><th>扣非YoY</th><th>核心看点</th></tr></thead>
+      <tbody>
+        <tr><td><strong>宏和科技</strong></td><td><code>603256</code></td><td><span class="a-meet">✔符合预期</span></td><td>4.4亿</td><td><span class="yp">+80%</span></td><td>55.7%</td><td><span class="yp">+27.5pct</span></td><td>1.4亿</td><td><span class="yp">+407%</span></td><td style="color:var(--text2)">毛利率55%同比+28pct，AI高端e-glass布需求验证</td></tr>
+        <tr><td><strong>菲利华</strong></td><td><code>300395</code></td><td><span class="a-meet">✔符合预期</span></td><td>6.2亿</td><td><span class="yp">+53%</span></td><td>50.7%</td><td>+0.7pct</td><td>1.3亿</td><td><span class="yp">+41%</span></td><td style="color:var(--text2)">半导体石英受AI拉动，电子布为第二增长曲线</td></tr>
+        <tr><td>中材科技</td><td><code>002080</code></td><td><span class="a-meet">✔符合预期</span></td><td>68.5亿</td><td><span class="yp">+24%</span></td><td>20.9%</td><td><span class="yp">+2.4pct</span></td><td>4.5亿</td><td><span class="yp">+80%</span></td><td style="color:var(--text2)">玻纤+隔膜盈利修复，AI电子布步入放量周期</td></tr>
+      </tbody>
+    </table>
+    <!-- 价格分层体系 -->
+    <div style="margin-top:16px;margin-bottom:6px;font-weight:700;font-size:12px;color:var(--accent)">▍ 产品价格分层体系（26年5月）</div>
+    <table class="ctable">
+      <thead><tr><th>产品类型</th><th>当前价格</th><th>代表用途</th><th>核心供应商</th><th>壁垒</th></tr></thead>
+      <tbody>
+        <tr><td>普通7628厚布</td><td><strong>6.6元/米</strong> <span style="color:var(--text2);font-size:10px">↑ 持续涨价</span></td><td>标准FR-4 CCL</td><td>巨石/中材/国际复材</td><td style="color:var(--text2)">低</td></tr>
+        <tr><td>薄布（1080/2116）</td><td><strong>~9元/米</strong></td><td>多层PCB中间层</td><td>宏和/国际复材</td><td>中</td></tr>
+        <tr><td>Low-Dk一代</td><td><strong>25-30元/米</strong></td><td>AI服务器主板（M7级CCL）</td><td>宏和/中材/国际复材</td><td style="color:var(--up)">高</td></tr>
+        <tr><td>Low-Dk二代</td><td><strong>100-110元/米</strong></td><td>AI服务器主板（M8级CCL）</td><td>国际复材/中材</td><td style="color:var(--up)">极高</td></tr>
+        <tr><td>Low-CTE</td><td><strong>80-240元/米</strong>（均价100元）</td><td>ABF载板/BT载板</td><td><strong>宏和（核心）</strong></td><td style="color:var(--up)">极高</td></tr>
+        <tr style="background:#fefce8"><td><strong>Q布（石英布）</strong></td><td><strong>~220元/米</strong></td><td>正交背板/LPU/Rubin Ultra</td><td><strong>菲利华（独家）</strong></td><td style="color:var(--dn);font-weight:700">最高·独家</td></tr>
+      </tbody>
+    </table>
+    <div style="font-size:11px;color:var(--text2);margin:4px 0 12px;padding:6px 10px;background:#f8f9fa;border-radius:5px">
+      普通布→Q布价格跨越33倍；当前月缺口3,000-4,000万米（占需求10%+），库存降至<strong>7天</strong>（近乎零库存）
+    </div>
+
+    <!-- 厂商月产能对比 -->
+    <div style="margin-top:4px;margin-bottom:6px;font-weight:700;font-size:12px;color:var(--accent)">▍ 厂商AI电子布月产能对比（2026年Q2）</div>
+    <table class="ctable">
+      <thead><tr><th>公司</th><th>Low-Dk一代</th><th>Low-Dk二代</th><th>Low-CTE</th><th>Q布</th><th>主要客户</th></tr></thead>
+      <tbody>
+        <tr><td><strong>宏和科技</strong> <code>603256</code></td><td>60万米/月</td><td>5-10万米/月</td><td><span class="yp"><strong>25-30万米/月</strong></span></td><td>—</td><td>利森诺科(ABF)、三菱瓦斯(BT)、谷歌TPU</td></tr>
+        <tr><td><strong>国际复材</strong></td><td>少量</td><td><span class="yp"><strong>40-50万米/月</strong></span></td><td>少量</td><td>—</td><td>Resonac（已获认证）</td></tr>
+        <tr><td>中材科技 <code>002080</code></td><td>120万米+/月</td><td>扩产中</td><td>10-15万米/月</td><td>小批量</td><td>国内云厂综合</td></tr>
+        <tr style="background:#fefce8"><td><strong>菲利华</strong> <code>300395</code></td><td>—</td><td>—</td><td>—</td><td><strong>独家</strong></td><td>英伟达/深南/健鼎等</td></tr>
+        <tr><td>中国巨石</td><td>普通布绝对龙头</td><td>研发中</td><td>研发中</td><td>—</td><td>综合客户</td></tr>
+      </tbody>
+    </table>
+    <div style="font-size:11px;color:var(--dn);margin:4px 0 12px;padding:6px 10px;background:#fef2f2;border-radius:5px;border-left:3px solid var(--dn)">
+      ⚠ <strong>二代布缺口警示：</strong>2026年需求4,600万米，供给仅2,640万米/年（220万米/月），缺口达<strong>43%</strong>
+    </div>
+
+    <!-- 织机瓶颈 -->
+    <div style="margin-top:4px;margin-bottom:6px;font-weight:700;font-size:12px;color:var(--accent)">▍ 织机瓶颈量化（最硬的供给约束）</div>
+    <table class="ctable">
+      <thead><tr><th>维度</th><th>数据</th><th>含义</th></tr></thead>
+      <tbody>
+        <tr><td>Toyota织机交期</td><td><span class="yn"><strong>2026年1月订→2028Q3到货；当前订→2030年下半年</strong></span></td><td>交期从1年暴增至4年+</td></tr>
+        <tr><td>AI布单台年产效</td><td><strong>7-8万米</strong>（vs 普通布28-30万米）</td><td>效率仅普通布的 <strong style="color:var(--dn)">1/4</strong></td></tr>
+        <tr><td>2027年AI布所需织机</td><td>~3,000台</td><td>Toyota仅能供给约2,400台，<strong>缺口600台</strong></td></tr>
+        <tr><td>国产织机（万利/日发/泰坦）</td><td style="color:var(--warn)">良率稳定性不足</td><td>短期1-2年内不能规模替代丰田</td></tr>
+      </tbody>
+    </table>
+
+    <!-- 菲利华Q布独立逻辑 -->
+    <div style="margin-top:14px;margin-bottom:6px;font-weight:700;font-size:12px;color:var(--accent)">▍ 石英电子布（Q布）独立逻辑 — 菲利华2027年期权</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px">
+      <div style="padding:10px 12px;background:#fefce8;border-radius:8px;border:1px solid #fde68a">
+        <div style="font-weight:700;font-size:12px;margin-bottom:6px;color:#92400e">性能壁垒（不可替代）</div>
+        <div style="font-size:11px;color:var(--text2);line-height:1.7">
+          介电损耗DF：<strong>1-2‱</strong>（vs Low-Dk二代12-14‱，vs M9要求≤7‱）<br>
+          热膨胀系数：<strong>0.55PPM</strong>（vs PTFE 50-200PPM）<br>
+          → 唯一同时满足低损耗+低膨胀的方案
+        </div>
+      </div>
+      <div style="padding:10px 12px;background:#eff6ff;border-radius:8px;border:1px solid #93c5fd">
+        <div style="font-weight:700;font-size:12px;margin-bottom:6px;color:#1d4ed8">应用时间线（2027年才兑现）</div>
+        <div style="font-size:11px;color:var(--text2);line-height:1.7">
+          2026年Q3-Q4：LPU推理引擎 + 正交背板起量<br>
+          <strong>2027年：Rubin Ultra全面采用（最大场景）</strong><br>
+          NVL72单柜950米；若1.5万柜→新增1,400万米需求<br>
+          2025年菲利华Q布收入：<strong>0.98亿元</strong>（微小基数）
+        </div>
+      </div>
+    </div>
+
+    <div class="seg-sum"><strong>双重逻辑并存：</strong>普通布/AI布（宏和/国际复材/中材）受益于当下景气；菲利华Q布是完全不同的2027年期权——现在收入微小，但Rubin Ultra落地后将是最大应用场景。织机交期暴增至4年+、AI布产效仅普通布1/4，是整个AI PCB供应链的最上游瓶颈，普通布涨价逻辑持续至2026年底，二代布缺口43%是最强的供需信号。</div>
+    <div class="chart-row" style="margin-top:14px">
+      <div class="chart-box"><h4>电子布 — 季度收入（亿元）</h4><div class="chart-wrap"><canvas id="c-cloth-rev"></canvas></div></div>
+      <div class="chart-box"><h4>电子布 — 毛利率（%）</h4><div class="chart-wrap"><canvas id="c-cloth-gm"></canvas></div></div>
+    </div>
+  </div>
+
+  <!-- ⑤ 钻针 -->
+  <div class="tab-pane" id="tab-drill">
+    <!-- 业绩表 -->
+    <table class="ctable">
+      <thead><tr><th>公司</th><th>代码</th><th>业绩</th><th>26Q1收入</th><th>收入YoY</th><th>26Q1毛利率</th><th>毛利率YoY</th><th>26Q1扣非</th><th>扣非YoY</th><th>核心看点</th></tr></thead>
+      <tbody>
+        <tr><td><strong>鼎泰高科</strong></td><td><code>301377</code></td><td><span class="a-super">✅超预期</span></td><td>8.1亿</td><td><span class="yp">+92%</span></td><td><strong>53.3%</strong></td><td><span class="yp"><strong>+15.3pct</strong></span></td><td>2.6亿</td><td><span class="yp">+286%</span></td><td style="color:var(--text2)">钻针供不应求，毛利率53%同比+15pct；超预期</td></tr>
+        <tr><td>中钨高新</td><td><code>000657</code></td><td><span class="a-meet">✔符合预期</span></td><td>70.1亿</td><td><span class="yp">+107%</span></td><td>30.5%</td><td><span class="yp">+9.9pct</span></td><td>9.2亿</td><td><span class="yp">+349%</span></td><td style="color:var(--text2)">含矿业/远景注入；<strong>子公司金洲PCB钻针月出货9,000万支，26Q1均价1.8元，毛利47-48%，超产能运行</strong></td></tr>
+      </tbody>
+    </table>
+    <div style="font-size:11px;padding:8px 10px;background:#ecfeff;border-radius:6px;border:1px solid #a5f3fc;margin-top:8px">
+      📌 <strong>中钨金洲最新（260512浙商线下）：</strong>26Q1 PCB钻针出货2.8亿只，全年预计12亿只+；2亿只项目2026年6-7月投产（+1,500万支/月）；AiP PCB市占率<strong>80%+</strong>（0.2mm以上全球第一），全球前20大AiP基板厂已合作19家，与生益科技签订保供协议；<strong>40倍径以上全行业唯一批量供应</strong>（50倍已量产，60倍通过客户验证）；M9钻针寿命700-900孔（vs市场普通200孔）
+    </div>
+
+    <!-- 全球竞争格局 -->
+    <div style="margin-top:16px;margin-bottom:6px;font-weight:700;font-size:12px;color:var(--accent)">▍ 全球竞争格局（2026年最新）</div>
+    <table class="ctable">
+      <thead><tr><th>公司</th><th>月产量（PCB钻针）</th><th>2026目标</th><th>AI PCB市占率</th><th>核心优势/状态</th><th>梯队</th></tr></thead>
+      <tbody>
+        <tr><td><strong>鼎泰高科</strong> 301377</td><td><strong data-tip="dingtech-capacity">1.3亿支/月</strong></td><td><strong>2亿支/月（26年底）</strong></td><td><span class="yp"><strong>~40%+</strong></span></td><td>设备自制（成本1/3进口价）；毛利率53%最高；50亿智造基地在建</td><td style="color:var(--up);font-weight:700">第一梯队</td></tr>
+        <tr><td><strong>中钨金洲</strong> 000657子</td><td><strong>9,000万支/月（超产能）</strong></td><td><strong>约1亿支/月（6-7月投产）</strong></td><td><span class="yp"><strong data-tip="zhongwu-aip-share">80%+（AiP PCB）</strong></span></td><td>瑞士设备保有量行业最多；40倍径以上无竞品；全产业链（矿→粉→针）</td><td style="color:var(--up);font-weight:700">第一梯队</td></tr>
+        <tr style="color:var(--text2)"><td>佑能工具（日本）</td><td>（无披露）</td><td><span class="yn" style="color:var(--dn);font-weight:700">⚠️ 濒临破产</span></td><td style="color:var(--dn)">持续下滑</td><td>丧失成本竞争力；AI时代加速出局</td><td style="color:var(--dn)">退出中</td></tr>
+        <tr style="color:var(--text2)"><td>尖点科技（8021.TW）</td><td>（无披露）</td><td><span class="yn" style="color:var(--dn);font-weight:700">⚠️ 濒临破产</span></td><td style="color:var(--dn)">持续下滑</td><td>依赖瑞士进口设备，无法竞争</td><td style="color:var(--dn)">退出中</td></tr>
+      </tbody>
+    </table>
+    <div style="font-size:11px;color:var(--text2);margin-top:6px;padding:8px 10px;background:#fef2f2;border-radius:6px;border:1px solid #fecaca">
+      ⚠️ <strong>格局重大更新：</strong>行业从"鼎泰一强+佑能/尖点追赶"演变为<strong>鼎泰+金洲双强垄断</strong>。佑能和台湾尖点<strong>双双濒临破产</strong>，行业集中度加速提升。鼎泰靠设备自制成本领先，金洲靠全产业链+瑞士设备保有量领先，双强格局持续强化。
+    </div>
+
+    <!-- 鼎泰产能路线图 -->
+    <div style="margin-top:16px;margin-bottom:6px;font-weight:700;font-size:12px;color:var(--accent)">▍ 鼎泰高科产能路线图</div>
+    <table class="ctable">
+      <thead><tr><th>时间节点</th><th>月产能</th><th>关键事件</th></tr></thead>
+      <tbody>
+        <tr><td>2024年均值</td><td>~5,000-6,000万支/月</td><td>AI PCB需求启动，订单开始排期</td></tr>
+        <tr><td>2025年</td><td>~8,000-9,000万支/月</td><td>AI扩产期，产线快速爬坡</td></tr>
+        <tr><td><strong>2026Q1</strong></td><td><strong>1.3亿支/月</strong></td><td>供不应求确认，毛利率同比+15pct至53%</td></tr>
+        <tr><td>2026年底目标</td><td><strong>2亿支/月</strong></td><td>新产线投产，配套AI PCB扩产节奏</td></tr>
+      </tbody>
+    </table>
+
+    <!-- AI钻针价值量阶梯 -->
+    <div style="margin-top:16px;margin-bottom:6px;font-weight:700;font-size:12px;color:var(--accent)">▍ AI钻针价值量阶梯（长径比→价格体系）</div>
+    <table class="ctable">
+      <thead><tr><th>长径比</th><th>代表规格</th><th>单支价格（元）</th><th>寿命（孔/支）</th><th>应用场景</th></tr></thead>
+      <tbody>
+        <tr><td>&lt;30倍</td><td>0.2/5mm</td><td>1.5-1.6元</td><td>1,000-2,000孔</td><td>普通服务器PCB</td></tr>
+        <tr><td>30-40倍</td><td>0.2/7-8mm</td><td><strong>3-4元</strong></td><td>400-800孔</td><td>GB200/GB300 AI板（当前主流需求段）</td></tr>
+        <tr style="background:#fefce8"><td>40-50倍</td><td>0.2/8.5-9.5mm</td><td><strong style="color:var(--warn)">8-10元</strong></td><td>200-400孔</td><td>Rubin 144、M9厚板（<strong>利润贡献最大段</strong>）</td></tr>
+        <tr style="background:#fef2f2"><td>50倍+</td><td>0.2/10mm+</td><td><strong style="color:var(--dn)">15-20元</strong></td><td>&lt;200孔</td><td>CPX正交背板、Ultra 576</td></tr>
+      </tbody>
+    </table>
+    <div style="font-size:11px;color:var(--text2);margin-top:4px;padding:6px 10px;background:#f8f9fa;border-radius:5px">
+      材料升级对寿命的影响：M6(2,000孔) → M7(1,000孔) → M8(400-500孔) → M9(100-200孔)；M9需<strong>分3-4次分段钻孔</strong>
+    </div>
+
+    <!-- 机柜维度消耗量 -->
+    <div style="margin-top:14px;margin-bottom:6px;font-weight:700;font-size:12px;color:var(--accent)">▍ 机柜维度钻针消耗量（量价双乘数效应）</div>
+    <table class="ctable">
+      <thead><tr><th>机柜型号</th><th>单柜用钻量</th><th>均价（元/支）</th><th>单柜钻针价值量</th><th>vs GB200倍数</th></tr></thead>
+      <tbody>
+        <tr><td>GB200 NVL72</td><td>~3,000支</td><td>1.5元</td><td>~4,500元</td><td>1×</td></tr>
+        <tr><td>GB300 NVL72</td><td>~7,000支</td><td>3-4元</td><td>~2.5万元</td><td><span class="yp">5.5×</span></td></tr>
+        <tr style="background:#fefce8"><td>Rubin 144</td><td>~15,000支</td><td>8-10元</td><td>~13.5万元</td><td><span class="yp" style="font-weight:700">30×</span></td></tr>
+        <tr style="background:#fef2f2"><td>Rubin CPX</td><td>~30,000支</td><td>10-15元</td><td>~37.5万元</td><td><span class="yp" style="font-weight:700">83×</span></td></tr>
+        <tr style="background:#fef2f2"><td><strong>Rubin Ultra 576</strong></td><td>~50,000支</td><td><strong>15-20元</strong></td><td><strong>~75万元</strong></td><td><span class="yp" style="font-weight:700;color:var(--dn)">167×</span></td></tr>
+      </tbody>
+    </table>
+    <div style="font-size:11px;color:var(--text2);margin-top:4px;padding:6px 10px;background:#f0fdf4;border-radius:5px;border-left:3px solid var(--up)">
+      💡 单柜钻针价值量从GB200的4,500元→Ultra 576的75万元，<strong>增长167倍</strong>。每台机柜卖出，钻针受益是AI PCB里弹性最纯粹、最即时的环节——没有客户认证等待，随出货线性兑现。
+    </div>
+
+    <!-- 核心壁垒 -->
+    <div style="margin-top:16px;margin-bottom:6px;font-weight:700;font-size:12px;color:var(--accent)">▍ 核心壁垒（为何鼎泰份额持续扩张）</div>
+    <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:14px">
+      <div style="padding:10px 12px;background:#f0fdf4;border-radius:8px;border:1px solid #86efac">
+        <div style="font-weight:700;font-size:12px;margin-bottom:4px;color:var(--up)">① 设备自制（核心壁垒）</div>
+        <div style="font-size:11px;color:var(--text2)">鼎泰自研钻针研磨机与生产设备，竞争对手须从外部采购，鼎泰设备成本比外采低40-50%，同时掌握工艺参数不外泄。</div>
+      </div>
+      <div style="padding:10px 12px;background:#eff6ff;border-radius:8px;border:1px solid #93c5fd">
+        <div style="font-weight:700;font-size:12px;margin-bottom:4px;color:#1d4ed8">② 材料优势</div>
+        <div style="font-size:11px;color:var(--text2)">AI PCB钻针需超细钨钢棒材（直径0.1-0.3mm），鼎泰与钨矿/粉冶企业深度绑定，优先获取高纯度钨材，台湾厂商依赖日本供应链，成本偏高。</div>
+      </div>
+      <div style="padding:10px 12px;background:#fefce8;border-radius:8px;border:1px solid #fde68a">
+        <div style="font-weight:700;font-size:12px;margin-bottom:4px;color:#92400e">③ 客户认证先发</div>
+        <div style="font-size:11px;color:var(--text2)">已通过鸿海、比亚迪等大客户认证，且认证周期约6-12个月。AI PCB扩产节奏紧张，客户无意愿切换二供，鼎泰份额具粘性。</div>
+      </div>
+      <div style="padding:10px 12px;background:#fdf4ff;border-radius:8px;border:1px solid #d8b4fe">
+        <div style="font-weight:700;font-size:12px;margin-bottom:4px;color:#7e22ce">④ 规模效应（双强共有）</div>
+        <div style="font-size:11px;color:var(--text2)">鼎泰1.3亿+金洲9,000万≈双强合计2.2亿支/月；佑能、尖点濒临破产，规模碾压竞对。鼎泰固定成本摊薄优势最强；金洲40倍径以上无竞品，一户一议定价，价格不透明保护利润。</div>
+      </div>
+    </div>
+
+    <div class="seg-sum"><strong>双强垄断格局已确立：</strong>钻针已演变为鼎泰+金洲双强垄断，佑能和台湾尖点双双濒临破产，行业集中度加速提升。鼎泰毛利率53%（行业最高），金洲毛利率47-48%（次高），两强均超产能运行/供不应求。随机柜升级，单柜钻针价值量从4,500元→75万元（+167倍），量价双乘数是最核心弹性来源。 <span data-tip="diamond-drill-status" style="color:var(--text2);font-size:11px;cursor:help;border-bottom:1px dashed var(--text2)">⚠ 金刚石钻针现状</span>：实验室阶段，全球年产56万只，短期不影响格局。</div>
+
+    <div class="chart-row" style="margin-top:14px">
+      <div class="chart-box"><h4>钻针 — 季度收入（亿元）</h4><div class="chart-wrap"><canvas id="c-drill-rev"></canvas></div></div>
+      <div class="chart-box"><h4>钻针 — 毛利率（%）</h4><div class="chart-wrap"><canvas id="c-drill-gm"></canvas></div></div>
+    </div>
+  </div>
+
+  <!-- ⑥ PCB设备 -->
+  <div class="tab-pane" id="tab-equip">
+
+    <!-- ▷ 下游PCB厂CapEx总量 -->
+    <div style="margin-bottom:20px">
+      <div class="tab-step-hd">
+        <span class="step-num">1</span>
+        下游PCB厂 CapEx — 扩产周期确认（单位：亿元）
+        <span class="step-note">6家头部PCB制造商年度资本开支 · 数据来源：各公司年报</span>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:12px">
+        <!-- 数据表 -->
+        <div>
+          <table class="ctable" style="font-size:11px">
+            <thead><tr>
+              <th>公司</th><th>代码</th><th>2022</th><th>2023</th><th>2024</th><th style="color:var(--up)">2025</th><th>25 YoY</th>
+            </tr></thead>
+            <tbody>
+              <tr><td><strong>鹏鼎控股</strong></td><td><code>002938</code></td><td>43.4</td><td>35.1</td><td>28.4</td><td><strong style="color:var(--up)">66.3</strong></td><td><span class="yp">+133%</span></td></tr>
+              <tr><td><strong>胜宏科技</strong></td><td><code>300476</code></td><td>10.6</td><td>6.4</td><td>8.3</td><td><strong style="color:var(--up)">66.2</strong></td><td><span class="yp" style="color:var(--dn)">+698% 🔴</span></td></tr>
+              <tr><td><strong>深南电路</strong></td><td><code>002916</code></td><td>33.8</td><td>32.5</td><td>25.3</td><td><strong style="color:var(--up)">37.7</strong></td><td><span class="yp">+49%</span></td></tr>
+              <tr><td><strong>沪电股份</strong></td><td><code>002463</code></td><td>8.8</td><td>8.1</td><td>21.5</td><td><strong style="color:var(--up)">32.0</strong></td><td><span class="yp">+49%</span></td></tr>
+              <tr><td><strong>景旺电子</strong></td><td><code>603228</code></td><td>18.9</td><td>14.5</td><td>18.5</td><td><strong style="color:var(--up)">27.7</strong></td><td><span class="yp">+50%</span></td></tr>
+              <tr><td><strong>生益电子</strong></td><td><code>688183</code></td><td>6.9</td><td>6.2</td><td>4.2</td><td><strong style="color:var(--up)">16.4</strong></td><td><span class="yp">+290%</span></td></tr>
+              <tr style="background:#f0fdf4">
+                <td><strong>合计</strong></td><td style="color:var(--text2)">—</td>
+                <td><strong>122.4</strong></td><td><strong>102.8</strong></td><td><strong>106.2</strong></td>
+                <td><strong style="color:var(--up);font-size:13px">246.3</strong></td>
+                <td><span class="yp" style="font-weight:700">+132%</span></td>
+              </tr>
+            </tbody>
+          </table>
+          <div style="font-size:10px;color:var(--text2);margin-top:5px">注：2025年为年报实际值；2021年历史峰值约150亿（本轮已超历史高点+64%）</div>
+        </div>
+        <!-- 趋势图 -->
+        <div class="chart-box" style="padding:12px 14px">
+          <h4>头部PCB厂 CapEx 合计趋势（亿元，堆叠）</h4>
+          <div class="chart-wrap" style="height:200px"><canvas id="c-pcb-capex"></canvas></div>
+        </div>
+      </div>
+      <!-- 三大观察 -->
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:10px;font-size:11px">
+        <div style="padding:8px 10px;background:#fef2f2;border:1px solid #fecaca;border-radius:6px">
+          <div style="font-weight:700;color:var(--dn);margin-bottom:3px">🔴 胜宏科技 最大增量</div>
+          8.3亿→66.2亿（+698%，约7倍）；芯碁第一大客户；胜宏买日本设备被海关卡住，国产替代逻辑强化
+        </div>
+        <div style="padding:8px 10px;background:#fef2f2;border:1px solid #fecaca;border-radius:6px">
+          <div style="font-weight:700;color:var(--dn);margin-bottom:3px">🔴 鹏鼎控股 弹性最大</div>
+          28.4亿→66.3亿（+133%）；芯碁第二大客户（占芯碁收入13%）；今年拟投约300亿（含土建/基建）
+        </div>
+        <div style="padding:8px 10px;background:#f0fdf4;border:1px solid #86efac;border-radius:6px">
+          <div style="font-weight:700;color:var(--up);margin-bottom:3px">✅ 合计246亿 超历史高点</div>
+          6家合计已超2021年历史峰值150亿+64%；全面进入AI PCB新一轮扩产周期，2025-2027持续落地
+        </div>
+      </div>
+      <!-- 逻辑链过渡 -->
+      <div style="text-align:center;padding:7px 0;background:var(--bg);border:1px dashed var(--border);border-radius:6px;font-size:10px;color:var(--text2);letter-spacing:.3px">
+        ↓ &nbsp;这 <strong style="color:var(--text)">246亿设备CapEx</strong> 按工序如何分配？各设备环节谁受益最大？&nbsp; ↓
+      </div>
+    </div>
+
+    <!-- ① CapEx分配可视化 -->
+    <div style="margin-bottom:18px">
+      <div class="tab-step-hd">
+        <span class="step-num">2</span>
+        PCB产线 CapEx 构成 — 钱花在哪里
+        <span class="step-note">来源：招商/中金/光大/东北证券、广合科技招股书、Prismark 多源交叉验证</span>
+      </div>
+      <!-- 比例色块 -->
+      <div style="display:flex;height:44px;border-radius:8px;overflow:hidden;border:1px solid var(--border);margin-bottom:8px">
+        <div style="flex:20;background:#7c3aed;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:1px;font-size:9px;font-weight:700;color:#fff;min-width:0;overflow:hidden"><span>钻孔</span><span>~20%</span></div>
+        <div style="flex:14;background:#2563eb;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:1px;font-size:9px;font-weight:700;color:#fff;min-width:0;overflow:hidden"><span>曝光</span><span>~14%</span></div>
+        <div style="flex:12;background:#0891b2;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:1px;font-size:9px;font-weight:700;color:#fff;min-width:0;overflow:hidden"><span>检测</span><span>~12%</span></div>
+        <div style="flex:10;background:#059669;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:1px;font-size:9px;font-weight:700;color:#fff;min-width:0;overflow:hidden"><span>电镀</span><span>~10%</span></div>
+        <div style="flex:6;background:#d97706;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:1px;font-size:9px;font-weight:700;color:#fff;min-width:0;overflow:hidden"><span>压合</span><span>~6%</span></div>
+        <div style="flex:5;background:#64748b;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:1px;font-size:9px;font-weight:600;color:#fff;min-width:0;overflow:hidden"><span>成型</span><span>5%</span></div>
+        <div style="flex:5;background:#475569;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:1px;font-size:9px;font-weight:600;color:#fff;min-width:0;overflow:hidden"><span>蚀刻</span><span>5%</span></div>
+        <div style="flex:5;background:#4f46e5;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:1px;font-size:9px;font-weight:600;color:#fff;min-width:0;overflow:hidden"><span>自动化</span><span>5%</span></div>
+        <div style="flex:3;background:#94a3b8;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:1px;font-size:9px;color:#fff;min-width:0;overflow:hidden"><span>贴膜</span><span>3%</span></div>
+        <div style="flex:5;background:#cbd5e1;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:1px;font-size:9px;color:#475569;min-width:0;overflow:hidden"><span>其他</span><span>5%</span></div>
+        <div style="flex:15;background:#f1f5f9;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:1px;font-size:9px;font-weight:600;color:#64748b;min-width:0;overflow:hidden;border-left:2px dashed #cbd5e1"><span>土建/基建</span><span>~15%</span></div>
+      </div>
+      <!-- 三大结论 badge -->
+      <div style="display:flex;gap:8px;flex-wrap:wrap;font-size:10px">
+        <div style="padding:4px 10px;background:#f5f3ff;border:1px solid #c4b5fd;border-radius:4px;color:#6d28d9;font-weight:600">★ 钻孔+曝光+检测 = 三大核心，合计 46–50%</div>
+        <div style="padding:4px 10px;background:#f0fdf4;border:1px solid #86efac;border-radius:4px;color:#15803d;font-weight:600">设备合计 ~85–90%（其余为土建/基础设施）</div>
+        <div style="padding:4px 10px;background:#fff7ed;border:1px solid #fed7aa;border-radius:4px;color:#c2410c;font-weight:600">高端AI PCB 单位投资 ~7500万/万㎡（传统板~2000万，升3–4倍）</div>
+        <div style="padding:4px 10px;background:#fef2f2;border:1px solid #fecaca;border-radius:4px;color:#b91c1c;font-weight:600">本轮扩产：头部厂商合计800亿，设备投入500–640亿，2025–2027落地</div>
+      </div>
+    </div>
+
+    <!-- ② 设备品类全览表 -->
+    <table class="ctable" style="margin-bottom:14px;font-size:11px">
+      <thead><tr>
+        <th style="width:8%;white-space:nowrap">工序</th>
+        <th style="width:6%">占比</th>
+        <th style="width:19%">主要设备</th>
+        <th style="width:17%">A股代表</th>
+        <th style="width:13%">海外龙头</th>
+        <th style="width:20%">AI PCB技术趋势</th>
+      </tr></thead>
+      <tbody>
+        <tr style="background:#f5f3ff">
+          <td style="white-space:nowrap"><strong style="color:#7c3aed">🔵 钻孔</strong></td>
+          <td><strong style="color:#7c3aed">~20%</strong></td>
+          <td style="font-size:10px">机械钻孔机、CO₂/UV激光钻孔机、超快激光钻孔机、钻头研磨机</td>
+          <td><strong>大族数控 301200</strong><br><span style="font-size:10px;color:var(--text2)">国内份额70–80%</span></td>
+          <td style="font-size:10px">日本三菱（高阶HDI）<br>Schmoll / Hitachi</td>
+          <td style="font-size:10px;color:var(--text2)">微径化(&lt;0.1mm)；主轴升至40万rpm；激光钻孔需求随高阶HDI翻倍</td>
+        </tr>
+        <tr style="background:#eff6ff">
+          <td style="white-space:nowrap"><strong style="color:#2563eb">💡 曝光(LDI)</strong></td>
+          <td><strong style="color:#2563eb">~14%</strong></td>
+          <td style="font-size:10px">激光直接成像(LDI)、传统菲林曝光机</td>
+          <td><strong>芯碁微装 688630</strong><br><span style="font-size:10px;color:var(--text2)">LDI龙头；大族数控部分产品</span></td>
+          <td style="font-size:10px">Orbotech(KLA)<br>Screen</td>
+          <td style="font-size:10px;color:var(--text2)">LDI全面替代菲林；精度推至&lt;10μm线宽；层数增加→台数等比↑</td>
+        </tr>
+        <tr>
+          <td style="white-space:nowrap"><strong style="color:#0891b2">🔍 检测</strong></td>
+          <td><strong style="color:#0891b2">~12%</strong></td>
+          <td style="font-size:10px">AOI自动光学检测、AVI外观检查、电测设备、X-ray检测</td>
+          <td>天准科技 688003<br><span style="font-size:10px;color:var(--text2)">日联科技（未上市）；国内相对弱</span></td>
+          <td style="font-size:10px"><strong>Orbotech(KLA)</strong><br>Camtek</td>
+          <td style="font-size:10px;color:var(--text2)">AI视觉检测渗透率↑；高阶HDI要求X-ray检测增加；每道工序后必检</td>
+        </tr>
+        <tr style="background:#f0fdf4">
+          <td style="white-space:nowrap"><strong style="color:#059669">⚡ 电镀(VCP)</strong></td>
+          <td><strong style="color:#059669">~10%</strong></td>
+          <td style="font-size:10px">垂直连续电镀线(VCP)、PTH沉铜线、除胶液铜线</td>
+          <td><strong>东威技术 688516</strong><br><span style="font-size:10px;color:var(--text2)">VCP市占&gt;50%</span></td>
+          <td style="font-size:10px">Atotech(MKS)</td>
+          <td style="font-size:10px;color:var(--text2)">直流→脉冲升级（单价400–500万→700–800万/台）；HDI电镀次数显著增加</td>
+        </tr>
+        <tr>
+          <td style="white-space:nowrap"><strong style="color:#d97706">🔩 压合</strong></td>
+          <td>~6%</td>
+          <td style="font-size:10px">真空热压机、冷压机</td>
+          <td style="font-size:10px;color:var(--text2)">国内厂商（分散）</td>
+          <td style="font-size:10px">Burkle（德）</td>
+          <td style="font-size:10px;color:var(--text2)">随层数增加，压合次数等比↑；高端板层间对准精度要求更严</td>
+        </tr>
+        <tr>
+          <td style="white-space:nowrap"><strong style="color:#64748b">✂️ 成型</strong></td>
+          <td>~5%</td>
+          <td style="font-size:10px">CNC成型机、CCD成型机、激光成型机、V-Cut</td>
+          <td style="font-size:10px;color:var(--text2)">国内厂商</td>
+          <td style="font-size:10px">—</td>
+          <td style="font-size:10px;color:var(--text2)">激光成型替代机械成型趋势；CCD定位精度提升</td>
+        </tr>
+        <tr>
+          <td style="white-space:nowrap"><strong style="color:#475569">🧪 蚀刻</strong></td>
+          <td>~5%</td>
+          <td style="font-size:10px">蚀刻退膜线、显影蚀刻退膜线、退锡线</td>
+          <td style="font-size:10px;color:var(--text2)">国内厂商</td>
+          <td style="font-size:10px">—</td>
+          <td style="font-size:10px;color:var(--text2)">精细线路对蚀刻均匀性要求持续提升</td>
+        </tr>
+        <tr>
+          <td style="white-space:nowrap"><strong style="color:#4f46e5">🤖 自动化</strong></td>
+          <td>~5%</td>
+          <td style="font-size:10px">收放板设备、自动搬运、MES系统、锡膏印刷机</td>
+          <td style="font-size:10px">凯格精机（未上市）<br>劲拓股份 300600</td>
+          <td style="font-size:10px">ASMPT / ITW</td>
+          <td style="font-size:10px;color:var(--text2)">AI服务器用三类设备价值量升至70–80万/台；MES标配</td>
+        </tr>
+        <tr>
+          <td style="color:var(--text2);white-space:nowrap">📦 贴膜</td>
+          <td style="color:var(--text2)">~3%</td>
+          <td style="font-size:10px;color:var(--text2)">贴膜机、自动分拣包装</td>
+          <td style="font-size:10px;color:var(--text2)">国内厂商</td><td>—</td>
+          <td style="font-size:10px;color:var(--text2)">自动化程度持续提升</td>
+        </tr>
+        <tr style="background:#f8f9fa">
+          <td style="color:var(--text2);white-space:nowrap">其他辅助</td>
+          <td style="color:var(--text2)">~5%</td>
+          <td style="font-size:10px;color:var(--text2)">标化线、烘烤线、文字喷印机、清洗设备</td>
+          <td style="font-size:10px;color:var(--text2)">—</td><td>—</td>
+          <td style="font-size:10px;color:var(--text2)">表面处理/阻焊/文字标识辅助工序</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- ③ A股标的财务追踪 -->
+    <div class="tab-step-hd" style="margin-top:6px">
+      <span class="step-num">3</span>
+      A股设备标的 · 26Q1业绩追踪
+      <span class="step-note">大族数控/芯碁微装/东威技术/天准科技</span>
+    </div>
+    <table class="ctable">
+      <thead><tr><th>公司</th><th>代码</th><th>覆盖工序</th><th>业绩</th><th>26Q1收入</th><th>收入YoY</th><th>26Q1毛利率</th><th>毛利率YoY</th><th>26Q1扣非</th><th>扣非YoY</th><th>核心看点</th></tr></thead>
+      <tbody>
+        <tr><td><strong>大族数控</strong></td><td><code>301200</code></td>
+          <td><span style="font-size:10px;color:#7c3aed;font-weight:600">🔵 钻孔</span></td>
+          <td><span class="a-super">✅超预期</span></td><td>19.6亿</td><td><span class="yp">+104%</span></td><td>33.1%</td><td><span class="yp">+3.5pct</span></td><td>3.2亿</td><td><span class="yp">+199%</span></td>
+          <td style="font-size:11px;color:var(--text2)">AI PCB扩产加速，钻孔产品需求高增；全年预期约100亿（vs 2025年58亿）</td>
+        </tr>
+        <tr><td><strong>芯碁微装</strong></td><td><code>688630</code></td>
+          <td><span style="font-size:10px;color:#2563eb;font-weight:600">💡 曝光LDI</span></td>
+          <td><span class="a-super">✅超预期</span></td><td>5.1亿</td><td><span class="yp">+113%</span></td><td>40.9%</td><td>-0.4pct</td><td>1.1亿</td><td><span class="yp">+102%</span></td>
+          <td style="font-size:11px;color:var(--text2)">Q1新签8亿；4月单月3亿排产排到7月；全年订单确定超30亿；先进封装今年交付≥20台；鹏鼎CapEx 70-80亿→300亿是最大催化🔴</td>
+        </tr>
+        <tr><td><strong>东威技术</strong></td><td><code>688516</code></td>
+          <td><span style="font-size:10px;color:#059669;font-weight:600">⚡ 电镀VCP</span></td>
+          <td><span class="a-meet">待更新</span></td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td>
+          <td style="font-size:11px;color:var(--text2)">VCP市占&gt;50%；脉冲电镀升级趋势下单台价值量提升40–60%；HDI高端化直接受益</td>
+        </tr>
+        <tr><td><strong>天准科技</strong></td><td><code>688003</code></td>
+          <td><span style="font-size:10px;color:#0891b2;font-weight:600">🔍 检测AOI</span></td>
+          <td><span class="a-meet">待更新</span></td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td>
+          <td style="font-size:11px;color:var(--text2)">PCB AOI检测国内相对领先；高阶HDI/BGA的X-ray检测需求是增量；国内仍弱于Orbotech</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="seg-sum">
+      PCB设备是AI PCB扩产的前置指标，收入增速100%+直接验证板厂扩产真实性。<strong>大族（钻孔）+ 芯碁（曝光LDI）</strong>是A股最纯粹的设备标的，占CapEx合计34%；东威技术（电镀VCP）受益脉冲升级；检测环节（天准/日联）国内仍弱于Orbotech/Camtek。<br>
+      <strong style="color:var(--dn)">⚡【260520 实地调研新增】</strong> 鹏鼎CapEx边际变化极大：之前每年70-80亿，今年拟投300亿（约4倍）——是当前最重要行业alpha。芯碁第一大客户胜宏、第二大鹏鼎（占13%）、深南第三；鹏鼎买进口设备为主，国产直写光刻只有芯碁一家，鹏鼎大扩是芯碁最大催化剂。胜宏购买日本设备被海关卡住，国产化替代逻辑进一步强化。
+    </div>
+    <div class="chart-row" style="margin-top:14px">
+      <div class="chart-box"><h4>PCB设备 — 季度收入（亿元）</h4><div class="chart-wrap"><canvas id="c-equip-rev"></canvas></div></div>
+      <div class="chart-box"><h4>PCB设备 — 毛利率（%）</h4><div class="chart-wrap"><canvas id="c-equip-gm"></canvas></div></div>
+    </div>
+  </div>
+</div><!-- /card -->
+
+<!-- 六环节景气汇总 -->
+<div class="st">📋 六环节景气汇总</div>
+<div class="sum-grid" style="margin-bottom:20px">
+  <div class="sum-item"><div class="sum-seg">① PCB制造</div><div class="sum-val" style="color:var(--up)">🟢 景气强</div><div class="sum-note">HLC产能认证差异化，胜宏/沪电领跑</div></div>
+  <div class="sum-item"><div class="sum-seg">② CCL覆铜板</div><div class="sum-val" style="color:var(--up)">🟢 景气强</div><div class="sum-note">M8涨价+国产化，生益科技超预期</div></div>
+  <div class="sum-item"><div class="sum-seg">③ 铜箔</div><div class="sum-val" style="color:var(--warn)">🟡 边际改善</div><div class="sum-note">从亏损转盈利，HVLP护城河成型</div></div>
+  <div class="sum-item"><div class="sum-seg">④ 电子布</div><div class="sum-val" style="color:var(--up)">🟢 景气强</div><div class="sum-note">宏和毛利率55%新高，织机是瓶颈</div></div>
+  <div class="sum-item"><div class="sum-seg">⑤ 钻针</div><div class="sum-val" style="color:var(--up)">🟢 最强</div><div class="sum-note">鼎泰毛利率53%创新高，供不应求</div></div>
+  <div class="sum-item"><div class="sum-seg">⑥ PCB设备</div><div class="sum-val" style="color:var(--up)">🟢 景气强</div><div class="sum-note">扩产前置指标，100%+增速验证</div></div>
+</div>
+
+<!-- ── 利润池格局 ── -->
+<div class="st">💰 利润池格局（26Q1）</div>
+<div class="chart-row" style="margin-bottom:20px;grid-template-columns:3fr 2fr">
+  <div class="chart-box">
+    <h4>利润池气泡图 — 收入规模 × 毛利率（气泡大小 = 季度毛利润）</h4>
+    <div style="font-size:10px;color:var(--text2);margin-bottom:8px">X轴：季度收入（亿元）　Y轴：毛利率（%）　气泡：绝对毛利润（越大越多钱）</div>
+    <div class="chart-wrap" style="height:280px"><canvas id="c-profit-bubble"></canvas></div>
+  </div>
+  <div class="chart-box">
+    <h4>毛利率 YoY 改善（26Q1 vs 25Q1，pct）</h4>
+    <div style="font-size:10px;color:var(--text2);margin-bottom:8px">谁的议价权提升最快</div>
+    <div class="chart-wrap" style="height:280px"><canvas id="c-margin-delta"></canvas></div>
+  </div>
+</div>
+
+<!-- ── A股映射 + 催化剂 ── -->
+<div class="b-grid">
+  <div>
+    <div class="st">📈 A股标的映射</div>
+    <div class="card">
+      <table class="ctable">
+        <thead><tr><th>代码</th><th>公司</th><th>位置</th><th>核心看点</th><th>观点</th></tr></thead>
+        <tbody>
+          <tr><td><code>300476</code></td><td><strong>胜宏科技</strong></td><td style="color:var(--text2)">HLC主板纯弹性</td><td>多平台认证，HLC 58%</td><td><span class="a-super">🟢核心仓</span></td></tr>
+          <tr><td><code>002463</code></td><td><strong>沪电股份</strong></td><td style="color:var(--text2)">AI主板+网络认证</td><td>1.6T交换已出货，订单至2027</td><td><span class="a-super">🟢核心仓</span></td></tr>
+          <tr><td><code>600183</code></td><td><strong>生益科技</strong></td><td style="color:var(--text2)">CCL国产龙头</td><td>M8 ASP+2.4倍，涨价最快进报表</td><td><span class="a-super">🔵进攻仓</span></td></tr>
+          <tr><td><code>301377</code></td><td><strong>鼎泰高科</strong></td><td style="color:var(--text2)">钻针耗材</td><td>毛利率53%，供不应求，弹性最纯粹</td><td><span class="a-meet">🟡观察</span></td></tr>
+          <tr><td><code>603256</code></td><td><strong>宏和科技</strong></td><td style="color:var(--text2)">电子布纯标的</td><td>毛利率55%新高，AI fabric瓶颈</td><td><span class="a-meet">🟡观察</span></td></tr>
+          <tr><td><code>002916</code></td><td>深南电路</td><td style="color:var(--text2)">PCB+IC载板</td><td>ABF载板国产替代，2027年主弹性</td><td><span class="a-meet">🟡观察仓</span></td></tr>
+          <tr><td><code>688519</code></td><td>南亚新材</td><td style="color:var(--text2)">CCL跟随者</td><td>全球首批NV M5代送样，4-5月关键窗口；PE &lt;40倍</td><td><span class="a-meet">🟡观察</span></td></tr>
+          <tr><td><code>002972</code></td><td>华正新材</td><td style="color:var(--text2)">CCL黑马（H客户）</td><td>AI占比25年14%→26年30%，毛利率14%→18%，PE仅23倍明显低估</td><td><span class="a-meet">🟡观察</span></td></tr>
+          <tr><td><code>300395</code></td><td>菲利华</td><td style="color:var(--text2)">Q布独家（2027期权）</td><td>2025年Q布收入0.98亿，2026Q3-Q4起量，2027年Rubin Ultra最大场景</td><td><span class="a-meet">🟡2027期权</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div>
+    <div class="st">📅 催化剂跟踪</div>
+    <div class="card">
+      <div class="tl-item"><div class="tl-dot tl-d-t"></div><div class="tl-date">每月10日</div><div class="tl-content"><div class="tl-evt">台湾PCB厂月营收（TUC/欣兴/健鼎）</div><div class="tl-meta">TUC 5月高盛预测50.71亿台币，同比+137%</div></div><span class="tl-st st-t">🔵跟踪</span></div>
+      <div class="tl-item"><div class="tl-dot tl-d-p"></div><div class="tl-date">2026-Q2</div><div class="tl-content"><div class="tl-evt">英伟达GB300首批HGX服务器出货</div><div class="tl-meta">板厂AI板收入加速确认；沪电黄石二期动工</div></div><span class="tl-st st-p">🕐待观察</span></div>
+      <div class="tl-item"><div class="tl-dot tl-d-p"></div><div class="tl-date">2026-Q2</div><div class="tl-content"><div class="tl-evt">生益科技常熟新厂满产（M8产能翻倍）</div><div class="tl-meta">CCL供给扩张与AI需求匹配验证</div></div><span class="tl-st st-p">🕐待观察</span></div>
+      <div class="tl-item"><div class="tl-dot tl-d-p"></div><div class="tl-date">2026-Q3</div><div class="tl-content"><div class="tl-evt">博通Tomahawk 6放量（2026年180万片）</div><div class="tl-meta">交换机板需求第二波；Q2业绩预告7月中旬</div></div><span class="tl-st st-p">🕐待观察</span></div>
+      <div class="tl-item"><div class="tl-dot tl-d-p"></div><div class="tl-date">2026-Q4</div><div class="tl-content"><div class="tl-evt">超大厂2027年CapEx初步指引</div><div class="tl-meta">决定2027年需求基准（基准5200亿美元）</div></div><span class="tl-st st-p">🕐核心节点</span></div>
+      <div class="tl-item"><div class="tl-dot tl-d-r"></div><div class="tl-date">持续</div><div class="tl-content"><div class="tl-evt">铜价走势 + 二供认证进度</div><div class="tl-meta">铜价高位压毛利；二供加速则分散份额</div></div><span class="tl-st st-r">⚠风险</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ── 当前判断 ── -->
+<div class="st">💡 当前判断</div>
+<div class="j-grid">
+  <div class="card"><div style="font-size:11px;font-weight:600;color:var(--text2);margin-bottom:8px;text-transform:uppercase;letter-spacing:.4px">核心逻辑</div>
+    <div class="logic-box">AI PCB已进入<strong>第二阶段：利润兑现</strong>。2026Q1六环节全线超预期或符合预期，钻针（鼎泰毛利率53%）、电子布（宏和毛利率55%）、PCB设备（大族/芯碁增速100%+）验证景气深度。核心判断：<strong>不买"扩产最多"，买"客户切换成本最高"</strong>。</div>
+    <div style="font-size:11px;font-weight:600;color:var(--text2);margin-bottom:6px">三档标的策略</div>
+    <div class="strat-g">
+      <div class="strat-i s-core"><div class="strat-l" style="color:var(--up)">🟢核心仓</div><div style="font-size:11px">胜宏科技<br>沪电股份</div></div>
+      <div class="strat-i s-atk"><div class="strat-l" style="color:var(--tag)">🔵进攻仓</div><div style="font-size:11px">生益科技<br>（CCL最快兑现）</div></div>
+      <div class="strat-i s-wch"><div class="strat-l" style="color:var(--warn)">🟡观察仓</div><div style="font-size:11px">鼎泰高科<br>宏和科技</div></div>
+    </div>
+  </div>
+  <div class="card"><div style="font-size:11px;font-weight:600;color:var(--text2);margin-bottom:8px;text-transform:uppercase;letter-spacing:.4px">主要风险</div>
+    <div class="risk-i"><span class="rn">R1</span><span>英伟达GB出货节奏低于预期（沪电/胜宏AI板集中度60%+在NV/博通）</span></div>
+    <div class="risk-i"><span class="rn">R2</span><span>超大厂Q4历史性压缩CapEx（花旗提示：Q4年末预算结余期）</span></div>
+    <div class="risk-i"><span class="rn">R3</span><span>A股PCB 2026年扩产45%，若2027需求增速回落则过剩</span></div>
+    <div class="risk-i"><span class="rn">R4</span><span>铜价高位压缩PCB/CCL毛利率传导</span></div>
+    <div style="margin-top:12px;padding-top:10px;border-top:1px solid var(--border)">
+      <div style="font-size:10px;color:var(--text2);font-weight:600;margin-bottom:4px">下次更新关注点</div>
+      <div style="font-size:11px">TUC 5月月收 + 深南Q2毛利率是否站稳29%+ + 沪电黄石二期动工时间表</div>
+    </div>
+  </div>
+</div>
+
+<!-- 证伪清单（升级版）-->
+<div class="card" style="margin-bottom:20px">
+  <div style="display:flex;align-items:baseline;gap:12px;margin-bottom:10px;flex-wrap:wrap">
+    <span style="font-size:12px;font-weight:700">🚨 证伪清单（升级版）</span>
+    <span style="font-size:11px;color:var(--text2)">单点信号≠证伪；<strong>五张表共振走坏</strong>才是真实见顶信号（价格+交期+良率+认证+现金流）</span>
+  </div>
+
+  <!-- 三种情景 -->
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px">
+    <div style="background:var(--tag-bg);border:1px solid #a5f3fc;border-radius:7px;padding:10px 12px">
+      <div style="font-size:11px;font-weight:700;color:var(--tag);margin-bottom:4px">📊 基准情景（~60%）</div>
+      <div style="font-size:11px">普通材料松，高端M9/HVLP4/30+层仍紧；财报分化<br><strong>→ 持有高纯度标的</strong></div>
+    </div>
+    <div style="background:var(--up-bg);border:1px solid #86efac;border-radius:7px;padding:10px 12px">
+      <div style="font-size:11px;font-weight:700;color:var(--up);margin-bottom:4px">🚀 乐观情景（~25%）</div>
+      <div style="font-size:11px">五张表同向验证，1.6T加速放量<br><strong>→ 全线重估</strong></div>
+    </div>
+    <div style="background:var(--dn-bg);border:1px solid #fca5a5;border-radius:7px;padding:10px 12px">
+      <div style="font-size:11px;font-weight:700;color:var(--dn);margin-bottom:4px">⚠️ 悲观情景（~15%）</div>
+      <div style="font-size:11px">高端有效供给开闸，二供快速认证<br><strong>→ 降格为周期股</strong></div>
+    </div>
+  </div>
+
+  <!-- 分级证伪表 -->
+  <table class="ctable">
+    <thead>
+      <tr><th>编号</th><th>证伪条件</th><th>类型</th><th>对应跟踪指标</th><th>当前状态</th><th>严重程度</th></tr>
+    </thead>
+    <tbody>
+      <tr style="background:#fafbfc">
+        <td colspan="6" style="font-size:10px;color:var(--text2);padding:5px 12px;font-weight:600">⬇ 单点信号（不改变整体判断）</td>
+      </tr>
+      <tr>
+        <td><strong>F1</strong></td>
+        <td>收入涨但毛利率不跟（成本转嫁）</td>
+        <td><span style="font-size:10px;color:var(--text2)">单点</span></td>
+        <td style="color:var(--text2)">§3.6 关键公司季度毛利率</td>
+        <td><span class="a-super" style="font-size:10px">🟢 暂未触发</span></td>
+        <td><span style="color:var(--warn);font-weight:600">🟡 警示</span></td>
+      </tr>
+      <tr>
+        <td><strong>F2</strong></td>
+        <td>高端材料价差回落 + PCB交期同步缩短</td>
+        <td><span style="font-size:10px;color:var(--text2)">中等组合</span></td>
+        <td style="color:var(--text2)">§3.2 CCL价格 + §3.5 PCB交期</td>
+        <td><span class="a-super" style="font-size:10px">🟢 暂未触发</span></td>
+        <td><span style="color:#ea580c;font-weight:600">🟠 较强</span></td>
+      </tr>
+      <tr>
+        <td><strong>F3</strong></td>
+        <td>德尔顿/二供快速通过核心客户量产认证</td>
+        <td><span style="font-size:10px;color:var(--text2)">中等组合</span></td>
+        <td style="color:var(--text2)">德尔顿广州三厂2026Q4节点</td>
+        <td><span class="a-super" style="font-size:10px">🟢 暂未触发</span></td>
+        <td><span style="color:#ea580c;font-weight:600">🟠 较强</span></td>
+      </tr>
+      <tr>
+        <td><strong>F4</strong></td>
+        <td>超大厂2027年CapEx指引低于4800亿美元</td>
+        <td><span style="font-size:10px;color:var(--text2)">需求端</span></td>
+        <td style="color:var(--text2)">各财报季CapEx指引</td>
+        <td><span class="a-super" style="font-size:10px">🟢 暂未触发</span></td>
+        <td><span style="color:var(--dn);font-weight:600">🔴 最强单点</span></td>
+      </tr>
+      <tr>
+        <td><strong>F5</strong></td>
+        <td>客户锁定未进现金流（应收/存货快于收入）</td>
+        <td><span style="font-size:10px;color:var(--text2)">财务端</span></td>
+        <td style="color:var(--text2)">头部公司季报资产负债表</td>
+        <td><span class="a-meet" style="font-size:10px">⬜ 待跟踪</span></td>
+        <td><span style="color:var(--warn);font-weight:600">🟡 警示</span></td>
+      </tr>
+      <tr style="background:#fafbfc">
+        <td colspan="6" style="font-size:10px;color:var(--text2);padding:5px 12px;font-weight:600">⬇ 系统性信号（真实见顶）</td>
+      </tr>
+      <tr style="background:var(--dn-bg)">
+        <td><strong style="color:var(--dn)">五表<br>共振</strong></td>
+        <td><strong>F1+F2+F3+F5 同时出现</strong><br><span style="font-size:10px;color:var(--text2)">价格↓ + 交期缩 + 良率扩散 + 认证分散 + 现金流恶化</span></td>
+        <td><span style="font-size:10px;color:var(--dn);font-weight:600">系统信号</span></td>
+        <td style="color:var(--text2)">五张表同向走坏</td>
+        <td><span class="a-super" style="font-size:10px">🟢 安全</span></td>
+        <td><span style="color:var(--dn);font-weight:700">🔴 立即降评</span></td>
+      </tr>
+    </tbody>
+  </table>
+  <div style="font-size:10px;color:var(--text2);margin-top:8px;padding:8px 10px;background:var(--bg);border-radius:5px;border-left:3px solid var(--warn)">
+    ⚠ "有效供给开闸"有三种严重程度不同：①普通供给开闸（不改判断）②高端材料开闸（中等警示）③高端有效产能开闸（降评信号）— 切勿混淆
+  </div>
+</div>
+
+</div><!-- /wrap -->
+
+<script>
+const QTR = ['23Q1','23Q2','23Q3','23Q4','24Q1','24Q2','24Q3','24Q4','25Q1','25Q2','25Q3','25Q4','26Q1'];
+const COLORS = ['#0891b2','#16a34a','#8b5cf6','#d97706','#f43f5e','#64748b'];
+
+// ── 修订历史 & 数据冲突 数据字典 ──
+// 维护说明：每次数字更新时，把旧值连同来源移入 records，新值写入看板表格
+// type: 'history' = 同一指标的时间修订序列
+// type: 'conflict' = 多来源说法不同，需标注采用哪个
+const tipData = {
+
+  'dingtech-capacity': {
+    type: 'history',
+    label: '鼎泰高科 — 月产量修订记录',
+    records: [
+      { date: '2026Q1实际', value: '1.3亿支/月', delta: '↑', source: '鼎泰高科纪要' },
+      { date: '2025年11月底', value: '1.15亿支/月', delta: '↑', source: '2025Q3交流会' },
+      { date: '2025Q4', value: '1.1亿支/月', delta: '↑', source: '鼎泰高科纪要' },
+      { date: '2025H1', value: '~1.0亿支/月', delta: '↑', source: '鼎泰高科纪要' },
+      { date: '2024均', value: '~8,500万支/月', delta: '—', source: '鼎泰高科纪要' },
+    ],
+    note: '目标：2026年中1.5亿→2026年底2亿→2027年极限2.5亿 | 持续上修=供不应求确认'
+  },
+
+  'ccl-fr4-price': {
+    type: 'history',
+    label: 'FR-4 CCL 价格（元/张）修订记录',
+    records: [
+      { date: '2026年Q1', value: '150-200元/张', delta: '↑', source: '中金/国泰海通研报' },
+      { date: '2026年1月', value: '日本龙头宣布3月起涨30%', delta: '↑', source: '开源研报' },
+      { date: '2025年底', value: '累计涨价25个点以上', delta: '↑', source: '开源研报' },
+      { date: '2025年中', value: '120-130元/张', delta: '↑', source: '建滔4轮涨价' },
+      { date: '2025年初', value: '~100元/张', delta: '—', source: '中金研报' },
+    ],
+    note: '2021年历史高点210-220元/张；本轮接近但未超历史高点 | 建滔2025年共涨4轮，2026年已涨2轮'
+  },
+
+  'diamond-drill-status': {
+    type: 'conflict',
+    label: '金刚石钻针 — 替代威胁评估',
+    sources: [
+      { source: '市场担忧', value: '金刚石钻针可能替代传统钨钢针，改变鼎泰/金洲竞争格局' },
+      { source: '研报核实（天风/长江机械）', value: '实验室阶段，全球年产仅~56万只（月均不足5万支），是鼎泰单月产量的0.04%' },
+      { source: '行业定位', value: '补充方案而非替代；传统钨钢+TEC/PVD涂层升级仍是主流且成本更优' },
+    ],
+    chosen: '短期1-2年内不影响竞争格局；主要参与者（沃尔德/四方达）仍在少数客户测试中，未进小批量出货',
+    note: '⚠ 长期（3年+）技术路线仍有不确定性，需持续跟踪测试进展'
+  },
+
+  'zhongwu-aip-share': {
+    type: 'conflict',
+    label: 'AI PCB钻针市占率 — 来源分歧',
+    sources: [
+      { source: '中钨金洲纪要260512（自述）', value: '80%+（AiP PCB，0.2mm以上规格）' },
+      { source: '鼎泰高科纪要（自述）',       value: '全球最大，目标40%+（全规格PCB钻针）' },
+      { source: '产量推算交叉验证',            value: '鼎泰1.3亿 vs 金洲9,000万 → 产量比≈59:41，80%不可信' },
+    ],
+    chosen: '金洲80%可能特指AiP载板最后一道通孔工序（极小径超长径比），金洲是该子分类唯一批量供应商；整体AI PCB钻针份额两强接近，实际以产量比59:41更可信',
+    note: '⚠ 自述市占率存在口径选择偏差，企业倾向于选对自己最有利的子分类'
+  }
+
+};
+
+// ── Tooltip 渲染逻辑 ──
+const tipBubble = document.createElement('div');
+tipBubble.className = 'tip-bubble';
+document.body.appendChild(tipBubble);
+
+function buildTipHtml(key) {
+  const d = tipData[key];
+  if (!d) return '';
+  const icon = d.type === 'history' ? '📅' : '⚠️';
+  let html = `<div class="tip-title">${icon} ${d.label}</div>`;
+  if (d.type === 'history') {
+    d.records.forEach(r => {
+      const dc = r.delta === '↑' ? 'tip-delta-up' : r.delta === '↓' ? 'tip-delta-dn' : 'tip-delta-eq';
+      html += `<div class="tip-row">
+        <span class="tip-date">${r.date}</span>
+        <span class="tip-val">${r.value}</span>
+        <span class="${dc}">${r.delta}</span>
+        <span class="tip-src">${r.source}</span>
+      </div>`;
+    });
+  } else if (d.type === 'conflict') {
+    d.sources.forEach(s => {
+      html += `<div class="tip-conflict-row">
+        <span class="tip-conflict-src">来源：${s.source}</span>
+        <span class="tip-conflict-val">${s.value}</span>
+      </div>`;
+    });
+    if (d.chosen) html += `<div class="tip-chosen">✓ 采用：${d.chosen}</div>`;
+  }
+  if (d.note) html += `<div class="tip-note">${d.note}</div>`;
+  return html;
+}
+
+function positionTip(e) {
+  const bw = tipBubble.offsetWidth, bh = tipBubble.offsetHeight;
+  const x = e.clientX + 14, y = e.clientY + 14;
+  tipBubble.style.left = (x + bw > window.innerWidth - 10 ? e.clientX - bw - 14 : x) + 'px';
+  tipBubble.style.top  = (y + bh > window.innerHeight - 10 ? e.clientY - bh - 14 : y) + 'px';
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('[data-tip]').forEach(el => {
+    el.classList.add('tip-host');
+    el.addEventListener('mouseenter', e => {
+      tipBubble.innerHTML = buildTipHtml(el.dataset.tip);
+      tipBubble.classList.add('visible');
+      positionTip(e);
+    });
+    el.addEventListener('mousemove', positionTip);
+    el.addEventListener('mouseleave', () => tipBubble.classList.remove('visible'));
+  });
+});
+
+// Tab switching
+document.getElementById('tabNav').querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('.tab-pane').forEach(p=>p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('tab-'+btn.dataset.tab).classList.add('active');
+  });
+});
+
+function mkRevChart(id, companies) {
+  const ctx = document.getElementById(id);
+  if (!ctx) return;
+  new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: QTR,
+      datasets: companies.map((c,i) => ({
+        label: c.name, data: c.rev,
+        backgroundColor: COLORS[i]+'99', borderColor: COLORS[i],
+        borderWidth: 1, borderRadius: 3,
+      }))
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { position:'top', labels:{ font:{size:10}, padding:8 } } },
+      scales: {
+        x: { grid:{display:false}, ticks:{font:{size:9}}, stacked:false },
+        y: { grid:{color:'#f1f5f9'}, ticks:{font:{size:9}} }
+      }
+    }
+  });
+}
+
+function mkGmChart(id, companies) {
+  const ctx = document.getElementById(id);
+  if (!ctx) return;
+  new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: QTR,
+      datasets: companies.map((c,i) => ({
+        label: c.name, data: c.gm.map(v=>+(v*100).toFixed(1)),
+        borderColor: COLORS[i], backgroundColor: COLORS[i]+'15',
+        tension: 0.3, fill: false, borderWidth: 2, pointRadius: 2.5,
+      }))
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { position:'top', labels:{ font:{size:10}, padding:8 } } },
+      scales: {
+        x: { grid:{display:false}, ticks:{font:{size:9}} },
+        y: {
+          grid:{color:'#f1f5f9'}, ticks:{font:{size:9}, callback:v=>v+'%'},
+          title:{display:true,text:'毛利率%',font:{size:9},color:'#94a3b8'}
+        }
+      }
+    }
+  });
+}
+
+// ── Data ──
+const D = {
+  pcb: [
+    { name:'沪电',  rev:[18.7,19.0,23.2,28.6,25.8,28.4,35.9,43.3,40.4,44.6,50.2,54.3,62.1], gm:[0.257,0.335,0.321,0.324,0.339,0.388,0.349,0.318,0.328,0.373,0.358,0.357,0.356] },
+    { name:'胜宏',  rev:[17.6,19.1,20.7,21.9,23.9,24.6,28.4,30.3,43.1,47.2,50.9,51.8,55.2], gm:[0.201,0.217,0.239,0.172,0.195,0.217,0.232,0.257,0.334,0.388,0.352,0.335,0.345] },
+    { name:'深南',  rev:[27.8,32.5,34.3,40.6,39.6,43.6,47.3,48.6,47.8,56.7,63.0,68.9,66.0], gm:[0.230,0.228,0.234,0.242,0.252,0.271,0.254,0.220,0.247,0.276,0.314,0.286,0.292] },
+    { name:'生益电子',rev:[7.4,8.4,8.1,8.8,8.8,10.9,12.1,15.1,15.8,21.9,30.6,26.6,24.1],    gm:[0.183,0.164,0.142,0.101,0.189,0.204,0.249,0.249,0.298,0.308,0.339,0.291,0.352] },
+    { name:'景旺',  rev:[23.4,26.2,27.9,30.1,27.4,31.2,32.1,35.8,33.4,37.5,39.9,42.3,38.9], gm:[0.244,0.230,0.263,0.194,0.246,0.235,0.233,0.201,0.208,0.220,0.220,0.216,0.188] },
+    { name:'鹏鼎',  rev:[66.7,48.7,89.2,116.1,66.9,64.4,103.6,116.5,80.9,82.9,104.8,122.9,79.9],gm:[0.209,0.148,0.228,0.232,0.204,0.155,0.236,0.214,0.178,0.203,0.231,0.234,0.229] },
+  ],
+  ccl: [
+    { name:'生益科技', rev:[37.6,41.2,44.7,42.4,44.2,52.1,51.2,56.4,56.1,70.7,79.3,78.2,81.4], gm:[0.197,0.189,0.200,0.184,0.213,0.218,0.229,0.221,0.246,0.269,0.281,0.258,0.281] },
+    { name:'南亚新材', rev:[7.0,7.8,8.2,6.9,6.6,9.5,8.3,9.2,9.5,13.5,13.6,15.6,18.3],         gm:[0.091,0.024,0.027,0.028,0.083,0.114,0.065,0.080,0.100,0.126,0.109,0.130,0.152] },
+  ],
+  foil: [
+    { name:'铜冠铜箔', rev:[8.5,9.0,10.2,10.1,8.9,11.8,11.5,15.0,13.9,16.0,17.4,19.5,18.4],  gm:[0.055,0.019,0.005,0.019,-0.004,0.007,-0.014,-0.010,0.027,0.043,0.042,0.030,0.088] },
+    { name:'德福科技', rev:[12.8,16.5,20.1,15.9,11.9,19.9,21.6,24.6,25.0,28.0,32.0,39.4,43.4], gm:[0.124,0.065,0.079,0.044,-0.031,0.045,0.016,0.033,0.065,0.065,0.067,0.083,0.091] },
+  ],
+  cloth: [
+    { name:'宏和科技', rev:[1.22,1.66,2.09,1.64,1.90,2.18,2.11,2.16,2.46,3.04,3.02,3.19,4.42], gm:[0.164,0.045,0.052,0.122,0.122,0.177,0.190,0.200,0.281,0.340,0.349,0.435,0.556] },
+    { name:'菲利华',  rev:[5.0,5.2,4.7,6.0,4.1,5.0,4.0,4.3,4.1,5.0,4.7,6.4,6.2],             gm:[0.456,0.545,0.514,0.468,0.396,0.455,0.412,0.416,0.500,0.486,0.485,0.439,0.507] },
+    { name:'中材科技', rev:[42.6,81.2,58.5,76.6,44.3,61.1,62.7,71.7,55.1,78.3,83.7,84.9,68.5], gm:[0.281,0.239,0.224,0.252,0.194,0.177,0.168,0.152,0.185,0.211,0.191,0.170,0.209] },
+  ],
+  drill: [
+    { name:'鼎泰高科', rev:[2.76,3.06,3.45,3.93,3.33,3.80,4.16,4.51,4.23,4.81,5.53,6.86,8.14], gm:[0.391,0.337,0.402,0.334,0.338,0.354,0.372,0.363,0.380,0.403,0.429,0.460,0.533] },
+    { name:'中钨高新', rev:[30.6,34.9,30.0,31.9,29.7,38.4,34.2,45.1,33.9,44.6,49.1,48.8,70.1], gm:[0.172,0.154,0.160,0.190,0.142,0.155,0.148,0.384,0.206,0.216,0.229,0.285,0.305] },
+  ],
+  equip: [
+    { name:'大族数控', rev:[3.01,4.70,3.69,4.94,7.51,8.14,7.79,10.0,9.60,14.2,15.2,18.7,19.6], gm:[0.364,0.359,0.355,0.330,0.265,0.318,0.254,0.284,0.296,0.307,0.340,0.422,0.331] },
+    { name:'芯碁微装', rev:[1.57,1.62,2.05,3.05,1.98,2.51,2.68,2.36,2.42,4.12,2.79,4.75,5.15], gm:[0.442,0.479,0.378,0.423,0.439,0.403,0.395,0.248,0.413,0.426,0.421,0.364,0.409] },
+  ],
+};
+
+mkRevChart('c-pcb-rev', D.pcb);   mkGmChart('c-pcb-gm',   D.pcb);
+mkRevChart('c-ccl-rev', D.ccl);   mkGmChart('c-ccl-gm',   D.ccl);
+mkRevChart('c-foil-rev',D.foil);  mkGmChart('c-foil-gm',  D.foil);
+mkRevChart('c-cloth-rev',D.cloth);mkGmChart('c-cloth-gm', D.cloth);
+mkRevChart('c-drill-rev',D.drill);mkGmChart('c-drill-gm', D.drill);
+mkRevChart('c-equip-rev',D.equip);mkGmChart('c-equip-gm', D.equip);
+
+// ── 下游PCB厂 CapEx 堆叠柱状图 ──
+(function(){
+  const ctx = document.getElementById('c-pcb-capex'); if(!ctx) return;
+  new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: ['2018','2019','2020','2021','2022','2023','2024','2025'],
+      datasets: [
+        { label:'鹏鼎控股', data:[40.4,38.5,54.5,69.7,43.4,35.1,28.4,66.3], backgroundColor:'#7c3aed' },
+        { label:'胜宏科技', data:[11.6,14.8,21.0,15.4,10.6,6.4,8.3,66.2],  backgroundColor:'#dc2626' },
+        { label:'深南电路', data:[11.8,21.8,24.9,26.6,33.8,32.5,25.3,37.7], backgroundColor:'#0891b2' },
+        { label:'沪电股份', data:[2.7,4.4,3.7,5.0,8.8,8.1,21.5,32.0],      backgroundColor:'#16a34a' },
+        { label:'景旺电子', data:[5.3,9.2,18.8,23.9,18.9,14.5,18.5,27.7],  backgroundColor:'#d97706' },
+        { label:'生益电子', data:[2.7,5.8,10.7,9.8,6.9,6.2,4.2,16.4],      backgroundColor:'#94a3b8' },
+      ]
+    },
+    options: {
+      responsive:true, maintainAspectRatio:false,
+      plugins: {
+        legend:{ position:'bottom', labels:{ font:{size:9}, boxWidth:10, padding:6 } },
+        tooltip:{ callbacks:{ footer: items => '合计: ' + items.reduce((s,i)=>s+i.parsed.y,0).toFixed(1)+'亿' } }
+      },
+      scales: {
+        x:{ stacked:true, grid:{display:false} },
+        y:{ stacked:true, grid:{color:'#e9ecef'}, ticks:{ callback: v=>v+'亿' } }
+      }
+    }
+  });
+})();
+
+// ── 钻针景气走势（尖点科技月营收 + 鼎泰高科季度毛利率，2020-2026）──
+(function() {
+  const labels = [
+    '20-01','20-02','20-03','20-04','20-05','20-06','20-07','20-08','20-09','20-10','20-11','20-12',
+    '21-01','21-02','21-03','21-04','21-05','21-06','21-07','21-08','21-09','21-10','21-11','21-12',
+    '22-01','22-02','22-03','22-04','22-05','22-06','22-07','22-08','22-09','22-10','22-11','22-12',
+    '23-01','23-02','23-03','23-04','23-05','23-06','23-07','23-08','23-09','23-10','23-11','23-12',
+    '24-01','24-02','24-03','24-04','24-05','24-06','24-07','24-08','24-09','24-10','24-11','24-12',
+    '25-01','25-02','25-03','25-04','25-05','25-06','25-07','25-08','25-09','25-10','25-11','25-12',
+    '26-01','26-02','26-03','26-04'
+  ];
+
+  // 尖点科技月营收（百万新台币）
+  const jiandian = [
+    202,167,229,235,246,254,261,265,274,278,280,283,
+    267,257,256,299,303,332,338,356,358,333,330,345,
+    326,288,304,305,296,292,284,290,298,286,278,263,
+    222,194,201,191,197,226,227,239,270,263,262,258,
+    239,228,269,280,292,319,320,320,322,315,314,323,
+    285,290,313,322,333,358,361,390,418,438,438,466,
+    453,413,473,525
+  ];
+
+  // 鼎泰高科季度毛利率（%）— 映射到季末月份，其余为 null
+  // 2020-2022 无数据；从 2023Q1 开始
+  // index: 2023-03=38, 2023-06=41, 2023-09=44, 2023-12=47
+  //        2024-03=50, 2024-06=53, 2024-09=56, 2024-12=59
+  //        2025-03=62, 2025-06=65, 2025-09=68, 2025-12=71
+  //        2026-03=74
+  const dingtaiGM = new Array(76).fill(null);
+  const gmData = [
+    [38,39.1],[41,33.7],[44,40.2],[47,33.4],
+    [50,33.8],[53,35.4],[56,37.2],[59,36.3],
+    [62,38.0],[65,40.3],[68,42.9],[71,46.0],
+    [74,53.3]
+  ];
+  gmData.forEach(([i,v]) => dingtaiGM[i] = v);
+
+  const peak2021 = 358; // 尖点 2021-09 峰值
+
+  new Chart(document.getElementById('c-drill-price'), {
+    type: 'line',
+    data: {
+      labels,
+      datasets: [
+        {
+          label: '尖点科技月营收（百万NTD）',
+          data: jiandian,
+          borderColor: '#0891b2',
+          backgroundColor: 'rgba(8,145,178,0.09)',
+          fill: true, tension: 0.3, borderWidth: 2.5,
+          pointRadius: 0, pointHoverRadius: 4,
+          yAxisID: 'y',
+        },
+        {
+          label: '鼎泰高科季度毛利率（%）',
+          data: dingtaiGM,
+          borderColor: '#d97706',
+          backgroundColor: '#d97706',
+          fill: false, borderWidth: 0,
+          pointRadius: (ctx) => ctx.raw !== null ? 7 : 0,
+          pointStyle: 'circle',
+          pointHoverRadius: 9,
+          showLine: false,
+          yAxisID: 'y2',
+        },
+        {
+          label: '2021年尖点峰值（358M NTD）',
+          data: new Array(76).fill(peak2021),
+          borderColor: '#dc2626',
+          backgroundColor: 'transparent',
+          fill: false, borderWidth: 1,
+          borderDash: [5, 4], pointRadius: 0, pointHoverRadius: 0,
+          yAxisID: 'y',
+        },
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      interaction: { mode: 'index', intersect: false },
+      plugins: {
+        legend: { position: 'top', labels: { font: { size: 10 }, padding: 10, boxWidth: 18 } },
+        tooltip: {
+          callbacks: {
+            label: ctx => {
+              if (ctx.datasetIndex === 2) return null;
+              if (ctx.datasetIndex === 1) return ctx.raw !== null ? ` 鼎泰毛利率: ${ctx.raw}%` : null;
+              return ` 尖点营收: ${ctx.parsed.y} 百万NTD`;
+            }
+          }
+        }
+      },
+      scales: {
+        x: {
+          grid: { display: false },
+          ticks: { font: { size: 9 }, callback: (v, i) => i % 6 === 0 ? labels[i] : '', maxRotation: 0 }
+        },
+        y: {
+          position: 'left',
+          grid: { color: '#f1f5f9' },
+          ticks: { font: { size: 9 }, callback: v => v + 'M' },
+          title: { display: true, text: '尖点营收（百万NTD）', font: { size: 9 }, color: '#0891b2' },
+          min: 100, max: 600,
+        },
+        y2: {
+          position: 'right',
+          grid: { drawOnChartArea: false },
+          ticks: { font: { size: 9 }, callback: v => v + '%' },
+          title: { display: true, text: '鼎泰毛利率（%）', font: { size: 9 }, color: '#d97706' },
+          min: 25, max: 60,
+        }
+      }
+    }
+  });
+})();
+
+// ── 铜箔价格走势图 — 加工费周期拆解（2021-04 至 2026-03）──
+(function() {
+  const labels = [
+    '21-04','21-05','21-06','21-07','21-08','21-09','21-10','21-11','21-12',
+    '22-01','22-02','22-03','22-04','22-05','22-06','22-07','22-08','22-09','22-10','22-11','22-12',
+    '23-01','23-02','23-03','23-04','23-05','23-06','23-07','23-08','23-09','23-10','23-11','23-12',
+    '24-01','24-02','24-03','24-04','24-05','24-06','24-07','24-08','24-09','24-10','24-11','24-12',
+    '25-01','25-02','25-03','25-04','25-05','25-06','25-07','25-08','25-09','25-10','25-11','25-12',
+    '26-01','26-02','26-03'
+  ];
+
+  // 铜箔出口均价（海关，美元/吨）
+  const foilPrice = [
+    12398,12924,13036,13432,12752,13457,12867,12995,12998,
+    12754,13764,12853,13176,13085,12496,12704,11268,11737,11394,10927,11372,
+    11137,11533,11589,11511,11562,10904,11416,11130,11108,10890,10619,10762,
+    10741,11259,11685,11416,12153,12579,12319,11928,12005,11740,12126,12201,
+    12140,11927,12394,12401,12611,12430,12630,12952,12676,12680,13062,13744,
+    14395,15056,17190
+  ];
+
+  // LME铜月末价（美元/吨）
+  const lme = [
+    9949,10160,9385,9748,9462,9041,9955,9605,9692,
+    9620,9974,10337,9820,9500,8245,7800,7721,7647,7525,8198,8387,
+    9075,8844,8935,8571,8017,8210,8636,8360,8230,8038,8332,8476,
+    8513,8389,8729,9974,9985,9476,9014,9215,9767,9427,8879,8706,
+    8950,9364,9673,9204,9623,10040,9606,9805,10300,10902,11004,12504,
+    13370,13440,12160
+  ];
+
+  // 铜成本（LME × 0.95）
+  const copperCost = lme.map(v => Math.round(v * 0.95));
+  // 加工费（foil - copper cost）
+  const processFee = foilPrice.map((v, i) => v - copperCost[i]);
+  // 2021年加工费峰值参考线（Jul 2021 = 4171）
+  const peakFee = new Array(labels.length).fill(4171);
+
+  new Chart(document.getElementById('c-foil-price'), {
+    type: 'bar',
+    data: {
+      labels,
+      datasets: [
+        {
+          label: '铜金属成本（LME×0.95）',
+          data: copperCost,
+          backgroundColor: 'rgba(217,119,6,0.55)',
+          borderColor: 'rgba(217,119,6,0.8)',
+          borderWidth: 0,
+          stack: 'foil',
+        },
+        {
+          label: '隐含加工费',
+          data: processFee,
+          backgroundColor: (ctx) => {
+            const v = ctx.raw;
+            return v < 0 ? 'rgba(220,38,38,0.6)' : 'rgba(8,145,178,0.65)';
+          },
+          borderColor: 'transparent',
+          borderWidth: 0,
+          stack: 'foil',
+        },
+        {
+          label: '2021年加工费峰值（$4,171）',
+          data: peakFee,
+          type: 'line',
+          borderColor: '#dc2626',
+          borderWidth: 1,
+          borderDash: [5, 4],
+          backgroundColor: 'transparent',
+          pointRadius: 0,
+          stack: undefined,
+        },
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      interaction: { mode: 'index', intersect: false },
+      plugins: {
+        legend: { position: 'top', labels: { font: { size: 10 }, padding: 10, boxWidth: 16 } },
+        tooltip: {
+          callbacks: {
+            afterBody: (items) => {
+              const fee = items.find(i => i.dataset.label === '隐含加工费');
+              const copper = items.find(i => i.dataset.label.includes('铜金属'));
+              if (fee && copper) {
+                const total = (fee.raw + copper.raw);
+                return [`合计: $${total.toLocaleString()}/吨`];
+              }
+            }
+          }
+        }
+      },
+      scales: {
+        x: {
+          stacked: true,
+          grid: { display: false },
+          ticks: { font: { size: 9 }, callback: (v, i) => i % 6 === 0 ? labels[i] : '', maxRotation: 0 }
+        },
+        y: {
+          stacked: true,
+          grid: { color: '#f1f5f9' },
+          ticks: { font: { size: 9 }, callback: v => '$' + (v/1000).toFixed(0) + 'k' },
+          title: { display: true, text: '美元/吨', font: { size: 9 }, color: '#94a3b8' },
+          min: 0, max: 20000
+        }
+      }
+    }
+  });
+})();
+
+// ── 电子布价格走势图（iFinD EDB 海关数据 + 宏和科技公告，2020-2026） ──
+(function() {
+  const labels = [
+    '20-01','20-02','20-03','20-04','20-05','20-06','20-07','20-08','20-09','20-10','20-11','20-12',
+    '21-01','21-02','21-03','21-04','21-05','21-06','21-07','21-08','21-09','21-10','21-11','21-12',
+    '22-01','22-02','22-03','22-04','22-05','22-06','22-07','22-08','22-09','22-10','22-11','22-12',
+    '23-01','23-02','23-03','23-04','23-05','23-06','23-07','23-08','23-09','23-10','23-11','23-12',
+    '24-01','24-02','24-03','24-04','24-05','24-06','24-07','24-08','24-09','24-10','24-11','24-12',
+    '25-01','25-02','25-03','25-04','25-05','25-06','25-07','25-08','25-09','25-10','25-11','25-12',
+    '26-01','26-02','26-03'
+  ];
+
+  // 海关出口均价（美元/千克，月度）
+  const clothExport = [
+    4.75,5.26,4.36,4.73,4.70,5.03,4.76,4.13,4.58,4.48,4.79,4.81,
+    4.56,4.90,4.94,5.33,6.12,6.01,6.88,5.56,6.27,5.96,6.45,6.61,
+    5.18,5.17,4.74,5.39,5.25,5.20,6.25,5.91,5.44,5.01,5.02,5.43,
+    4.92,5.38,5.79,5.07,4.15,3.78,4.11,4.34,4.08,4.58,4.15,3.91,
+    4.04,4.00,4.27,4.39,4.14,4.56,4.29,4.28,3.96,3.99,4.26,4.72,
+    3.91,4.58,4.64,4.91,4.73,5.89,6.60,6.61,6.33,6.08,5.97,6.85,
+    6.27,7.22,7.97
+  ];
+
+  // 宏和科技年均价（元/米）— 映射到12月数据点，其余null
+  const honghePx = new Array(75).fill(null);
+  const yearMap = { 12:4.99, 24:6.10, 36:4.84, 48:3.69, 60:3.74, 72:5.32, 74:9.78 };
+  // 2020-12→index12, 2021-12→index24 ... 2025-12→index72, 2026Q1→index74(26-03)
+  Object.entries(yearMap).forEach(([i,v]) => honghePx[+i] = v);
+
+  const peak2021 = 6.88;
+
+  new Chart(document.getElementById('c-cloth-price'), {
+    type: 'line',
+    data: {
+      labels,
+      datasets: [
+        {
+          label: '海关出口均价（$/kg）',
+          data: clothExport,
+          borderColor: '#0891b2',
+          backgroundColor: 'rgba(8,145,178,0.08)',
+          fill: true, tension: 0.3, borderWidth: 2.5,
+          pointRadius: 0, pointHoverRadius: 4,
+          yAxisID: 'y',
+        },
+        {
+          label: '宏和科技年均价（元/米）',
+          data: honghePx,
+          borderColor: '#d97706',
+          backgroundColor: '#d97706',
+          fill: false,
+          borderWidth: 0,
+          pointRadius: (ctx) => ctx.raw !== null ? 7 : 0,
+          pointStyle: 'circle',
+          pointHoverRadius: 9,
+          showLine: false,
+          yAxisID: 'y2',
+        },
+        {
+          label: '2021年峰值（$6.88/kg）',
+          data: new Array(75).fill(peak2021),
+          borderColor: '#dc2626',
+          backgroundColor: 'transparent',
+          fill: false, borderWidth: 1,
+          borderDash: [5,4], pointRadius: 0, pointHoverRadius: 0,
+          yAxisID: 'y',
+        },
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      interaction: { mode: 'index', intersect: false },
+      plugins: {
+        legend: { position: 'top', labels: { font: { size: 10 }, padding: 10, boxWidth: 18 } },
+        tooltip: {
+          callbacks: {
+            label: ctx => {
+              if (ctx.datasetIndex === 2) return null;
+              if (ctx.datasetIndex === 1) return ctx.raw !== null ? ` 宏和均价: ${ctx.raw} 元/米` : null;
+              return ` 出口均价: $${ctx.parsed.y.toFixed(2)}/kg`;
+            }
+          }
+        }
+      },
+      scales: {
+        x: {
+          grid: { display: false },
+          ticks: { font: { size: 9 }, callback: (v,i) => i % 6 === 0 ? labels[i] : '', maxRotation: 0 }
+        },
+        y: {
+          position: 'left',
+          grid: { color: '#f1f5f9' },
+          ticks: { font: { size: 9 }, callback: v => '$' + v.toFixed(1) },
+          title: { display: true, text: '出口均价 (USD/kg)', font: { size: 9 }, color: '#0891b2' },
+          min: 3, max: 9.5,
+        },
+        y2: {
+          position: 'right',
+          grid: { drawOnChartArea: false },
+          ticks: { font: { size: 9 }, callback: v => v + '元' },
+          title: { display: true, text: '宏和均价 (元/米)', font: { size: 9 }, color: '#d97706' },
+          min: 0, max: 12,
+        }
+      }
+    }
+  });
+})();
+
+// ── CCL价格走势图（iFinD EDB 海关数据，2020-2026） ──
+(function() {
+  const labels = [
+    '20-01','20-02','20-03','20-04','20-05','20-06','20-07','20-08','20-09','20-10','20-11','20-12',
+    '21-01','21-02','21-03','21-04','21-05','21-06','21-07','21-08','21-09','21-10','21-11','21-12',
+    '22-01','22-02','22-03','22-04','22-05','22-06','22-07','22-08','22-09','22-10','22-11','22-12',
+    '23-01','23-02','23-03','23-04','23-05','23-06','23-07','23-08','23-09','23-10','23-11','23-12',
+    '24-01','24-02','24-03','24-04','24-05','24-06','24-07','24-08','24-09','24-10','24-11','24-12',
+    '25-01','25-02','25-03','25-04','25-05','25-06','25-07','25-08','25-09','25-10','25-11','25-12',
+    '26-01','26-02','26-03'
+  ];
+  // 出口均价（国产CCL，美元/吨）
+  const exportPrice = [
+    6087,6239,5328,6141,6812,5948,6141,5749,6143,5676,5733,5863,
+    7047,6685,6870,8123,8784,9371,9779,9121,8021,8402,8485,8714,
+    8278,8512,7676,8041,7590,7308,6611,6928,6361,6375,6190,6386,
+    5974,7071,6456,6298,6085,5827,5613,5816,5836,6532,5814,6227,
+    6037,6345,6392,6459,6078,6464,7231,6765,7094,6079,5780,6588,
+    7042,7834,6912,7209,8080,8287,9052,8346,9032,8847,8733,9035,
+    8666,9622,11043
+  ];
+  // 进口均价（台日高端CCL，美元/吨）
+  const importPrice = [
+    19962,23124,19752,21128,20843,21524,20101,20963,22034,19707,21523,17846,
+    20287,23656,20244,20656,22165,25298,23963,23714,24587,20796,22770,23099,
+    26598,23089,24731,24692,24269,26191,24136,24921,25511,31816,22852,24088,
+    28395,26834,21769,30375,28352,31390,25852,29055,29761,26584,27829,28058,
+    25883,30390,24803,26808,25432,26956,34821,26083,27452,33549,25073,28474,
+    32726,29394,30929,40578,35270,35969,40084,37420,36028,46461,37503,32641,
+    37417,43148,37620
+  ];
+  const peak2021 = 9779; // 2021年历史峰值（水平参考线）
+
+  new Chart(document.getElementById('c-ccl-price'), {
+    type: 'line',
+    data: {
+      labels,
+      datasets: [
+        {
+          label: '出口均价（国产CCL）',
+          data: exportPrice,
+          borderColor: '#0891b2',
+          backgroundColor: 'rgba(8,145,178,0.08)',
+          fill: true,
+          tension: 0.3,
+          borderWidth: 2.5,
+          pointRadius: 0,
+          pointHoverRadius: 4,
+          yAxisID: 'y',
+        },
+        {
+          label: '进口均价（台日高端M8+）',
+          data: importPrice,
+          borderColor: '#8b5cf6',
+          backgroundColor: 'transparent',
+          fill: false,
+          tension: 0.3,
+          borderWidth: 1.5,
+          pointRadius: 0,
+          pointHoverRadius: 4,
+          borderDash: [0,0],
+          yAxisID: 'y2',
+        },
+        {
+          label: '2021年出口均价峰值（$9,779）',
+          data: new Array(labels.length).fill(peak2021),
+          borderColor: '#dc2626',
+          backgroundColor: 'transparent',
+          fill: false,
+          borderWidth: 1,
+          borderDash: [5, 4],
+          pointRadius: 0,
+          pointHoverRadius: 0,
+          yAxisID: 'y',
+        },
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      interaction: { mode: 'index', intersect: false },
+      plugins: {
+        legend: { position: 'top', labels: { font: { size: 10 }, padding: 10, boxWidth: 18 } },
+        tooltip: {
+          callbacks: {
+            label: ctx => {
+              if (ctx.datasetIndex === 2) return null;
+              return ` ${ctx.dataset.label}: $${ctx.parsed.y.toLocaleString()} /吨`;
+            }
+          }
+        },
+        annotation: {}
+      },
+      scales: {
+        x: {
+          grid: { display: false },
+          ticks: {
+            font: { size: 9 },
+            callback: (val, i) => (i % 6 === 0 ? labels[i] : ''),
+            maxRotation: 0,
+          }
+        },
+        y: {
+          position: 'left',
+          grid: { color: '#f1f5f9' },
+          ticks: { font: { size: 9 }, callback: v => '$' + (v/1000).toFixed(0) + 'k' },
+          title: { display: true, text: '出口均价 (USD/吨)', font: { size: 9 }, color: '#0891b2' },
+          min: 4000, max: 14000,
+        },
+        y2: {
+          position: 'right',
+          grid: { drawOnChartArea: false },
+          ticks: { font: { size: 9 }, callback: v => '$' + (v/1000).toFixed(0) + 'k' },
+          title: { display: true, text: '进口均价 (USD/吨)', font: { size: 9 }, color: '#8b5cf6' },
+          min: 15000, max: 55000,
+        }
+      }
+    }
+  });
+})();
+
+// ── AI需求量分析图表 ──
+
+// ① 单GPU对应PCB价值量升级路径
+new Chart(document.getElementById('c-gpu-val'), {
+  type: 'bar',
+  data: {
+    labels: ['H100/200\nHopper', 'B200/300\nBlackwell', 'GB200\nNVL72', 'GB300\nNVL72', 'VR200\nNVL144'],
+    datasets: [{
+      label: '单GPU价值量（元/颗）',
+      data: [1318, 1728, 2224, 2966, 6333],
+      backgroundColor: ['#94a3b8','#64748b','#0891b2','#0ea5e9','#16a34a'],
+      borderRadius: 5, borderWidth: 0,
+    }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: {
+      legend: { display: false },
+      tooltip: { callbacks: { label: ctx => ` ¥${ctx.parsed.y.toLocaleString()} 元/GPU` } },
+      annotation: {}
+    },
+    scales: {
+      x: { grid: { display: false }, ticks: { font: { size: 10 } } },
+      y: {
+        grid: { color: '#f1f5f9' },
+        ticks: { font: { size: 10 }, callback: v => '¥' + v.toLocaleString() },
+        title: { display: true, text: '元/GPU（72GPU标准化）', font: { size: 9 }, color: '#94a3b8' }
+      }
+    }
+  }
+});
+
+// ② AI PCB市场规模分解（堆叠柱状图）
+new Chart(document.getElementById('c-mkt-size'), {
+  type: 'bar',
+  data: {
+    labels: ['2024', '2025E', '2026E', '2027E'],
+    datasets: [
+      { label: 'NV GPU服务器',          data: [846, 1517, 2862, 6943], backgroundColor: '#0891b2', stack: 'mkt' },
+      { label: 'ASIC服务器(Google等)',   data: [858, 2349, 4874, 8245], backgroundColor: '#8b5cf6', stack: 'mkt' },
+      { label: '光模块PCB',             data: [230,  599, 2125, 2750], backgroundColor: '#16a34a', stack: 'mkt' },
+      { label: '交换机PCB',             data: [750, 1150, 2150, 3700], backgroundColor: '#d97706', stack: 'mkt' },
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: {
+      legend: { position: 'bottom', labels: { font: { size: 10 }, padding: 8 } },
+      tooltip: {
+        mode: 'index', intersect: false,
+        callbacks: {
+          footer: items => '合计：$' + (items.reduce((s,i)=>s+i.parsed.y,0)/1000).toFixed(1) + 'B'
+        }
+      }
+    },
+    scales: {
+      x: { grid: { display: false }, ticks: { font: { size: 11 } }, stacked: true },
+      y: {
+        grid: { color: '#f1f5f9' }, stacked: true,
+        ticks: { font: { size: 10 }, callback: v => '$' + (v/1000).toFixed(0) + 'B' }
+      }
+    }
+  }
+});
+
+// ③ CCL M8/M9需求量预测
+new Chart(document.getElementById('c-ccl-demand'), {
+  type: 'bar',
+  data: {
+    labels: ['2025E', '2026E', '2027E'],
+    datasets: [
+      {
+        label: 'M8需求（万张）',
+        data: [220, 407, 571],
+        backgroundColor: '#0891b2', borderRadius: 4, stack: 'ccl',
+      },
+      {
+        label: 'M9需求（万张）',
+        data: [0, 33, 492],
+        backgroundColor: '#16a34a', borderRadius: 4, stack: 'ccl',
+      },
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: {
+      legend: { position: 'top', labels: { font: { size: 10 }, padding: 8 } },
+      tooltip: {
+        mode: 'index', intersect: false,
+        callbacks: { footer: items => '合计：' + items.reduce((s,i)=>s+i.parsed.y,0) + ' 万张' }
+      }
+    },
+    scales: {
+      x: { grid: { display: false }, ticks: { font: { size: 11 } }, stacked: true },
+      y: {
+        grid: { color: '#f1f5f9' }, stacked: true,
+        ticks: { font: { size: 10 }, callback: v => v + '万' },
+        title: { display: true, text: '用量（万张）', font: { size: 9 }, color: '#94a3b8' }
+      }
+    }
+  }
+});
+
+// ③b GPU出货量趋势
+new Chart(document.getElementById('c-gpu-ship'), {
+  type: 'bar',
+  data: {
+    labels: ['2024', '2025E', '2026E', '2027E'],
+    datasets: [
+      { label: '英伟达 GPU（万颗）', data: [445, 563, 676, 820], backgroundColor: '#0891b2', stack: 's', borderRadius: [0,0,0,0] },
+      { label: 'ASIC（万颗）',       data: [165, 450, 930, 1410], backgroundColor: '#8b5cf6', stack: 's' },
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: {
+      legend: { position: 'top', labels: { font: { size: 10 }, padding: 8 } },
+      tooltip: {
+        mode: 'index', intersect: false,
+        callbacks: { footer: items => '合计：' + items.reduce((s,i)=>s+i.parsed.y,0) + ' 万颗' }
+      }
+    },
+    scales: {
+      x: { grid: { display: false }, ticks: { font: { size: 11 } }, stacked: true },
+      y: { grid: { color: '#f1f5f9' }, stacked: true, ticks: { font: { size: 10 }, callback: v => v + '万' } }
+    }
+  }
+});
+
+// ④ 台股月度营收高频指标（2025全年）
+new Chart(document.getElementById('c-tw-monthly'), {
+  type: 'line',
+  data: {
+    labels: ['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'],
+    datasets: [
+      {
+        label: '台耀TUC (高速CCL)',
+        data: [487,518,528,561,505,567,642,612,686,687,728,782],
+        borderColor: '#0891b2', backgroundColor: 'rgba(8,145,178,.10)',
+        tension: 0.3, fill: true, borderWidth: 2, pointRadius: 2.5,
+      },
+      {
+        label: '台光电子 (CCL)',
+        data: [1682,1692,1846,1731,1752,1934,2015,2110,1928,1944,1957,2095],
+        borderColor: '#8b5cf6', backgroundColor: 'transparent',
+        tension: 0.3, fill: false, borderWidth: 2, pointRadius: 2,
+      },
+      {
+        label: '欣兴电子 (ABF载板)',
+        data: [2285,2403,2554,2627,2557,2631,2723,2734,2726,2726,2778,2846],
+        borderColor: '#16a34a', backgroundColor: 'transparent',
+        tension: 0.3, fill: false, borderWidth: 2, pointRadius: 2,
+      },
+      {
+        label: '尖点科技 (钻针×10)',
+        data: [685,698,752,774,802,862,868,938,1007,1053,1053,1122],
+        borderColor: '#d97706', backgroundColor: 'transparent',
+        tension: 0.3, fill: false, borderWidth: 1.5, pointRadius: 2, borderDash: [4,3],
+      },
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: {
+      legend: { position: 'top', labels: { font: { size: 9 }, padding: 6 } },
+      tooltip: { mode: 'index', intersect: false }
+    },
+    scales: {
+      x: { grid: { display: false }, ticks: { font: { size: 9 } } },
+      y: { grid: { color: '#f1f5f9' }, ticks: { font: { size: 9 } } }
+    }
+  }
+});
+
+// ── 折叠功能：自动为所有 .st 章节标题绑定展开/收起 ──
+(function() {
+  const sections = document.querySelectorAll('.st');
+
+  sections.forEach(st => {
+    // 收集该标题之后、下一个 .st 之前的所有兄弟节点
+    const siblings = [];
+    let node = st.nextElementSibling;
+    while (node && !node.classList.contains('st')) {
+      siblings.push(node);
+      node = node.nextElementSibling;
+    }
+    if (!siblings.length) return;
+
+    // 用 .sec-body 包裹这些内容
+    const body = document.createElement('div');
+    body.className = 'sec-body';
+    st.parentNode.insertBefore(body, siblings[0]);
+    siblings.forEach(el => body.appendChild(el));
+
+    // 记录展开高度（Chart.js 渲染完后可能变化，用 auto-calc）
+    const calcHeight = () => {
+      body.style.maxHeight = body.scrollHeight + 'px';
+    };
+    // 初始化时先设为 auto 展开
+    body.style.maxHeight = '9999px';
+
+    // 添加折叠箭头
+    const arrow = document.createElement('span');
+    arrow.className = 'st-arrow';
+    arrow.textContent = '▾';
+    st.appendChild(arrow);
+
+    // 点击切换
+    st.addEventListener('click', () => {
+      const isOpen = !body.classList.contains('collapsed');
+      if (isOpen) {
+        // 先固定当前高度再折叠（让 transition 生效）
+        body.style.maxHeight = body.scrollHeight + 'px';
+        requestAnimationFrame(() => {
+          body.classList.add('collapsed');
+          st.classList.add('collapsed');
+        });
+      } else {
+        body.classList.remove('collapsed');
+        st.classList.remove('collapsed');
+        // 展开后重新计算高度
+        body.style.maxHeight = body.scrollHeight + 'px';
+        // 动画结束后恢复为大值，避免内容动态增高时被裁剪
+        body.addEventListener('transitionend', () => {
+          if (!body.classList.contains('collapsed')) {
+            body.style.maxHeight = '9999px';
+          }
+        }, { once: true });
+      }
+    });
+  });
+})();
+
+// ── 利润池气泡图 ──
+(function() {
+  const ctx = document.getElementById('c-profit-bubble');
+  if (!ctx) return;
+
+  // 数据：26Q1 季度数据
+  const companies = [
+    // label, x(收入亿), y(毛利率%), segment, color
+    { label: '沪电股份',  x: 62.1, y: 35.6, seg: 'PCB制造', color: '#0891b2' },
+    { label: '胜宏科技',  x: 55.2, y: 34.5, seg: 'PCB制造', color: '#0891b2' },
+    { label: '深南电路',  x: 66.0, y: 29.2, seg: 'PCB制造', color: '#0e7490' },
+    { label: '生益科技',  x: 81.4, y: 28.1, seg: 'CCL',    color: '#16a34a' },
+    { label: '铜冠铜箔',  x: 18.4, y:  8.8, seg: '铜箔',   color: '#d97706' },
+    { label: '德福科技',  x: 43.4, y:  9.1, seg: '铜箔',   color: '#f59e0b' },
+    { label: '宏和科技',  x:  4.4, y: 55.7, seg: '电子布',  color: '#8b5cf6' },
+    { label: '鼎泰高科',  x:  8.1, y: 53.3, seg: '钻针',   color: '#f43f5e' },
+    { label: '大族数控',  x: 19.6, y: 33.1, seg: 'PCB设备', color: '#64748b' },
+    { label: '芯碁微装',  x:  5.1, y: 40.9, seg: 'PCB设备', color: '#94a3b8' },
+  ];
+
+  // 自定义 afterDraw 插件，在气泡上画公司名
+  const labelPlugin = {
+    id: 'bubbleLabels',
+    afterDatasetsDraw(chart) {
+      const { ctx } = chart;
+      ctx.save();
+      chart.data.datasets.forEach((ds, i) => {
+        const meta = chart.getDatasetMeta(i);
+        meta.data.forEach(el => {
+          const { x, y } = el.tooltipPosition();
+          ctx.font = 'bold 9px sans-serif';
+          ctx.fillStyle = '#1e293b';
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'middle';
+          ctx.fillText(ds.label, x, y);
+        });
+      });
+      ctx.restore();
+    }
+  };
+
+  const datasets = companies.map(c => {
+    const gp = c.x * c.y / 100;         // 季度毛利润（亿元）
+    const r = Math.max(6, Math.sqrt(gp) * 5.5); // 气泡像素半径
+    return {
+      label: c.label,
+      data: [{ x: c.x, y: c.y, r }],
+      backgroundColor: c.color + 'bb',
+      borderColor: c.color,
+      borderWidth: 1.5,
+    };
+  });
+
+  new Chart(ctx, {
+    type: 'bubble',
+    data: { datasets },
+    plugins: [labelPlugin],
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            label: function(ctx) {
+              const d = ctx.raw;
+              const gp = (ctx.dataset.data[0].x * ctx.parsed.y / 100).toFixed(1);
+              return [
+                `${ctx.dataset.label}`,
+                `收入：${ctx.parsed.x}亿元`,
+                `毛利率：${ctx.parsed.y}%`,
+                `季度毛利润：${gp}亿元`
+              ];
+            }
+          }
+        }
+      },
+      scales: {
+        x: {
+          title: { display: true, text: '季度收入（亿元）', font: { size: 10 } },
+          min: 0, max: 100,
+          grid: { color: '#e9ecef' }
+        },
+        y: {
+          title: { display: true, text: '毛利率（%）', font: { size: 10 } },
+          min: 0, max: 65,
+          grid: { color: '#e9ecef' }
+        }
+      }
+    }
+  });
+})();
+
+// ── 毛利率 YoY 改善横向柱图 ──
+(function() {
+  const ctx = document.getElementById('c-margin-delta');
+  if (!ctx) return;
+
+  const data = [
+    { label: '宏和科技（电子布）', delta: 27.5, color: '#8b5cf6' },
+    { label: '鼎泰高科（钻针）',   delta: 15.3, color: '#f43f5e' },
+    { label: '铜冠铜箔（铜箔）',   delta:  6.1, color: '#d97706' },
+    { label: '深南电路（PCB）',    delta:  4.5, color: '#0e7490' },
+    { label: '生益科技（CCL）',    delta:  3.5, color: '#16a34a' },
+    { label: '大族数控（设备）',   delta:  3.5, color: '#64748b' },
+    { label: '沪电股份（PCB）',    delta:  2.8, color: '#0891b2' },
+    { label: '德福科技（铜箔）',   delta:  2.6, color: '#f59e0b' },
+    { label: '胜宏科技（PCB）',    delta:  1.1, color: '#22d3ee' },
+  ];
+
+  new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: data.map(d => d.label),
+      datasets: [{
+        data: data.map(d => d.delta),
+        backgroundColor: data.map(d => d.color + 'cc'),
+        borderColor: data.map(d => d.color),
+        borderWidth: 1.5,
+        borderRadius: 4,
+      }]
+    },
+    options: {
+      indexAxis: 'y',
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            label: ctx => `+${ctx.parsed.x} pct（26Q1 vs 25Q1）`
+          }
+        }
+      },
+      scales: {
+        x: {
+          title: { display: true, text: '毛利率提升（pct）', font: { size: 10 } },
+          grid: { color: '#e9ecef' }
+        },
+        y: {
+          ticks: { font: { size: 10 } },
+          grid: { display: false }
+        }
+      }
+    }
+  });
+})();
+</script>
+</body>
+</html>

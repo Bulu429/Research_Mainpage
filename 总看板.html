@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>投研工作台总看板</title>
+<style>
+:root {
+  --bg: #f5f6f3;
+  --paper: #ffffff;
+  --ink: #1f2a2e;
+  --muted: #667276;
+  --line: #dde2dc;
+  --line-strong: #c8d0c8;
+  --green: #1f7a5a;
+  --blue: #285f8f;
+  --amber: #9a6418;
+  --red: #9b3b33;
+  --shadow: 0 10px 28px rgba(31, 42, 46, .08);
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  font-family: "Microsoft YaHei", "PingFang SC", "Segoe UI", sans-serif;
+  color: var(--ink);
+  background:
+    linear-gradient(90deg, rgba(31,122,90,.05) 1px, transparent 1px),
+    linear-gradient(180deg, rgba(31,122,90,.04) 1px, transparent 1px),
+    var(--bg);
+  background-size: 32px 32px;
+  font-size: 14px;
+  line-height: 1.55;
+}
+a { color: inherit; text-decoration: none; }
+.shell { max-width: 1420px; margin: 0 auto; padding: 24px 28px 40px; }
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 10px 0 22px;
+}
+.brand { display: flex; flex-direction: column; gap: 4px; }
+.kicker {
+  color: var(--green);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: .08em;
+}
+h1 {
+  margin: 0;
+  font-size: clamp(28px, 4vw, 52px);
+  line-height: 1.05;
+  letter-spacing: 0;
+  font-weight: 800;
+}
+.meta {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  color: var(--muted);
+}
+.pill {
+  border: 1px solid var(--line);
+  background: rgba(255,255,255,.72);
+  border-radius: 999px;
+  padding: 6px 11px;
+  white-space: nowrap;
+}
+.command {
+  display: grid;
+  grid-template-columns: 1.35fr .65fr;
+  gap: 18px;
+  align-items: stretch;
+  margin-bottom: 22px;
+}
+.panel {
+  background: rgba(255,255,255,.88);
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow);
+  border-radius: 8px;
+}
+.brief {
+  min-height: 220px;
+  padding: 22px;
+  display: grid;
+  grid-template-columns: minmax(260px, 1fr) minmax(300px, .8fr);
+  gap: 22px;
+}
+.brief h2, .watch h2, .section h2 {
+  margin: 0 0 10px;
+  font-size: 16px;
+  letter-spacing: 0;
+}
+.brief p {
+  margin: 0;
+  color: var(--muted);
+  max-width: 720px;
+}
+.axis {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  margin-top: 22px;
+}
+.axis-item {
+  border-left: 3px solid var(--green);
+  background: #f7faf7;
+  padding: 10px 10px 9px;
+}
+.axis-item:nth-child(2) { border-left-color: var(--blue); }
+.axis-item:nth-child(3) { border-left-color: var(--amber); }
+.axis-item:nth-child(4) { border-left-color: var(--red); }
+.axis-label { color: var(--muted); font-size: 12px; }
+.axis-value { display: block; font-size: 18px; font-weight: 800; margin-top: 2px; }
+.map {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  grid-auto-rows: 26px;
+  gap: 6px;
+  align-self: end;
+}
+.node {
+  border: 1px solid var(--line-strong);
+  background: #f7f8f5;
+  border-radius: 4px;
+}
+.node.hot { background: #dfeee6; border-color: #9fc4af; }
+.node.blue { background: #ddeaf3; border-color: #9bb9cf; }
+.node.amber { background: #f4e7cf; border-color: #d5b175; }
+.node.red { background: #f2dbd8; border-color: #cfa09a; }
+.watch {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.watch-list { display: grid; gap: 10px; margin-top: 10px; }
+.watch-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 9px;
+  gap: 12px;
+}
+.watch-row:last-child { border-bottom: 0; padding-bottom: 0; }
+.watch-row span:first-child { font-weight: 700; }
+.tag {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 24px;
+  padding: 3px 8px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  color: var(--muted);
+  background: #fff;
+  font-size: 12px;
+  white-space: nowrap;
+}
+.tag.green { color: var(--green); border-color: #a7ccb8; background: #eef7f1; }
+.tag.blue { color: var(--blue); border-color: #aac3d8; background: #eef5fa; }
+.tag.amber { color: var(--amber); border-color: #dcc18f; background: #fbf5e8; }
+.tag.red { color: var(--red); border-color: #d8aaa5; background: #fbefed; }
+.layout {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  gap: 18px;
+  align-items: start;
+}
+.nav {
+  position: sticky;
+  top: 16px;
+  padding: 14px;
+}
+.nav-title {
+  font-size: 12px;
+  color: var(--muted);
+  font-weight: 700;
+  margin: 4px 6px 10px;
+}
+.nav a {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 11px;
+  border-radius: 6px;
+  color: var(--muted);
+}
+.nav a:hover { background: #f0f4ef; color: var(--ink); }
+.content { display: grid; gap: 18px; }
+.section { padding: 18px; }
+.section-head {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 14px;
+  margin-bottom: 14px;
+}
+.section-sub { color: var(--muted); font-size: 13px; }
+.project-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+.project {
+  min-height: 184px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fff;
+  transition: transform .16s ease, box-shadow .16s ease, border-color .16s ease;
+}
+.project:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 28px rgba(31,42,46,.1);
+  border-color: var(--line-strong);
+}
+.project-top {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+.project h3 { margin: 0 0 7px; font-size: 20px; }
+.project p { margin: 0; color: var(--muted); }
+.mark {
+  width: 44px;
+  height: 44px;
+  border-radius: 8px;
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+  font-weight: 900;
+  color: #fff;
+  background: var(--green);
+}
+.project:nth-child(2) .mark { background: var(--blue); }
+.project:nth-child(3) .mark { background: var(--amber); }
+.project:nth-child(4) .mark { background: var(--red); }
+.project-foot {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 16px;
+}
+.open {
+  font-weight: 800;
+  color: var(--green);
+}
+.project:nth-child(2) .open { color: var(--blue); }
+.project:nth-child(3) .open { color: var(--amber); }
+.project:nth-child(4) .open { color: var(--red); }
+.link-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+.mini {
+  display: grid;
+  gap: 8px;
+  padding: 13px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fff;
+  min-height: 118px;
+  transition: border-color .16s ease, transform .16s ease;
+}
+.mini:hover { border-color: var(--line-strong); transform: translateY(-1px); }
+.mini strong { font-size: 15px; }
+.mini small { color: var(--muted); line-height: 1.45; }
+.mini-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  align-items: center;
+}
+.footer {
+  margin-top: 18px;
+  color: var(--muted);
+  text-align: center;
+  font-size: 12px;
+  padding: 18px 0 6px;
+}
+@media (max-width: 1040px) {
+  .command, .brief, .layout { grid-template-columns: 1fr; }
+  .nav { position: static; }
+  .link-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 720px) {
+  .shell { padding: 18px 14px 28px; }
+  .topbar, .section-head { align-items: flex-start; flex-direction: column; }
+  .meta { justify-content: flex-start; }
+  .axis, .project-grid, .link-grid { grid-template-columns: 1fr; }
+  .map { grid-template-columns: repeat(4, 1fr); }
+}
+</style>
+</head>
+<body>
+<main class="shell">
+  <header class="topbar">
+    <div class="brand">
+      <div class="kicker">TMT RESEARCH OPERATING DESK</div>
+      <h1>投研工作台总看板</h1>
+    </div>
+    <div class="meta">
+      <span class="pill">A股 TMT 为主</span>
+      <span class="pill">周频监控 + 基本面研究</span>
+      <span class="pill">更新：2026-06-12</span>
+    </div>
+  </header>
+
+  <section class="command">
+    <div class="brief panel">
+      <div>
+        <h2>一个入口，四类研究资产</h2>
+        <p>总看板负责承接周频信号监控、行业基本面、基金重仓和美股映射项目：先看市场与产业链强弱，再回到行业链、资金偏好、海外映射和公司材料做验证。这里不是展示页，而是每天打开后能迅速定位下一步工作的总控台。</p>
+        <div class="axis">
+          <div class="axis-item"><span class="axis-label">监控看板</span><span class="axis-value">1</span></div>
+          <div class="axis-item"><span class="axis-label">研究项目</span><span class="axis-value">3</span></div>
+          <div class="axis-item"><span class="axis-label">行业方向</span><span class="axis-value">9</span></div>
+          <div class="axis-item"><span class="axis-label">海外公司</span><span class="axis-value">4</span></div>
+        </div>
+      </div>
+      <div class="map" aria-label="投研链路示意">
+        <div class="node hot"></div><div class="node hot"></div><div class="node"></div><div class="node blue"></div><div class="node blue"></div>
+        <div class="node hot"></div><div class="node"></div><div class="node amber"></div><div class="node blue"></div><div class="node"></div>
+        <div class="node"></div><div class="node amber"></div><div class="node amber"></div><div class="node"></div><div class="node red"></div>
+        <div class="node hot"></div><div class="node"></div><div class="node"></div><div class="node red"></div><div class="node red"></div>
+        <div class="node"></div><div class="node blue"></div><div class="node amber"></div><div class="node"></div><div class="node hot"></div>
+      </div>
+    </div>
+    <aside class="watch panel">
+      <div>
+        <h2>建议使用顺序</h2>
+        <div class="watch-list">
+          <div class="watch-row"><span>1. 市场强弱</span><span class="tag green">网状图动量</span></div>
+          <div class="watch-row"><span>2. 产业验证</span><span class="tag amber">行业看板</span></div>
+          <div class="watch-row"><span>3. 资金偏好</span><span class="tag blue">基金重仓</span></div>
+          <div class="watch-row"><span>4. 海外映射</span><span class="tag red">美股映射</span></div>
+        </div>
+      </div>
+    </aside>
+  </section>
+
+  <div class="layout">
+    <nav class="nav panel">
+      <div class="nav-title">快速导航</div>
+      <a href="#core"><span>核心入口</span><span>4</span></a>
+      <a href="#industry"><span>行业基本面</span><span>9</span></a>
+      <a href="#oversea"><span>美股映射</span><span>4</span></a>
+      <a href="#tools"><span>工具区</span><span>1</span></a>
+    </nav>
+
+    <div class="content">
+      <section id="core" class="section panel">
+        <div class="section-head">
+          <div>
+            <h2>核心入口</h2>
+            <div class="section-sub">入口按照“信号发现，基本面拆解，海外映射验证”排列。</div>
+          </div>
+          <span class="tag green">总层入口</span>
+        </div>
+        <div class="project-grid">
+          <a class="project" href="monitoring/周频_网状图动量看板/dashboard/latest.html" target="_blank">
+            <div class="project-top">
+              <div>
+                <h3>周频网状图动量看板</h3>
+                <p>TMT 产业链强弱、52周新高、放量、趋势与轮动信号，用于发现最先变化的方向。</p>
+              </div>
+              <div class="mark">M</div>
+            </div>
+            <div class="project-foot"><span class="tag green">监控系统</span><span class="open">打开最新看板</span></div>
+          </a>
+          <a class="project" href="research/基本面研究/行业看板/行业基本面入口.html">
+            <div class="project-top">
+              <div>
+                <h3>行业基本面入口</h3>
+                <p>国产算力、光模块、PCB、先进封装、液冷等产业链框架和公司数据库，用于基本面验证。</p>
+              </div>
+              <div class="mark">I</div>
+            </div>
+            <div class="project-foot"><span class="tag amber">基本面项目</span><span class="open">进入行业入口</span></div>
+          </a>
+          <a class="project" href="research/策略研究/基金重仓看板/fund_dashboard.html" target="_blank">
+            <div class="project-top">
+              <div>
+                <h3>基金重仓看板</h3>
+                <p>基金持仓、重仓行业和个股视角，用于观察机构资金偏好与产业链拥挤度。</p>
+              </div>
+              <div class="mark">F</div>
+            </div>
+            <div class="project-foot"><span class="tag blue">策略研究</span><span class="open">打开看板</span></div>
+          </a>
+          <a class="project" href="research/基本面研究/美股映射研究/美股映射研究_看板.html" target="_blank">
+            <div class="project-top">
+              <div>
+                <h3>美股映射研究</h3>
+                <p>海外龙头、AI 基建主线和 A 股映射关系，用于交叉验证景气趋势和估值锚。</p>
+              </div>
+              <div class="mark">U</div>
+            </div>
+            <div class="project-foot"><span class="tag red">海外映射</span><span class="open">进入项目看板</span></div>
+          </a>
+        </div>
+      </section>
+
+      <section id="industry" class="section panel">
+        <div class="section-head">
+          <div>
+            <h2>行业基本面入口</h2>
+            <div class="section-sub">从行业总项目下钻到具体方向，适合在周频信号出现后快速回看产业逻辑。</div>
+          </div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end">
+            <a class="tag amber" href="research/基本面研究/行业看板/行业基本面入口.html">打开行业入口</a>
+            <a class="tag amber" href="research/基本面研究/行业看板/00_INDEX.md" target="_blank">打开索引</a>
+          </div>
+        </div>
+        <div class="link-grid">
+          <a class="mini" href="research/基本面研究/行业看板/国产AI算力/国产AI算力_看板.html" target="_blank"><div class="mini-row"><strong>国产 AI 算力</strong><span class="tag amber">算力</span></div><small>AI 芯片、超节点、国产替代和服务器链条。</small></a>
+          <a class="mini" href="research/基本面研究/行业看板/光模块/光模块_看板.html" target="_blank"><div class="mini-row"><strong>光模块</strong><span class="tag amber">光通信</span></div><small>800G、1.6T、CPO、光芯片和北美 CapEx。</small></a>
+          <a class="mini" href="research/基本面研究/行业看板/PCB/PCB_看板.html" target="_blank"><div class="mini-row"><strong>PCB</strong><span class="tag amber">材料</span></div><small>高多层板、CCL、电子布、铜箔和设备。</small></a>
+          <a class="mini" href="research/基本面研究/行业看板/先进封装/先进封装_看板.html" target="_blank"><div class="mini-row"><strong>先进封装</strong><span class="tag amber">封装</span></div><small>CoWoS、TSV、RDL、HBM 和国产设备。</small></a>
+          <a class="mini" href="research/基本面研究/行业看板/交换芯片/交换芯片_看板.html" target="_blank"><div class="mini-row"><strong>交换芯片</strong><span class="tag amber">网络</span></div><small>Switch ASIC、SerDes、超节点和光电协同。</small></a>
+          <a class="mini" href="research/基本面研究/行业看板/液冷/液冷_看板.html" target="_blank"><div class="mini-row"><strong>液冷</strong><span class="tag amber">散热</span></div><small>冷板、浸没、CDU、精密温控和机柜功率。</small></a>
+          <a class="mini" href="research/基本面研究/行业看板/国产半导体/国产半导体_看板.html" target="_blank"><div class="mini-row"><strong>国产半导体</strong><span class="tag amber">半导体</span></div><small>设备、材料、晶圆、封装和设计链条。</small></a>
+          <a class="mini" href="research/基本面研究/行业看板/光通信/光通信_看板.html" target="_blank"><div class="mini-row"><strong>光通信</strong><span class="tag amber">通信</span></div><small>光模块之外的传输、器件和网络侧研究。</small></a>
+          <a class="mini" href="research/基本面研究/行业看板/光纤光缆/光纤光缆_看板.html" target="_blank"><div class="mini-row"><strong>光纤光缆</strong><span class="tag amber">光缆</span></div><small>光纤预制棒、光缆、海缆和供给周期。</small></a>
+        </div>
+      </section>
+
+      <section id="oversea" class="section panel">
+        <div class="section-head">
+          <div>
+            <h2>美股映射入口</h2>
+            <div class="section-sub">从海外龙头和云厂商变化反推 A 股产业链，适合做景气验证和估值锚校准。</div>
+          </div>
+          <a class="tag red" href="research/基本面研究/美股映射研究/项目说明.md" target="_blank">项目说明</a>
+        </div>
+        <div class="link-grid">
+          <a class="mini" href="research/基本面研究/美股映射研究/companies/NVDA_英伟达.html" target="_blank"><div class="mini-row"><strong>NVDA 英伟达</strong><span class="tag red">AI 芯片</span></div><small>GPU、网络、GB 系列和全球 AI 资本开支。</small></a>
+          <a class="mini" href="research/基本面研究/美股映射研究/companies/AVGO_博通.html" target="_blank"><div class="mini-row"><strong>AVGO 博通</strong><span class="tag red">ASIC</span></div><small>交换芯片、定制 ASIC、网络互联和云厂商链条。</small></a>
+          <a class="mini" href="research/基本面研究/美股映射研究/companies/MRVL_迈威尔.html" target="_blank"><div class="mini-row"><strong>MRVL 迈威尔</strong><span class="tag red">互联</span></div><small>光电互联、DSP、交换与数据中心定制芯片。</small></a>
+          <a class="mini" href="research/基本面研究/美股映射研究/companies/GOOGL_谷歌.html" target="_blank"><div class="mini-row"><strong>GOOGL 谷歌</strong><span class="tag red">云厂商</span></div><small>TPU、CapEx、云业务和 AI 应用需求侧。</small></a>
+        </div>
+      </section>
+
+      <section id="tools" class="section panel">
+        <div class="section-head">
+          <div>
+            <h2>工具区</h2>
+            <div class="section-sub">放置独立计算器和辅助研究工具，和核心看板分开管理。</div>
+          </div>
+          <span class="tag blue">研究工具</span>
+        </div>
+        <div class="link-grid">
+          <a class="mini" href="research/基本面研究/Tokenomics Calculator/index.html" target="_blank"><div class="mini-row"><strong>Tokenomics Calculator</strong><span class="tag blue">计算器</span></div><small>AI 推理成本、收入上限和模型经济性测算工具。</small></a>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <footer class="footer">投研数据库 · workwork 总层入口 · 所有链接均使用本地相对路径</footer>
+</main>
+</body>
+</html>

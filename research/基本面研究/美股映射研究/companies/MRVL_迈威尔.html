@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MRVL 迈威尔 · 美股映射（连接瓶颈旗手）</title>
+<style>
+:root{
+  /* ① 基底 · 三页通用 */
+  --bg:#f7f8fa;--card:#fff;--border:#e6e8eb;
+  --text:#1a1d21;--text2:#586271;--text3:#8a94a3;
+  /* ② 品牌色 · 本页=迈威尔靛蓝 indigo —— 只用于结构/标题/边框/「本公司」 */
+  --accent:#4338ca;--accent2:#a5b4fc;--accent-bg:#eef2ff;--accent-ink:#3730a3;
+  /* ③ 语义色 · 三页统一：绿=利好 / 红=利空 */
+  --up:#15803d;--up-bg:#eaf6ee;--up-ink:#136130;
+  --dn:#c01d24;--dn-bg:#fbeaeb;--dn-ink:#9a161c;
+  --warn:#b45309;--warn-bg:#fdf4e7;
+  /* ④ 中性强调 · 对比对象/他人/次级结构 */
+  --neu:#475569;--neu-bg:#eef1f5;--neu-bd:#c3cdd9;--neu-ink:#334155;
+  --neu2:#64748b;--neu2-bg:#f4f6f9;--neu2-bd:#d7dee6;
+  --blue:var(--neu);--blue-bg:var(--neu-bg);--blue-bd:var(--neu-bd);
+  --sh:0 1px 3px rgba(0,0,0,.07);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;background:var(--bg);color:var(--text);font-size:14px;line-height:1.6}
+a{color:var(--accent);text-decoration:none}
+a:hover{text-decoration:underline}
+.hdr{background:var(--card);border-bottom:1px solid var(--border);padding:14px 32px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:var(--sh)}
+.hdr-l{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.hdr-title{font-size:19px;font-weight:800}
+.hdr-sub{font-size:11px;color:var(--text2);margin-top:1px}
+.badge{display:inline-flex;align-items:center;padding:3px 10px;border-radius:12px;font-size:11px;font-weight:700;white-space:nowrap}
+.b-red{background:var(--accent-bg);color:var(--accent);border:1px solid var(--accent2)}
+.b-blue{background:var(--blue-bg);color:var(--blue);border:1px solid var(--blue-bd)}
+.hdr-back{display:inline-flex;align-items:center;gap:5px;padding:5px 12px;border:1px solid var(--accent2);border-radius:8px;background:var(--accent-bg);color:var(--accent);font-size:12px;font-weight:700;text-decoration:none;transition:all .15s}
+.hdr-back:hover{background:var(--accent);color:#fff}
+.hdr-meta{font-size:10.5px;color:var(--text2);text-align:right;line-height:1.7}
+.wrap{max-width:1080px;margin:0 auto;padding:20px 32px 60px}
+.sec{margin-bottom:16px;background:var(--card);border:1px solid var(--border);border-radius:10px;box-shadow:var(--sh);overflow:hidden}
+.sec-hd{padding:11px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;cursor:pointer;background:#fafbfc;user-select:none}
+.sec-hd:hover{background:#f1f3f5}
+.sec-ttl{font-size:13px;font-weight:700;display:flex;align-items:center;gap:8px}
+.sec-num{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:50%;background:var(--accent);color:#fff;font-size:11px;font-weight:800;flex-shrink:0}
+.sec-arrow{font-size:12px;color:var(--text2);transition:transform .2s}
+.sec-hd.collapsed .sec-arrow{transform:rotate(-90deg)}
+.sec-body{padding:18px}
+.sec-body.collapsed{display:none}
+.breakdown-top{display:grid;grid-template-columns:1fr auto 1fr auto 1fr;align-items:center;gap:0;margin-bottom:20px}
+.bk-box{text-align:center;padding:14px 16px;border-radius:10px;border:2px solid}
+.bk-box.total{border-color:var(--accent);background:var(--accent-bg)}
+.bk-box.dc{border-color:var(--neu);background:var(--neu-bg)}
+.bk-val{font-size:22px;font-weight:900;letter-spacing:-.5px}
+.bk-val.total{color:var(--accent)}
+.bk-val.dc{color:var(--neu-ink)}
+.bk-lbl{font-size:11px;color:var(--text2);margin-top:3px}
+.bk-pct{font-size:10px;font-weight:700;margin-top:4px;padding:1px 6px;border-radius:4px;display:inline-block}
+.bk-pct.dc{background:var(--accent);color:#fff}
+.bk-arrow{font-size:20px;color:var(--text2);padding:0 8px;text-align:center}
+.bk-split{display:flex;flex-direction:column;gap:8px}
+.bk-mini{border:1.5px solid var(--neu-bd);background:#fff;border-radius:8px;padding:8px 10px;text-align:center}
+.bk-mini .v{font-size:15px;font-weight:900;color:var(--neu-ink)}
+.bk-mini .l{font-size:10px;color:var(--text2)}
+.ctable{width:100%;border-collapse:collapse;font-size:12.5px}
+.ctable th{background:#f1f3f5;padding:7px 10px;text-align:left;font-weight:700;border-bottom:2px solid var(--border);font-size:11.5px;color:var(--text2);white-space:nowrap}
+.ctable td{padding:7px 10px;border-bottom:1px solid #f1f3f5;vertical-align:middle}
+.ctable tr:last-child td{border-bottom:none}
+.ctable .num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.ctable .latest{background:var(--accent-bg)}
+.ctable .latest td{font-weight:700}
+.tag{display:inline-block;padding:1px 6px;border-radius:4px;font-size:10px;font-weight:700;border:1px solid;white-space:nowrap}
+.tag-est{background:#f1f5f9;color:var(--text2);border-color:#cbd5e1}
+.tag-ac{background:var(--accent-bg);color:var(--accent);border-color:var(--accent2)}
+.note{font-size:11px;color:var(--text2);margin-top:10px;line-height:1.6}
+.foot{text-align:center;font-size:11px;color:var(--text2);padding:14px;margin-top:10px}
+/* KPI */
+.kpi-ttl{font-size:11px;font-weight:700;color:var(--text2);letter-spacing:.3px;margin:2px 0 8px}
+.kpi-strip{display:grid;grid-template-columns:repeat(7,1fr);gap:10px;margin-bottom:18px}
+@media(max-width:980px){.kpi-strip{grid-template-columns:repeat(4,1fr)}}
+@media(max-width:560px){.kpi-strip{grid-template-columns:repeat(2,1fr)}}
+.kpi{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:11px 13px;box-shadow:var(--sh);display:flex;flex-direction:column}
+.kpi.accent{border:1.5px solid var(--accent2);background:var(--accent-bg)}
+.kpi .k-lbl{font-size:11px;color:var(--text2);font-weight:600}
+.kpi .k-val{font-size:19px;font-weight:900;letter-spacing:-.5px;margin-top:3px;line-height:1.1}
+.kpi.accent .k-val{color:var(--accent)}
+.kpi .k-unit{font-size:11px;font-weight:700;color:var(--text2);margin-left:2px}
+.kpi .k-sub{font-size:10px;color:var(--text2);margin-top:4px}
+.kpi .k-sub b{color:var(--up)}
+/* 定位引子 */
+.why-wrap{border:1.5px dashed var(--accent2);background:var(--accent-bg);border-radius:10px;padding:15px 16px;margin-bottom:20px}
+.why-hd{font-size:12.5px;font-weight:800;color:var(--accent);margin-bottom:10px}
+/* 引擎卡 */
+.eng2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px}
+@media(max-width:760px){.eng2{grid-template-columns:1fr}}
+.eng{border:1px solid var(--border);border-top:3px solid;border-radius:10px;overflow:hidden;background:var(--card)}
+.eng-hd{padding:10px 14px;font-size:13px;font-weight:800;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.eng-hd .pct{margin-left:auto;font-size:10px;font-weight:800;color:#fff;border-radius:5px;padding:2px 8px}
+.eng-bd{padding:0 14px 13px;font-size:11.5px;color:var(--text2);line-height:1.9}
+.eng-bd b{color:var(--text)}
+/* 带间距的要点列表 */
+.plist{display:flex;flex-direction:column;gap:9px}
+.plist > div{line-height:1.85;font-size:11.5px;color:var(--text2)}
+.plist > div b{color:var(--text)}
+.plist .pn{display:inline-flex;align-items:center;justify-content:center;width:17px;height:17px;border-radius:50%;font-size:9.5px;font-weight:800;color:#fff;margin-right:6px;vertical-align:1px;flex-shrink:0}
+.spine-intro{font-size:11.5px;color:var(--text2);line-height:1.7;margin-bottom:14px}
+.spine-intro b{color:var(--text)}
+.atom{font-size:14px;font-weight:800;color:#312e81;background:var(--accent-bg);border:1.5px solid var(--accent2);border-radius:9px;padding:13px 16px;margin-bottom:16px;line-height:1.75}
+.atom b{color:var(--dn)}
+.concl{margin-top:16px;border:1.5px solid var(--accent2);border-radius:9px;background:var(--accent-bg);padding:14px 16px;font-size:12px;line-height:1.95;color:var(--text)}
+.concl b{color:var(--accent-ink)}
+.cmp{width:100%;border-collapse:collapse;font-size:12px}
+.cmp th,.cmp td{padding:9px 12px;border:1px solid var(--border);vertical-align:top;text-align:left}
+.cmp thead th{font-size:12.5px;font-weight:800;text-align:center}
+.cmp .h-self{background:var(--accent-bg);color:var(--accent)}
+.cmp .h-oth{background:var(--neu2-bg);color:var(--neu-ink)}
+.cmp td.dim{font-weight:800;background:#fafbfc;white-space:nowrap;width:104px}
+.cmp .self{background:var(--accent-bg)}.cmp .oth{background:#fbfcfd}
+.cmp b{color:var(--text)}
+.split3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:14px}
+@media(max-width:760px){.split3{grid-template-columns:1fr}}
+.s3{border:1px solid var(--border);border-top:3px solid;border-radius:8px;padding:11px 13px;background:var(--card)}
+.s3-t{font-size:12px;font-weight:800;margin-bottom:5px}
+.s3-d{font-size:10.5px;color:var(--text2);line-height:1.55}
+.s3-d b{color:var(--text)}
+/* 认知沉淀 */
+.sec.mid{border:1.5px solid var(--accent2);background:linear-gradient(180deg,var(--accent-bg) 0%,#fff 60%)}
+.sec.mid .sec-hd{background:var(--accent-bg)}
+.mid-thesis{font-size:13px;font-weight:800;color:#312e81;background:var(--accent-bg);border:1px solid var(--accent2);border-radius:8px;padding:13px 16px;margin-bottom:16px;line-height:1.9}
+.mid-thesis .em{color:var(--dn)}
+.cog-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+@media(max-width:840px){.cog-grid{grid-template-columns:1fr}}
+.cog-card{border:1px solid var(--border);border-radius:10px;padding:14px 14px 12px;background:var(--card);box-shadow:var(--sh);position:relative;display:flex;flex-direction:column}
+.cog-card .cog-no{position:absolute;top:-10px;left:14px;width:24px;height:24px;border-radius:50%;background:var(--accent);color:#fff;font-size:12px;font-weight:900;display:flex;align-items:center;justify-content:center;box-shadow:var(--sh)}
+.cog-card .cog-tt{font-size:13px;font-weight:800;margin:8px 0 8px;line-height:1.45;color:var(--text)}
+.cog-card .cog-tt b{color:var(--accent)}
+.cog-card .cog-body{font-size:11.5px;color:var(--text2);line-height:1.8;flex:1}
+.cog-card .cog-body b{color:var(--text)}
+.cog-card .cog-tag{margin-top:10px;font-size:10.5px;font-weight:700;color:var(--accent-ink);background:#fff;border:1px solid var(--accent2);border-radius:6px;padding:5px 9px;line-height:1.5}
+.cog-card .cog-tag .k{color:var(--text2);font-weight:400}
+/* 高盛分业务预测迷你表 */
+.gs-cap{font-size:11.5px;font-weight:700;color:var(--accent);margin:14px 0 8px}
+.gs-cap span{color:var(--text2);font-weight:400;font-size:10.5px}
+.gsfc{width:100%;border-collapse:collapse;font-size:11.5px;margin:4px 0 6px}
+.gsfc th{background:var(--accent-bg);color:var(--accent);padding:6px 8px;font-weight:800;font-size:11px;text-align:center;border:1px solid var(--accent2)}
+.gsfc th:first-child{text-align:left}
+.gsfc td{padding:6px 8px;text-align:center;border:1px solid var(--border);font-variant-numeric:tabular-nums}
+.gsfc td:first-child{text-align:left;font-weight:700;color:var(--text2)}
+.gsfc .rev td{font-weight:900;color:var(--text);font-size:13px}
+.gsfc .rev td:first-child{font-size:11.5px;color:var(--accent)}
+.gsfc .yoy td{color:var(--up);font-weight:700;font-size:11px}
+.gsfc .yoy td:first-child{color:var(--text2);font-weight:700}
+.gs-note{font-size:10.5px;color:var(--text2);margin:8px 0 4px;line-height:1.55}
+.gs-note b{color:var(--text)}
+</style>
+</head>
+<body>
+
+<header class="hdr">
+  <div class="hdr-l">
+    <a class="hdr-back" href="../美股映射研究_看板.html">← 返回看板</a>
+    <div>
+      <div class="hdr-title">🌐 MRVL · 迈威尔（Marvell）</div>
+      <div class="hdr-sub">NASDAQ · AI 数据中心互联平台 · <b>连接瓶颈周期的高 Beta 旗手 · A 股光 / PCB / 互联链映射源头</b></div>
+    </div>
+    <span class="badge b-red">🔗 连接瓶颈旗手</span>
+    <span class="badge b-blue">W2 Scale-up 互联</span>
+    <span class="badge b-blue">W5 非 NVDA 算力</span>
+  </div>
+  <div class="hdr-meta">
+    更新：2026-06-12<br>最新季度：Q1 FY2027（2026-05-29）
+  </div>
+</header>
+
+<div class="wrap">
+
+<!-- 定位说明 -->
+<div class="why-wrap">
+  <div class="why-hd">🧭 Marvell 是什么角色？——不是巨头，是"连接瓶颈周期的高 Beta 旗手"</div>
+  <div style="font-size:11.5px;color:var(--text2);line-height:1.75">
+    博通是已经做大的<b style="color:var(--text)">"互联军火商"</b>；Marvell 则是同一条连接赛道上<b style="color:var(--text)">更小、更纯、增速更快</b>的弹性表达——3 年营收 3 倍（<b style="color:var(--text)">$55 亿→$165 亿</b>），AI 收入几乎全部来自"连接"（<b style="color:var(--accent)">光 DSP + 定制 ASIC</b>），没有博通那样的 VMware 软件压舱石，<b style="color:var(--text)">涨跌弹性更大</b>。
+    更关键：2026 台北电脑展黄仁勋定调"AI 进入<b style="color:var(--text)">连接瓶颈周期</b>"，Marvell 两日暴涨 <b style="color:var(--text)">43%</b>，直接点燃 A 股光模块 / PCB / 光设备 / 互联芯片板块。
+    所以这一页的落点不是"它值多少钱"，而是"<b style="color:var(--accent)">它是 A 股连接链的发令枪——它的每一次指引，对应 A 股哪条链的催化</b>"。
+  </div>
+</div>
+
+<!-- KPI -->
+<div class="kpi-ttl">关键指标 · 成长与估值（财务：高盛 GS 模型；MRVL 财年截至 1 月 → FY2027 = 2026/2–2027/1，<b>当前处于 Q2 FY2027（2026 年 5–7 月）进行中、最新财报 Q1 FY2027（2026-05-29）</b>；市值/PE：2026-06-12 实时 $280.71）</div>
+<div class="kpi-strip">
+  <div class="kpi accent">
+    <div class="k-lbl">当前市值</div>
+    <div class="k-val">~2,456<span class="k-unit">亿$</span></div>
+    <div class="k-sub">高成长溢价 · FY27E PE ~90×（TTM ~96×）</div>
+  </div>
+  <div class="kpi">
+    <div class="k-lbl">FY27E 营收</div>
+    <div class="k-val">115<span class="k-unit">亿$</span></div>
+    <div class="k-sub">YoY <b>+41%</b> · FY26E 82 亿</div>
+  </div>
+  <div class="kpi">
+    <div class="k-lbl">FY28E 营收</div>
+    <div class="k-val">165<span class="k-unit">亿$</span></div>
+    <div class="k-sub">YoY <b>+44%</b> · 3 年 3 倍</div>
+  </div>
+  <div class="kpi">
+    <div class="k-lbl">FY27E 非GAAP EPS</div>
+    <div class="k-val">$3.13</div>
+    <div class="k-sub">FY28E <b>$5.20</b></div>
+  </div>
+  <div class="kpi">
+    <div class="k-lbl">FY28E 营业利润率</div>
+    <div class="k-val">40<span class="k-unit">%</span></div>
+    <div class="k-sub">ex-SBC · FY26E 35%（运营杠杆）</div>
+  </div>
+  <div class="kpi">
+    <div class="k-lbl">光互联（AI）FY28E</div>
+    <div class="k-val">68<span class="k-unit">亿$</span></div>
+    <div class="k-sub">第一引擎 · 占 AI 六成</div>
+  </div>
+  <div class="kpi">
+    <div class="k-lbl">定制 ASIC FY28E</div>
+    <div class="k-val">40<span class="k-unit">亿$</span></div>
+    <div class="k-sub">FY29 目标 <b>&gt;$100 亿</b></div>
+  </div>
+</div>
+
+<!-- ① 业务拆解 -->
+<section class="sec">
+  <div class="sec-hd" onclick="toggleSec(this)">
+    <div class="sec-ttl"><span class="sec-num">①</span>业务拆解 · 一家"纯 AI 连接"公司</div>
+    <span class="sec-arrow">▼</span>
+  </div>
+  <div class="sec-body">
+
+    <div class="breakdown-top">
+      <div class="bk-box total">
+        <div class="bk-val total">115<span style="font-size:13px">亿$</span></div>
+        <div class="bk-lbl">FY27E 总营收</div>
+      </div>
+      <div class="bk-arrow">→</div>
+      <div class="bk-box dc">
+        <div class="bk-val dc">92<span style="font-size:13px">亿$</span></div>
+        <div class="bk-lbl">数据中心</div>
+        <span class="bk-pct dc">占总营收 80%</span>
+      </div>
+      <div class="bk-arrow">→</div>
+      <div class="bk-split">
+        <div class="bk-mini"><div class="v" style="color:var(--accent)">63 亿$</div><div class="l">其中 AI（光+定制）· 占 DC ~68%</div></div>
+        <div class="bk-mini"><div class="v">28 亿$</div><div class="l">DC 内非 AI（交换/存储/光非AI）</div></div>
+      </div>
+    </div>
+
+    <div class="spine-intro">Marvell 已从传统通信芯片厂<b>转型为"纯 AI 数据中心连接"公司</b>：数据中心占比从 FY24 的 40% 飙到 FY28E 的 <b>86%</b>，<b>AI 双引擎（光互联 + 定制 ASIC）</b>是全部增长来源；传统终端业务（运营商 / 企业网 / 消费 / 汽车）几乎零增长，正被快速稀释。</div>
+
+    <div class="gs-cap">📊 高盛分业务预测 · 三大 AI 引擎 + 传统业务<span>｜单位：亿美元，财年截至 1 月</span></div>
+    <table class="ctable">
+      <thead><tr><th>业务线（数据中心拆分）</th><th class="num">FY25</th><th class="num">FY26E</th><th class="num">FY27E</th><th class="num">FY28E</th><th>定位</th></tr></thead>
+      <tbody>
+        <tr><td><b>光互联 Optical（AI · 光 DSP）</b></td><td class="num">12</td><td class="num">23</td><td class="num">43</td><td class="num"><b>68</b></td><td><span class="tag tag-ac">第一引擎</span></td></tr>
+        <tr><td><b>定制 ASIC（Custom Compute）</b></td><td class="num">7</td><td class="num">15</td><td class="num">20</td><td class="num"><b>40</b></td><td><span class="tag tag-ac">第二曲线</span></td></tr>
+        <tr class="latest"><td><b>＝ AI 小计</b></td><td class="num">19</td><td class="num">39</td><td class="num">63</td><td class="num"><b>108</b></td><td><span class="tag tag-ac">占 DC ~76%</span></td></tr>
+        <tr><td>DC 内非 AI（交换 T100/Innovium / 存储 / 光非AI / NIC）</td><td class="num">22</td><td class="num">22</td><td class="num">28</td><td class="num">34</td><td><span class="tag tag-est">停滞稀释</span></td></tr>
+        <tr class="latest"><td><b>＝ 数据中心合计</b></td><td class="num">42</td><td class="num">61</td><td class="num">92</td><td class="num"><b>142</b></td><td><span class="tag tag-ac">占总营收 86%</span></td></tr>
+        <tr><td>传统终端（运营商/企业网/消费/汽车）</td><td class="num">16</td><td class="num">21</td><td class="num">23</td><td class="num">23</td><td><span class="tag tag-est">萎缩</span></td></tr>
+        <tr><td><b>公司总营收</b></td><td class="num">58</td><td class="num">82</td><td class="num">115</td><td class="num"><b>165</b></td><td><span style="color:var(--up);font-weight:700;font-size:10px">CAGR ~42%</span></td></tr>
+      </tbody>
+    </table>
+    <div class="note">📌 交换芯片（Innovium）虽按 GS 口径归在"DC 非 AI"，但实为 AI 驱动、增速最快的一块（$2 亿→$10 亿，FY28E +100%）。<br>📌 与博通的根本差异：博通 AI 大头是<b>定制 XPU</b>（自己做计算芯片军火商）；Marvell AI 大头是<b>光互联 DSP</b>（FY28E 光 $68 亿 &gt; 定制 $40 亿）——<b>Marvell 更靠近"光"，是 A 股光模块 / 光芯片链最贴的映射源</b>。</div>
+
+  </div>
+</section>
+
+<!-- ② AI 互联 -->
+<section class="sec">
+  <div class="sec-hd" onclick="toggleSec(this)">
+    <div class="sec-ttl"><span class="sec-num">②</span>引擎一 · AI 互联（光 DSP 全栈连接）</div>
+    <span class="sec-arrow">▼</span>
+  </div>
+  <div class="sec-body">
+
+    <div class="eng" style="border-top-color:var(--accent);margin-bottom:14px">
+      <div class="eng-hd" style="color:var(--accent)">🌐 PAM DSP 垄断 · 全栈连接军火库<span class="pct" style="background:var(--accent)">第一引擎 · 占 AI ~60%</span></div>
+      <div class="eng-bd">
+        Marvell 最强、最确定的引擎：<b>电信号在芯片间、机柜间长距离跑，必须靠 PAM DSP 把信号"整形 + 纠错"</b>。Marvell 是这块的垄断者——800G 份额领先、<b>1.6T 率先量产</b>、3.2T 已展示。互联增速远超资本开支（FY27 互联 +70% vs CAPEX +30%），是<b>ASP 提升 × 附着率增长双驱动</b>。
+      </div>
+    </div>
+
+    <div class="gs-cap">📊 高盛预测 · 光互联 AI（Optical AI）<span>｜单位：亿美元，约占 AI 60%</span></div>
+    <table class="gsfc">
+      <thead><tr><th>口径</th><th>FY25</th><th>FY26E</th><th>FY27E</th><th>FY28E</th></tr></thead>
+      <tbody>
+        <tr class="rev"><td>光互联营收</td><td>12</td><td>23</td><td>43</td><td>68</td></tr>
+        <tr class="yoy"><td>YoY</td><td>+122%</td><td>+95%</td><td>+85%</td><td>+57%</td></tr>
+      </tbody>
+    </table>
+
+    <div class="plist">
+      <div><span class="pn" style="background:var(--accent)">1</span><b>PAM4 DSP · 光模块的"电芯片心脏"</b>：每个高速光模块里都要一颗 DSP 做信号处理。800G 领先、1.6T 率先量产——直接对标 A 股<b>光模块（中际旭创 / 天孚）</b>放量节奏。</div>
+      <div><span class="pn" style="background:var(--accent)">2</span><b>全栈连接 · 不止 DSP</b>：DSP + TIA / driver（年化 &gt;$10 亿）+ AEC / retimer + 相干 DCI + 硅光 CPO——<b>业界最完整的连接全家桶</b>，每一环都是独立收费站。</div>
+      <div><span class="pn" style="background:var(--accent)">3</span><b>铜→光切换 = 长期顺风</b>：铜缆物理极限（400G 仅 1 米），集群规模越大越被迫上光。Marvell 的光电方案是这场切换的直接受益者，也是 A 股 <b>CPO / 硅光</b>叙事的源头。</div>
+    </div>
+    <div class="gs-note">📈 高盛口径下光互联是 Marvell <b>最大且最确定</b>的引擎（FY28E $68 亿），增速虽从 +122% 放缓到 +57%，但绝对体量持续第一——这也是为什么 Marvell 涨，A 股<b>光模块链</b>跟得最紧。</div>
+
+  </div>
+</section>
+
+<!-- ③ 定制 ASIC -->
+<section class="sec">
+  <div class="sec-hd" onclick="toggleSec(this)">
+    <div class="sec-ttl"><span class="sec-num">③</span>引擎二 · 定制 ASIC（0→$10B 第二曲线）</div>
+    <span class="sec-arrow">▼</span>
+  </div>
+  <div class="sec-body">
+
+    <div class="eng" style="border-top-color:var(--accent);margin-bottom:14px">
+      <div class="eng-hd" style="color:var(--accent)">🧩 定制 XPU · ASIC 双寡头的"老二"<span class="pct" style="background:var(--accent)">第二曲线 · 占 AI ~35%</span></div>
+      <div class="eng-bd">
+        和博通并列的<b>全球唯二规模化 AI 定制 ASIC 玩家</b>（Marvell 规模更小、起步更晚，但增速更猛）。从 2019 年收购 Avera 进入，FY25 $7 亿 → FY28E $40 亿，<b>FY29 目标 &gt;$100 亿</b>。与所有美国超大规模云厂商（AWS / Google / 微软）均有定制合作。
+      </div>
+    </div>
+
+    <div class="gs-cap">📊 高盛预测 · 定制计算 Custom Compute（ASIC）<span>｜单位：亿美元，约占 AI 35%</span></div>
+    <table class="gsfc">
+      <thead><tr><th>口径</th><th>FY25</th><th>FY26E</th><th>FY27E</th><th>FY28E</th></tr></thead>
+      <tbody>
+        <tr class="rev"><td>定制 ASIC 营收</td><td>7</td><td>15</td><td>20</td><td>40</td></tr>
+        <tr class="yoy"><td>YoY</td><td>—</td><td>+114%</td><td>+31%</td><td>+100%</td></tr>
+      </tbody>
+    </table>
+
+    <div class="plist">
+      <div><span class="pn" style="background:var(--accent)">1</span><b>"老二"的活法 = 差异化卡位</b>：博通拿最大的旗舰 XPU 单（Google / Meta / OpenAI），Marvell 靠 <b>224G SerDes + 业界首款 2nm SRAM IP + 先进封装</b> 切入 AWS / 微软等，做旗舰 XPU + 配套（NIC / CXL）双轮。</div>
+      <div><span class="pn" style="background:var(--accent)">2</span><b>增速比博通更猛</b>：基数小、客户在爬坡，FY28E 同比 +100%；FY29 目标 &gt;$100 亿意味着还要再翻 2-3 倍——是 Marvell 估值弹性的主要来源。</div>
+      <div><span class="pn" style="background:var(--accent)">3</span><b>对 A 股的映射</b>：定制 ASIC 放量同样拉动 <b>CoWoS / HBM / ABF 载板 / 高速 PCB</b>，与博通 XPU 共抢产能——是 A 股 <b>PCB（沪电 / 深南 / 胜宏）</b> 的另一台需求引擎。</div>
+    </div>
+    <div class="gs-note">⚠️ 高盛 FY28E 给定制 $40 亿，相对公司"FY29 &gt;$100 亿"目标偏保守——若新 Tier-1 XPU 客户量产兑现，这块是<b>最大的预期上修来源</b>。</div>
+
+  </div>
+</section>
+
+<!-- ④ Scale-up 光互联 · Celestial AI -->
+<section class="sec">
+  <div class="sec-hd" onclick="toggleSec(this)">
+    <div class="sec-ttl"><span class="sec-num">④</span>引擎三 · Scale-up 光互联（Celestial AI · 远期期权）</div>
+    <span class="sec-arrow">▼</span>
+  </div>
+  <div class="sec-body">
+
+    <div class="eng" style="border-top-color:var(--accent);margin-bottom:14px">
+      <div class="eng-hd" style="color:var(--accent)">🔮 光子织物 · 把"光"搬进机柜内<span class="pct" style="background:var(--accent)">第三极 · 未计入指引</span></div>
+      <div class="eng-bd">
+        前两台引擎是"现在"，这台是"远期看涨期权"：通过收购 <b>Celestial AI</b> 拿到光子织物（Photonic Fabric），带宽 <b>16Tbps/chiplet（10 倍于当前 1.6T DSP）</b>，把光互联从"机柜之间"推进到"机柜之内"（Scale-up）——直接挑战 NVLink / 铜缆的机柜内地盘。
+      </div>
+    </div>
+
+    <div class="plist">
+      <div><span class="pn" style="background:var(--accent)">1</span><b>已拿到全球最大超大规模设计订单</b>：Celestial 光子织物 <b>FY2028 Q4 年化 $5 亿 → FY2029 Q4 年化 $10 亿</b>——<b style="color:var(--up)">这部分尚未计入 $16.5B（FY28）指引</b>，是纯上行弹性。</div>
+      <div><span class="pn" style="background:var(--accent)">2</span><b>XConn 收购补 Scale-up 交换</b>：支持所有协议，单项目生命周期数十亿美元，<b>同样未计入指引</b>；叠加 XPU attach（NIC + CXL）FY2029 收入 &gt;$20 亿。</div>
+      <div><span class="pn" style="background:var(--accent)">3</span><b>2030 Scale-up 互连市场 &gt;$100 亿</b>：Marvell 定位端到端"光 + 电"全方案——若兑现，是公司估值里"还没标价"的第二层故事。</div>
+    </div>
+    <div class="concl">
+      🎯 <b>位置结论</b>：④ 是 Marvell 相对博通的<b>独特看涨期权</b>——把光互联做到机柜内（Scale-up），抢的正是 NVLink / 铜缆最硬的地盘。对 A 股：Scale-up 光互联 = <b>CPO / 硅光</b>更早期、更前沿的映射，利好<b>光芯片 / 光设备</b>链的远期想象空间。
+    </div>
+
+  </div>
+</section>
+
+<!-- ⑤ 被低估的两条线 -->
+<section class="sec">
+  <div class="sec-hd" onclick="toggleSec(this)">
+    <div class="sec-ttl"><span class="sec-num">⑤</span>被低估的两条线 · 交换（T100）+ 内存（CXL）</div>
+    <span class="sec-arrow">▼</span>
+  </div>
+  <div class="sec-body">
+
+    <div class="spine-intro">光互联（②）和定制 ASIC（③）之外，深度报告点出两条<b>被低估的线</b>——它们让 Marvell 从"卖芯片"扩展到"卖系统插槽"，是"异构互连平台"叙事的关键拼图。</div>
+
+    <div class="eng" style="border-top-color:var(--accent);margin-bottom:14px">
+      <div class="eng-hd" style="color:var(--accent)">🔀 交换 · Teralynx T100（进入 AI 网络架构层）<span class="pct" style="background:var(--accent)">正面对标博通 Tomahawk</span></div>
+      <div class="eng-bd">
+        旗舰交换芯片：<b>102.4Tbps、3nm、512 端口 radix、典型功耗 &lt;1000W（比竞品低 25%）</b>，支持 BGA / 共封装铜 / CPO 多种封装，本季度起向客户采样。交换芯片是 AI 网络的<b>核心控制点</b>（决定网络层级、端口密度、延迟、拥塞控制、XPU 利用率）——T100 让 Marvell 从"光器件供应商"正式进入 <b>AI 网络架构层</b>，也是其 CPO 路线的关键载体。难点在于：要从"采样"走到"真实收入"，还需客户在大规模 AI 集群验证拥塞控制、软件栈与供货能力。
+      </div>
+    </div>
+
+    <div class="eng" style="border-top-color:var(--accent)">
+      <div class="eng-hd" style="color:var(--accent)">🧠 内存墙 · CXL / PCIe（被低估的第三条线）<span class="pct" style="background:var(--accent)">中期选项</span></div>
+      <div class="eng-bd">
+        agentic AI 推理撞上"<b>内存墙</b>"：更大上下文、更长记忆链、更频繁的缓存与工具调用——算力越异构，<b>内存与数据调度越复杂，连接芯片价值越高</b>。Marvell 资产：<b>CXL memory pooling、PCIe/CXL switch、retimer、XPU attach、XConn</b>，<b>CXL 相关未来几年 &gt;$10 亿</b>。它让 Marvell 在服务器与机柜内部多拿"插槽"，从单芯片收入扩展到<b>系统 attach 收入</b>——而且与定制硅天然协同（客户自研 XPU 不只要主芯片，还要内存扩展、I/O、网络接口）。
+      </div>
+    </div>
+
+    <div class="concl">
+      🎯 <b>这两条线决定 Marvell 的"平台性"</b>：短期不是主驱动，却是它从"零件供应商"升级为<b>系统接口平台</b>的关键——只要客户不只买一颗 ASIC，而是同时买交换、互连、内存接口，议价权就会提高。对 A 股：交换映射 <b>盛科 / 裕太微</b>，CXL / PCIe 映射 <b>澜起科技</b>（内存池化、retimer）。
+    </div>
+
+  </div>
+</section>
+
+<!-- ⑥ NVIDIA 战略合作 -->
+<section class="sec">
+  <div class="sec-hd" onclick="toggleSec(this)">
+    <div class="sec-ttl"><span class="sec-num">⑥</span>NVIDIA 战略合作 · "两边下注"的聪明卡位</div>
+    <span class="sec-arrow">▼</span>
+  </div>
+  <div class="sec-body">
+
+    <div class="atom">
+      🤝 2026 Computex，Marvell 与 NVIDIA 的关系从"被认可"升级为三大支柱战略合作：<b style="color:var(--accent)">硅光子 + NVLink Fusion + AI-RAN</b>。本质是一手给"去英伟达"阵营做定制 ASIC，一手又绑定 NVIDIA 生态——<b style="color:var(--text)">无论 AI 算力走闭环还是开放，它都卖连接</b>。
+    </div>
+
+    <div class="plist">
+      <div><span class="pn" style="background:var(--accent)">1</span><b>硅光子（CPO）· 把光引擎卖进 NVIDIA</b>：NVIDIA Quantum-X / Spectrum-X <b>Photonics（共封装光学交换机）</b>需要光引擎，Marvell 供这块——它有 MZM/EAM/MRM 硅光平台、<b>第三代 6.4T 光引擎</b>、100 万+ 硅光 DCI 模块量产经验。NVIDIA 走 CPO，Marvell 同样收钱。</div>
+      <div><span class="pn" style="background:var(--accent)">2</span><b>NVLink Fusion · 定制 ASIC 的"通行证"（最关键）</b>：英伟达<b>向 Marvell 投资 $20 亿</b>，并把原本封闭的 NVLink 开放给第三方定制芯片——Marvell 的定制 XPU 能<b>通过 NVLink 接入 NVIDIA 机架、和 GPU 混部</b>，客户自研芯片不必脱离 NVIDIA 生态。但要看清本质：<b>英伟达不是交出控制权，而是让 Marvell 进入"接口层"</b>——控制权中心仍是 GPU / NVLink / CUDA，Marvell 拿到的是"<b>与控制权中心兼容</b>"的接口价值（很高，但上限受英伟达生态边界约束）。</div>
+      <div><span class="pn" style="background:var(--accent)">3</span><b>AI-RAN · 传统电信业务的 AI 出口</b>：NVIDIA 推动把 AI 算力塞进 5G/6G 无线接入网，Marvell 用其<b>运营商基础设施积累</b>合作做 AI-RAN——给那块萎缩的传统终端业务（①表）一个 AI 转型方向。</div>
+    </div>
+
+    <div class="concl">
+      🎯 <b>战略本质 = 两边下注</b>：和博通"跨路线收税"异曲同工——Marvell 既做替代 GPU 的定制 ASIC，又通过 NVLink Fusion / CPO / AI-RAN 绑定 NVIDIA，<b>对冲了"闭环 vs 开放"的路线风险</b>。
+      <b>但需注意</b>：管理层目前只给了三个关键词背书，<b>产品落地时间线、合作的收入贡献尚未披露</b>——是后续跟踪的重点观察项。
+    </div>
+
+  </div>
+</section>
+
+<!-- ⑦ 连接瓶颈周期 -->
+<section class="sec">
+  <div class="sec-hd" onclick="toggleSec(this)">
+    <div class="sec-ttl"><span class="sec-num">⑦</span>连接瓶颈周期 · 为什么"连接"成了第三大底座</div>
+    <span class="sec-arrow">▼</span>
+  </div>
+  <div class="sec-body">
+
+    <div class="atom">
+      🎤 黄仁勋 2026 台北电脑展定调：AI 已走过<b>算力荒</b>、<b>存储荒</b>，正式进入<b>连接瓶颈周期</b>——连接是决定 AI 集群性能天花板的<b style="color:var(--accent)">第三大底座</b>。Marvell 是这条主线最纯的受益标的。
+    </div>
+
+    <div class="plist">
+      <div><span class="pn" style="background:var(--neu)">1</span><b>带宽缺口已成刚性约束</b>：万卡级训练集群中，GPU 并行计算的<b>数据传输耗时占整体 90%</b>，PCIE 总线带宽缺口高达 <b>300%+</b>，集群硬件利用率普遍 <b>低于 50%</b>——算力买了一半在空转，瓶颈在"连"。</div>
+      <div><span class="pn" style="background:var(--neu)">2</span><b>铜缆撞上物理极限 → 渐进上光</b>：100G 铜缆只能跑 5 米、200G 2.5 米、<b>400G 仅 1 米</b>。但<b>铜光不是"此消彼长"，而是按距离/功耗/带宽密度共存</b>——能用铜就用铜（便宜、好部署），越过阈值光才逐步向机柜内、交换芯片周边、封装附近迁移。Marvell 的聪明在于<b>铜（高速铜 / 重定时）、光（DSP / 硅光 / CPO）两手都备</b>，不赌单一路线。</div>
+      <div><span class="pn" style="background:var(--neu)">3</span><b>连接也是能耗主战场</b>：AI 算力集群 <b>60%–90% 的功耗集中在数据搬运</b>——省电的连接方案（高效 DSP、光互联）同时解了带宽墙和能耗墙。</div>
+    </div>
+    <div class="concl">
+      🎯 <b>主线确认</b>：连接瓶颈是<b>结构性、跨多年</b>的机会。Marvell 两日暴涨 <b>43%</b>（首日 +33%、次日 +10%），并带动 Coherent、Lumentum 同步大涨——这本身就是"<b>后续行情主线 = 连接板块</b>"被市场用脚投票确认。<b>下一节看这条主线怎么映射到 A 股。</b>
+    </div>
+
+  </div>
+</section>
+
+<!-- ⑧ A股映射（重头） -->
+<section class="sec">
+  <div class="sec-hd" onclick="toggleSec(this)">
+    <div class="sec-ttl"><span class="sec-num">⑧</span>★ A 股映射 · Marvell 是连接链的"发令枪"</div>
+    <span class="sec-arrow">▼</span>
+  </div>
+  <div class="sec-body">
+
+    <div class="spine-intro">Marvell 的四块业务，几乎一一对应 A 股连接链的四条赛道。它的指引和股价，是这四条链最直接的<b>风向标 / 发令枪</b>——参考《从 Marvell 看互联投资机遇》（东方电子）：</div>
+
+    <table class="ctable">
+      <thead><tr><th>Marvell 业务</th><th>→ A 股映射链</th><th>核心标的</th><th>催化逻辑</th></tr></thead>
+      <tbody>
+        <tr class="latest"><td><b>光 DSP / 光模块</b></td><td><b>光模块 + 光芯片</b></td><td><b>中际旭创、天孚通信</b></td><td>NPO 打开数百亿利润；CPO 出货上修至 2027 年 ~50 万台；TB200/TPU V8 Q3 起量</td></tr>
+        <tr><td>定制 ASIC / XPU 放量</td><td>高速 PCB / 载板</td><td><b>沪电、深南、胜宏、鹏鼎</b></td><td>PCB 载板化（mSAP→IC 载板）；M6/M7 CCL 涨价 20%+；M8 缺口 Q3 拉大</td></tr>
+        <tr><td>交换 / PCIe / CXL</td><td>互联芯片</td><td><b>澜起科技、盛科通信、裕太微</b></td><td>GPU:PCIe switch 配比 4:1→2:1→1:1；Scale-up 交换 0→1 爆发</td></tr>
+        <tr><td>光互联扩产</td><td>光设备</td><td><b>日联科技、联迅仪器</b></td><td>过去 vs 未来一年资本开支 ~10 倍；日联新签订单翻 5 倍（2→4-5 亿）</td></tr>
+      </tbody>
+    </table>
+
+    <div class="split3" style="grid-template-columns:1fr 1fr">
+      <div class="s3" style="border-top-color:var(--accent)">
+        <div class="s3-t" style="color:var(--accent)">🔵 光模块 · 最贴的映射（核心）</div>
+        <div class="s3-d">Marvell 光 DSP 是光模块的"电芯片心脏"，<b>它放量 = A 股光模块放量</b>。<b>中际旭创</b>（大龙头）、<b>天孚通信</b>（小龙头）+ 光芯片/材料（东山精密、维特光电）。NPO/CPO 把利润空间再打开数百亿。</div>
+      </div>
+      <div class="s3" style="border-top-color:var(--accent)">
+        <div class="s3-t" style="color:var(--accent)">🟣 PCB · 从周期到成长重估</div>
+        <div class="s3-d"><b>载板化（半导体化）</b>把 PCB 从周期估值切到成长估值：<b>沪电、深南、胜宏、鹏鼎</b>。M6/M7 CCL 已涨价 <b>20%+</b>，GD300/TPU V8 上量，M8 高端 PCB <b>Q3 供需缺口进一步拉大</b>。</div>
+      </div>
+      <div class="s3" style="border-top-color:var(--neu)">
+        <div class="s3-t" style="color:var(--neu-ink)">⚙️ 互联芯片 · Scale-up 0→1</div>
+        <div class="s3-d"><b>澜起科技</b>（CXL / PCIe retimer，内存池化）、<b>盛科 / 裕太微</b>（以太网交换，Scale-up 配比 4:1-8:1，需求空间 2-3 倍）。国产自研 GPU 多用第三方交换芯片，拉动需求。</div>
+      </div>
+      <div class="s3" style="border-top-color:var(--neu)">
+        <div class="s3-t" style="color:var(--neu-ink)">🔧 光设备 · 最早期斜率最陡</div>
+        <div class="s3-d">行情<b>早期阶段、持续性强</b>，订单斜率远超 PCB/光伏设备：<b>日联科技</b>（2026 新签 4-5 亿，翻 5 倍）、<b>联迅仪器</b>（测试设备景气最高）。交期持续拉长。</div>
+      </div>
+    </div>
+
+    <div class="concl">
+      🎯 <b>映射结论</b>：A 股光模块、PCB 是<b>全球 AI 供应链最具优势的品类，应当拥有独立定价权</b>（参考韩国存储、日本材料、美国芯片的路径）。<b>Marvell 的每一次指引/大涨，就是这四条链的发令枪</b>——盯它的光互联营收和指引，比盯任何单一 A 股标的的季报都更前瞻。<b>这正是"美股映射 A 股"最干净的一个范本。</b>
+    </div>
+
+  </div>
+</section>
+
+<!-- 💡 vs 博通对照 -->
+<section class="sec mid">
+  <div class="sec-hd" onclick="toggleSec(this)">
+    <div class="sec-ttl"><span style="font-size:14px">💡</span>我的分析 · Marvell vs 博通：双寡头怎么选</div>
+    <span class="sec-arrow">▼</span>
+  </div>
+  <div class="sec-body">
+
+    <table class="cmp">
+      <thead><tr><th style="background:#fafbfc">维度</th><th class="h-oth">🔗 博通（规模派）</th><th class="h-self">🌐 Marvell（弹性派）</th></tr></thead>
+      <tbody>
+        <tr><td class="dim">体量（FY28E 营收）</td><td class="oth">$2,493 亿</td><td class="self"><b>$165 亿</b>（小约 15 倍）</td></tr>
+        <tr><td class="dim">AI 第一引擎</td><td class="oth">定制 XPU（计算）</td><td class="self"><b>光互联 DSP</b>（连接）</td></tr>
+        <tr><td class="dim">增速（FY28E）</td><td class="oth">营收 +33%</td><td class="self">营收 <b>+44%</b>（更快更纯）</td></tr>
+        <tr><td class="dim">利润率</td><td class="oth">净利率 ~53%（含软件）</td><td class="self">营业利润率 40%（ex-SBC）</td></tr>
+        <tr><td class="dim">压舱石</td><td class="oth">VMware 软件（GM 93%）</td><td class="self"><b>无</b>，纯硬件 → 弹性更大</td></tr>
+        <tr><td class="dim">估值</td><td class="oth">PE ~18.6×（FY27E）</td><td class="self">PE ~39×（成长溢价）</td></tr>
+        <tr><td class="dim">股性</td><td class="oth">低 Beta · 稳健</td><td class="self"><b>高 Beta · 弹性</b></td></tr>
+        <tr><td class="dim">A 股映射侧重</td><td class="oth">交换芯片 / ASIC 链</td><td class="self"><b>光模块 / 光链</b></td></tr>
+      </tbody>
+    </table>
+    <div class="note" style="margin-top:14px;padding:11px 13px;background:var(--neu-bg);border-radius:8px;border:1px solid var(--neu-bd)">🗺️ <b style="color:var(--neu-ink)">控制权谱系</b>：英伟达、博通更像 AI 基础设施的<b style="color:var(--text)">中心节点</b>（GPU+NVLink+CUDA ／ 大客户 ASIC+网络）；Marvell 更像<b style="color:var(--text)">跨节点的接口平台</b>——触点最多、但控制权不最强。与 Astera / Credo 相比，它们更"纯"（对单条高速连接线反应更直接），Marvell 是大平台（确定性＋复杂性并存）。<b style="color:var(--text)">它要赢，不靠每条线都第一，而靠让客户同时买"光＋交换＋定制＋CXL"组合、形成黏性。</b></div>
+    <div class="concl">
+      🎯 <b>不是二选一</b>：博通是"连接收税的<b>确定性</b>"（巨头、高利润、低波动）；Marvell 是"连接弹性 + 光链映射的<b>高 Beta</b>"（小、纯、快、波动大）。<b>论对 A 股光模块 / 光设备链的指示性，Marvell 更强、更前瞻</b>——它涨，光模块链跟得最紧。两者合起来，才是"连接主线"的完整拼图。
+    </div>
+
+  </div>
+</section>
+
+<!-- 💡 三种世界观 -->
+<section class="sec mid">
+  <div class="sec-hd" onclick="toggleSec(this)">
+    <div class="sec-ttl"><span style="font-size:14px">💡</span>我的分析 · 三种世界观：怎么给 Marvell 定价</div>
+    <span class="sec-arrow">▼</span>
+  </div>
+  <div class="sec-body">
+
+    <div class="mid-thesis">
+      Marvell 的估值分歧，本质来自<b>三种世界观</b>：① 看成<b>光互连公司</b>（估值类比光学芯片，上限有限）；② 看成 <b>ASIC 公司</b>（赌 FY2028 定制放量、向博通靠拢，对传闻/量产高度敏感、波动大）；③ 看成<b>异构互连平台</b>（光 + 交换 + CXL + NVLink + 定制共同构成价值）。<span class="em">深度报告与本页都认同第三种</span>——单看光会低估协同，单看 ASIC 又高估客户可见度。
+    </div>
+
+    <div style="font-size:11.5px;font-weight:700;color:var(--accent);margin:6px 0 10px">把 Marvell 拆成三层、各给不同折现率 ——</div>
+    <div class="split3">
+      <div class="s3" style="border-top-color:var(--accent)">
+        <div class="s3-t" style="color:var(--accent)">第一层 · 高确定性（估值下限）</div>
+        <div class="s3-d"><b>光互连 + 数据中心交换</b>：已进入收入确认阶段（互连 FY27 +70%；TIA/driver、DCI 各 $10 亿年化）。需求很难逆转，是<b>重估的下限</b>。</div>
+      </div>
+      <div class="s3" style="border-top-color:var(--accent)">
+        <div class="s3-t" style="color:var(--accent)">第二层 · FY2028 弹性</div>
+        <div class="s3-d"><b>定制 ASIC + XPU attach + CXL</b>：估值上限最大、也最需克制。要看具名客户、量产爬坡、利润率证据——<b>兑现则估值中枢上移</b>，推迟则失去最有弹性的部分。</div>
+      </div>
+      <div class="s3" style="border-top-color:var(--accent)">
+        <div class="s3-t" style="color:var(--accent)">第三层 · 长期期权</div>
+        <div class="s3-d"><b>CPO + 硅光 + Celestial Photonic Fabric</b>：改变价值池分布的"上限故事"。不是 FY2027 收入核心，但决定 Marvell 能否被按"平台"长期定价。</div>
+      </div>
+    </div>
+
+    <div class="concl">
+      🎯 <b>接受"异构互连平台"框架，Marvell 就不需要每条线都第一</b>——只要证明多产品线共同进入大客户架构，就能拿到比"单一光学/ASIC 公司"更稳定的估值溢价。但溢价要可持续，需<b>第一层继续兑现、第二层具名放量、第三层进入客户验证</b>，并始终用<b>财务与客户证据约束叙事</b>（别把故事讲过头）。
+    </div>
+
+  </div>
+</section>
+
+<!-- 💡 跟踪框架 -->
+<section class="sec mid">
+  <div class="sec-hd" onclick="toggleSec(this)">
+    <div class="sec-ttl"><span style="font-size:14px">💡</span>我的分析 · 跟踪 Marvell 该看什么</div>
+    <span class="sec-arrow">▼</span>
+  </div>
+  <div class="sec-body">
+
+    <div class="mid-thesis">
+      跟踪 Marvell = 跟踪<b>"连接主线的景气 + A 股光链的发令枪"</b>。它比博通更纯、更早反应连接周期——所以它的几个指引口径，对 A 股<b>光模块 / PCB / 光设备</b>的指示性<span class="em">极强、且前瞻</span>。
+    </div>
+
+    <div class="cog-grid">
+      <div class="cog-card">
+        <div class="cog-no">1</div>
+        <div class="cog-tt"><b>光互联（DSP）营收 / 增速</b><br>= A 股光模块景气温度计</div>
+        <div class="cog-body">光是 Marvell 第一引擎（FY28E $68 亿 &gt; 定制 $40 亿）。它的营收和增速，是<b>判断 A 股光模块景气</b>最直接的前瞻指标——Marvell 加速，光模块链跟最紧。</div>
+        <div class="cog-tag"><span class="k">映射：</span>中际旭创 / 天孚通信</div>
+      </div>
+      <div class="cog-card">
+        <div class="cog-no">2</div>
+        <div class="cog-tt"><b>定制 ASIC 新客户 + 量产时点</b><br>= 弹性来源 + PCB 催化</div>
+        <div class="cog-body">定制 FY29 目标 &gt;$100 亿，目前 GS 给 FY28E 仅 $40 亿——<b>新 Tier-1 XPU 客户量产</b>是最大的预期上修来源，同时拉动 A 股高速 PCB / 载板。</div>
+        <div class="cog-tag"><span class="k">映射：</span>沪电 / 深南 / 胜宏</div>
+      </div>
+      <div class="cog-card">
+        <div class="cog-no">3</div>
+        <div class="cog-tt"><b>Celestial / Scale-up 光 + 全年指引上修</b><br>= 第三极期权 + 主线强度</div>
+        <div class="cog-body">Celestial FY28 Q4 年化 $5 亿里程碑（未计入指引）；全年指引（FY27 $11.5B / FY28 $16.5B）<b>是否上修</b>=连接主线强度。上修 = 整条 A 股光链加速信号。</div>
+        <div class="cog-tag"><span class="k">映射：</span>光设备（日联 / 联迅）/ CPO</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<div class="foot">数据来源：高盛 GS 模型（model 3，更新 2026-05-27）、Marvell 业绩会档案（Q3FY2024–Q1FY2027）、《从 Marvell 看互联投资机遇》（东方电子）。本页仅为投研记录，不构成投资建议。<br>美股映射研究 · 连接瓶颈旗手 · 2026-06-12</div>
+
+</div>
+
+<script>
+function toggleSec(el){el.classList.toggle('collapsed');const b=el.parentElement.querySelector('.sec-body');if(b)b.classList.toggle('collapsed');}
+</script>
+</body>
+</html>

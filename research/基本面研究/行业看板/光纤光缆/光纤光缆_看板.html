@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>光纤光缆 研究看板</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+  :root {
+    --bg: #f8f9fa;
+    --card: #ffffff;
+    --border: #e9ecef;
+    --text-primary: #212529;
+    --text-secondary: #6c757d;
+    --accent: #0891b2;
+    --up: #16a34a;
+    --down: #dc2626;
+    --neutral: #d97706;
+    --up-bg: #f0fdf4;
+    --down-bg: #fef2f2;
+    --neutral-bg: #fffbeb;
+    --tag-bg: #ecfeff;
+    --tag-text: #0e7490;
+    --shadow: 0 1px 3px rgba(0,0,0,.08), 0 1px 2px rgba(0,0,0,.04);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+    background: var(--bg);
+    color: var(--text-primary);
+    font-size: 14px;
+    line-height: 1.6;
+  }
+  .header {
+    background: var(--card);
+    border-bottom: 1px solid var(--border);
+    padding: 18px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: var(--shadow);
+  }
+  .header-left { display: flex; align-items: center; gap: 14px; }
+  .sector-name { font-size: 20px; font-weight: 700; }
+  .sector-sub { font-size: 13px; color: var(--text-secondary); }
+  .outlook-badge {
+    display: inline-flex; align-items: center; gap: 5px;
+    padding: 4px 12px; border-radius: 20px; font-size: 13px; font-weight: 600;
+    background: var(--neutral-bg); color: var(--neutral); border: 1px solid #fcd34d;
+  }
+  .back-link {
+    display: inline-flex; align-items: center; gap: 5px;
+    font-size: 12px; color: var(--text-secondary);
+    text-decoration: none; padding: 4px 10px;
+    border: 1px solid var(--border); border-radius: 6px;
+    background: var(--bg);
+  }
+  .back-link:hover { color: var(--accent); border-color: #a5f3fc; }
+  .header-meta { font-size: 12px; color: var(--text-secondary); text-align: right; }
+  .container { max-width: 1300px; margin: 0 auto; padding: 24px 32px; }
+  .notice-bar {
+    background: #fffbeb; border: 1px solid #fcd34d; border-radius: 8px;
+    padding: 10px 16px; margin-bottom: 20px;
+    font-size: 12px; color: #92400e;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .section-title {
+    font-size: 14px; font-weight: 700; color: var(--text-primary);
+    margin-bottom: 14px; padding-bottom: 7px;
+    border-bottom: 2px solid var(--accent);
+    display: flex; align-items: center; gap: 7px;
+  }
+  .kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 26px; }
+  .kpi-card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 10px; padding: 16px 18px; box-shadow: var(--shadow);
+  }
+  .kpi-label { font-size: 11px; color: var(--text-secondary); margin-bottom: 5px; text-transform: uppercase; letter-spacing: .3px; }
+  .kpi-value { font-size: 22px; font-weight: 700; margin-bottom: 4px; }
+  .kpi-note { font-size: 11px; color: var(--text-secondary); }
+  .kpi-up   { color: var(--up); }
+  .kpi-flat { color: var(--text-secondary); }
+  .kpi-pending { color: var(--neutral); font-size: 18px !important; }
+  .charts-grid { display: grid; grid-template-columns: 3fr 2fr; gap: 14px; margin-bottom: 26px; }
+  .chart-card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 10px; padding: 18px 20px; box-shadow: var(--shadow);
+  }
+  .chart-card h3 { font-size: 12px; font-weight: 600; color: var(--text-secondary); margin-bottom: 12px; text-transform: uppercase; letter-spacing: .4px; }
+  .chart-wrapper { position: relative; height: 210px; }
+  .chart-placeholder {
+    height: 210px; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; gap: 8px;
+    color: var(--text-secondary); font-size: 12px;
+    background: var(--bg); border-radius: 6px;
+    border: 1px dashed var(--border);
+  }
+  .chart-placeholder .ph-icon { font-size: 28px; opacity: .4; }
+  .table-card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 10px; padding: 18px 20px; box-shadow: var(--shadow);
+    margin-bottom: 18px; overflow-x: auto;
+  }
+  .table-card h3 { font-size: 12px; font-weight: 600; color: var(--text-secondary); margin-bottom: 12px; text-transform: uppercase; letter-spacing: .4px; }
+  table { width: 100%; border-collapse: collapse; }
+  th {
+    text-align: left; padding: 8px 12px; font-size: 11px; font-weight: 600;
+    color: var(--text-secondary); background: var(--bg);
+    border-bottom: 1px solid var(--border); white-space: nowrap;
+  }
+  td { padding: 10px 12px; font-size: 13px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: #fafbfc; }
+  .share-bar-wrap { display: flex; align-items: center; gap: 8px; }
+  .share-bar { height: 6px; background: var(--border); border-radius: 3px; width: 80px; overflow: hidden; }
+  .share-bar-fill { height: 100%; background: var(--accent); border-radius: 3px; }
+  .share-pct { font-size: 12px; color: var(--text-secondary); min-width: 36px; }
+  .tag {
+    display: inline-block; padding: 2px 8px; border-radius: 4px;
+    font-size: 11px; font-weight: 600;
+  }
+  .tag-focus   { background: var(--up-bg);      color: var(--up);      border: 1px solid #86efac; }
+  .tag-watch   { background: var(--neutral-bg); color: var(--neutral); border: 1px solid #fcd34d; }
+  .tag-neutral { background: var(--bg);         color: var(--text-secondary); border: 1px solid var(--border); }
+  .tag-loc { background: var(--tag-bg); color: var(--tag-text); border: 1px solid #a5f3fc; }
+  .bottom-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 26px; }
+  .tl-item { display: flex; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--border); }
+  .tl-item:last-child { border-bottom: none; }
+  .tl-dot { width: 9px; height: 9px; border-radius: 50%; margin-top: 5px; flex-shrink: 0; }
+  .tl-dot-pending { background: var(--neutral); }
+  .tl-dot-track   { background: var(--accent); }
+  .tl-date { font-size: 11px; color: var(--text-secondary); white-space: nowrap; min-width: 68px; margin-top: 2px; }
+  .tl-content { flex: 1; }
+  .tl-event { font-size: 13px; font-weight: 500; }
+  .tl-meta { font-size: 11px; color: var(--text-secondary); margin-top: 2px; }
+  .tl-status {
+    font-size: 11px; padding: 2px 7px; border-radius: 4px;
+    white-space: nowrap; align-self: flex-start; margin-top: 2px;
+  }
+  .status-pending { background: var(--neutral-bg); color: var(--neutral); }
+  .status-track   { background: var(--tag-bg);     color: var(--tag-text); }
+  .judgment-grid { display: grid; grid-template-columns: 3fr 2fr; gap: 14px; margin-bottom: 26px; }
+  .judgment-card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 10px; padding: 18px 20px; box-shadow: var(--shadow);
+  }
+  .judgment-card h3 { font-size: 12px; font-weight: 600; color: var(--text-secondary); margin-bottom: 10px; text-transform: uppercase; letter-spacing: .4px; }
+  .logic-text {
+    font-size: 14px; line-height: 1.8; background: var(--bg);
+    border-radius: 6px; padding: 14px 16px; border-left: 3px solid var(--accent);
+  }
+  .risk-item { display: flex; gap: 8px; margin-bottom: 8px; font-size: 13px; align-items: flex-start; }
+  .risk-num { background: var(--down-bg); color: var(--down); font-size: 11px; font-weight: 700; padding: 1px 6px; border-radius: 3px; margin-top: 1px; flex-shrink: 0; }
+  code { font-size: 11px; background: var(--tag-bg); color: var(--tag-text); padding: 2px 6px; border-radius: 4px; font-family: monospace; }
+  @media (max-width: 900px) {
+    .kpi-grid { grid-template-columns: repeat(2,1fr); }
+    .charts-grid, .bottom-grid, .judgment-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div class="header-left">
+    <span class="sector-name">光纤光缆</span>
+    <span class="sector-sub">光纤预制棒 · 光缆 · 海底缆</span>
+    <span class="outlook-badge">🟡 框架版</span>
+  </div>
+  <div style="display:flex;align-items:center;gap:16px;">
+    <a class="back-link" href="../行业基本面入口.html">← 行业基本面入口</a>
+    <div class="header-meta">
+      研究看板 · TMT 产业链<br>
+      更新：2026-05-25（数据待补充）
+    </div>
+  </div>
+</header>
+
+<div class="container">
+
+  <div class="notice-bar">
+    ⚠️ 本看板为框架版，核心数据（光纤均价、预制棒自给率）待补充。竞争格局与标的映射已就位，催化剂跟踪持续更新。
+  </div>
+
+  <!-- KPI -->
+  <div class="section-title"><span>📊</span>核心供需指标</div>
+  <div class="kpi-grid">
+    <div class="kpi-card">
+      <div class="kpi-label">光纤均价</div>
+      <div class="kpi-value kpi-pending">待补充</div>
+      <div class="kpi-note">元/芯公里，待录入</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">海缆需求方向</div>
+      <div class="kpi-value kpi-up">高增</div>
+      <div class="kpi-note">↑ 数据中心互联驱动</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">预制棒自给率</div>
+      <div class="kpi-value kpi-pending">待补充</div>
+      <div class="kpi-note">%，国产化进展跟踪</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">运营商集采进度</div>
+      <div class="kpi-value" style="font-size:18px; color:var(--neutral)">待招标</div>
+      <div class="kpi-note">→ 年度集采周期（Q1-Q2）</div>
+    </div>
+  </div>
+
+  <!-- Charts -->
+  <div class="charts-grid">
+    <div class="chart-card">
+      <h3>光纤均价走势（待补充）</h3>
+      <div class="chart-wrapper">
+        <canvas id="priceChart"></canvas>
+      </div>
+    </div>
+    <div class="chart-card">
+      <h3>A股光纤光缆市占率估算</h3>
+      <div class="chart-wrapper">
+        <canvas id="shareChart"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <!-- Competitors -->
+  <div class="section-title"><span>🏭</span>竞争格局</div>
+  <div class="table-card">
+    <table>
+      <thead>
+        <tr>
+          <th>公司</th>
+          <th>市占率（估算）</th>
+          <th>属性</th>
+          <th>核心优势</th>
+          <th>最新动态</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>亨通光电 <code>600487</code></strong></td>
+          <td><div class="share-bar-wrap"><div class="share-bar"><div class="share-bar-fill" style="width:25%"></div></div><span class="share-pct">~25%</span></div></td>
+          <td><span class="tag tag-loc">A股</span></td>
+          <td>光纤光缆龙头，海底缆布局领先，海外业务占比高</td>
+          <td>待更新</td>
+        </tr>
+        <tr>
+          <td><strong>长飞光纤 <code>601869</code></strong></td>
+          <td><div class="share-bar-wrap"><div class="share-bar"><div class="share-bar-fill" style="width:22%"></div></div><span class="share-pct">~22%</span></div></td>
+          <td><span class="tag tag-loc">A股</span></td>
+          <td>预制棒自给率最高，成本优势突出</td>
+          <td>待更新</td>
+        </tr>
+        <tr>
+          <td><strong>中天科技 <code>002512</code></strong></td>
+          <td><div class="share-bar-wrap"><div class="share-bar"><div class="share-bar-fill" style="width:18%"></div></div><span class="share-pct">~18%</span></div></td>
+          <td><span class="tag tag-loc">A股</span></td>
+          <td>光缆/海缆/电缆协同，海缆竞争力强</td>
+          <td>待更新</td>
+        </tr>
+        <tr>
+          <td><strong>烽火通信 <code>600498</code></strong></td>
+          <td><div class="share-bar-wrap"><div class="share-bar"><div class="share-bar-fill" style="width:12%"></div></div><span class="share-pct">~12%</span></div></td>
+          <td><span class="tag tag-loc">A股</span></td>
+          <td>运营商背景，电信采购稳定</td>
+          <td>待更新</td>
+        </tr>
+        <tr>
+          <td><strong>Corning</strong></td>
+          <td><div class="share-bar-wrap"><div class="share-bar"><div class="share-bar-fill" style="width:15%"></div></div><span class="share-pct">国际</span></div></td>
+          <td><span class="tag tag-neutral">美股</span></td>
+          <td>全球光纤标准制定者，预制棒技术领先</td>
+          <td>待更新</td>
+        </tr>
+        <tr>
+          <td><strong>其他（通鼎/富通等）</strong></td>
+          <td><div class="share-bar-wrap"><div class="share-bar"><div class="share-bar-fill" style="width:8%"></div></div><span class="share-pct">其他</span></div></td>
+          <td><span class="tag tag-loc">A股</span></td>
+          <td>—</td>
+          <td>—</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- A-share + Catalyst -->
+  <div class="bottom-grid">
+    <div>
+      <div class="section-title"><span>📈</span>A股标的映射</div>
+      <div class="table-card">
+        <table>
+          <thead>
+            <tr><th>代码</th><th>公司名</th><th>产业链位置</th><th>海外对标</th><th>观点</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>600487</code></td><td><strong>亨通光电</strong></td>
+              <td style="color:var(--text-secondary)">光纤光缆/海底缆</td><td>Corning</td>
+              <td><span class="tag tag-watch">🟡 观察</span></td>
+            </tr>
+            <tr>
+              <td><code>601869</code></td><td><strong>长飞光纤</strong></td>
+              <td style="color:var(--text-secondary)">光纤/预制棒</td><td>Corning</td>
+              <td><span class="tag tag-watch">🟡 观察</span></td>
+            </tr>
+            <tr>
+              <td><code>002512</code></td><td><strong>中天科技</strong></td>
+              <td style="color:var(--text-secondary)">光缆/海缆/电缆</td><td>Prysmian</td>
+              <td><span class="tag tag-watch">🟡 观察</span></td>
+            </tr>
+            <tr>
+              <td><code>600498</code></td><td><strong>烽火通信</strong></td>
+              <td style="color:var(--text-secondary)">光纤/通信设备</td><td>—</td>
+              <td><span class="tag tag-neutral">⚪ 中性</span></td>
+            </tr>
+            <tr>
+              <td><code>002491</code></td><td><strong>通鼎互联</strong></td>
+              <td style="color:var(--text-secondary)">光纤光缆</td><td>—</td>
+              <td><span class="tag tag-neutral">⚪ 中性</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div>
+      <div class="section-title"><span>📅</span>催化剂跟踪</div>
+      <div class="table-card">
+        <div class="timeline">
+          <div class="tl-item">
+            <div class="tl-dot tl-dot-pending"></div>
+            <div class="tl-date">2026-Q2</div>
+            <div class="tl-content">
+              <div class="tl-event">三大运营商年度光纤集采</div>
+              <div class="tl-meta">中移/中联/中电信年度采购，量价关键验证</div>
+            </div>
+            <span class="tl-status status-pending">🕐 待观察</span>
+          </div>
+          <div class="tl-item">
+            <div class="tl-dot tl-dot-pending"></div>
+            <div class="tl-date">持续跟踪</div>
+            <div class="tl-content">
+              <div class="tl-event">亨通/中天海缆中标情况</div>
+              <div class="tl-meta">国内外海底缆项目招标与中标公告</div>
+            </div>
+            <span class="tl-status status-pending">🕐 待观察</span>
+          </div>
+          <div class="tl-item">
+            <div class="tl-dot tl-dot-pending"></div>
+            <div class="tl-date">持续跟踪</div>
+            <div class="tl-content">
+              <div class="tl-event">海底缆新招标项目披露</div>
+              <div class="tl-meta">跨洋/区域海缆项目，验证海外市场扩张</div>
+            </div>
+            <span class="tl-status status-pending">🕐 待观察</span>
+          </div>
+          <div class="tl-item">
+            <div class="tl-dot tl-dot-track"></div>
+            <div class="tl-date">持续跟踪</div>
+            <div class="tl-content">
+              <div class="tl-event">光纤均价走势</div>
+              <div class="tl-meta">供需拐点信号，关注价格企稳/回升节点</div>
+            </div>
+            <span class="tl-status status-track">📊 跟踪中</span>
+          </div>
+          <div class="tl-item">
+            <div class="tl-dot tl-dot-track"></div>
+            <div class="tl-date">持续跟踪</div>
+            <div class="tl-content">
+              <div class="tl-event">预制棒国产化进展</div>
+              <div class="tl-meta">长飞/亨通预制棒自给率提升，成本结构改善</div>
+            </div>
+            <span class="tl-status status-track">📊 跟踪中</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Judgment -->
+  <div class="section-title"><span>💡</span>当前判断</div>
+  <div class="judgment-grid">
+    <div class="judgment-card">
+      <h3>核心逻辑（框架）</h3>
+      <div class="logic-text">
+        光纤光缆景气由两条主线驱动：<br><br>
+        ① <strong>运营商集采周期</strong>：三大运营商年度光纤集采量价决定国内景气基线，关注Q1-Q2招标结果。<br><br>
+        ② <strong>海底缆高增</strong>：AI数据中心洲际互联拉动海缆需求，<strong>亨通光电/中天科技</strong>为核心受益标的，海缆毛利率显著高于陆缆。<br><br>
+        <strong>预制棒自给率</strong>是成本优化关键变量，<strong>长飞光纤</strong>预制棒优势最突出。
+      </div>
+    </div>
+    <div class="judgment-card">
+      <h3>主要风险</h3>
+      <div class="risk-item"><span class="risk-num">R1</span><span>运营商资本开支削减或集采延期（国内需求基盘风险）</span></div>
+      <div class="risk-item"><span class="risk-num">R2</span><span>光纤价格竞争加剧，供给过剩压制毛利率</span></div>
+      <div class="risk-item"><span class="risk-num">R3</span><span>海底缆竞争格局恶化（日韩欧厂商竞争）</span></div>
+      <div style="margin-top:16px; padding-top:12px; border-top:1px solid var(--border);">
+        <div style="font-size:11px; color:var(--text-secondary); font-weight:600; margin-bottom:6px;">下次更新关注点</div>
+        <div style="font-size:12px; color:var(--text-primary);">补充光纤均价数据 + 三大运营商集采结果 + 海缆中标公告</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// 光纤均价走势 — 数据待补充，当前用 null 占位并显示提示
+new Chart(document.getElementById("priceChart"), {
+  type: "line",
+  data: {
+    labels: ["2024Q1","2024Q2","2024Q3","2024Q4","2025Q1","2025Q2","2025Q3","2025Q4","2026Q1","2026Q2E"],
+    datasets: [
+      {
+        label: "光纤均价（元/芯公里）",
+        data: [null, null, null, null, null, null, null, null, null, null],
+        borderColor: "#0891b2",
+        backgroundColor: "rgba(8,145,178,0.08)",
+        tension: 0.3, fill: true, borderWidth: 2,
+        borderDash: [5, 4],
+      },
+    ],
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: {
+      legend: { position: "top", labels: { font: { size: 11 }, padding: 10 } },
+      tooltip: { mode: "index", intersect: false },
+      title: {
+        display: true,
+        text: "⚠ 数据待补充 — 请录入各季度光纤均价",
+        font: { size: 11 }, color: "#d97706", padding: { bottom: 6 },
+      },
+    },
+    scales: {
+      x: { grid: { color: "#f1f5f9" }, ticks: { font: { size: 10 } } },
+      y: {
+        grid: { color: "#f1f5f9" }, ticks: { font: { size: 10 } },
+        title: { display: true, text: "元/芯公里", font: { size: 10 }, color: "#94a3b8" },
+      },
+    },
+  },
+});
+
+// 市占率估算（A股口径，示意）
+new Chart(document.getElementById("shareChart"), {
+  type: "doughnut",
+  data: {
+    labels: ["亨通光电", "长飞光纤", "中天科技", "烽火通信", "其他"],
+    datasets: [{
+      data: [28, 25, 20, 13, 14],
+      backgroundColor: ["#0891b2","#0e7490","#22d3ee","#67e8f9","#e2e8f0"],
+      borderColor: "#fff",
+      borderWidth: 2,
+    }],
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: {
+      legend: { position: "right", labels: { font: { size: 11 }, padding: 8 } },
+      tooltip: { callbacks: { label: ctx => ` ${ctx.label}: ${ctx.parsed}%` } },
+      title: {
+        display: true,
+        text: "A股光纤光缆市占率（示意，待校正）",
+        font: { size: 10 }, color: "#94a3b8",
+      },
+    },
+    cutout: "58%",
+  },
+});
+</script>
+</body>
+</html>

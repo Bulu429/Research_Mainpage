@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GOOGL 谷歌 · 美股映射（第二根主干）</title>
+<style>
+:root{
+  --bg:#f8f9fa;--card:#fff;--border:#e9ecef;--text:#212529;--text2:#6c757d;
+  --accent:#1a73e8;--accent2:#aecbfa;--accent-bg:#e8f0fe;
+  --up:#16a34a;--dn:#dc2626;--warn:#d97706;
+  --up-bg:#f0fdf4;--dn-bg:#fef2f2;--warn-bg:#fffbeb;
+  --blue:#1d4ed8;--blue-bg:#eff6ff;--blue-bd:#93c5fd;
+  --sh:0 1px 3px rgba(0,0,0,.08);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;background:var(--bg);color:var(--text);font-size:14px;line-height:1.6}
+a{color:var(--accent);text-decoration:none}
+a:hover{text-decoration:underline}
+.hdr{background:var(--card);border-bottom:1px solid var(--border);padding:14px 32px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:var(--sh)}
+.hdr-l{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.hdr-title{font-size:19px;font-weight:800}
+.hdr-sub{font-size:11px;color:var(--text2);margin-top:1px}
+.badge{display:inline-flex;align-items:center;padding:3px 10px;border-radius:12px;font-size:11px;font-weight:700;white-space:nowrap}
+.b-orange{background:var(--warn-bg);color:var(--warn);border:1px solid #fcd34d}
+.b-blue{background:var(--accent-bg);color:var(--accent);border:1px solid var(--accent2)}
+.hdr-back{display:inline-flex;align-items:center;gap:5px;padding:5px 12px;border:1px solid var(--accent2);border-radius:8px;background:var(--accent-bg);color:var(--accent);font-size:12px;font-weight:700;text-decoration:none;transition:all .15s}
+.hdr-back:hover{background:var(--accent);color:#fff}
+.hdr-meta{font-size:10.5px;color:var(--text2);text-align:right;line-height:1.7}
+.wrap{max-width:1080px;margin:0 auto;padding:20px 32px 60px}
+.sec{margin-bottom:16px;background:var(--card);border:1px solid var(--border);border-radius:10px;box-shadow:var(--sh);overflow:hidden}
+.sec-hd{padding:11px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;cursor:pointer;background:#fafbfc;user-select:none}
+.sec-hd:hover{background:#f1f3f5}
+.sec-ttl{font-size:13px;font-weight:700;display:flex;align-items:center;gap:8px}
+.sec-num{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:50%;background:var(--accent);color:#fff;font-size:11px;font-weight:800;flex-shrink:0}
+.sec-arrow{font-size:12px;color:var(--text2);transition:transform .2s}
+.sec-hd.collapsed .sec-arrow{transform:rotate(-90deg)}
+.sec-body{padding:18px}
+.sec-body.collapsed{display:none}
+.breakdown-top{display:grid;grid-template-columns:1fr auto 1fr auto 1fr;align-items:center;gap:0;margin-bottom:20px}
+.bk-box{text-align:center;padding:14px 16px;border-radius:10px;border:2px solid}
+.bk-box.total{border-color:var(--accent);background:var(--accent-bg)}
+.bk-box.dc{border-color:var(--blue);background:var(--blue-bg)}
+.bk-val{font-size:22px;font-weight:900;letter-spacing:-.5px}
+.bk-val.total{color:var(--accent)}
+.bk-val.dc{color:var(--blue)}
+.bk-lbl{font-size:11px;color:var(--text2);margin-top:3px}
+.bk-pct{font-size:10px;font-weight:700;margin-top:4px;padding:1px 6px;border-radius:4px;display:inline-block}
+.bk-pct.dc{background:var(--blue);color:#fff}
+.bk-arrow{font-size:20px;color:var(--text2);padding:0 8px;text-align:center}
+.bk-split{display:flex;flex-direction:column;gap:8px}
+.bk-mini{border:1.5px solid var(--up);background:var(--up-bg);border-radius:8px;padding:8px 10px;text-align:center}
+.bk-mini .v{font-size:15px;font-weight:900;color:var(--up)}
+.bk-mini .l{font-size:10px;color:var(--text2)}
+.ctable{width:100%;border-collapse:collapse;font-size:12.5px}
+.ctable th{background:#f1f3f5;padding:7px 10px;text-align:left;font-weight:700;border-bottom:2px solid var(--border);font-size:11.5px;color:var(--text2);white-space:nowrap}
+.ctable td{padding:7px 10px;border-bottom:1px solid #f1f3f5;vertical-align:middle}
+.ctable tr:last-child td{border-bottom:none}
+.ctable .num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.ctable .latest{background:var(--accent-bg)}
+.ctable .latest td{font-weight:600}
+.tag{display:inline-block;padding:1px 6px;border-radius:4px;font-size:10px;font-weight:700;border:1px solid;white-space:nowrap}
+.tag-est{background:#f1f5f9;color:var(--text2);border-color:#cbd5e1}
+.note{font-size:11px;color:var(--text2);margin-top:10px;line-height:1.6}
+.foot{text-align:center;font-size:11px;color:var(--text2);padding:14px;margin-top:10px}
+/* KPI */
+.kpi-ttl{font-size:11px;font-weight:700;color:var(--text2);letter-spacing:.3px;margin:2px 0 8px}
+.kpi-strip{display:grid;grid-template-columns:repeat(7,1fr);gap:10px;margin-bottom:18px}
+@media(max-width:980px){.kpi-strip{grid-template-columns:repeat(4,1fr)}}
+@media(max-width:560px){.kpi-strip{grid-template-columns:repeat(2,1fr)}}
+.kpi{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:11px 13px;box-shadow:var(--sh);display:flex;flex-direction:column}
+.kpi.accent{border:1.5px solid var(--accent2);background:var(--accent-bg)}
+.kpi .k-lbl{font-size:11px;color:var(--text2);font-weight:600}
+.kpi .k-val{font-size:19px;font-weight:900;letter-spacing:-.5px;margin-top:3px;line-height:1.1}
+.kpi.accent .k-val{color:var(--accent)}
+.kpi .k-unit{font-size:11px;font-weight:700;color:var(--text2);margin-left:2px}
+.kpi .k-sub{font-size:10px;color:var(--text2);margin-top:4px}
+.kpi .k-sub b{color:var(--up)}
+/* 因果链引子 */
+.why-wrap{border:1.5px dashed var(--accent2);background:#f5f9ff;border-radius:10px;padding:15px 16px;margin-bottom:20px}
+.why-hd{font-size:12.5px;font-weight:800;color:var(--accent);margin-bottom:13px}
+/* 演进 + 拓扑 */
+.evo-strip{display:flex;align-items:stretch;gap:6px;flex-wrap:wrap;margin-bottom:6px}
+.evo-card{flex:1;min-width:118px;border:1px solid var(--border);border-radius:9px;padding:11px 9px;text-align:center;background:var(--card);display:flex;flex-direction:column;gap:4px;box-shadow:var(--sh)}
+.evo-card.hl{border:1.5px solid var(--accent);background:var(--accent-bg)}
+.evo-ic{font-size:21px;line-height:1}
+.evo-t{font-size:12.5px;font-weight:800}
+.evo-card.hl .evo-t{color:var(--accent)}
+.evo-d{font-size:9.5px;color:var(--text2);line-height:1.45}
+.evo-ar{display:flex;align-items:center;color:var(--accent);font-weight:900;font-size:16px}
+@media(max-width:780px){.evo-ar{display:none}}
+.evo-note{font-size:11.5px;color:var(--text2);text-align:center;margin:8px 0 18px}
+.evo-note b{color:var(--accent)}
+.dom{border-radius:12px;padding:13px}
+.dom.across{border:2px dashed var(--blue-bd);background:#f5f9ff}
+.dom.out{border:2px dashed #86efac;background:#f3fdf6}
+.dom.up{border:2px solid #c4b5fd;background:#faf8ff;flex:1;min-width:230px}
+.dlabel{font-size:11px;font-weight:800;margin-bottom:9px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.dlabel small{font-weight:400;font-size:10px;color:var(--text2)}
+.dlabel.across{color:var(--blue)}.dlabel.out{color:#15803d}.dlabel.up{color:#7c3aed}
+.rack-row{display:flex;gap:10px;align-items:stretch;flex-wrap:wrap}
+.switch-col{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0;min-width:130px}
+.node{border:1px dashed #cbd5e1;border-radius:8px;padding:8px;background:#fff}
+.node-t{font-size:9px;color:var(--text2);font-weight:700;margin-bottom:6px;text-align:center}
+.chips{display:flex;align-items:center;justify-content:center;gap:0;flex-wrap:wrap}
+.comp{border-radius:7px;padding:7px 8px;text-align:center;font-size:11px;font-weight:800;border:1.5px solid;min-width:52px;line-height:1.15}
+.comp .cs{display:block;font-size:8px;font-weight:600;margin-top:1px;opacity:.85}
+.comp.cpu{border-color:#64748b;background:#f1f5f9;color:#334155}
+.comp.tpu{border-color:var(--accent);background:var(--accent-bg);color:var(--accent)}
+.comp.sw{border-color:#7c3aed;background:#f3e8ff;color:#6b21a8}
+.comp.opt{border-color:#0891b2;background:#cffafe;color:#0e7490}
+.comp.fac{border-color:var(--blue);background:var(--blue-bg);color:var(--blue)}
+.lk{display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.lk-h{flex-direction:row}.lk-v{flex-direction:column;padding:4px 0}
+.lk .ln-h{height:2px;width:14px}.lk .ln-v{width:2px;height:11px}
+.lk-pill{font-size:8px;font-weight:800;padding:1px 5px;border-radius:4px;white-space:nowrap;margin:0 3px}
+.lk-v .lk-pill{margin:2px 0}
+.ici{background:#e8f0fe;color:#1a56db}.ici-ln{background:#4285f4}
+.ocs{background:#cffafe;color:#0e7490}.ocs-ln{background:#06b6d4}
+.cu{background:#fde68a;color:#92400e}.cu-ln{background:#f59e0b}
+.topo-map{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:16px}
+@media(max-width:760px){.topo-map{grid-template-columns:1fr}}
+.tm{border:1px solid var(--border);border-left-width:4px;border-radius:8px;padding:10px 12px;background:var(--card)}
+.tm .tm-t{font-size:11.5px;font-weight:800;margin-bottom:3px}
+.tm .tm-d{font-size:10.5px;color:var(--text2);line-height:1.55}
+.tm .tm-d b{color:var(--text)}
+/* 四道墙 */
+.spine-intro{font-size:11.5px;color:var(--text2);line-height:1.65;margin-bottom:14px}
+.spine-intro b{color:var(--text)}
+.spine{border:1px solid var(--border);border-radius:9px;overflow:hidden}
+.lane{display:flex;gap:12px;align-items:stretch;padding:13px 14px;border-bottom:1px solid #f1f3f5}
+.lane:last-child{border-bottom:none}
+.lane-req{width:212px;flex-shrink:0;border-left:4px solid;padding-left:11px}
+.lr-t{font-size:12.5px;font-weight:800}
+.lr-d{font-size:10px;color:var(--text2);line-height:1.5;margin-top:3px}
+.lr-d em{color:var(--accent);font-style:normal;font-weight:700}
+.lane-arrow{display:flex;align-items:center;color:#cbd5e1;font-weight:900;font-size:17px;flex-shrink:0}
+.lane-fill{flex:1;display:flex;flex-wrap:wrap;gap:7px;align-items:center}
+.fchip{font-size:11px;font-weight:700;border-radius:6px;padding:5px 11px;border:1.5px solid;background:var(--card)}
+.lane-w{width:150px;flex-shrink:0;display:flex;flex-wrap:wrap;gap:5px;align-items:center;justify-content:flex-end}
+.wt{font-size:9.5px;font-weight:800;color:#fff;border-radius:4px;padding:2px 7px;white-space:nowrap}
+.wt.out{background:#94a3b8}
+@media(max-width:840px){.lane{flex-direction:column;gap:9px}.lane-req,.lane-w{width:auto}.lane-arrow{display:none}.lane-w{justify-content:flex-start}}
+.wall{margin-top:15px}
+.wall-h{display:flex;align-items:center;gap:9px;flex-wrap:wrap;padding:9px 13px;border-radius:8px 8px 0 0;color:#fff;font-size:12.5px;font-weight:800}
+.wall-h .wsub{font-size:10px;font-weight:400;opacity:.92}
+.wall-h .winv{margin-left:auto}
+.wall .spine{border-radius:0 0 8px 8px;border-top:none}
+.inv{font-size:9px;font-weight:800;border-radius:4px;padding:2px 7px;white-space:nowrap;border:1px solid;background:#fff}
+.inv.s{color:#15803d;border-color:#86efac}.inv.m{color:#b45309;border-color:#fcd34d}.inv.w{color:#64748b;border-color:#cbd5e1}
+/* 认知沉淀 */
+.sec.mid{border:1.5px solid var(--accent2);background:linear-gradient(180deg,#f5f9ff 0%,#fff 60%)}
+.sec.mid .sec-hd{background:var(--accent-bg)}
+.mid-thesis{font-size:13px;font-weight:800;color:var(--accent);background:var(--accent-bg);border:1px solid var(--accent2);border-radius:8px;padding:12px 16px;margin-bottom:16px;line-height:1.7}
+.mid-thesis .em{color:var(--dn)}
+.cog-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+@media(max-width:840px){.cog-grid{grid-template-columns:1fr}}
+.cog-card{border:1px solid var(--border);border-radius:10px;padding:14px 14px 12px;background:var(--card);box-shadow:var(--sh);position:relative;display:flex;flex-direction:column}
+.cog-card .cog-no{position:absolute;top:-10px;left:14px;width:24px;height:24px;border-radius:50%;background:var(--accent);color:#fff;font-size:12px;font-weight:900;display:flex;align-items:center;justify-content:center;box-shadow:var(--sh)}
+.cog-card .cog-tt{font-size:13px;font-weight:800;margin:8px 0 8px;line-height:1.45;color:var(--text)}
+.cog-card .cog-tt b{color:var(--accent)}
+.cog-card .cog-body{font-size:11.5px;color:var(--text2);line-height:1.65;flex:1}
+.cog-card .cog-body b{color:var(--text)}
+.cog-card .cog-tag{margin-top:10px;font-size:10.5px;font-weight:700;color:var(--accent);background:var(--accent-bg);border:1px solid var(--accent2);border-radius:6px;padding:5px 9px;line-height:1.5}
+.cog-card .cog-tag .k{color:var(--text2);font-weight:400}
+/* 双主干对照 */
+.cmp{width:100%;border-collapse:collapse;font-size:12px}
+.cmp th,.cmp td{padding:9px 12px;border:1px solid var(--border);vertical-align:top;text-align:left}
+.cmp thead th{font-size:12.5px;font-weight:800;text-align:center}
+.cmp .h-nv{background:var(--warn-bg);color:#9a3412}
+.cmp .h-gg{background:var(--accent-bg);color:var(--accent)}
+.cmp td.dim{font-weight:800;background:#fafbfc;white-space:nowrap;width:120px}
+.cmp .nv{background:#fffdf8}.cmp .gg{background:#f8fbff}
+.cmp b{color:var(--text)}
+.split3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:14px}
+@media(max-width:760px){.split3{grid-template-columns:1fr}}
+.s3{border:1px solid var(--border);border-top:3px solid;border-radius:8px;padding:11px 13px;background:var(--card)}
+.s3-t{font-size:12px;font-weight:800;margin-bottom:5px}
+.s3-d{font-size:10.5px;color:var(--text2);line-height:1.55}
+.s3-d b{color:var(--text)}
+.concl{margin-top:16px;border:1.5px solid var(--accent2);border-radius:9px;background:var(--accent-bg);padding:13px 15px;font-size:12px;line-height:1.8}
+.concl b{color:var(--accent)}
+</style>
+</head>
+<body>
+
+<header class="hdr">
+  <div class="hdr-l">
+    <a class="hdr-back" href="../美股映射研究_看板.html">← 返回看板</a>
+    <div>
+      <div class="hdr-title">🔷 GOOGL · 谷歌（Alphabet）</div>
+      <div class="hdr-sub">NASDAQ · 超大规模云 + 自研 TPU 全栈 · <b>AI 算力的"第二根主干"</b></div>
+    </div>
+    <span class="badge b-blue">W1 第二根主干 · 副干</span>
+    <span class="badge b-orange">W5 非 NVDA 算力体系</span>
+  </div>
+  <div class="hdr-meta">
+    更新：2026-06-08<br>最新季度：Q1 CY2026（2026-04-24）
+  </div>
+</header>
+
+<div class="wrap">
+
+<!-- 定位说明 -->
+<div class="why-wrap">
+  <div class="why-hd">🧭 为什么 Google 这个"看似 CSP"的公司，要和 NVDA 一起放在 W1？</div>
+  <div style="font-size:11.5px;color:var(--text2);line-height:1.7">
+    因为按<b style="color:var(--text)">角色</b>（而非商业模式）看，Google 不是云买家——它是<b style="color:var(--accent)">唯一拥有完整自研主干的玩家</b>：
+    <b style="color:var(--text)">TPU</b>（自研算力芯片，博通联合设计）+ <b style="color:var(--text)">ICI / OCS 光路交换</b>（自研互联）+ <b style="color:var(--text)">JAX / XLA / Pathways</b>（自研软件栈，对标 CUDA）。
+    AWS / 微软 / Meta 主要是 NVDA 的<b style="color:var(--text)">买家</b>（→ W7 算力租赁）；只有 Google 是和 NVDA 同物种的<b style="color:var(--accent)">架构定义者</b>。
+    它是"<b style="color:var(--text)">去英伟达</b>"路线最成熟的原型，是整套映射的<b style="color:var(--accent)">第二个坐标原点</b>。本页结构与 NVDA 镜像，通篇给"<b style="color:var(--text)">第二套答案</b>"。
+  </div>
+</div>
+
+<!-- KPI -->
+<div class="kpi-ttl">关键指标 · 经营快照（数据：业绩会档案 INDEX；最新 Q1 CY2026 / 2026-04-24）</div>
+<div class="kpi-strip">
+  <div class="kpi accent">
+    <div class="k-lbl">当前市值</div>
+    <div class="k-val">~43,400<span class="k-unit">亿$</span></div>
+    <div class="k-sub">约 $4.34 万亿 · 2026-06-12 实时</div>
+  </div>
+  <div class="kpi">
+    <div class="k-lbl">季度总营收</div>
+    <div class="k-val">1,090<span class="k-unit">亿$</span></div>
+    <div class="k-sub">YoY <b>+22%</b>（连续11季双位数）</div>
+  </div>
+  <div class="kpi">
+    <div class="k-lbl">Google Cloud</div>
+    <div class="k-val">200<span class="k-unit">亿$</span></div>
+    <div class="k-sub">YoY <b>+63%</b> · 首破$200亿</div>
+  </div>
+  <div class="kpi">
+    <div class="k-lbl">Cloud 营业利润率</div>
+    <div class="k-val">32.9<span class="k-unit">%</span></div>
+    <div class="k-sub">从11%一路上行 · 拐点</div>
+  </div>
+  <div class="kpi">
+    <div class="k-lbl">净利润</div>
+    <div class="k-val">626<span class="k-unit">亿$</span></div>
+    <div class="k-sub">YoY <b>+81%</b> · EPS $5.11</div>
+  </div>
+  <div class="kpi">
+    <div class="k-lbl">CapEx（FY26 指引）</div>
+    <div class="k-val">1,800–2,900<span class="k-unit">亿$</span></div>
+    <div class="k-sub">AI 基建超级周期</div>
+  </div>
+  <div class="kpi">
+    <div class="k-lbl">Cloud 订单储备</div>
+    <div class="k-val">4,620<span class="k-unit">亿$</span></div>
+    <div class="k-sub">环比<b>翻倍</b> · 需求能见度</div>
+  </div>
+</div>
+
+<!-- ① 业务拆解 -->
+<section class="sec">
+  <div class="sec-hd" onclick="toggleSec(this)">
+    <div class="sec-ttl"><span class="sec-num">①</span>业务拆解（聚焦"算力主干"部分）</div>
+    <span class="sec-arrow">▼</span>
+  </div>
+  <div class="sec-body">
+    <div class="note" style="margin:0 0 14px;padding:9px 12px;background:var(--accent-bg);border:1px solid var(--accent2);border-radius:8px;color:var(--accent);font-weight:600">
+      📌 本页只关心 Google 作为"<b>第二根算力主干</b>"的部分 = <b>Google Cloud + 自研 TPU 基建</b>；搜索/广告/YouTube 是现金牛主业，不在映射范围内（但它们是 TPU 巨额 CapEx 的"钱袋子"）。
+    </div>
+
+    <div style="font-size:11px;font-weight:700;color:var(--text2);margin-bottom:12px;letter-spacing:.3px">Q1 CY2026 营收结构（2026-04-24）</div>
+    <div class="breakdown-top">
+      <div class="bk-box total">
+        <div class="bk-val total">$1,090亿</div>
+        <div class="bk-lbl">总营收</div>
+        <div style="margin-top:6px;font-size:11px;color:var(--text2)">YoY <strong style="color:var(--up)">+22%</strong></div>
+      </div>
+      <div class="bk-arrow">→</div>
+      <div class="bk-box dc">
+        <div class="bk-val dc">$200亿</div>
+        <div class="bk-lbl">Google Cloud（含 TPU / GCP）</div>
+        <div style="margin-top:4px"><span class="bk-pct dc">占总营收 ~18%</span></div>
+        <div style="margin-top:5px;font-size:11px;color:var(--text2)">YoY <strong style="color:var(--up)">+63%</strong></div>
+      </div>
+      <div class="bk-arrow">→</div>
+      <div class="bk-split">
+        <div class="bk-mini"><div class="v">32.9%</div><div class="l">Cloud 营业利润率（拐点上行）</div></div>
+        <div class="bk-mini"><div class="v">$4,620亿</div><div class="l">Cloud 订单储备（环比翻倍）</div></div>
+      </div>
+    </div>
+
+    <div style="font-size:11px;font-weight:700;color:var(--text2);margin-bottom:10px;letter-spacing:.3px">Google Cloud 季度轨迹（营收 + 利润率，近 5 季）</div>
+    <table class="ctable">
+      <thead>
+        <tr><th>季度</th><th class="num">Cloud 营收</th><th class="num">营业利润率</th><th>关键里程碑</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Q1 CY2025</td><td class="num">$123亿</td><td class="num">17.8%</td><td>TPU Ironwood（7代）；Gemini 2.5 Pro</td></tr>
+        <tr><td>Q2 CY2025</td><td class="num">$136亿</td><td class="num">20.7%</td><td>CapEx 上调 →$850亿</td></tr>
+        <tr><td>Q3 CY2025</td><td class="num">$152亿</td><td class="num">23.7%</td><td>总营收首破千亿；Gemini MAU 6.5亿</td></tr>
+        <tr><td>Q4 CY2025</td><td class="num">$177亿</td><td class="num">30.1%</td><td>利润率破 30%；UCP 推出</td></tr>
+        <tr class="latest"><td><strong>Q1 CY2026 ★</strong></td><td class="num"><strong>$200亿</strong></td><td class="num"><strong>32.9%</strong></td><td><strong>Cloud 首破 $200亿；TPU 第8代（8t/8i）</strong></td></tr>
+      </tbody>
+    </table>
+    <div class="note">
+      📌 <strong>利润率拐点 = TPU 自研的回报</strong>：Cloud 利润率从 11%（2024）一路升到 32.9%，背后是自研 TPU 摊薄了对外购 GPU 的依赖 + 规模效应。<b>自研主干越用越省，是 Google 能持续高 CapEx 的底气。</b>
+    </div>
+  </div>
+</section>
+
+<!-- ② TPU 体系拆解 -->
+<section class="sec">
+  <div class="sec-hd" onclick="toggleSec(this)">
+    <div class="sec-ttl"><span class="sec-num">②</span>Google AI 基础设施 · TPU 体系拆解</div>
+    <span class="sec-arrow">▼</span>
+  </div>
+  <div class="sec-body">
+
+    <div class="evo-strip">
+      <div class="evo-card"><div class="evo-ic">🔹</div><div class="evo-t">TPU v5 / v6</div><div class="evo-d">训练推理通用<br>3D Torus 互联</div></div>
+      <div class="evo-ar">→</div>
+      <div class="evo-card"><div class="evo-ic">🔷</div><div class="evo-t">Ironwood（7代）</div><div class="evo-d">推理算力 +10x<br>能效近翻倍</div></div>
+      <div class="evo-ar">→</div>
+      <div class="evo-card hl"><div class="evo-ic">⚡</div><div class="evo-t">TPU 8（8t/8i）</div><div class="evo-d">训练/推理<b>首次分拆</b><br>原生 FP4 · Axion CPU</div></div>
+    </div>
+    <div class="evo-note">关键叙事：英伟达用<b>同一张卡</b>（H/B/Rubin）覆盖全场景；Google 走<b>工作负载专用化</b>——训练（8t）与推理（8i）分拆，换取性价比。</div>
+
+    <div style="font-size:11px;font-weight:700;color:var(--text2);margin:6px 0 8px;letter-spacing:.3px">TPU 8t（预训练）vs TPU 8i（推理）· 核心规格</div>
+    <table class="ctable">
+      <thead>
+        <tr><th>指标</th><th>TPU 8t · 预训练</th><th>TPU 8i · 推理服务</th><th style="color:var(--text2);font-weight:400">解读</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>网络拓扑</td><td>3D Torus（邻接通信）</td><td><strong>Boardfly</strong>（Dragonfly 高基数）</td><td style="font-size:11px;color:var(--text2)">推理需 all-to-all，Boardfly 直径 -56%</td></tr>
+        <tr><td>专用引擎</td><td>SparseCore（embedding）</td><td><strong>CAE</strong>（集合通信加速）</td><td style="font-size:11px;color:var(--text2)">8i 片上同步延迟 -5x</td></tr>
+        <tr><td>HBM 容量</td><td class="num">216 GB</td><td class="num"><strong>288 GB</strong></td><td style="font-size:11px;color:var(--text2)">推理装更大模型</td></tr>
+        <tr><td>片上 SRAM</td><td class="num">128 MB</td><td class="num"><strong>384 MB（3×）</strong></td><td style="font-size:11px;color:var(--text2)">KV Cache 全存片上</td></tr>
+        <tr><td>HBM 带宽</td><td class="num">6,528 GB/s</td><td class="num"><strong>8,601 GB/s</strong></td><td style="font-size:11px;color:var(--text2)">推理更吃内存带宽</td></tr>
+        <tr><td>FP4 峰值算力</td><td class="num"><strong>12.6 PFLOPs</strong></td><td class="num">10.1 PFLOPs</td><td style="font-size:11px;color:var(--text2)">训练更吃 FLOPs</td></tr>
+        <tr><td>CPU Header</td><td>Arm Axion</td><td>Arm Axion</td><td style="font-size:11px;color:var(--text2)">消除主机数据准备瓶颈</td></tr>
+        <tr><td>最大规模</td><td colspan="2" style="text-align:center"><strong>单 Superpod 9,600 芯片 → 最大 134,000 芯片互联 · 47 PB/s 对分带宽</strong></td><td style="font-size:11px;color:var(--text2)">JAX+Pathways 扩至百万芯片</td></tr>
+      </tbody>
+    </table>
+    <div class="note">
+      代际提升（vs Ironwood）：训练性价比最高 <strong>2.7×</strong>、推理（大 MoE 低延迟）最高 <strong>+80%</strong>、能效最高 <strong>2×</strong>。
+      <b>TPU = 博通（Broadcom）联合设计的定制 ASIC，台积电代工 + CoWoS 封装 + HBM</b>——这条供应链与 NVDA 高度重叠，但互联层完全不同（见 ④）。
+    </div>
+
+    <div style="margin-top:14px;background:var(--up-bg);border:1px solid #86efac;border-radius:9px;padding:12px 15px;font-size:11.5px;line-height:1.75">
+      💡 <b style="color:#15803d">为什么客户要 TPU：系统 &gt; 微架构，而微架构现在也追上了</b>（SemiAnalysis）：<br>
+      ① 微架构<b>已追平</b>——Ironwood 对 GB200 的 FLOPs/带宽仅小差距、容量持平（8-Hi HBM3E），仅 GA 晚 1 年；<br>
+      ② <b>TCO：Ironwood 3D Torus 比 GB200 低 ~44%</b>（自用口径）；外部租赁比 GB200 低 ~30%、比 GB300 低 ~41%；<br>
+      ③ <b>TPU 实测 MFU 反而高于 Blackwell</b>（英伟达标称 FLOPs 靠 DVFS 灌水）→ Anthropic ~40% MFU，每有效 PFLOP 成本比 GB300 低 ~52%；<br>
+      ④ <b>Gemini 3（当前 SOTA）全程 TPU 训练</b>——证明 TPU 能扛最难的前沿预训练。
+    </div>
+  </div>
+</section>
+
+<!-- ③ 认知沉淀 -->
+<section class="sec mid">
+  <div class="sec-hd" onclick="toggleSec(this)">
+    <div class="sec-ttl"><span class="sec-num">③</span>认知沉淀 · 跟踪"副干"真正该积累什么</div>
+    <span class="sec-arrow">▼</span>
+  </div>
+  <div class="sec-body">
+    <div class="mid-thesis">
+      💡 核心判断：Google 的财报同样难有惊喜（市场已知它强）。作为"<span class="em">第二根主干</span>"，真正该跟踪的是它<b>相对 NVDA 主干的"此消彼长"</b>，以及它<b>独有的、对 A 股不同的供应链权重</b>——这 3 条：
+    </div>
+
+    <div style="background:var(--dn-bg);border:1px solid #fecaca;border-radius:9px;padding:12px 15px;margin-bottom:16px;font-size:11.5px;line-height:1.7">
+      🔥 <b style="color:var(--dn)">实证 · Anthropic 100 万 TPU 交易</b>（副干从"自用"→"商用主干"的里程碑）：<br>
+      ① <b>40 万 Ironwood（~$100亿成品机柜）由博通直接卖给 Anthropic</b>（博通财报点名第 4 大客户），Fluidstack 装机；<br>
+      ② <b>60 万经 GCP 租赁（~$420亿 RPO）</b>，占 Q3 GCP backlog 增量大头；<br>
+      ③ DC 基建来自<b>加密矿企 TeraWulf(WULF) / Cipher(CIFR)</b>；Google 用"<b>表外信用背书</b>"成 neocloud 融资新范式 → <b>矿企转 AI（IREN / APLD / WULF / CIFR）大受益</b>；后续 Meta / OAI / SSI / xAI 都在谈。
+      <div style="margin-top:7px;font-size:11px"><span style="color:var(--text2)">映射 → </span><b style="color:var(--accent)">博通 ASIC（W5）· neocloud 矿企（W7）</b></div>
+    </div>
+
+    <div class="cog-grid">
+      <div class="cog-card">
+        <div class="cog-no">1</div>
+        <div class="cog-tt"><b>TPU 自研渗透率</b><br>= "去英伟达"的温度计</div>
+        <div class="cog-body">Google 既是 GB200 首批云商、又自研 TPU。<b>自研 vs 外购 GPU 的比例</b>，直接读出"ASIC 副干 vs NVDA 主干"的份额拉锯——这是整套映射的<b>总交易变量</b>。Cloud 利润率上行 = 自研在赢。</div>
+        <div class="cog-tag"><span class="k">映射 → </span>非 NVDA 算力（W5）· 博通 ASIC 链</div>
+      </div>
+      <div class="cog-card">
+        <div class="cog-no">2</div>
+        <div class="cog-tt"><b>代际分拆</b>→ 训练链<br>与推理链开始分叉</div>
+        <div class="cog-body">TPU8 首次把训练（8t / 3D Torus / 铜为主）与推理（8i / Boardfly / <b>OCS 光更重</b>）分拆。<b>两条链的供应链权重不同</b>：推理放量 → 光互联、片上 SRAM、HBM 带宽需求结构性抬升。</div>
+        <div class="cog-tag"><span class="k">映射 → </span>光模块/光开关（W3）· 存储/内存（W1）</div>
+      </div>
+      <div class="cog-card">
+        <div class="cog-no">3</div>
+        <div class="cog-tt">互联走 <b>OCS 光路交换</b><br>对光的依赖结构性更高</div>
+        <div class="cog-body">这是副干与主干最大的物理分叉：Google 用 <b>OCS（光路交换 / MEMS）</b>替代电交换机，scale-up/out 都更早、更深地用光。<b>ASIC 单芯片算力低 → 需更多光模块做多芯片互联</b>（高盛对光模块龙头的核心逻辑）。</div>
+        <div class="cog-tag"><span class="k">映射 → </span>光模块/光纤/光开关 MEMS（W3）</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ④ TPU 系统拓扑 -->
+<section class="sec">
+  <div class="sec-hd" onclick="toggleSec(this)">
+    <div class="sec-ttl"><span class="sec-num">④</span>第二根主干 · TPU 系统拓扑（OCS 光路交换）</div>
+    <span class="sec-arrow">▼</span>
+  </div>
+  <div class="sec-body">
+
+    <div class="evo-note" style="margin:0 0 14px">同样是"把 N 颗芯片粘成一台超级计算机"，但 Google 的粘法不同：<b>组内用铜、组间用 OCS 光路交换</b>，没有英伟达那种"电交换机 + 可插拔光模块"的结构。</div>
+
+    <div class="dom across">
+      <div class="dlabel across">🌐 DCN（Virgo 网络）· 数据中心级 <small>最大 134,000 芯片互联 · 47 PB/s 无阻塞对分带宽 · JAX+Pathways 扩至百万芯片</small></div>
+      <div class="dom out">
+        <div class="dlabel out">🟢 Pod · ≤1,024 活动芯片 <small>36 个 Group 通过 OCS 光路交换机全连接（Boardfly 拓扑，网络直径仅 7 跳）</small></div>
+        <div class="rack-row">
+          <!-- Group 1 -->
+          <div class="dom up">
+            <div class="dlabel up">🟣 Group · Scale-up <small>8 块板卡 · 铜缆全连接</small></div>
+            <div class="node">
+              <div class="node-t">Building Block（BB）· 4 芯片全连接环</div>
+              <div class="chips">
+                <div class="comp tpu">TPU<span class="cs">8t/8i</span></div>
+                <div class="lk lk-h"><div class="ln-h ici-ln"></div><span class="lk-pill ici">ICI</span><div class="ln-h ici-ln"></div></div>
+                <div class="comp tpu">TPU<span class="cs">8t/8i</span></div>
+              </div>
+              <div style="text-align:center;margin-top:6px"><div class="comp cpu" style="display:inline-block">Arm Axion CPU Header<span class="cs">消除主机瓶颈</span></div></div>
+            </div>
+            <div class="lk lk-v"><div class="ln-v cu-ln"></div><span class="lk-pill cu">组内铜缆</span><div class="ln-v cu-ln"></div></div>
+            <div style="text-align:center"><div class="comp tpu" style="display:inline-block;min-width:160px">BB × 多 → Group（8 板）<span class="cs">11 条组内通信链路</span></div></div>
+          </div>
+          <!-- OCS 光交换 -->
+          <div class="switch-col">
+            <div class="lk lk-h"><span class="lk-pill ocs">光路</span><div class="ln-h ocs-ln" style="width:20px"></div></div>
+            <div class="comp opt" style="min-width:120px">OCS 光路交换机<span class="cs">MEMS 微镜阵列<br>组间全连接</span></div>
+            <div class="lk lk-v"><div class="ln-v ocs-ln"></div></div>
+            <div class="comp opt" style="min-width:120px">光模块 / 光纤<span class="cs">承载 ICI-over-optics</span></div>
+            <div class="lk lk-h"><div class="ln-h ocs-ln" style="width:20px"></div><span class="lk-pill ocs">光路</span></div>
+          </div>
+          <!-- Group 2 -->
+          <div class="dom up">
+            <div class="dlabel up">🟣 Group <small>… × 36 个 Group / Pod</small></div>
+            <div class="node">
+              <div class="node-t">Building Block（BB）· 4 芯片全连接环</div>
+              <div class="chips">
+                <div class="comp tpu">TPU<span class="cs">8t/8i</span></div>
+                <div class="lk lk-h"><div class="ln-h ici-ln"></div><span class="lk-pill ici">ICI</span><div class="ln-h ici-ln"></div></div>
+                <div class="comp tpu">TPU<span class="cs">8t/8i</span></div>
+              </div>
+              <div style="text-align:center;margin-top:6px"><div class="comp cpu" style="display:inline-block">Arm Axion CPU</div></div>
+            </div>
+            <div class="lk lk-v"><div class="ln-v cu-ln"></div><span class="lk-pill cu">组内铜缆</span><div class="ln-v cu-ln"></div></div>
+            <div style="text-align:center"><div class="comp tpu" style="display:inline-block;min-width:160px">Group（8 板）</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="lk lk-v" style="margin-top:4px"><div class="ln-v dci-ln" style="background:#60a5fa"></div><span class="lk-pill" style="background:var(--blue-bg);color:var(--blue)">Superpod 间 · DCN 互联</span><div class="ln-v" style="width:2px;height:11px;background:#60a5fa"></div></div>
+      <div style="text-align:center"><div class="comp fac" style="display:inline-block;min-width:220px">Superpod（9,600 芯片）× 多 → 最大 134,000 芯片<span class="cs">整座数据中心 = 一台 TPU 超算</span></div></div>
+    </div>
+
+    <div class="topo-map">
+      <div class="tm" style="border-left-color:#0891b2">
+        <div class="tm-t" style="color:#0e7490">★ OCS 光路交换（副干独有）</div>
+        <div class="tm-d">Google 用 <b>OCS（MEMS 光开关）</b>替代电交换机做组间全连接。<b>每颗 TPUv7 配 ~1.5 个光模块</b>（按 cube 内位置）；用的是 <b>FR 光模块 + 光环行器(circulator) + CWDM8</b>（8 波长→1 根光纤）——<b>和 NVDA 的可插拔/CPO 完全不同的一条光链</b>。<br><b>映射 → </b>光模块·光纤·MEMS 光开关·<b>光环行器/CWDM</b>（W3）</div>
+      </div>
+      <div class="tm" style="border-left-color:#f59e0b">
+        <div class="tm-t" style="color:#b45309">组内铜缆全连接</div>
+        <div class="tm-d">Group 内 8 块板卡用<b>铜缆</b>全连接（短距以铜为主，与 NVDA 机架内逻辑一致）。<br><b>映射 → </b>高速铜连接（W1）</div>
+      </div>
+      <div class="tm" style="border-left-color:var(--accent)">
+        <div class="tm-t" style="color:var(--accent)">TPU 芯片本体 = 博通定制 ASIC</div>
+        <div class="tm-d">TPU 由 <b>博通联合设计</b>，台积电代工 + CoWoS + HBM。SerDes / 定制 IP 是博通核心价值。<br><b>映射 → </b>ASIC / SerDes（W5 / W2）</div>
+      </div>
+    </div>
+
+    <div class="note" style="margin-top:12px">
+      📌 <b>OCS 经济性</b>（SemiAnalysis）：4,096 TPU 只需 <b>48 个 OCS</b> vs 568 个 InfiniBand 交换机；网络成本 <b>&lt;5% 总 CapEx</b>、&lt;3% 总功耗。OCS 单价虽贵 3–4×，但数量极少 + 省掉多层电交换，整体更省电更省钱——<b>这是 Google 敢把组间互联全走光的底气</b>。
+    </div>
+  </div>
+</section>
+
+<!-- ⑤ 四道墙（TPU 的另一套答案） -->
+<section class="sec">
+  <div class="sec-hd" onclick="toggleSec(this)">
+    <div class="sec-ttl"><span class="sec-num">⑤</span>技术主干 · 四道墙（TPU 的另一套答案 vs NVDA）</div>
+    <span class="sec-arrow">▼</span>
+  </div>
+  <div class="sec-body">
+    <div class="spine-intro">
+      同样的四道物理墙，副干（TPU）给出<b>不同的解法权重</b>——尤其在<b>互联墙</b>：Google 用 <em>OCS 光路交换</em>，对光的依赖结构性高于 NVDA。<em>斜体</em>= 与 NVDA 主干的关键差异。每条标注 <b>A股可投性</b>。
+    </div>
+
+    <!-- 算力墙 -->
+    <div class="wall">
+      <div class="wall-h" style="background:#475569">🧱 ① 算力墙 <span class="wsub">单 die 撞光刻墙</span><span class="winv"><span class="inv w">A股可投性：弱</span></span></div>
+      <div class="spine">
+        <div class="lane">
+          <div class="lane-req" style="border-color:#475569"><div class="lr-t" style="color:#334155">单位面积更多算力</div><div class="lr-d">TPU8 拆 8t/8i 专用化 + 原生 FP4。<em>vs NVDA：博通定制 ASIC，非自研 GPU 架构</em></div></div>
+          <div class="lane-arrow">→</div>
+          <div class="lane-fill">
+            <span class="fchip" style="border-color:#cbd5e1;color:#334155">博通定制 ASIC</span>
+            <span class="fchip" style="border-color:#cbd5e1;color:#334155">台积电制程</span>
+            <span class="fchip" style="border-color:#cbd5e1;color:#334155">CoWoS 封装</span>
+          </div>
+          <div class="lane-w"><span class="inv w">弱</span><span class="wt" style="background:var(--accent)">W5 ASIC</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 内存墙 -->
+    <div class="wall">
+      <div class="wall-h" style="background:#7c3aed">🧱 ② 内存墙 <span class="wsub">喂不饱 + 推理 KV 受限</span><span class="winv"><span class="inv w">A股可投性：弱 → 中</span></span></div>
+      <div class="spine">
+        <div class="lane">
+          <div class="lane-req" style="border-color:#7c3aed"><div class="lr-t" style="color:#6b21a8">更高内存带宽 / 容量</div><div class="lr-d">HBM 216/288GB。<em>vs NVDA：8i 片上 SRAM 加到 384MB（3×），KV 全存片上——更激进的近存方案</em></div></div>
+          <div class="lane-arrow">→</div>
+          <div class="lane-fill">
+            <span class="fchip" style="border-color:#c4b5fd;color:#6b21a8">HBM</span>
+            <span class="fchip" style="border-color:#c4b5fd;color:#6b21a8">大容量片上 SRAM</span>
+            <span class="fchip" style="border-color:#c4b5fd;color:#6b21a8">TPUDirect 存储（10×）</span>
+          </div>
+          <div class="lane-w"><span class="inv w">弱</span><span class="wt" style="background:#7c3aed">W1 存储</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 互联墙 -->
+    <div class="wall">
+      <div class="wall-h" style="background:#0891b2">🧱 ③ 互联墙 ★副干最大差异 <span class="wsub">组内铜、组间光（OCS）；对光依赖结构性更高</span><span class="winv"><span class="inv s">A股可投性：强</span></span></div>
+      <div class="spine">
+        <div class="lane">
+          <div class="lane-req" style="border-color:#0891b2"><div class="lr-t" style="color:#0e7490">组间互联 / 距离（光）</div><div class="lr-d"><em>OCS 光路交换（MEMS）替代电交换机</em>；<b>每颗 TPUv7 ~1.5 个光模块</b>，scale-up 都更早用光 → 光依赖结构性更重</div></div>
+          <div class="lane-arrow">→</div>
+          <div class="lane-fill">
+            <span class="fchip" style="border-color:#67e8f9;color:#0e7490">OCS 光路交换</span>
+            <span class="fchip" style="border-color:#67e8f9;color:#0e7490">MEMS 光开关</span>
+            <span class="fchip" style="border-color:#67e8f9;color:#0e7490">FR 光模块 / 光纤</span>
+            <span class="fchip" style="border-color:#67e8f9;color:#0e7490">光环行器 / CWDM</span>
+          </div>
+          <div class="lane-w"><span class="inv s">强</span><span class="wt" style="background:#16a34a">W3</span></div>
+        </div>
+        <div class="lane">
+          <div class="lane-req" style="border-color:#0891b2"><div class="lr-t" style="color:#0e7490">芯片间速率（ICI）+ 组内铜</div><div class="lr-d">ICI 扩展带宽 2×、DCN 4×；组内 8 板铜缆全连接。<em>对标 NVLink + 铜缆背板</em></div></div>
+          <div class="lane-arrow">→</div>
+          <div class="lane-fill">
+            <span class="fchip" style="border-color:#67e8f9;color:#0e7490">SerDes（博通）</span>
+            <span class="fchip" style="border-color:#67e8f9;color:#0e7490">高速铜缆</span>
+            <span class="fchip" style="border-color:#67e8f9;color:#0e7490">高层 PCB</span>
+          </div>
+          <div class="lane-w"><span class="inv s">强</span><span class="wt" style="background:#16a34a">W1/W2</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 能耗墙 -->
+    <div class="wall">
+      <div class="wall-h" style="background:#d97706">🧱 ④ 能耗墙 <span class="wsub">能效是 TPU 的看家本领（perf/watt 2×）</span><span class="winv"><span class="inv m">A股可投性：中 → 强</span></span></div>
+      <div class="spine">
+        <div class="lane">
+          <div class="lane-req" style="border-color:#d97706"><div class="lr-t" style="color:#b45309">供电 + 散热</div><div class="lr-d">每单位电力算力 5 年提升近 4×。<em>vs NVDA：物理层逻辑相同（高功率→液冷+供电）</em></div></div>
+          <div class="lane-arrow">→</div>
+          <div class="lane-fill">
+            <span class="fchip" style="border-color:#fcd34d;color:#b45309">电源 / 供电</span>
+            <span class="fchip" style="border-color:#fca5a5;color:#b91c1c">液冷</span>
+            <span class="fchip" style="border-color:#fde047;color:#854d0e">MLCC / 被动</span>
+          </div>
+          <div class="lane-w"><span class="inv m">中</span><span class="wt" style="background:#d97706">W8</span><span class="wt out">物理层</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="note" style="margin-top:15px">
+      📌 副干的供应链结论：<b>算力墙/内存墙同样 A股弱</b>（博通/台积/HBM）；<b>A股甜区仍在「互联墙 + 能耗墙」，且因 OCS 光路交换，副干对"光"的依赖比 NVDA 主干更重</b>——这是 Google 这根副干给 A 股光链额外加的一层弹性。
+    </div>
+  </div>
+</section>
+
+<!-- ⑥ 双主干对照 -->
+<section class="sec">
+  <div class="sec-hd" onclick="toggleSec(this)">
+    <div class="sec-ttl"><span class="sec-num">⑥</span>双主干对照 · 哪些 A 股"吃两根主干"</div>
+    <span class="sec-arrow">▼</span>
+  </div>
+  <div class="sec-body">
+
+    <table class="cmp">
+      <thead>
+        <tr><th style="background:#fafbfc">维度</th><th class="h-nv">🟠 NVDA 主干（商用 / 开放）</th><th class="h-gg">🔷 Google 副干（自研 / 垂直）</th></tr>
+      </thead>
+      <tbody>
+        <tr><td class="dim">算力芯片</td><td class="nv">GPU（H/B/Rubin），<b>同卡通吃</b>全场景</td><td class="gg">TPU 8t/8i，<b>训练推理分拆</b>专用化</td></tr>
+        <tr><td class="dim">芯片来源</td><td class="nv">自研架构 + 台积代工</td><td class="gg"><b>博通联合设计</b> + 台积代工</td></tr>
+        <tr><td class="dim">Scale-up 互联</td><td class="nv">NVLink + 铜缆背板</td><td class="gg">ICI + 组内铜缆</td></tr>
+        <tr><td class="dim">Scale-out 互联</td><td class="nv">Spectrum-X / InfiniBand<br>（<b>电交换机 + 可插拔光</b>）</td><td class="gg"><b>OCS 光路交换（MEMS）</b><br>组间全用光</td></tr>
+        <tr><td class="dim">软件栈</td><td class="nv"><b>CUDA</b>（最深护城河，但<b style="color:var(--dn)">在松动</b>）</td><td class="gg">JAX / XLA / Pathways / Pallas；<b>正补 PyTorch 原生 + vLLM/SGLang</b>（Meta 重新有兴趣买 TPU）</td></tr>
+        <tr><td class="dim">商业模式</td><td class="nv">卖系统给<b>所有人</b></td><td class="gg">主要<b>自用</b> + GCP 出租</td></tr>
+        <tr><td class="dim">对"光"的依赖</td><td class="nv">高（scale-out）</td><td class="gg"><b>更高</b>（OCS 让组间互联也走光）</td></tr>
+      </tbody>
+    </table>
+
+    <div style="font-size:11px;font-weight:700;color:var(--text2);margin:18px 0 8px">A股标的"吃几根主干"——这才是映射的落点</div>
+    <div class="split3">
+      <div class="s3" style="border-top-color:#16a34a">
+        <div class="s3-t" style="color:#15803d">✅ 两根主干都吃（最稳）</div>
+        <div class="s3-d"><b>光模块 / 光纤 / 光器件、PCB、高速铜连接、被动元件、液冷、电源</b>。<br>无论 NVDA 还是 Google 赢，这些环节都受益——<b>不赌路线，只赌 AI 基建总量</b>。光链甚至因 OCS 多吃一层。</div>
+      </div>
+      <div class="s3" style="border-top-color:var(--warn)">
+        <div class="s3-t" style="color:#b45309">🟠 偏 NVDA 主干</div>
+        <div class="s3-d"><b>NVLink 铜缆背板专用件、Spectrum-X 配套、CUDA 生态相关</b>。<br>绑定英伟达机架形态，弹性随 NVDA 份额走。</div>
+      </div>
+      <div class="s3" style="border-top-color:var(--accent)">
+        <div class="s3-t" style="color:var(--accent)">🔷 偏 ASIC 副干</div>
+        <div class="s3-d"><b>博通 ASIC 链、OCS / MEMS 光开关、定制 SerDes</b>。<br>随"去英伟达"渗透率走，对应 <b>W5 非 NVDA 算力</b>。</div>
+      </div>
+    </div>
+
+    <div class="concl">
+      🎯 <b>结论</b>：Google 副干的存在，给"只押 NVDA"上了一道保险。对 A 股最优的姿势，是<b>重仓"两根主干都吃"的环节（光 / PCB / 铜连接 / 被动 / 液冷）</b>，再用"偏 NVDA / 偏 ASIC"两侧做 alpha——而<b>两根主干的份额此消彼长（NVDA GPU vs TPU/ASIC），就是这套映射的总指挥棒</b>。
+      <div style="font-size:10px;color:var(--text2);font-weight:400;margin-top:8px">资料来源：Alphabet 业绩会档案（Q1CY24–Q1CY26）、Google Cloud《TPU 8t/8i 架构深度解析》（2026-04-23）、SemiAnalysis《Google TPUv7 — The 900lb Gorilla》《Systems Matter More Than Microarchitecture》。市值为 2026-06-12 实时（$4.34 万亿）。</div>
+    </div>
+  </div>
+</section>
+
+</div>
+
+<div class="foot">
+  GOOGL · 谷歌（Alphabet）&nbsp;·&nbsp; 美股映射研究 · 第二根主干 &nbsp;·&nbsp; 2026-06-08 &nbsp;·&nbsp;
+  <a href="../美股映射研究_看板.html">← 返回看板</a>
+</div>
+
+<script>
+function toggleSec(el){
+  el.classList.toggle('collapsed');
+  el.parentElement.querySelector('.sec-body').classList.toggle('collapsed');
+}
+</script>
+</body>
+</html>

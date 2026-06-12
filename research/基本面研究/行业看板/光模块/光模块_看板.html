@@ -1,0 +1,861 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>光模块 研究看板</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+:root {
+  --bg:#f8f9fa; --card:#fff; --border:#e9ecef;
+  --text:#212529; --text2:#6c757d;
+  --accent:#2563eb; --up:#16a34a; --dn:#dc2626; --warn:#d97706;
+  --up-bg:#f0fdf4; --dn-bg:#fef2f2; --warn-bg:#fffbeb;
+  --tag-bg:#eff6ff; --tag:#1d4ed8;
+  --sh: 0 1px 3px rgba(0,0,0,.08),0 1px 2px rgba(0,0,0,.04);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;background:var(--bg);color:var(--text);font-size:14px;line-height:1.6}
+
+.hdr{background:var(--card);border-bottom:1px solid var(--border);padding:14px 28px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:var(--sh)}
+.hdr-l{display:flex;align-items:center;gap:12px}
+.hdr-title{font-size:19px;font-weight:700}
+.hdr-sub{font-size:11px;color:var(--text2)}
+.badge-up{display:inline-flex;align-items:center;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600;background:var(--up-bg);color:var(--up);border:1px solid #86efac}
+.badge-tag{display:inline-flex;align-items:center;padding:3px 10px;border-radius:12px;font-size:11px;background:var(--tag-bg);color:var(--tag);border:1px solid #bfdbfe}
+.hdr-meta{font-size:11px;color:var(--text2);text-align:right}
+.back-link{display:inline-flex;align-items:center;gap:4px;font-size:11px;color:var(--text2);text-decoration:none;padding:3px 9px;border:1px solid var(--border);border-radius:5px;background:var(--bg)}
+.back-link:hover{color:var(--accent);border-color:#bfdbfe}
+
+.wrap{max-width:1380px;margin:0 auto;padding:20px 28px}
+
+.st{font-size:13px;font-weight:700;margin-bottom:11px;padding-bottom:6px;border-bottom:2px solid var(--accent);display:flex;align-items:center;gap:6px;cursor:pointer;user-select:none;justify-content:space-between}
+.st-arrow{font-size:13px;color:var(--text2);transition:transform .25s;display:inline-block;flex-shrink:0}
+.sec-body{overflow:hidden;transition:max-height .35s cubic-bezier(.4,0,.2,1),opacity .25s;max-height:9999px;opacity:1}
+.sec-body.collapsed{max-height:0!important;opacity:0}
+.st.collapsed .st-arrow{transform:rotate(-90deg)}
+
+.card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:16px 18px;box-shadow:var(--sh)}
+.kpi-g{display:grid;grid-template-columns:repeat(4,1fr);gap:11px;margin-bottom:20px}
+.kpi .lbl{font-size:10px;color:var(--text2);text-transform:uppercase;letter-spacing:.4px;margin-bottom:4px}
+.kpi .val{font-size:19px;font-weight:700;margin-bottom:3px}
+.kpi .note{font-size:10px;color:var(--text2)}
+.c-up{color:var(--up)} .c-warn{color:var(--warn)} .c-dn{color:var(--dn)} .c-acc{color:var(--accent)}
+
+.tab-nav{display:flex;gap:0;border-bottom:2px solid var(--border);margin-bottom:14px}
+.tab-btn{padding:8px 16px;font-size:12px;font-weight:600;color:var(--text2);background:none;border:none;cursor:pointer;white-space:nowrap;border-bottom:2px solid transparent;margin-bottom:-2px;transition:color .15s,border-color .15s}
+.tab-btn:hover{color:var(--accent)}
+.tab-btn.active{color:var(--accent);border-bottom-color:var(--accent)}
+.tab-pane{display:none}
+.tab-pane.active{display:block}
+
+.ctable{width:100%;border-collapse:collapse;margin-bottom:14px;font-size:12px}
+.ctable th{text-align:left;padding:6px 8px;font-size:10px;font-weight:600;color:var(--text2);background:var(--bg);border-bottom:1px solid var(--border);white-space:nowrap}
+.ctable td{padding:8px 8px;border-bottom:1px solid var(--border);vertical-align:middle}
+.ctable tr:last-child td{border-bottom:none}
+.ctable tr:hover td{background:#fafbfc}
+
+.a-super{display:inline-block;padding:1px 7px;border-radius:3px;font-size:10px;font-weight:700;background:var(--up-bg);color:var(--up);border:1px solid #86efac}
+.a-meet{display:inline-block;padding:1px 7px;border-radius:3px;font-size:10px;font-weight:700;background:var(--tag-bg);color:var(--tag);border:1px solid #bfdbfe}
+.a-miss{display:inline-block;padding:1px 7px;border-radius:3px;font-size:10px;font-weight:700;background:var(--warn-bg);color:var(--warn);border:1px solid #fcd34d}
+.a-na{display:inline-block;padding:1px 7px;border-radius:3px;font-size:10px;color:var(--text2);background:var(--bg);border:1px solid var(--border)}
+.yp{color:var(--up);font-weight:600} .yn{color:var(--dn);font-weight:600}
+code{font-size:10px;background:var(--tag-bg);color:var(--tag);padding:1px 5px;border-radius:3px}
+
+.chart-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px}
+.chart-box{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:14px 16px}
+.chart-box h4{font-size:10px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:.4px;margin-bottom:10px}
+.chart-wrap{position:relative;height:200px}
+
+.b-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px}
+.tl-item{display:flex;gap:10px;padding:8px 0;border-bottom:1px solid var(--border)}
+.tl-item:last-child{border-bottom:none}
+.tl-dot{width:8px;height:8px;border-radius:50%;margin-top:5px;flex-shrink:0}
+.tl-d-p{background:var(--warn)} .tl-d-v{background:var(--up)} .tl-d-r{background:var(--dn)} .tl-d-t{background:var(--accent)}
+.tl-date{font-size:10px;color:var(--text2);white-space:nowrap;min-width:60px;margin-top:2px}
+.tl-evt{font-size:12px;font-weight:500}
+.tl-meta{font-size:10px;color:var(--text2);margin-top:1px}
+.tl-st{font-size:10px;padding:1px 6px;border-radius:3px;white-space:nowrap;align-self:flex-start;margin-top:2px}
+.st-p{background:var(--warn-bg);color:var(--warn)}
+.st-v{background:var(--up-bg);color:var(--up)}
+.st-r{background:var(--dn-bg);color:var(--dn)}
+.st-t{background:var(--tag-bg);color:var(--tag)}
+
+.j-grid{display:grid;grid-template-columns:2fr 1fr;gap:12px;margin-bottom:20px}
+.logic-box{font-size:13px;line-height:1.8;background:var(--bg);border-radius:6px;padding:12px 14px;border-left:3px solid var(--accent);margin-bottom:10px}
+.strat-g{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.strat-i{padding:7px 9px;border-radius:6px;font-size:11px}
+.s-core{background:var(--up-bg);border:1px solid #86efac}
+.s-atk{background:var(--tag-bg);border:1px solid #bfdbfe}
+.s-wch{background:var(--warn-bg);border:1px solid #fcd34d}
+.strat-l{font-size:10px;font-weight:700;margin-bottom:2px}
+.risk-i{display:flex;gap:6px;margin-bottom:6px;font-size:12px}
+.rn{background:var(--dn-bg);color:var(--dn);font-size:10px;font-weight:700;padding:1px 5px;border-radius:3px;flex-shrink:0;margin-top:2px}
+
+.seg-sum{font-size:12px;color:var(--text2);background:var(--bg);border-radius:6px;padding:10px 12px;border-left:3px solid var(--accent);margin-top:8px}
+.kpi-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px}
+
+@media(max-width:900px){.kpi-g{grid-template-columns:repeat(2,1fr)}.chart-row,.b-grid,.j-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<header class="hdr">
+  <div class="hdr-l">
+    <a class="back-link" href="../行业基本面入口.html">← 行业基本面入口</a>
+    <span class="hdr-title">光模块</span>
+    <span class="hdr-sub">光模块 · CPO · 光芯片 · 硅光</span>
+    <span class="badge-up">🟢 景气上行</span>
+    <span class="badge-tag">800G 放量期</span>
+    <span class="badge-tag">1.6T 元年</span>
+  </div>
+  <div style="display:flex;align-items:center;gap:14px">
+    <a class="back-link" href="../行业基本面入口.html">← 行业基本面入口</a>
+    <div class="hdr-meta">研究看板 · TMT 产业链<br>测算表：260323 ｜ 更新：2026-05-25</div>
+  </div>
+</header>
+
+<div class="wrap">
+
+<!-- ── 当前判断速览 ── -->
+<div style="background:#1e293b;border-radius:10px;padding:14px 18px;margin-bottom:16px;display:flex;align-items:flex-start;gap:24px;flex-wrap:wrap">
+  <div style="flex:1;min-width:280px">
+    <div style="font-size:10px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:.5px;margin-bottom:5px">⚡ 当前判断速览（2026-05-25）</div>
+    <div style="font-size:13px;color:#f1f5f9;line-height:1.7">
+      光模块进入 <strong style="color:#fb923c">1.6T 元年</strong>：2026E 1.6T 有效需求从 125 万颗爆发至 <strong style="color:#fb923c">2,854 万颗（+22×）</strong>，是近三年最大产品升级周期。<br>
+      800G 仍是当期主收入（旭创 2026E 贡献 38.8%，新易盛 55.9%），但 1.6T 将在 2026H2 起快速超越 800G 占比。<br>
+      <span style="color:#fbbf24;font-size:12px">⚠️ 供给端：200G EML 持续紧缺，实际出货约为有效需求 85-90%；硅光渗透率提升将拉动 CW 激光器（源杰）需求超预期。</span><br>
+      <span style="color:#4ade80;font-size:12px">核心策略：买 1.6T 产能落地最快的双龙头，规避纯 400G 公司；CPO 2026-2027 为中期布局窗口。</span>
+    </div>
+  </div>
+  <div style="display:flex;gap:8px;flex-shrink:0;flex-wrap:wrap">
+    <div style="background:#14532d;border:1px solid #166534;border-radius:7px;padding:8px 12px;text-align:center">
+      <div style="font-size:9px;font-weight:700;color:#4ade80;margin-bottom:3px">🟢 核心仓</div>
+      <div style="font-size:11px;color:#f1f5f9;font-weight:600">中际旭创<br><span style="color:#94a3b8">300308</span></div>
+    </div>
+    <div style="background:#14532d;border:1px solid #166534;border-radius:7px;padding:8px 12px;text-align:center">
+      <div style="font-size:9px;font-weight:700;color:#4ade80;margin-bottom:3px">🟢 核心仓</div>
+      <div style="font-size:11px;color:#f1f5f9;font-weight:600">新易盛<br><span style="color:#94a3b8">300502</span></div>
+    </div>
+    <div style="background:#0c4a6e;border:1px solid #075985;border-radius:7px;padding:8px 12px;text-align:center">
+      <div style="font-size:9px;font-weight:700;color:#38bdf8;margin-bottom:3px">🔵 进攻仓</div>
+      <div style="font-size:11px;color:#f1f5f9;font-weight:600">天孚通信<br><span style="color:#94a3b8">300394</span></div>
+    </div>
+    <div style="background:#431407;border:1px solid #7c2d12;border-radius:7px;padding:8px 12px;text-align:center">
+      <div style="font-size:9px;font-weight:700;color:#fb923c;margin-bottom:3px">🟡 观察仓</div>
+      <div style="font-size:11px;color:#f1f5f9;font-weight:600">源杰科技<br><span style="color:#94a3b8">688498</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ── 标的汇总 ── -->
+<div class="st" onclick="toggleSec(this)">📋 标的汇总（全产业链 · 20支）<span class="st-arrow">▾</span></div>
+<div class="sec-body" style="margin-bottom:16px">
+<div class="card">
+  <table class="ctable">
+    <thead>
+      <tr><th>公司</th><th>代码</th><th>子赛道</th><th>持仓类型</th><th>核心看点</th><th style="min-width:150px">近期边际</th></tr>
+    </thead>
+    <tbody>
+      <!-- 主要光模块供应商 -->
+      <tr style="background:#eff6ff;border-top:2px solid var(--accent)">
+        <td colspan="6" style="font-size:11px;font-weight:700;color:var(--accent);padding:5px 8px">📦 主要光模块供应商</td>
+      </tr>
+      <tr style="background:#f0fdf4">
+        <td><strong>中际旭创</strong></td><td><code>300308</code></td><td>光模块龙头</td>
+        <td><span class="a-super">🟢 核心仓</span></td>
+        <td style="font-size:11px">800G+1.6T双主线，2026E 1.6T贡献56%收入；北美大客户深度绑定</td>
+        <td><span style="font-size:10px;color:var(--text2)">—</span></td>
+      </tr>
+      <tr style="background:#f0fdf4">
+        <td><strong>新易盛</strong></td><td><code>300502</code></td><td>光模块（第二梯队）</td>
+        <td><span class="a-super">🟢 核心仓</span></td>
+        <td style="font-size:11px">1.6T快速放量，2026E 1.6T占34%，800G仍主力；性价比优势显著</td>
+        <td><span style="font-size:10px;color:var(--text2)">—</span></td>
+      </tr>
+      <!-- 新光模块方案 -->
+      <tr style="background:#fffbeb;border-top:2px solid var(--warn)">
+        <td colspan="6" style="font-size:11px;font-weight:700;color:var(--warn);padding:5px 8px">🟡 新光模块方案（新进入者）</td>
+      </tr>
+      <tr><td><strong>东山精密</strong></td><td><code>002384</code></td><td>新光模块（代工）</td><td><span class="a-miss">观察</span></td><td style="font-size:11px">光模块拓展中，体量仍小</td><td><span style="font-size:10px;color:var(--text2)">—</span></td></tr>
+      <tr><td><strong>华工科技</strong></td><td><code>000988</code></td><td>新光模块</td><td><span class="a-miss">观察</span></td><td style="font-size:11px">自研光芯片布局，产品覆盖400G/800G</td><td><span style="font-size:10px;color:var(--text2)">—</span></td></tr>
+      <tr><td><strong>光迅科技</strong></td><td><code>002281</code></td><td>光模块（电信主）</td><td><span class="a-na">中性</span></td><td style="font-size:11px">数通份额偏低，电信侧稳定；AI受益有限</td><td><span style="font-size:10px;color:var(--text2)">—</span></td></tr>
+      <tr><td><strong>联特科技</strong></td><td><code>301205</code></td><td>新光模块</td><td><span class="a-miss">观察</span></td><td style="font-size:11px">中速率模块为主，高端能力待验证</td><td><span style="font-size:10px;color:var(--text2)">—</span></td></tr>
+      <tr><td><strong>剑桥科技</strong></td><td><code>603083</code></td><td>新光模块</td><td><span class="a-miss">观察</span></td><td style="font-size:11px">400G数通切入，800G路线图中</td><td><span style="font-size:10px;color:var(--text2)">—</span></td></tr>
+      <tr><td><strong>环旭电子</strong></td><td><code>601231</code></td><td>新光模块（代工）</td><td><span class="a-na">中性</span></td><td style="font-size:11px">ODM属性，光模块毛利率较低</td><td><span style="font-size:10px;color:var(--text2)">—</span></td></tr>
+      <tr><td><strong>立讯精密</strong></td><td><code>002475</code></td><td>新光模块（代工）</td><td><span class="a-na">中性</span></td><td style="font-size:11px">800G切入，规模体量大但光模块占比小</td><td><span style="font-size:10px;color:var(--text2)">—</span></td></tr>
+      <!-- 无源器件 -->
+      <tr style="background:#f0fdf4;border-top:2px solid var(--up)">
+        <td colspan="6" style="font-size:11px;font-weight:700;color:var(--up);padding:5px 8px">🟩 无源器件（光器件/CPO）</td>
+      </tr>
+      <tr style="background:#f0fdf4">
+        <td><strong>天孚通信</strong></td><td><code>300394</code></td><td>光引擎/CPO核心</td>
+        <td><span class="a-meet">🔵 进攻仓</span></td>
+        <td style="font-size:11px">1.6T光引擎代工：2025E 36.75万只→2026E 250万只；CPO主要受益方</td>
+        <td><span style="font-size:10px;color:var(--text2)">—</span></td>
+      </tr>
+      <tr><td><strong>炬光科技</strong></td><td><code>688167</code></td><td>激光器光源</td><td><span class="a-miss">观察</span></td><td style="font-size:11px">半导体激光器，AI数据中心应用拓展</td><td><span style="font-size:10px;color:var(--text2)">—</span></td></tr>
+      <tr><td><strong>光库科技</strong></td><td><code>300620</code></td><td>光纤器件</td><td><span class="a-na">中性</span></td><td style="font-size:11px">光隔离器/环形器为主，AI受益间接</td><td><span style="font-size:10px;color:var(--text2)">—</span></td></tr>
+      <tr><td><strong>腾景科技</strong></td><td><code>688195</code></td><td>CPO早期</td><td><span class="a-miss">观察</span></td><td style="font-size:11px">CPO光引擎产品送样，2026-2027导入期</td><td><span style="font-size:10px;color:var(--text2)">—</span></td></tr>
+      <tr><td><strong>太辰光</strong></td><td><code>300570</code></td><td>光无源器件</td><td><span class="a-na">中性</span></td><td style="font-size:11px">光分路器/熔融拉锥，AI受益较间接</td><td><span style="font-size:10px;color:var(--text2)">—</span></td></tr>
+      <tr><td><strong>致尚科技</strong></td><td><code>301486</code></td><td>光器件</td><td><span class="a-na">中性</span></td><td style="font-size:11px">—</td><td><span style="font-size:10px;color:var(--text2)">—</span></td></tr>
+      <tr><td><strong>蓝特光学</strong></td><td><code>688127</code></td><td>精密光学元件</td><td><span class="a-na">中性</span></td><td style="font-size:11px">精密光学玻璃，光通信用量小</td><td><span style="font-size:10px;color:var(--text2)">—</span></td></tr>
+      <!-- 激光器 -->
+      <tr style="background:#fef2f2;border-top:2px solid var(--dn)">
+        <td colspan="6" style="font-size:11px;font-weight:700;color:var(--dn);padding:5px 8px">🔴 激光器（光芯片）</td>
+      </tr>
+      <tr style="background:#fffbeb">
+        <td><strong>源杰科技</strong></td><td><code>688498</code></td><td>CW 激光器（硅光核心）</td>
+        <td><span class="a-miss">🟡 观察仓</span></td>
+        <td style="font-size:11px">硅光渗透率提升红利；2025E CW收入 4.1亿→2026E 17.9亿（+335%）</td>
+        <td><span style="font-size:10px;color:var(--text2)">—</span></td>
+      </tr>
+      <tr><td><strong>云南锗业</strong></td><td><code>002428</code></td><td>InP 衬底</td><td><span class="a-miss">观察</span></td><td style="font-size:11px">InP衬底供给稀缺，AI激光器原材料</td><td><span style="font-size:10px;color:var(--text2)">—</span></td></tr>
+      <tr><td><strong>三安光电</strong></td><td><code>600703</code></td><td>InP 激光器</td><td><span class="a-miss">观察</span></td><td style="font-size:11px">EML激光器布局，产能爬坡中</td><td><span style="font-size:10px;color:var(--text2)">—</span></td></tr>
+      <tr><td><strong>卓胜微</strong></td><td><code>300782</code></td><td>InP 激光器</td><td><span class="a-na">中性</span></td><td style="font-size:11px">主营滤波器，InP激光器为探索方向</td><td><span style="font-size:10px;color:var(--text2)">—</span></td></tr>
+    </tbody>
+  </table>
+  <div style="display:flex;gap:12px;align-items:center;margin-top:6px;font-size:10px;color:var(--text2)">
+    <span><span class="a-super">🟢核心仓</span> 景气主受益，重仓持有</span>
+    <span><span class="a-meet" style="background:#dbeafe;color:#1d4ed8;border-color:#bfdbfe">🔵进攻仓</span> CPO/新技术中期布局</span>
+    <span><span class="a-miss">🟡观察仓</span> 景气受益，等待验证点</span>
+    <span style="margin-left:auto;color:var(--text2)">⚠️ 研究性判断，不构成投资建议</span>
+  </div>
+</div>
+</div>
+
+<!-- ── 静态供需分析 ── -->
+<div class="st" onclick="toggleSec(this)">🔢 静态供需分析<span class="st-arrow">▾</span></div>
+<div class="sec-body" style="margin-bottom:16px">
+
+<div class="kpi-g">
+  <div class="card kpi"><div class="lbl">光模块 TAM（2026E）</div><div class="val c-up">3,014 亿元</div><div class="note">↑ +137% YoY；2025-2030 CAGR 57%</div></div>
+  <div class="card kpi"><div class="lbl">800G 有效需求（2026E）</div><div class="val c-up">5,218 万颗</div><div class="note">↑ +82% YoY；实际出货约 5,229 万颗</div></div>
+  <div class="card kpi"><div class="lbl">1.6T 有效需求（2026E）</div><div class="val" style="color:var(--accent);font-size:19px;font-weight:700">2,854 万颗</div><div class="note">↑ +22× vs 2025E 125万颗（元年爆发）</div></div>
+  <div class="card kpi"><div class="lbl">龙头双寡头份额（2025E）</div><div class="val c-up">~59%</div><div class="note">旭创 ~31% ＋ 新易盛 ~22%</div></div>
+</div>
+
+<div class="chart-row">
+  <div class="chart-box">
+    <h4>① 光模块 TAM 规模预测（亿元，400G+800G+1.6T）</h4>
+    <div class="chart-wrap" style="height:220px"><canvas id="c-tam"></canvas></div>
+    <div style="font-size:10px;color:var(--text2);margin-top:5px">* 基于 AI 基础设施 TAM + NV 口径推算；2025-2030 CAGR 57%</div>
+  </div>
+  <div class="chart-box">
+    <h4>② AI 光模块实际出货量（万颗，800G + 1.6T）</h4>
+    <div class="chart-wrap" style="height:220px"><canvas id="c-demand"></canvas></div>
+    <div style="font-size:10px;color:var(--text2);margin-top:5px">* 2024A：800G 974万；1.6T 6万　2026E：800G 5229万；1.6T 2431万</div>
+  </div>
+</div>
+
+<div class="chart-row">
+  <div class="chart-box">
+    <h4>③ 旭创（300308）收入预测（亿元）</h4>
+    <div class="chart-wrap" style="height:220px"><canvas id="c-xc"></canvas></div>
+  </div>
+  <div class="chart-box">
+    <h4>④ 新易盛（300502）收入预测（亿元）</h4>
+    <div class="chart-wrap" style="height:220px"><canvas id="c-xys"></canvas></div>
+  </div>
+</div>
+
+<!-- 供需缺口说明 -->
+<div class="card" style="margin-bottom:0">
+  <div style="font-size:12px;font-weight:700;margin-bottom:10px">供需平衡表（2025E / 2026E 口径）</div>
+  <table class="ctable">
+    <thead><tr><th>规格</th><th>有效需求（万颗）</th><th>实际出货（万颗）</th><th>出货/需求</th><th>供需判断</th><th>瓶颈因素</th></tr></thead>
+    <tbody>
+      <tr>
+        <td><strong>400G</strong></td>
+        <td>—</td><td>—</td><td>—</td>
+        <td><span class="a-na">轻微过剩</span></td>
+        <td style="font-size:11px;color:var(--text2)">成熟产品，供给充足，价格持续下行</td>
+      </tr>
+      <tr style="background:#ecfeff">
+        <td><strong>800G</strong></td>
+        <td>2025E：2,865；2026E：5,218</td>
+        <td>2025E：2,333；2026E：5,229</td>
+        <td><span class="yp">~81% / ~100%</span></td>
+        <td><span class="a-super">紧平衡</span></td>
+        <td style="font-size:11px;color:var(--text2)">100G EML 紧缺（2025E）；2026E供需趋于平衡</td>
+      </tr>
+      <tr style="background:#eff6ff">
+        <td><strong>1.6T</strong></td>
+        <td>2025E：125；2026E：2,854</td>
+        <td>2025E：119；2026E：2,431</td>
+        <td><span class="yp">~95% / ~85%</span></td>
+        <td><span class="a-miss">需求 > 供给</span></td>
+        <td style="font-size:11px;color:var(--text2)">200G EML 缺货，供给递延至次年；硅光方案缓解 EML 依赖</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+</div>
+
+<!-- ── 速率演进时间轴 ── -->
+<div class="st" onclick="toggleSec(this)">📐 速率演进与产品升级时间轴<span class="st-arrow">▾</span></div>
+<div class="sec-body" style="margin-bottom:16px">
+<div class="card">
+  <div style="font-size:10px;color:var(--text2);margin-bottom:14px">产品代际演进 · 技术方案变化 · A股受益标的　｜　更新规则：每次收到新纪要在里程碑栏追加 <code>[YYMMDD] 来源→事件</code></div>
+
+  <!-- 时间轴可视化 -->
+  <div style="display:flex;align-items:flex-start;gap:0;margin-bottom:20px;padding:0 4px;overflow-x:auto">
+    <!-- 100G -->
+    <div style="flex:1;min-width:90px;text-align:center;opacity:0.4">
+      <div style="display:flex;align-items:center;margin-bottom:8px">
+        <div style="flex:1;height:2px;background:#cbd5e1"></div>
+        <div style="width:26px;height:26px;border-radius:50%;background:#94a3b8;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:#fff;flex-shrink:0">100G</div>
+        <div style="flex:1;height:2px;background:#cbd5e1"></div>
+      </div>
+      <div style="font-size:10px;font-weight:700;color:#64748b">退出</div>
+      <div style="font-size:9px;color:#94a3b8;margin-top:2px">存量消化</div>
+    </div>
+    <!-- 200G -->
+    <div style="flex:1;min-width:90px;text-align:center;opacity:0.55">
+      <div style="display:flex;align-items:center;margin-bottom:8px">
+        <div style="flex:1;height:2px;background:#cbd5e1"></div>
+        <div style="width:26px;height:26px;border-radius:50%;background:#64748b;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:#fff;flex-shrink:0">200G</div>
+        <div style="flex:1;height:2px;background:#cbd5e1"></div>
+      </div>
+      <div style="font-size:10px;font-weight:700;color:#64748b">存量</div>
+      <div style="font-size:9px;color:#94a3b8;margin-top:2px">降价去化</div>
+    </div>
+    <!-- 400G -->
+    <div style="flex:1.1;min-width:100px;text-align:center;opacity:0.75">
+      <div style="display:flex;align-items:center;margin-bottom:8px">
+        <div style="flex:1;height:2px;background:#d97706"></div>
+        <div style="width:30px;height:30px;border-radius:50%;background:#d97706;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:#fff;flex-shrink:0">400G</div>
+        <div style="flex:1;height:2px;background:#d97706"></div>
+      </div>
+      <div style="font-size:10px;font-weight:700;color:#d97706">成熟期</div>
+      <div style="font-size:9px;color:#92400e;margin-top:3px;padding:1px 6px;background:#fffbeb;border-radius:3px;display:inline-block">轻微过剩</div>
+      <div style="font-size:9px;color:#94a3b8;margin-top:3px">旭创/新易盛 降价中</div>
+    </div>
+    <!-- 800G ★ 当前核心 -->
+    <div style="flex:1.4;min-width:120px;text-align:center">
+      <div style="display:flex;align-items:center;margin-bottom:8px">
+        <div style="flex:1;height:3px;background:#2563eb"></div>
+        <div style="width:38px;height:38px;border-radius:50%;background:#2563eb;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;flex-shrink:0;box-shadow:0 0 0 4px #dbeafe">800G</div>
+        <div style="flex:1;height:3px;background:#2563eb"></div>
+      </div>
+      <div style="font-size:11px;font-weight:700;color:#2563eb">放量期 ★</div>
+      <div style="font-size:9px;color:#fff;margin-top:3px;padding:2px 8px;background:#2563eb;border-radius:3px;display:inline-block;font-weight:700">🟢 主力收入</div>
+      <div style="font-size:9px;color:#1d4ed8;margin-top:3px;font-weight:600">H100/H200/B200<br>主流配置</div>
+      <div style="font-size:9px;color:#1e40af;margin-top:3px;background:#dbeafe;padding:2px 5px;border-radius:3px">旭创 · 新易盛 · 天孚</div>
+    </div>
+    <!-- 1.6T -->
+    <div style="flex:1.3;min-width:110px;text-align:center">
+      <div style="display:flex;align-items:center;margin-bottom:8px">
+        <div style="flex:1;height:2px;background:#7c3aed"></div>
+        <div style="width:34px;height:34px;border-radius:50%;background:#7c3aed;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#fff;flex-shrink:0">1.6T</div>
+        <div style="flex:1;height:2px;background:#7c3aed"></div>
+      </div>
+      <div style="font-size:10px;font-weight:700;color:#7c3aed">导入期 ▲</div>
+      <div style="font-size:9px;color:#fff;margin-top:3px;padding:1px 7px;background:#7c3aed;border-radius:3px;display:inline-block;font-weight:600">🔵 2026H2放量</div>
+      <div style="font-size:9px;color:#6d28d9;margin-top:3px">GB300 / R系列<br>200G EML缺货</div>
+      <div style="font-size:9px;color:#4c1d95;margin-top:3px;background:#f5f3ff;padding:2px 5px;border-radius:3px">旭创 · 新易盛 · 天孚</div>
+    </div>
+    <!-- CPO -->
+    <div style="flex:1;min-width:90px;text-align:center;opacity:0.7">
+      <div style="display:flex;align-items:center;margin-bottom:8px">
+        <div style="flex:1;height:2px;background:#16a34a;border-top:2px dashed #4ade80"></div>
+        <div style="width:28px;height:28px;border-radius:50%;border:2px dashed #16a34a;display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:700;color:#16a34a;flex-shrink:0;background:#f0fdf4">CPO</div>
+        <div style="flex:1;height:2px;background:#16a34a"></div>
+      </div>
+      <div style="font-size:10px;font-weight:700;color:#16a34a">2026-2027</div>
+      <div style="font-size:9px;color:#16a34a;margin-top:3px;padding:1px 6px;background:#f0fdf4;border-radius:3px;display:inline-block">🟡 早期</div>
+      <div style="font-size:9px;color:#15803d;margin-top:3px">天孚 · 腾景<br>送样验证</div>
+    </div>
+  </div>
+
+  <!-- 详情对照表 -->
+  <table class="ctable" style="font-size:11px">
+    <thead>
+      <tr><th>速率</th><th>主流方案</th><th>商用状态</th><th>A股核心受益</th><th>价格区间（USD）</th><th>关键里程碑</th></tr>
+    </thead>
+    <tbody>
+      <tr style="color:var(--text2)"><td>100G</td><td>VCSEL/EML</td><td>⚫ 退出</td><td>—</td><td>$65-90</td><td>快速降价，AI需求可忽略</td></tr>
+      <tr style="color:var(--text2)"><td>200G</td><td>EML</td><td>🔵 存量</td><td>—</td><td>$103-115</td><td>存量消化，无增量</td></tr>
+      <tr><td><strong>400G</strong></td><td>EML DR/FR/LPO</td><td>🟠 成熟/过剩</td><td>旭创（降价）、新易盛</td><td>$210-290</td><td>旭创400G出货：440万→257万（2025E→2026E 下滑）</td></tr>
+      <tr style="background:#eff6ff"><td><strong>800G</strong></td><td>EML/硅光 SR/DR/LPO</td><td><strong style="color:var(--accent)">🟢 放量主力</strong></td><td><strong>旭创 · 新易盛 · 天孚（光引擎）</strong></td><td>$340-680</td><td>2026E实际出货 5,229万颗（+124% YoY）；硅光渗透率 20%→45%→60%（2024/25E/26E）</td></tr>
+      <tr style="background:#f5f3ff"><td><strong>1.6T</strong></td><td>EML/硅光 DR/FR/LPO</td><td><strong style="color:#7c3aed">🔵 导入爆发</strong></td><td><strong>旭创 · 新易盛 · 天孚 · 源杰（CW激光器）</strong></td><td>$850-1200</td><td>2026E 有效需求2854万颗（+22×）；EML缺货约15%递延；硅光60%→80%渗透率</td></tr>
+      <tr><td><strong>CPO</strong></td><td>硅光+CW 激光器</td><td>🟡 早期导入</td><td>天孚通信 · 腾景科技</td><td>TBD</td><td>2026-2027为送样→量产窗口期；消除 pluggable 功耗损耗</td></tr>
+    </tbody>
+  </table>
+</div>
+</div>
+
+<!-- ── 价格追踪 ── -->
+<div class="st" onclick="toggleSec(this)">📈 价格趋势追踪<span class="st-arrow">▾</span></div>
+<div class="sec-body" style="margin-bottom:16px">
+<div class="chart-row">
+  <div class="chart-box">
+    <h4>各规格光模块价格趋势（USD，2023-2025E）</h4>
+    <div class="chart-wrap" style="height:230px"><canvas id="c-price"></canvas></div>
+    <div style="font-size:10px;color:var(--text2);margin-top:5px">
+      1.6T DR：2024E $1,500 → 2025E $1,200（-20%）　1.6T LPO：2025E $850（新增）　800G VFR8 最高 $950→$680
+    </div>
+  </div>
+  <div class="chart-box">
+    <h4>硅光渗透率演进（%，对 1.6T 出货量影响最大）</h4>
+    <div class="chart-wrap" style="height:230px"><canvas id="c-silicon"></canvas></div>
+    <div style="font-size:10px;color:var(--text2);margin-top:5px">
+      硅光渗透率↑ → CW 激光器（源杰）需求爆发；1.6T 硅光模块 2026E 占比 80%
+    </div>
+  </div>
+</div>
+
+<!-- 价格详细表 -->
+<div class="card">
+  <div style="font-size:12px;font-weight:700;margin-bottom:10px">价格明细表（USD / 只，测算表口径）</div>
+  <table class="ctable" style="font-size:11px">
+    <thead><tr><th>规格</th><th>2023</th><th>2024E</th><th>2025E</th><th>降价幅度</th><th>备注</th></tr></thead>
+    <tbody>
+      <tr><td>400G DR</td><td>$280</td><td>$240</td><td>$210</td><td><span class="yn">-25%</span></td><td style="font-size:10px;color:var(--text2)">成熟规格，持续降价</td></tr>
+      <tr><td>400G FR</td><td>$370</td><td>$320</td><td>$290</td><td><span class="yn">-22%</span></td><td style="font-size:10px;color:var(--text2)">长距离规格</td></tr>
+      <tr style="background:#eff6ff"><td><strong>800G SR</strong></td><td>$450</td><td>$380</td><td>$340</td><td><span class="yn">-24%</span></td><td style="font-size:10px;color:var(--text2)">最大量规格</td></tr>
+      <tr style="background:#eff6ff"><td><strong>800G DR</strong></td><td>$780</td><td>$600</td><td>$510</td><td><span class="yn">-35%</span></td><td style="font-size:10px;color:var(--text2)">降幅最大</td></tr>
+      <tr style="background:#eff6ff"><td>800G FR</td><td>$850</td><td>$650</td><td>$600</td><td><span class="yn">-29%</span></td><td style="font-size:10px;color:var(--text2)">—</td></tr>
+      <tr style="background:#eff6ff"><td>800G LPO</td><td>—</td><td>—</td><td>$400</td><td>—</td><td style="font-size:10px;color:var(--text2)">2025年新增规格</td></tr>
+      <tr style="background:#eff6ff"><td>800G VFR8</td><td>$950</td><td>$750</td><td>$680</td><td><span class="yn">-28%</span></td><td style="font-size:10px;color:var(--text2)">高端规格</td></tr>
+      <tr style="background:#f5f3ff"><td><strong>1.6T DR</strong></td><td>—</td><td>$1,500</td><td>$1,200</td><td><span class="yn">-20%</span></td><td style="font-size:10px;color:var(--text2)">新品仍溢价</td></tr>
+      <tr style="background:#f5f3ff"><td>1.6T FR</td><td>—</td><td>$1,800</td><td>$1,400</td><td><span class="yn">-22%</span></td><td style="font-size:10px;color:var(--text2)">长距</td></tr>
+      <tr style="background:#f5f3ff"><td>1.6T LPO</td><td>—</td><td>—</td><td>$850</td><td>—</td><td style="font-size:10px;color:var(--text2)">降功耗方案</td></tr>
+      <tr style="background:#f5f3ff"><td>1.6T 硅光</td><td>—</td><td>—</td><td>$1,100</td><td>—</td><td style="font-size:10px;color:var(--text2)">绕过 EML 缺货</td></tr>
+    </tbody>
+  </table>
+</div>
+</div>
+
+<!-- ── 公司深度 Tab ── -->
+<div class="st" onclick="toggleSec(this)">🏭 公司深度分析<span class="st-arrow">▾</span></div>
+<div class="sec-body" style="margin-bottom:16px">
+<div class="card">
+  <div class="tab-nav">
+    <button class="tab-btn active" onclick="switchTab(this,'t-xc')">旭创（300308）</button>
+    <button class="tab-btn" onclick="switchTab(this,'t-xys')">新易盛（300502）</button>
+    <button class="tab-btn" onclick="switchTab(this,'t-tianfu')">天孚（300394）</button>
+    <button class="tab-btn" onclick="switchTab(this,'t-yuanjie')">源杰（688498）</button>
+  </div>
+
+  <!-- 旭创 -->
+  <div id="t-xc" class="tab-pane active">
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px">
+      <div style="background:var(--up-bg);border:1px solid #86efac;border-radius:8px;padding:10px 12px">
+        <div style="font-size:10px;color:var(--text2);margin-bottom:3px">2026E 总收入</div>
+        <div style="font-size:18px;font-weight:700;color:var(--up)">1,128 亿元</div>
+        <div style="font-size:10px;color:var(--up)">↑ +186% YoY</div>
+      </div>
+      <div style="background:var(--tag-bg);border:1px solid #bfdbfe;border-radius:8px;padding:10px 12px">
+        <div style="font-size:10px;color:var(--text2);margin-bottom:3px">1.6T 收入占比（2026E）</div>
+        <div style="font-size:18px;font-weight:700;color:var(--accent)">56.1%</div>
+        <div style="font-size:10px;color:var(--accent)">↑ 从 2024A 仅 1.2%</div>
+      </div>
+      <div style="background:var(--tag-bg);border:1px solid #bfdbfe;border-radius:8px;padding:10px 12px">
+        <div style="font-size:10px;color:var(--text2);margin-bottom:3px">800G 出货量（2026E）</div>
+        <div style="font-size:18px;font-weight:700;color:var(--accent)">1,600 万只</div>
+        <div style="font-size:10px;color:var(--accent)">↑ +101% vs 2024A</div>
+      </div>
+      <div style="background:#f5f3ff;border:1px solid #ddd6fe;border-radius:8px;padding:10px 12px">
+        <div style="font-size:10px;color:var(--text2);margin-bottom:3px">净利率（2026E）</div>
+        <div style="font-size:18px;font-weight:700;color:#7c3aed">33.0%</div>
+        <div style="font-size:10px;color:#7c3aed">净利润 372 亿元</div>
+      </div>
+    </div>
+    <div class="chart-row">
+      <div class="chart-box">
+        <h4>旭创收入拆分（亿元，按产品速率）</h4>
+        <div class="chart-wrap" style="height:220px"><canvas id="c-xc-rev"></canvas></div>
+      </div>
+      <div class="chart-box">
+        <h4>旭创各速率出货量（万只）</h4>
+        <div class="chart-wrap" style="height:220px"><canvas id="c-xc-vol"></canvas></div>
+      </div>
+    </div>
+    <div class="seg-sum">
+      <strong>核心逻辑：</strong>旭创是全球光模块出货量最大的公司，北美 AI 大客户深度绑定。1.6T 产品 2024A 仅出货 3 万只，2025E 跃升至 56.8 万只，2026E 爆发至 1,220.7 万只（+21×）。1.6T 收入将从 2025E 的 40.9 亿增至 2026E 的 632.8 亿，成为最大收入来源。800G 在 2026E 仍放量，出货 1,600 万只，但 ASP 降至 $380/只，收入贡献占比从 64% 下降至 39%。
+    </div>
+  </div>
+
+  <!-- 新易盛 -->
+  <div id="t-xys" class="tab-pane">
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px">
+      <div style="background:var(--up-bg);border:1px solid #86efac;border-radius:8px;padding:10px 12px">
+        <div style="font-size:10px;color:var(--text2);margin-bottom:3px">2026E 总收入</div>
+        <div style="font-size:18px;font-weight:700;color:var(--up)">663 亿元</div>
+        <div style="font-size:10px;color:var(--up)">↑ +135% YoY</div>
+      </div>
+      <div style="background:var(--tag-bg);border:1px solid #bfdbfe;border-radius:8px;padding:10px 12px">
+        <div style="font-size:10px;color:var(--text2);margin-bottom:3px">800G 收入占比（2026E）</div>
+        <div style="font-size:18px;font-weight:700;color:var(--accent)">55.9%</div>
+        <div style="font-size:10px;color:var(--accent)">仍以 800G 为主力</div>
+      </div>
+      <div style="background:#f5f3ff;border:1px solid #ddd6fe;border-radius:8px;padding:10px 12px">
+        <div style="font-size:10px;color:var(--text2);margin-bottom:3px">1.6T 收入占比（2026E）</div>
+        <div style="font-size:18px;font-weight:700;color:#7c3aed">34.3%</div>
+        <div style="font-size:10px;color:#7c3aed">2027E 超越 800G 至 58%</div>
+      </div>
+      <div style="background:var(--warn-bg);border:1px solid #fcd34d;border-radius:8px;padding:10px 12px">
+        <div style="font-size:10px;color:var(--text2);margin-bottom:3px">净利率（2026E）</div>
+        <div style="font-size:18px;font-weight:700;color:var(--warn)">37.1%</div>
+        <div style="font-size:10px;color:var(--warn)">净利润 246 亿元</div>
+      </div>
+    </div>
+    <div class="chart-row">
+      <div class="chart-box">
+        <h4>新易盛收入拆分（亿元，按产品速率）</h4>
+        <div class="chart-wrap" style="height:220px"><canvas id="c-xys-rev"></canvas></div>
+      </div>
+      <div class="chart-box">
+        <h4>新易盛各速率出货量（万只）</h4>
+        <div class="chart-wrap" style="height:220px"><canvas id="c-xys-vol"></canvas></div>
+      </div>
+    </div>
+    <div class="seg-sum">
+      <strong>核心逻辑：</strong>新易盛是旭创之外最纯粹的 AI 光模块标的。2024A 收入 86.5 亿，2025E 达 282.4 亿（+227%），2026E 进一步至 663 亿（+135%）。800G 仍是 2026E 最大收入来源（371 亿，56%），但 1.6T 快速追赶（228 亿，34%）。净利率高达 37%，在 A 股光模块中最高。关键验证：1.6T 产能爬坡节奏（2026H1 是否超预期）。
+    </div>
+  </div>
+
+  <!-- 天孚 -->
+  <div id="t-tianfu" class="tab-pane">
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px">
+      <div style="background:var(--up-bg);border:1px solid #86efac;border-radius:8px;padding:10px 12px">
+        <div style="font-size:10px;color:var(--text2);margin-bottom:3px">光引擎收入（2026E）</div>
+        <div style="font-size:18px;font-weight:700;color:var(--up)">100.9 亿元</div>
+        <div style="font-size:10px;color:var(--up)">↑ +232% YoY（2025E 30.4亿）</div>
+      </div>
+      <div style="background:#f5f3ff;border:1px solid #ddd6fe;border-radius:8px;padding:10px 12px">
+        <div style="font-size:10px;color:var(--text2);margin-bottom:3px">1.6T 光引擎出货（2026E）</div>
+        <div style="font-size:18px;font-weight:700;color:#7c3aed">250 万只</div>
+        <div style="font-size:10px;color:#7c3aed">↑ +581% vs 2025E 36.75万只</div>
+      </div>
+      <div style="background:var(--tag-bg);border:1px solid #bfdbfe;border-radius:8px;padding:10px 12px">
+        <div style="font-size:10px;color:var(--text2);margin-bottom:3px">主要客户</div>
+        <div style="font-size:15px;font-weight:700;color:var(--accent)">Mellanox</div>
+        <div style="font-size:10px;color:var(--accent)">NV 生态核心代工商</div>
+      </div>
+      <div style="background:var(--up-bg);border:1px solid #86efac;border-radius:8px;padding:10px 12px">
+        <div style="font-size:10px;color:var(--text2);margin-bottom:3px">光引擎毛利率（2026E）</div>
+        <div style="font-size:18px;font-weight:700;color:var(--up)">50%</div>
+        <div style="font-size:10px;color:var(--up)">高毛利率持续稳定</div>
+      </div>
+    </div>
+    <div class="chart-box" style="margin-bottom:14px">
+      <h4>天孚光引擎收入拆分（亿元）</h4>
+      <div class="chart-wrap" style="height:200px"><canvas id="c-tianfu-rev"></canvas></div>
+    </div>
+    <div class="seg-sum">
+      <strong>核心逻辑：</strong>天孚是 Mellanox（NVIDIA 网络部门）最重要的光引擎代工商。1.6T 光引擎是最大增量，2025E 交付 36.75 万只（ASP $600），2026E 增至 250 万只（ASP $480），收入从 15.9 亿跃升至 86.4 亿（+444%）。2027E 进一步至 750 万只，收入 207.4 亿。CPO 方向中期看好：CPO 技术架构下光引擎地位更加核心，天孚是国内最有望进入 CPO 供应链的标的。50% 稳定毛利率是竞争壁垒体现。
+    </div>
+  </div>
+
+  <!-- 源杰 -->
+  <div id="t-yuanjie" class="tab-pane">
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px">
+      <div style="background:var(--up-bg);border:1px solid #86efac;border-radius:8px;padding:10px 12px">
+        <div style="font-size:10px;color:var(--text2);margin-bottom:3px">CW 光源收入（2026E）</div>
+        <div style="font-size:18px;font-weight:700;color:var(--up)">17.9 亿元</div>
+        <div style="font-size:10px;color:var(--up)">↑ +335% vs 2025E 4.1亿</div>
+      </div>
+      <div style="background:var(--tag-bg);border:1px solid #bfdbfe;border-radius:8px;padding:10px 12px">
+        <div style="font-size:10px;color:var(--text2);margin-bottom:3px">核心驱动：硅光渗透率</div>
+        <div style="font-size:18px;font-weight:700;color:var(--accent)">800G 45%</div>
+        <div style="font-size:10px;color:var(--accent)">2025E；2026E 升至 60%</div>
+      </div>
+      <div style="background:#f5f3ff;border:1px solid #ddd6fe;border-radius:8px;padding:10px 12px">
+        <div style="font-size:10px;color:var(--text2);margin-bottom:3px">旭创供应份额（2026E）</div>
+        <div style="font-size:18px;font-weight:700;color:#7c3aed">60%</div>
+        <div style="font-size:10px;color:#7c3aed">旭创 800G CW需求主供</div>
+      </div>
+      <div style="background:var(--warn-bg);border:1px solid #fcd34d;border-radius:8px;padding:10px 12px">
+        <div style="font-size:10px;color:var(--text2);margin-bottom:3px">CW 光源净利率（2026E）</div>
+        <div style="font-size:18px;font-weight:700;color:var(--warn)">40%</div>
+        <div style="font-size:10px;color:var(--warn)">净利润约 7.2 亿元</div>
+      </div>
+    </div>
+    <div class="chart-box" style="margin-bottom:14px">
+      <h4>源杰 CW 激光器收入预测（亿元）</h4>
+      <div class="chart-wrap" style="height:180px"><canvas id="c-yuanjie-rev"></canvas></div>
+    </div>
+    <div class="seg-sum">
+      <strong>核心逻辑：</strong>源杰是硅光渗透率提升的最直接受益者。硅光方案替代 EML，每只光模块需要 1-2 只 CW 激光器作为光源，绕过 200G EML 缺货瓶颈。2024A 收入仅 0.30 亿，2025E 跃升至 4.1 亿，2026E 达 17.9 亿。主要客户为旭创（2026E 旭创 800G 硅光渗透率 70%）。核心风险：EML 缺货问题若提前解决，硅光渗透率提升可能放缓。
+    </div>
+  </div>
+
+</div>
+</div>
+
+<!-- ── 高频指标 ── -->
+<div class="st" onclick="toggleSec(this)">📡 高频景气指标<span class="st-arrow">▾</span></div>
+<div class="sec-body" style="margin-bottom:16px">
+<div style="font-size:11px;color:var(--text2);background:var(--tag-bg);padding:8px 14px;border-radius:6px;border-left:3px solid var(--accent);margin-bottom:14px">
+  更新节奏：美股大客户季报（每季度）｜ 台股月营收 <strong>每月10日</strong>前后 ｜ 一季报/调研出货量 <strong>季度追踪</strong>
+</div>
+<div class="b-grid">
+  <div class="card">
+    <div style="font-size:12px;font-weight:700;margin-bottom:10px">景气追踪指标（季度/月度更新）</div>
+    <table class="ctable" style="font-size:11px">
+      <thead><tr><th>指标</th><th>最新值</th><th>趋势</th><th>更新时间</th></tr></thead>
+      <tbody>
+        <tr><td><strong>旭创 800G 出货</strong></td><td style="color:var(--text2)">待更新（2026Q1）</td><td>→</td><td style="color:var(--text2)">—</td></tr>
+        <tr><td><strong>旭创 1.6T 出货</strong></td><td style="color:var(--text2)">待更新（2026Q1）</td><td>→</td><td style="color:var(--text2)">—</td></tr>
+        <tr><td><strong>新易盛 800G 出货</strong></td><td style="color:var(--text2)">待更新（2026Q1）</td><td>→</td><td style="color:var(--text2)">—</td></tr>
+        <tr><td><strong>800G 模块交期</strong></td><td><strong>16-20 周</strong></td><td><span class="yp">↑ 偏紧</span></td><td style="color:var(--text2)">2026-05</td></tr>
+        <tr><td>1.6T 交期</td><td>20-24 周</td><td><span class="yp">↑ 紧张</span></td><td style="color:var(--text2)">2026-05</td></tr>
+        <tr><td>美股季报 CapEx 指引</td><td style="color:var(--text2)">2026Q2 待观察</td><td>→</td><td style="color:var(--text2)">—</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="card">
+    <div style="font-size:12px;font-weight:700;margin-bottom:10px">台股领先指标（月度）</div>
+    <table class="ctable" style="font-size:11px">
+      <thead><tr><th>公司</th><th>角色</th><th>最新月营收</th><th>YoY</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Coherent (COHR)</strong></td><td>光芯片/模块（美股）</td><td style="color:var(--text2)">待更新</td><td>—</td></tr>
+        <tr><td><strong>Lumentum (LITE)</strong></td><td>EML 激光器（美股）</td><td style="color:var(--text2)">待更新</td><td>—</td></tr>
+        <tr><td><strong>Applied Optoelectronics</strong></td><td>北美光模块</td><td style="color:var(--text2)">待更新</td><td>—</td></tr>
+        <tr><td>Finisar / II-VI</td><td>光芯片/模块</td><td style="color:var(--text2)">—</td><td>—</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+</div>
+
+<!-- ── 催化剂 + 当前判断 ── -->
+<div class="b-grid">
+  <div>
+    <div class="st" style="cursor:default">📅 催化剂跟踪</div>
+    <div class="card">
+      <div class="tl-item"><div class="tl-dot tl-d-p"></div><div class="tl-date">2026-Q2</div><div class="tl-content"><div class="tl-evt">北美四大 Hyperscaler Q1 财报 CapEx 指引</div><div class="tl-meta">Meta/MSFT/GOOGL/AMZN；AI基建支出全年指引验证</div></div><span class="tl-st st-p">🕐 待观察</span></div>
+      <div class="tl-item"><div class="tl-dot tl-d-p"></div><div class="tl-date">2026-Q2</div><div class="tl-content"><div class="tl-evt">旭创/新易盛 2026Q1 出货量披露</div><div class="tl-meta">验证 1.6T 爬坡节奏是否符合预期</div></div><span class="tl-st st-p">🕐 待观察</span></div>
+      <div class="tl-item"><div class="tl-dot tl-d-p"></div><div class="tl-date">2026-H2</div><div class="tl-content"><div class="tl-evt">1.6T 大规模量产节点</div><div class="tl-meta">供给瓶颈（200G EML）解除时间点；新份额争夺</div></div><span class="tl-st st-p">🕐 待观察</span></div>
+      <div class="tl-item"><div class="tl-dot tl-d-p"></div><div class="tl-date">2026-H2</div><div class="tl-content"><div class="tl-evt">CPO 主流客户导入进展</div><div class="tl-meta">天孚/腾景送样验证结果；Meta/谷歌 CPO 路线明确化</div></div><span class="tl-st st-p">🕐 待观察</span></div>
+      <div class="tl-item"><div class="tl-dot tl-d-t"></div><div class="tl-date">持续跟踪</div><div class="tl-content"><div class="tl-evt">硅光渗透率进展</div><div class="tl-meta">800G/1.6T 硅光方案切换速度 → 直接影响源杰 CW 需求</div></div><span class="tl-st st-t">📊 跟踪中</span></div>
+      <div class="tl-item"><div class="tl-dot tl-d-r"></div><div class="tl-date">持续跟踪</div><div class="tl-content"><div class="tl-evt">美国对华光芯片/模块出口管制</div><div class="tl-meta">光芯片（EML/VCSEL）及高端光模块潜在限制风险</div></div><span class="tl-st st-r">⚠ 风险</span></div>
+    </div>
+  </div>
+
+  <div>
+    <div class="st" style="cursor:default">💡 当前判断</div>
+    <div class="card">
+      <div style="font-size:10px;font-weight:700;color:var(--text2);margin-bottom:6px;text-transform:uppercase">核心逻辑</div>
+      <div class="logic-box">
+        2026 年是光模块行业 <strong>1.6T 元年</strong>：有效需求从 125 万颗爆发至 2,854 万颗（+22×），旭创/新易盛的 1.6T 收入将分别占全年收入 56% / 34%。当前供给瓶颈在于 200G EML，约 15% 需求递延至次年，但硅光路线正在加速绕过瓶颈。<br><br>
+        策略：重仓旭创+新易盛（1.6T 产能落地最快，净利率 33-37%）；天孚是 CPO 方向最纯粹标的；源杰受益硅光渗透率，弹性极大但体量仍小。
+      </div>
+      <div style="font-size:10px;font-weight:700;color:var(--text2);margin-bottom:6px;margin-top:10px;text-transform:uppercase">持仓策略</div>
+      <div class="strat-g">
+        <div class="strat-i s-core"><div class="strat-l">🟢 核心仓</div>旭创（300308）<br>新易盛（300502）</div>
+        <div class="strat-i s-atk"><div class="strat-l">🔵 进攻仓</div>天孚通信（300394）<br>CPO 中期布局</div>
+        <div class="strat-i s-wch"><div class="strat-l">🟡 观察仓</div>源杰科技（688498）<br>硅光红利，体量小</div>
+      </div>
+      <div style="margin-top:12px">
+        <div style="font-size:10px;font-weight:700;color:var(--text2);margin-bottom:6px;text-transform:uppercase">主要风险</div>
+        <div class="risk-i"><span class="rn">R1</span>北美 Hyperscaler CapEx 削减/延期（最大风险，一旦出现快速降评）</div>
+        <div class="risk-i"><span class="rn">R2</span>美国对华光芯片/模块出口管制升级（政策风险）</div>
+        <div class="risk-i"><span class="rn">R3</span>200G EML 缺货提前解决 → 1.6T 实际出货低于预期</div>
+        <div class="risk-i"><span class="rn">R4</span>硅光渗透率慢于预期 → 源杰证伪</div>
+      </div>
+      <div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--border);font-size:11px;color:var(--text2)">
+        <strong>下次更新关注点：</strong>旭创/新易盛 2026Q1 出货量 + 北美 Q2 CapEx 指引 + 1.6T 交期变化
+      </div>
+    </div>
+  </div>
+</div>
+
+</div><!-- /wrap -->
+
+<div style="text-align:center;padding:16px 0 28px;font-size:10px;color:var(--text2);border-top:1px solid var(--border);margin-top:8px">
+  光模块研究看板 · TMT 产业链二级研究 · 数据来源：内部测算表 260323 · 2026-05-25
+</div>
+
+<script>
+function toggleSec(el) {
+  el.classList.toggle('collapsed');
+  var body = el.nextElementSibling;
+  if (body && body.classList.contains('sec-body')) body.classList.toggle('collapsed');
+}
+function switchTab(btn, id) {
+  var nav = btn.parentNode, wrap = nav.parentNode;
+  nav.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  wrap.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+  btn.classList.add('active');
+  var el = document.getElementById(id);
+  if (el) el.classList.add('active');
+  // lazy-init charts in newly shown tab
+  if (id === 't-xc' && !window._xcInit) { initXcCharts(); window._xcInit=true; }
+  if (id === 't-xys' && !window._xysInit) { initXysCharts(); window._xysInit=true; }
+  if (id === 't-tianfu' && !window._tianfuInit) { initTianfuChart(); window._tianfuInit=true; }
+  if (id === 't-yuanjie' && !window._yuanjieInit) { initYuanjieChart(); window._yuanjieInit=true; }
+}
+
+const LABELS_6Y = ['2022A','2023A','2024A','2025E','2026E','2027E'];
+const C_16T = '#7c3aed', C_800G = '#2563eb', C_400G = '#d97706', C_OTHER = '#94a3b8';
+const OPTS = (title) => ({
+  responsive:true, maintainAspectRatio:false,
+  plugins:{ legend:{position:'top',labels:{font:{size:10},padding:8}}, tooltip:{mode:'index',intersect:false},
+    title: title ? {display:true,text:title,font:{size:10},color:'#94a3b8'} : undefined },
+  scales:{ x:{grid:{color:'#f1f5f9'},ticks:{font:{size:9}}}, y:{grid:{color:'#f1f5f9'},ticks:{font:{size:9}}} }
+});
+
+// ① TAM Bar
+new Chart(document.getElementById('c-tam'), {
+  type:'bar',
+  data:{ labels:['2025E','2026E','2027E','2028E','2029E','2030E'],
+    datasets:[{ label:'光模块 TAM（亿元）', data:[1272,3014,4914,6634,8491,9927],
+      backgroundColor:['#dbeafe','#93c5fd','#60a5fa','#3b82f6','#2563eb','#1d4ed8'], borderRadius:4 }] },
+  options:{ ...OPTS(), plugins:{...OPTS().plugins, legend:{display:false},
+    datalabels:undefined},
+    scales:{x:{grid:{color:'#f1f5f9'},ticks:{font:{size:9}}},
+      y:{grid:{color:'#f1f5f9'},ticks:{font:{size:9}},title:{display:true,text:'亿元',font:{size:9},color:'#94a3b8'}}} }
+});
+
+// ② AI光模块需求 Stacked Bar（万颗）
+new Chart(document.getElementById('c-demand'), {
+  type:'bar',
+  data:{ labels:['2023A','2024A','2025E','2026E'],
+    datasets:[
+      { label:'800G 实际出货', data:[147,974,2333,5229], backgroundColor:'#2563eb', borderRadius:2 },
+      { label:'1.6T 实际出货', data:[0,6,119,2431], backgroundColor:'#7c3aed', borderRadius:2 }
+    ] },
+  options:{ responsive:true,maintainAspectRatio:false, plugins:{legend:{position:'top',labels:{font:{size:10}}},tooltip:{mode:'index'}},
+    scales:{ x:{stacked:true,grid:{color:'#f1f5f9'},ticks:{font:{size:9}}},
+      y:{stacked:true,grid:{color:'#f1f5f9'},ticks:{font:{size:9}},title:{display:true,text:'万颗',font:{size:9},color:'#94a3b8'}} } }
+});
+
+// ③ 旭创总收入 Bar
+new Chart(document.getElementById('c-xc'), {
+  type:'bar',
+  data:{ labels:LABELS_6Y,
+    datasets:[{ label:'旭创总收入（亿元）', data:[96.4,107.2,238.6,394.5,1127.9,1949.3],
+      backgroundColor:['#dbeafe','#dbeafe','#93c5fd','#60a5fa','#2563eb','#1d4ed8'], borderRadius:4 }] },
+  options:{ ...OPTS(), plugins:{...OPTS().plugins,legend:{display:false}},
+    scales:{x:{grid:{color:'#f1f5f9'},ticks:{font:{size:9}}},y:{grid:{color:'#f1f5f9'},ticks:{font:{size:9}},title:{display:true,text:'亿元',font:{size:9},color:'#94a3b8'}}} }
+});
+
+// ④ 新易盛总收入 Bar
+new Chart(document.getElementById('c-xys'), {
+  type:'bar',
+  data:{ labels:LABELS_6Y,
+    datasets:[{ label:'新易盛总收入（亿元）', data:[33.1,31.0,86.5,282.4,663.3,1179.2],
+      backgroundColor:['#dcfce7','#dcfce7','#86efac','#4ade80','#16a34a','#15803d'], borderRadius:4 }] },
+  options:{ ...OPTS(), plugins:{...OPTS().plugins,legend:{display:false}},
+    scales:{x:{grid:{color:'#f1f5f9'},ticks:{font:{size:9}}},y:{grid:{color:'#f1f5f9'},ticks:{font:{size:9}},title:{display:true,text:'亿元',font:{size:9},color:'#94a3b8'}}} }
+});
+
+// ⑤ 价格趋势 Line
+new Chart(document.getElementById('c-price'), {
+  type:'line',
+  data:{ labels:['2023','2024E','2025E'],
+    datasets:[
+      { label:'400G DR', data:[280,240,210], borderColor:'#94a3b8', backgroundColor:'rgba(148,163,184,0.05)', tension:.3, borderWidth:2 },
+      { label:'800G SR', data:[450,380,340], borderColor:'#2563eb', backgroundColor:'rgba(37,99,235,0.06)', tension:.3, borderWidth:2 },
+      { label:'800G DR', data:[780,600,510], borderColor:'#1d4ed8', backgroundColor:'rgba(29,78,216,0.06)', tension:.3, borderWidth:2, borderDash:[4,3] },
+      { label:'1.6T DR', data:[null,1500,1200], borderColor:'#7c3aed', backgroundColor:'rgba(124,58,237,0.06)', tension:.3, borderWidth:2 },
+      { label:'1.6T LPO', data:[null,null,850], borderColor:'#a78bfa', backgroundColor:'rgba(167,139,250,0.05)', tension:.3, borderWidth:2, borderDash:[3,3] },
+    ] },
+  options:{ responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{position:'top',labels:{font:{size:10},padding:8}},tooltip:{mode:'index',intersect:false}},
+    scales:{x:{grid:{color:'#f1f5f9'},ticks:{font:{size:9}}},y:{grid:{color:'#f1f5f9'},ticks:{font:{size:9}},title:{display:true,text:'USD/只',font:{size:9},color:'#94a3b8'}}} }
+});
+
+// ⑥ 硅光渗透率
+new Chart(document.getElementById('c-silicon'), {
+  type:'line',
+  data:{ labels:['2024A','2025E','2026E','2027E'],
+    datasets:[
+      { label:'800G 硅光渗透率', data:[20,45,60,60], borderColor:'#2563eb', backgroundColor:'rgba(37,99,235,0.08)', tension:.3, fill:true, borderWidth:2 },
+      { label:'1.6T 硅光渗透率', data:[20,60,80,75], borderColor:'#7c3aed', backgroundColor:'rgba(124,58,237,0.06)', tension:.3, fill:true, borderWidth:2 }
+    ] },
+  options:{ responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{position:'top',labels:{font:{size:10}}},tooltip:{mode:'index'}},
+    scales:{x:{grid:{color:'#f1f5f9'},ticks:{font:{size:9}}},y:{grid:{color:'#f1f5f9'},ticks:{font:{size:9}},min:0,max:100,title:{display:true,text:'%',font:{size:9},color:'#94a3b8'}}} }
+});
+
+// 公司Tab Charts（lazy-init）
+function initXcCharts() {
+  new Chart(document.getElementById('c-xc-rev'), {
+    type:'bar',
+    data:{ labels:LABELS_6Y,
+      datasets:[
+        { label:'1.6T', data:[0,0,2.8,40.9,632.8,1462.9], backgroundColor:C_16T, stack:'s', borderRadius:2 },
+        { label:'800G', data:[5.2,36.8,149.0,254.1,437.9,443.7], backgroundColor:C_800G, stack:'s', borderRadius:2 },
+        { label:'400G', data:[41.9,35.7,58.8,72.9,36.1,23.0], backgroundColor:C_400G, stack:'s', borderRadius:2 },
+        { label:'200G+100G', data:[35.3,19.8,16.1,14.7,9.2,6.6], backgroundColor:C_OTHER, stack:'s', borderRadius:2 }
+      ] },
+    options:{ responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{position:'top',labels:{font:{size:10}}},tooltip:{mode:'index'}},
+      scales:{x:{stacked:true,grid:{color:'#f1f5f9'},ticks:{font:{size:9}}},y:{stacked:true,grid:{color:'#f1f5f9'},ticks:{font:{size:9}},title:{display:true,text:'亿元',font:{size:9},color:'#94a3b8'}}} }
+  });
+  new Chart(document.getElementById('c-xc-vol'), {
+    type:'bar',
+    data:{ labels:LABELS_6Y,
+      datasets:[
+        { label:'1.6T 出货', data:[0,0,3,56.8,1220.7,3320], backgroundColor:C_16T, stack:'s', borderRadius:2 },
+        { label:'800G 出货', data:[8,71,373.3,795.6,1600.4,1908], backgroundColor:C_800G, stack:'s', borderRadius:2 },
+        { label:'400G 出货', data:[150,156,301.9,440.3,256.7,192.1], backgroundColor:C_400G, stack:'s', borderRadius:2 }
+      ] },
+    options:{ responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{position:'top',labels:{font:{size:10}}},tooltip:{mode:'index'}},
+      scales:{x:{stacked:true,grid:{color:'#f1f5f9'},ticks:{font:{size:9}}},y:{stacked:true,grid:{color:'#f1f5f9'},ticks:{font:{size:9}},title:{display:true,text:'万只',font:{size:9},color:'#94a3b8'}}} }
+  });
+}
+function initXysCharts() {
+  new Chart(document.getElementById('c-xys-rev'), {
+    type:'bar',
+    data:{ labels:LABELS_6Y,
+      datasets:[
+        { label:'1.6T', data:[0,0,0.5,8.1,227.5,686.9], backgroundColor:C_16T, stack:'s', borderRadius:2 },
+        { label:'800G', data:[0,0,45.0,176.9,370.8,431.9], backgroundColor:C_800G, stack:'s', borderRadius:2 },
+        { label:'400G', data:[12.6,15.1,36.5,75.9,40.2,36.7], backgroundColor:C_400G, stack:'s', borderRadius:2 },
+        { label:'200G+100G', data:[6.5,5.9,7.2,6.6,3.8,2.7], backgroundColor:C_OTHER, stack:'s', borderRadius:2 }
+      ] },
+    options:{ responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{position:'top',labels:{font:{size:10}}},tooltip:{mode:'index'}},
+      scales:{x:{stacked:true,grid:{color:'#f1f5f9'},ticks:{font:{size:9}}},y:{stacked:true,grid:{color:'#f1f5f9'},ticks:{font:{size:9}},title:{display:true,text:'亿元',font:{size:9},color:'#94a3b8'}}} }
+  });
+  new Chart(document.getElementById('c-xys-vol'), {
+    type:'bar',
+    data:{ labels:LABELS_6Y,
+      datasets:[
+        { label:'1.6T 出货', data:[0,0,0.5,11.2,420.9,1495], backgroundColor:C_16T, stack:'s', borderRadius:2 },
+        { label:'800G 出货', data:[0,0,120.3,536.9,1279.0,1655], backgroundColor:C_800G, stack:'s', borderRadius:2 },
+        { label:'400G 出货', data:[45,63.7,191.9,470,282.6,293.5], backgroundColor:C_400G, stack:'s', borderRadius:2 }
+      ] },
+    options:{ responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{position:'top',labels:{font:{size:10}}},tooltip:{mode:'index'}},
+      scales:{x:{stacked:true,grid:{color:'#f1f5f9'},ticks:{font:{size:9}}},y:{stacked:true,grid:{color:'#f1f5f9'},ticks:{font:{size:9}},title:{display:true,text:'万只',font:{size:9},color:'#94a3b8'}}} }
+  });
+}
+function initTianfuChart() {
+  new Chart(document.getElementById('c-tianfu-rev'), {
+    type:'bar',
+    data:{ labels:['2023A','2024A','2025E','2026E','2027E'],
+      datasets:[
+        { label:'1.6T 光引擎', data:[0,0,15.9,86.4,207.4], backgroundColor:C_16T, stack:'s', borderRadius:2 },
+        { label:'800G 光引擎', data:[4.7,14.5,13.1,13.4,8.1], backgroundColor:C_800G, stack:'s', borderRadius:2 },
+        { label:'400G 光引擎', data:[2.3,1.8,1.4,1.1,1.0], backgroundColor:C_400G, stack:'s', borderRadius:2 }
+      ] },
+    options:{ responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{position:'top',labels:{font:{size:10}}},tooltip:{mode:'index'}},
+      scales:{x:{stacked:true,grid:{color:'#f1f5f9'},ticks:{font:{size:9}}},y:{stacked:true,grid:{color:'#f1f5f9'},ticks:{font:{size:9}},title:{display:true,text:'亿元',font:{size:9},color:'#94a3b8'}}} }
+  });
+}
+function initYuanjieChart() {
+  new Chart(document.getElementById('c-yuanjie-rev'), {
+    type:'bar',
+    data:{ labels:['2024A','2025E','2026E','2027E'],
+      datasets:[{ label:'CW 激光器收入（亿元）', data:[0.30,4.12,17.93,32.47],
+        backgroundColor:['#fef3c7','#fcd34d','#f59e0b','#d97706'], borderRadius:4 }] },
+    options:{ responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>` ${c.dataset.label}: ${c.parsed.y} 亿元`}}},
+      scales:{x:{grid:{color:'#f1f5f9'},ticks:{font:{size:9}}},y:{grid:{color:'#f1f5f9'},ticks:{font:{size:9}},title:{display:true,text:'亿元',font:{size:9},color:'#94a3b8'}}} }
+  });
+}
+
+// 默认初始化旭创Tab的图表（第一个tab）
+window._xcInit = true;
+initXcCharts();
+</script>
+</body>
+</html>

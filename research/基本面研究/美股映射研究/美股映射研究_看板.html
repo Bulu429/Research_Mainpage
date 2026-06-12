@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>美股映射研究</title>
+<style>
+:root{
+  --bg:#f8f9fa;--card:#fff;--border:#e9ecef;--text:#212529;--text2:#6c757d;
+  --accent:#ea580c;--accent2:#fed7aa;--accent-bg:#fff7ed;
+  --up:#16a34a;--dn:#dc2626;--warn:#d97706;
+  --up-bg:#f0fdf4;--dn-bg:#fef2f2;--warn-bg:#fffbeb;
+  --sh:0 1px 3px rgba(0,0,0,.08),0 1px 2px rgba(0,0,0,.04);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;background:var(--bg);color:var(--text);font-size:14px;line-height:1.55}
+a{color:var(--accent);text-decoration:none}
+a:hover{text-decoration:underline}
+
+/* Header */
+.hdr{background:var(--card);border-bottom:1px solid var(--border);padding:18px 32px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:var(--sh)}
+.hdr-l{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.hdr-title{font-size:22px;font-weight:800;letter-spacing:-.3px}
+.hdr-sub{font-size:12px;color:var(--text2)}
+.badge{display:inline-flex;align-items:center;gap:5px;padding:3px 10px;border-radius:12px;font-size:11px;font-weight:700}
+.b-orange{background:var(--accent-bg);color:var(--accent);border:1px solid var(--accent2)}
+.b-blue{background:#eff6ff;color:#1d4ed8;border:1px solid #93c5fd}
+.hdr-meta{font-size:11px;color:var(--text2);text-align:right;line-height:1.7}
+.hdr-back{display:inline-flex;align-items:center;gap:5px;padding:6px 12px;border:1px solid var(--accent2);border-radius:8px;background:var(--accent-bg);color:var(--accent);font-size:12px;font-weight:700;text-decoration:none;white-space:nowrap;transition:all .15s}
+.hdr-back:hover{background:var(--accent);color:#fff;text-decoration:none}
+
+/* Layout */
+.wrap{max-width:1320px;margin:0 auto;padding:20px 32px 40px}
+
+/* Section */
+.sec{margin-bottom:24px;background:var(--card);border:1px solid var(--border);border-radius:10px;box-shadow:var(--sh);overflow:hidden}
+.sec-hd{padding:12px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;cursor:pointer;background:#fafbfc}
+.sec-hd:hover{background:#f1f3f5}
+.sec-ttl{font-size:14px;font-weight:700;display:flex;align-items:center;gap:8px}
+.sec-ttl .icon{font-size:16px}
+.sec-arrow{font-size:12px;color:var(--text2);transition:transform .2s}
+.sec-hd.collapsed .sec-arrow{transform:rotate(-90deg)}
+.sec-body{padding:18px}
+.sec-body.collapsed{display:none}
+
+/* Table */
+.ctable{width:100%;border-collapse:collapse;font-size:12.5px}
+.ctable th{background:#f1f3f5;padding:8px 10px;text-align:left;font-weight:700;border-bottom:2px solid var(--border);font-size:12px;color:var(--text2);white-space:nowrap}
+.ctable td{padding:7px 10px;border-bottom:1px solid #f1f3f5;vertical-align:top}
+.ctable tr:hover{background:#fafbfc}
+.ctable td strong{white-space:nowrap}
+.ctable .num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.tag{display:inline-block;padding:1px 6px;border-radius:4px;font-size:10px;font-weight:700;background:var(--accent-bg);color:var(--accent);border:1px solid var(--accent2);white-space:nowrap}
+.tag-up{background:var(--up-bg);color:var(--up);border-color:#86efac}
+.tag-warn{background:var(--warn-bg);color:var(--warn);border-color:#fcd34d}
+.tag-dn{background:var(--dn-bg);color:var(--dn);border-color:#fca5a5}
+.tag-gray{background:#f1f5f9;color:var(--text2);border-color:#cbd5e1}
+.tag-blue{background:#eff6ff;color:#1d4ed8;border-color:#93c5fd}
+.p1{background:#16a34a;color:#fff;border:none}
+.p2{background:#d97706;color:#fff;border:none}
+.p3{background:#94a3b8;color:#fff;border:none}
+
+/* progress */
+.prog-wrap{height:18px;background:#f1f5f9;border-radius:10px;overflow:hidden;border:1px solid var(--border)}
+.prog-bar{height:100%;background:linear-gradient(90deg,#16a34a,#4ade80);width:0%;display:flex;align-items:center;justify-content:flex-end;padding-right:8px;color:#fff;font-size:10px;font-weight:700;transition:width .3s}
+
+/* kpi */
+.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:14px}
+.kpi{padding:12px 14px;border:1px solid var(--border);border-radius:8px;background:#fafbfc;text-align:center}
+.kpi-val{font-size:20px;font-weight:800;color:var(--accent)}
+.kpi-lbl{font-size:11px;color:var(--text2);margin-top:2px}
+
+/* Footer */
+.foot{text-align:center;font-size:11px;color:var(--text2);padding:14px;margin-top:20px}
+</style>
+</head>
+<body>
+
+<header class="hdr">
+  <div class="hdr-l">
+    <a class="hdr-back" href="../../../总看板.html">← 总看板</a>
+    <div>
+      <div class="hdr-title">🌎 美股映射研究</div>
+      <div class="hdr-sub">海外映射源 → A股行业看板 / 标的 · 56 家分类映射 · 补课排期</div>
+    </div>
+    <span class="badge b-orange">研究工具</span>
+    <span class="badge b-blue">每周 2-3 家 · 2 个月</span>
+  </div>
+  <div class="hdr-meta">
+    更新：2026-06-12（市值实时校准）<br>
+    底稿：<a href="美股映射研究_看板.md">美股映射研究_看板.md</a>
+  </div>
+</header>
+
+<div class="wrap">
+
+<!-- ====== 模块1：补课进度 + 排期 ====== -->
+<section class="sec">
+  <div class="sec-hd" onclick="toggleSec(this)">
+    <div class="sec-ttl"><span class="icon">📅</span>补课进度 + 主题排期（8 周）</div>
+    <span class="sec-arrow">▼</span>
+  </div>
+  <div class="sec-body">
+    <div class="kpi-grid">
+      <div class="kpi"><div class="kpi-val">56</div><div class="kpi-lbl">映射源总数</div></div>
+      <div class="kpi"><div class="kpi-val" style="color:#16a34a">4</div><div class="kpi-lbl">已补课（NVDA·GOOGL·AVGO·MRVL）</div></div>
+      <div class="kpi"><div class="kpi-val">2-6</div><div class="kpi-lbl">每周研究家数</div></div>
+      <div class="kpi"><div class="kpi-val">8 周</div><div class="kpi-lbl">8 主题 · 层次推进</div></div>
+    </div>
+    <div style="font-size:11px;color:var(--text2);margin-bottom:4px">补课进度（技术路线 + 对应交易已填写）</div>
+    <div class="prog-wrap"><div class="prog-bar" style="width:7%">4/56</div></div>
+
+    <div style="font-size:13px;font-weight:800;margin:16px 0 8px;padding-left:8px;border-left:3px solid var(--accent)">▍ 主题排期（按认知层次从内到外推进，核心公司多周出现）</div>
+    <table class="ctable">
+      <thead><tr><th style="width:60px">周次</th><th>研究对象</th><th>研究逻辑</th><th>映射板块</th></tr></thead>
+      <tbody>
+        <tr><td><strong>W1</strong></td><td>NVDA · GOOGL</td><td>两根主干——定义 AI 计算最小单位的两套架构（NVDA 商用主干 / Google 自研副干）</td><td>PCB · 被动元件 · 存储</td></tr>
+        <tr><td><strong>W2</strong></td><td>NVDA · AVGO · MRVL</td><td>Scale-up：如何把最小单位互联成更大的计算单元</td><td>交换芯片 · DSP · SerDes</td></tr>
+        <tr><td><strong>W3</strong></td><td>LITE · COHR · GLW · APH · CRDO</td><td>Scale-up / Scale-out 的实现——光器件（光模块 / 光纤 / 线缆）</td><td>光模块 · 无源器件 · 光纤</td></tr>
+        <tr><td><strong>W4</strong></td><td>INTC · TSM</td><td>如何制作算力芯片——先进封装 / 玻璃基板</td><td>先进封装 · 先进制程</td></tr>
+        <tr><td><strong>W5</strong></td><td>AVGO · MRVL · QCOM · AMD · INTC</td><td>非英伟达体系的算力芯片</td><td>CPU · ASIC</td></tr>
+        <tr><td><strong>W6</strong></td><td>NOK · CIEN</td><td>Scale-Across（DCI 通信）</td><td>—</td></tr>
+        <tr><td><strong>W7</strong></td><td>ORCL · CRWV · NBIS · IREN · APLD</td><td>neo-cloud 算力租赁</td><td>算力租赁</td></tr>
+        <tr><td><strong>W8</strong></td><td>GEV · BE</td><td>AI 发电</td><td>AI 柜外电</td></tr>
+      </tbody>
+    </table>
+    <div style="margin-top:8px;font-size:11px;color:var(--text2)">按认知层次从内到外推进；NVDA / AVGO / MRVL / INTC 等核心公司多周出现，每次从不同角度切入。ALAB / ANET / VRT / ASML / 存储 / 软件等可滚动补充。</div>
+  </div>
+</section>
+
+<!-- ====== 模块2.5：W1 映射总结 ====== -->
+<section class="sec">
+  <div class="sec-hd" onclick="toggleSec(this)">
+    <div class="sec-ttl"><span class="icon">🗂️</span>W1 映射总结 · 两根主干（NVDA / GOOGL）</div>
+    <span class="sec-arrow">▼</span>
+  </div>
+  <div class="sec-body">
+
+    <div style="font-size:13px;line-height:1.8;background:var(--accent-bg);border:1px solid var(--accent2);border-radius:9px;padding:13px 16px;margin-bottom:16px">
+      英伟达和谷歌的<b>产品线布局决定行业走势</b>，因此具备"<b style="color:var(--accent)">点石成金</b>"的能力。映射他们有<b>两种思路</b>：
+      ① <b>BOM 拆解</b>——拆单元节点的<b>价值量构成</b>；② <b>技术墙</b>——在他们正攻关的物理墙上找<b>优势企业（技术主干）</b>。
+    </div>
+
+    <div style="font-size:12px;font-weight:700;color:var(--text2);margin-bottom:8px">映射标的（按"是否解决技术问题"分主次）</div>
+    <table class="ctable">
+      <thead><tr><th style="width:120px">标的</th><th style="width:140px">对应</th><th>逻辑</th><th style="width:84px">展开</th></tr></thead>
+      <tbody>
+        <tr style="border-left:3px solid var(--up)">
+          <td><strong style="color:#15803d">光互联</strong> <span class="tag tag-up">主线</span></td>
+          <td>单元节点<b>之间</b>的互联</td>
+          <td>连接的<b>节点越多 → 光互联需求越大</b></td>
+          <td><span class="tag tag-blue">W2 / W3</span></td>
+        </tr>
+        <tr style="border-left:3px solid var(--up)">
+          <td><strong style="color:#15803d">PCB</strong> <span class="tag tag-up">主线</span></td>
+          <td>单元节点<b>内部</b>的互联</td>
+          <td>节点越大、<b>速率 / 通道越高 → PCB 需求持续提升</b>；<b style="color:var(--dn)">无海外对标 → NVDA / GOOGL 是唯一映射源</b></td>
+          <td><span class="tag tag-gray">本周</span></td>
+        </tr>
+        <tr style="border-left:3px solid var(--warn)">
+          <td><strong style="color:#b45309">能耗</strong> <span class="tag tag-warn">副产物</span></td>
+          <td>电 / 散热 / 被动元件</td>
+          <td>节点增长的<b>副产物</b>——芯片越多 → 能耗越高</td>
+          <td><span class="tag tag-blue">W8</span></td>
+        </tr>
+        <tr style="border-left:3px solid #cbd5e1">
+          <td><strong style="color:var(--text2)">服务器</strong> <span class="tag tag-gray">跟随</span></td>
+          <td>整机 / 组装</td>
+          <td><b>不解决任何技术问题</b>，纯跟随量增长</td>
+          <td style="color:var(--text2)">—</td>
+        </tr>
+      </tbody>
+    </table>
+    <div style="margin-top:8px;font-size:11px;color:var(--text2)">📌 两种思路的完整推演见 <a href="companies/NVDA_英伟达.html">NVDA 公司页</a> 的「技术主干 → 四道墙」与「Rubin BOM 价值迁移」。</div>
+  </div>
+</section>
+
+<!-- ====== 模块3：全量映射框架表 ====== -->
+<section class="sec">
+  <div class="sec-hd" onclick="toggleSec(this)">
+    <div class="sec-ttl"><span class="icon">📋</span>全量映射框架表（56 家）</div>
+    <span class="sec-arrow">▼</span>
+  </div>
+  <div class="sec-body">
+    <table class="ctable">
+      <thead><tr><th style="width:90px">代码</th><th>名称</th><th class="num">市值(约)</th><th>技术路线 / 交易</th><th style="width:40px">状态</th></tr></thead>
+      <tbody>
+        <!-- ===== W1 ===== -->
+        <tr style="background:#fff7ed"><td colspan="5" style="font-size:11px;font-weight:700;color:var(--accent);padding:5px 8px">📅 W1 · 两根主干——定义 AI 计算最小单位的两套架构（NVDA 主干 / Google 副干）</td></tr>
+        <tr><td><strong>NVDA.O</strong></td><td>英伟达 <span class="tag tag-blue" style="font-size:9px;padding:1px 4px">主干 · W1+W2</span></td><td class="num">5.2万亿$</td><td><a href="companies/NVDA_英伟达.html">→ 查看公司页</a></td><td>🟢</td></tr>
+        <tr><td><strong>GOOGL.O</strong></td><td>谷歌-A <span class="tag tag-blue" style="font-size:9px;padding:1px 4px">副干 · W1+W5</span></td><td class="num">4.34万亿$</td><td><a href="companies/GOOGL_谷歌.html">→ 查看公司页</a></td><td>🟢</td></tr>
+        <!-- ===== W2 ===== -->
+        <tr style="background:#eff6ff"><td colspan="5" style="font-size:11px;font-weight:700;color:#1d4ed8;padding:5px 8px">📅 W2 · Scale-up：把最小单位互联成更大计算单元</td></tr>
+        <tr><td><strong>AVGO.O</strong></td><td>博通 <span class="tag tag-blue" style="font-size:9px;padding:1px 4px">W2+W5</span></td><td class="num">1.83万亿$</td><td><a href="companies/AVGO_博通.html">→ 查看公司页</a>（互联军火商）</td><td>🟢</td></tr>
+        <tr><td><strong>MRVL.O</strong></td><td>迈威尔科技 <span class="tag tag-blue" style="font-size:9px;padding:1px 4px">W2+W5</span></td><td class="num">2456亿$</td><td><a href="companies/MRVL_迈威尔.html">→ 查看公司页</a>（连接瓶颈旗手）</td><td>🟢</td></tr>
+        <!-- ===== W3 ===== -->
+        <tr style="background:#f0fdf4"><td colspan="5" style="font-size:11px;font-weight:700;color:#047857;padding:5px 8px">📅 W3 · Scale-up / Scale-out 的实现——光器件（光模块 / 光纤 / 线缆）</td></tr>
+        <tr><td><strong>LITE.O</strong></td><td>Lumentum</td><td class="num">735亿$</td><td><span class="tag tag-gray">待补课</span></td><td>⚪</td></tr>
+        <tr><td><strong>COHR.N</strong></td><td>Coherent</td><td class="num">825亿$</td><td><span class="tag tag-gray">待补课</span></td><td>⚪</td></tr>
+        <tr><td><strong>GLW.N</strong></td><td>康宁</td><td class="num">1701亿$</td><td><span class="tag tag-gray">待补课</span></td><td>⚪</td></tr>
+        <tr><td><strong>APH.N</strong></td><td>安费诺</td><td class="num">1806亿$</td><td><span class="tag tag-gray">待补课</span></td><td>⚪</td></tr>
+        <tr><td><strong>CRDO.O</strong></td><td>Credo</td><td class="num">401亿$</td><td><span class="tag tag-gray">待补课</span></td><td>⚪</td></tr>
+        <!-- ===== W4 ===== -->
+        <tr style="background:#f5f3ff"><td colspan="5" style="font-size:11px;font-weight:700;color:#5b21b6;padding:5px 8px">📅 W4 · 如何制作算力芯片——先进封装 / 玻璃基板</td></tr>
+        <tr><td><strong>INTC.O</strong></td><td>英特尔 <span class="tag tag-blue" style="font-size:9px;padding:1px 4px">W4+W5</span></td><td class="num">5615亿$</td><td><span class="tag tag-gray">待补课</span></td><td>⚪</td></tr>
+        <tr><td><strong>TSM.N</strong></td><td>台积电</td><td class="num">2.3万亿$</td><td><span class="tag tag-gray">待补课</span></td><td>⚪</td></tr>
+        <!-- ===== W5 ===== -->
+        <tr style="background:#fdf4ff"><td colspan="5" style="font-size:11px;font-weight:700;color:#7e22ce;padding:5px 8px">📅 W5 · 非英伟达体系的算力芯片（AVGO / MRVL / INTC 亦在此周）</td></tr>
+        <tr><td><strong>AMD.O</strong></td><td>超威半导体</td><td class="num">8531亿$</td><td><span class="tag tag-gray">待补课</span></td><td>⚪</td></tr>
+        <tr><td><strong>QCOM.O</strong></td><td>高通</td><td class="num">2557亿$</td><td><span class="tag tag-gray">待补课</span></td><td>⚪</td></tr>
+        <!-- ===== W6 ===== -->
+        <tr style="background:#f0fdfa"><td colspan="5" style="font-size:11px;font-weight:700;color:#0f766e;padding:5px 8px">📅 W6 · Scale-Across（DCI 通信）</td></tr>
+        <tr><td><strong>NOK.N</strong></td><td>诺基亚</td><td class="num">954亿$</td><td><span class="tag tag-gray">待补课</span></td><td>⚪</td></tr>
+        <tr><td><strong>CIEN.N</strong></td><td>Ciena</td><td class="num">757亿$</td><td><span class="tag tag-gray">待补课</span></td><td>⚪</td></tr>
+        <!-- ===== W7 ===== -->
+        <tr style="background:#fafafa"><td colspan="5" style="font-size:11px;font-weight:700;color:#374151;padding:5px 8px">📅 W7 · neo-cloud 算力租赁</td></tr>
+        <tr><td><strong>ORCL.N</strong></td><td>甲骨文</td><td class="num">6797亿$</td><td><span class="tag tag-gray">待补课</span></td><td>⚪</td></tr>
+        <tr><td><strong>CRWV.O</strong></td><td>CoreWeave</td><td class="num">589亿$</td><td><span class="tag tag-gray">待补课</span></td><td>⚪</td></tr>
+        <tr><td><strong>NBIS.O</strong></td><td>Nebius</td><td class="num">659亿$</td><td><span class="tag tag-gray">待补课</span></td><td>⚪</td></tr>
+        <tr><td><strong>IREN.O</strong></td><td>IREN</td><td class="num">206亿$</td><td><span class="tag tag-gray">待补课</span></td><td>⚪</td></tr>
+        <tr><td><strong>APLD.O</strong></td><td>Applied Digital</td><td class="num">126亿$</td><td><span class="tag tag-gray">待补课</span></td><td>⚪</td></tr>
+        <!-- ===== W8 ===== -->
+        <tr style="background:#fffbeb"><td colspan="5" style="font-size:11px;font-weight:700;color:#92400e;padding:5px 8px">📅 W8 · AI 发电</td></tr>
+        <tr><td><strong>GEV.N</strong></td><td>GE Vernova</td><td class="num">2589亿$</td><td><span class="tag tag-gray">待补课</span></td><td>⚪</td></tr>
+        <tr><td><strong>BE.N</strong></td><td>Bloom Energy</td><td class="num">828亿$</td><td><span class="tag tag-gray">待补课</span></td><td>⚪</td></tr>
+        <!-- ===== 整机 / ODM 组装层（非 W 序列） ===== -->
+        <tr style="background:#eef2ff"><td colspan="5" style="font-size:11px;font-weight:700;color:#4338ca;padding:5px 8px">🔧 整机 / ODM 组装层（非 W 序列 · 系统组装者，非主干；衔接 NVDA 公司页 ⑥ Rubin BOM 视角）</td></tr>
+        <tr><td><strong>DELL.N</strong></td><td>戴尔科技 <span class="tag tag-gray" style="font-size:9px;padding:1px 4px">整机</span></td><td class="num">2725亿$</td><td><span class="tag tag-gray">整机层 · 待选代表</span></td><td>⚪</td></tr>
+        <tr><td><strong>SMCI.O</strong></td><td>超微电脑 <span class="tag tag-gray" style="font-size:9px;padding:1px 4px">整机</span></td><td class="num">282亿$</td><td><span class="tag tag-gray">待补课</span></td><td>⚪</td></tr>
+        <tr><td><strong>CLS.N</strong></td><td>天弘科技 <span class="tag tag-gray" style="font-size:9px;padding:1px 4px">ODM</span></td><td class="num">489亿$</td><td><span class="tag tag-gray">待补课</span></td><td>⚪</td></tr>
+        <!-- ===== 待定/滚动 ===== -->
+        <tr style="background:#f1f5f9"><td colspan="5" style="font-size:11px;font-weight:700;color:#64748b;padding:5px 8px">⏳ 待定 · 滚动安排（交换整机 / 液冷 / 设备 / 存储 / 大厂CapEx / 云IDC / 软件 / 终端）</td></tr>
+        <tr><td><strong>ALAB.O</strong></td><td>Astera Labs</td><td class="num">614亿$</td><td><span class="tag tag-gray">待补课</span></td><td>⚪</td></tr>
+        <tr><td><strong>ANET.N</strong></td><td>Arista 网络</td><td class="num">2090亿$</td><td><span class="tag tag-gray">待补课</span></td><td>⚪</td></tr>
+        <tr><td><strong>VRT.N</strong></td><td>Vertiv</td><td class="num">1244亿$</td><td><span class="tag tag-gray">待补课</span></td><td>⚪</td></tr>
+        <tr><td><strong>ASML.O</strong></td><td>阿斯麦</td><td class="num">6921亿$</td><td><span class="tag tag-gray">待补课</span></td><td>⚪</td></tr>
+        <tr><td><strong>MU.O</strong></td><td>美光科技</td><td class="num">~1800亿$</td><td><span class="tag tag-gray">待补课</span></td><td>⚪</td></tr>
+        <tr><td><strong>000660.KS</strong></td><td>SK海力士</td><td class="num">~1500亿$</td><td><span class="tag tag-gray">待补课</span></td><td>⚪</td></tr>
+        <tr><td><strong>005930.KS</strong></td><td>三星电子</td><td class="num">~3000亿$</td><td><span class="tag tag-gray">待补课</span></td><td>⚪</td></tr>
+        <tr><td><strong>WDC.O</strong></td><td>西部数据</td><td class="num">1984亿$</td><td><span class="tag tag-gray">待补课</span></td><td>⚪</td></tr>
+        <tr><td><strong>STX.O</strong></td><td>希捷科技</td><td class="num">2076亿$</td><td><span class="tag tag-gray">待补课</span></td><td>⚪</td></tr>
+        <tr><td><strong>SNDK.O</strong></td><td>闪迪</td><td class="num">2606亿$</td><td><span class="tag tag-gray">待补课</span></td><td>⚪</td></tr>
+        <tr><td><strong>285A.T</strong></td><td>铠侠</td><td class="num">~100亿$</td><td><span class="tag tag-gray">待补课</span></td><td>⚪</td></tr>
+        <tr><td><strong>MSFT.O</strong></td><td>微软</td><td class="num">3.2万亿$</td><td><span class="tag tag-gray">待补课</span></td><td>⚪</td></tr>
+        <tr><td><strong>AMZN.O</strong></td><td>亚马逊</td><td class="num">2.7万亿$</td><td><span class="tag tag-gray">待补课</span></td><td>⚪</td></tr>
+        <tr><td><strong>META.O</strong></td><td>脸书</td><td class="num">1.6万亿$</td><td><span class="tag tag-gray">待补课</span></td><td>⚪</td></tr>
+        <tr><td><strong>EQIX.O</strong></td><td>Equinix</td><td class="num">1074亿$</td><td><span class="tag tag-gray">待补课</span></td><td>⚪</td></tr>
+        <tr><td><strong>CRWD.O</strong></td><td>CrowdStrike</td><td class="num">1831亿$</td><td><span class="tag tag-gray">待补课</span></td><td>⚪</td></tr>
+        <tr><td><strong>PANW.O</strong></td><td>Palo Alto</td><td class="num">2276亿$</td><td><span class="tag tag-gray">待补课</span></td><td>⚪</td></tr>
+        <tr><td><strong>NET.N</strong></td><td>Cloudflare</td><td class="num">950亿$</td><td><span class="tag tag-gray">待补课</span></td><td>⚪</td></tr>
+        <tr><td><strong>AKAM.O</strong></td><td>阿卡迈</td><td class="num">231亿$</td><td><span class="tag tag-gray">待补课</span></td><td>⚪</td></tr>
+        <tr><td><strong>PLTR.O</strong></td><td>Palantir</td><td class="num">3397亿$</td><td><span class="tag tag-gray">待补课</span></td><td>⚪</td></tr>
+        <tr><td><strong>DDOG.O</strong></td><td>Datadog</td><td class="num">867亿$</td><td><span class="tag tag-gray">待补课</span></td><td>⚪</td></tr>
+        <tr><td><strong>SNOW.N</strong></td><td>Snowflake</td><td class="num">846亿$</td><td><span class="tag tag-gray">待补课</span></td><td>⚪</td></tr>
+        <tr><td><strong>NOW.N</strong></td><td>ServiceNow</td><td class="num">1231亿$</td><td><span class="tag tag-gray">待补课</span></td><td>⚪</td></tr>
+        <tr><td><strong>SAP.N</strong></td><td>思爱普</td><td class="num">2184亿$</td><td><span class="tag tag-gray">待补课</span></td><td>⚪</td></tr>
+        <tr><td><strong>CRM.N</strong></td><td>赛富时</td><td class="num">1546亿$</td><td><span class="tag tag-gray">待补课</span></td><td>⚪</td></tr>
+        <tr><td><strong>WDAY.O</strong></td><td>Workday</td><td class="num">365亿$</td><td><span class="tag tag-gray">待补课</span></td><td>⚪</td></tr>
+        <tr><td><strong>APP.O</strong></td><td>AppLovin</td><td class="num">1877亿$</td><td><span class="tag tag-gray">待补课</span></td><td>⚪</td></tr>
+        <tr><td><strong>ADBE.O</strong></td><td>奥多比</td><td class="num">1045亿$</td><td><span class="tag tag-gray">待补课</span></td><td>⚪</td></tr>
+        <tr><td><strong>SNPS.O</strong></td><td>新思科技</td><td class="num">947亿$</td><td><span class="tag tag-gray">待补课</span></td><td>⚪</td></tr>
+        <tr><td><strong>DUOL.O</strong></td><td>多邻国</td><td class="num">51亿$</td><td><span class="tag tag-gray">待补课</span></td><td>⚪</td></tr>
+        <tr><td><strong>AAPL.O</strong></td><td>苹果</td><td class="num">4.6万亿$</td><td><span class="tag tag-gray">待补课</span></td><td>⚪</td></tr>
+      </tbody>
+    </table>
+    <div style="margin-top:10px;font-size:10.5px;color:var(--text2);line-height:1.6">
+      📎 市值为约数（美股口径 亿/万亿美元；SK海力士/三星/铠侠 为 USD 估算）；A股映射标的为初步预填，补课时细化。「对应看板」链接到同级行业看板，「待建」为缺口（对应总看板待建版块）。
+    </div>
+  </div>
+</section>
+
+<!-- ====== 模块4：单家映射模板 + 样例 ====== -->
+<section class="sec">
+  <div class="sec-hd" onclick="toggleSec(this)">
+    <div class="sec-ttl"><span class="icon">📝</span>单家映射模板 + 样例（补课范式）</div>
+    <span class="sec-arrow">▼</span>
+  </div>
+  <div class="sec-body">
+    <div style="padding:11px 14px;background:#eff6ff;border:1px solid #c7d2fe;border-radius:8px;margin-bottom:14px;font-size:11.5px;line-height:1.7">
+      每家"补课"时填写 5 段：<strong>① 公司&业务定位 ② 技术路线/代际 ③ 景气信号 ④ A股映射标的&逻辑 ⑤ 对应交易（买什么/催化/风险）</strong>
+    </div>
+
+    <!-- AVGO 样例 -->
+    <div style="border:1.5px solid #6ee7b7;border-radius:10px;background:#f0fdf4;padding:14px 16px">
+      <div style="font-size:14px;font-weight:800;color:#047857;margin-bottom:8px">✓ 样例：AVGO 博通 → <a href="../行业看板/交换芯片/交换芯片_看板.html">交换芯片</a></div>
+      <div style="font-size:12px;line-height:1.8;color:var(--text)">
+        <div><strong>① 定位</strong>：全球以太网交换芯片绝对龙头（~70% 份额）+ AI 定制 ASIC 双主线，数据中心网络"中枢"。</div>
+        <div><strong>② 技术路线</strong>：Tomahawk 6（102.4T，2025/6 量产，含 CPO 版 Davisson）；200G SerDes 在产→224G；TSMC 3nm。</div>
+        <div><strong>③ 景气信号</strong>：FY26Q2 指引 AI 半导体营收 ~$107亿（+140% YoY），AI 网络约占 40%≈$43亿/季；2027 AI 芯片营收破 $1000亿；供货 52 周交期紧张。</div>
+        <div><strong>④ A股映射</strong>：① 交换芯片国产替代——<strong>盛科通信</strong>（25.6T 拼接替代 51.2T，阿里 3 万颗/9 亿订单）、<strong>中兴微</strong>（凌云 51.2T）；② <strong>博通缺货倒逼国产</strong>，映射强度高。详见 <a href="../行业看板/交换芯片/交换芯片_看板.html">交换芯片看板</a>。</div>
+        <div><strong>⑤ 对应交易</strong>：买<strong>盛科通信（688702）</strong>——超节点 25.6T 独供，弹性测算见交换芯片量价模型；催化=博通交期/缺货新闻 + 盛科 51.2T 回片（2026H2）；风险=博通扩产缓解缺口、盛科 51.2T 量产不及预期。</div>
+      </div>
+    </div>
+    <div style="margin-top:12px;font-size:11px;color:var(--text2)">↑ 以此为范式，每周按排期补 2-3 家，填入模块三对应行的「技术路线/交易」并更新状态 ⚪→🟢。</div>
+  </div>
+</section>
+
+</div>
+
+<div class="foot">
+  美股映射研究 · 独立项目 · 2026-06-05 · <a href="../../../总看板.html">← 总看板</a>
+</div>
+
+<script>
+function toggleSec(el){
+  el.classList.toggle('collapsed');
+  el.parentElement.querySelector('.sec-body').classList.toggle('collapsed');
+}
+</script>
+
+</body>
+</html>

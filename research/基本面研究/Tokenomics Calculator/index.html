@@ -1,0 +1,2671 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI 模型 Tokenomics 计算器</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    /* ================================================================
+       DESIGN TOKENS — Clean Institutional / Corporate Finance
+    ================================================================ */
+    :root {
+      --bg:        #F3F5F9;
+      --surface:   #FFFFFF;
+      --surface-2: #EDF0F5;
+      --border:    #DDE1EB;
+      --border-2:  #B8C2D2;
+      --text:      #0D1B2A;
+      --text-2:    #3D5166;
+      --text-3:    #8A97A8;
+      --accent:    #1558D6;
+      --accent-2:  #EBF0FF;
+      --accent-3:  #BDD1FF;
+      --positive:  #0A7A50;
+      --negative:  #C03030;
+      --ink:       #0D1B2A;
+      --navy:      #0A1628;
+      --mono: 'IBM Plex Mono', 'Courier New', monospace;
+      --sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    }
+
+    /* ================================================================
+       RESET & BASE
+    ================================================================ */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--sans);
+      background: var(--bg);
+      color: var(--text);
+      font-size: 13px;
+      line-height: 1.5;
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+    ::selection { background: var(--accent-3); color: var(--navy); }
+    ::-webkit-scrollbar { width: 5px; height: 5px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--border-2); border-radius: 2px; }
+
+    /* ================================================================
+       TOOLTIP
+    ================================================================ */
+    .tip-wrap { position: relative; display: inline; }
+    .tip-wrap .tip {
+      position: absolute;
+      bottom: calc(100% + 6px);
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--navy);
+      color: #E8EFF8;
+      font-family: var(--sans);
+      font-size: 11px;
+      line-height: 1.4;
+      padding: 6px 10px;
+      border-radius: 2px;
+      white-space: nowrap;
+      pointer-events: none;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity .15s, visibility .15s;
+      z-index: 999;
+      max-width: 260px;
+      white-space: normal;
+    }
+    .tip-wrap .tip::after {
+      content: '';
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      border: 4px solid transparent;
+      border-top-color: var(--navy);
+    }
+    .tip-wrap:hover .tip { opacity: 1; visibility: visible; }
+    .tip-warn { color: #F09090; }
+    .tip-note { color: #90B8FF; }
+
+    /* ================================================================
+       ENTRANCE ANIMATIONS
+    ================================================================ */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(8px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
+    .anim-header  { animation: fadeIn  .25s ease both; }
+    .anim-nav     { animation: fadeUp .3s .04s ease both; }
+    .anim-flow    { animation: fadeUp .3s .08s ease both; }
+    .anim-grid    { animation: fadeUp .3s .12s ease both; }
+    .anim-table   { animation: fadeUp .3s .08s ease both; }
+
+    /* ================================================================
+       HEADER
+    ================================================================ */
+    .masthead {
+      background: var(--navy);
+      border-bottom: 2px solid var(--accent);
+      padding: 0 32px;
+      display: flex;
+      align-items: stretch;
+      height: 50px;
+      gap: 0;
+    }
+    .masthead-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding-right: 20px;
+      border-right: 1px solid rgba(255,255,255,.09);
+      margin-right: 20px;
+    }
+    .masthead-back {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      height: 28px;
+      padding: 0 10px;
+      border: 1px solid rgba(255,255,255,.16);
+      color: rgba(255,255,255,.72);
+      background: rgba(255,255,255,.05);
+      font-size: 11px;
+      font-weight: 600;
+      text-decoration: none;
+      white-space: nowrap;
+      transition: background .12s, color .12s, border-color .12s;
+    }
+    .masthead-back:hover {
+      background: rgba(255,255,255,.12);
+      color: #fff;
+      border-color: rgba(255,255,255,.32);
+    }
+    .masthead-icon {
+      width: 28px;
+      height: 28px;
+      background: var(--accent);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .masthead-icon span {
+      color: #fff;
+      font-size: 9px;
+      font-weight: 700;
+      font-family: var(--mono);
+      letter-spacing: -0.3px;
+    }
+    .masthead-title {
+      font-family: var(--sans);
+      font-size: 13.5px;
+      font-weight: 600;
+      color: #fff;
+      letter-spacing: .01em;
+      line-height: 1.2;
+    }
+    .masthead-sub {
+      font-size: 9px;
+      color: rgba(255,255,255,.3);
+      letter-spacing: .05em;
+      font-family: var(--mono);
+      margin-top: 2px;
+    }
+    .masthead-meta {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-left: auto;
+    }
+    .masthead-pill {
+      font-size: 9px;
+      font-weight: 600;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,.28);
+      font-family: var(--sans);
+      padding: 3px 8px;
+      border: 1px solid rgba(255,255,255,.09);
+    }
+    .masthead-date {
+      font-family: var(--mono);
+      font-size: 10px;
+      color: rgba(255,255,255,.35);
+    }
+
+    /* ================================================================
+       NAV TABS
+    ================================================================ */
+    .tab-nav {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 0 32px;
+      display: flex;
+      gap: 0;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 1px 4px rgba(13,27,42,.06);
+    }
+    .tab-btn {
+      padding: 0 16px;
+      height: 40px;
+      border: none;
+      background: none;
+      cursor: pointer;
+      font-family: var(--sans);
+      font-size: 11.5px;
+      font-weight: 500;
+      letter-spacing: .02em;
+      color: var(--text-3);
+      border-bottom: 2px solid transparent;
+      margin-bottom: -1px;
+      transition: color .1s, border-color .1s;
+    }
+    .tab-btn:hover { color: var(--text-2); }
+    .tab-btn.active {
+      color: var(--accent);
+      border-bottom-color: var(--accent);
+      font-weight: 600;
+    }
+
+    /* ================================================================
+       PAGE SHELL
+    ================================================================ */
+    .page { padding: 22px 32px 56px; }
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+
+    /* ================================================================
+       SELECTION BAR
+    ================================================================ */
+    .selection-bar {
+      display: flex;
+      gap: 12px;
+      align-items: flex-end;
+      flex-wrap: wrap;
+      margin-bottom: 14px;
+      padding: 14px 16px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+    }
+    .sel-group {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      flex: 1;
+      min-width: 180px;
+      max-width: 300px;
+    }
+    .sel-group label {
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--text-3);
+      text-transform: uppercase;
+      letter-spacing: .08em;
+    }
+    .sel-group select {
+      padding: 6px 28px 6px 9px;
+      border: 1px solid var(--border-2);
+      font-size: 12px;
+      font-family: var(--sans);
+      background: var(--surface) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='9' height='5'%3E%3Cpath d='M0 0l4.5 5 4.5-5z' fill='%238A97A8'/%3E%3C/svg%3E") no-repeat right 9px center;
+      color: var(--text);
+      cursor: pointer;
+      outline: none;
+      transition: border-color .1s;
+      -webkit-appearance: none;
+      border-radius: 0;
+    }
+    .sel-group select:focus { border-color: var(--accent); }
+    .btn-reset {
+      padding: 6px 14px;
+      background: transparent;
+      border: 1px solid var(--border-2);
+      cursor: pointer;
+      font-family: var(--sans);
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: .05em;
+      text-transform: uppercase;
+      color: var(--text-3);
+      transition: all .1s;
+      border-radius: 0;
+      white-space: nowrap;
+    }
+    .btn-reset:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-2); }
+
+    .preset-bar {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+      margin: -2px 0 14px;
+    }
+    .preset-btn {
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text);
+      cursor: pointer;
+      text-align: left;
+      padding: 10px 12px;
+      min-height: 72px;
+      font-family: var(--sans);
+      transition: border-color .12s, background .12s, box-shadow .12s;
+    }
+    .preset-btn:hover {
+      border-color: var(--accent-3);
+      background: #F9FBFF;
+    }
+    .preset-btn.active {
+      border-color: var(--accent);
+      background: var(--accent-2);
+      box-shadow: inset 0 0 0 1px var(--accent-3);
+    }
+    .preset-title {
+      display: block;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 4px;
+    }
+    .preset-meta {
+      display: block;
+      font-family: var(--mono);
+      font-size: 9.5px;
+      color: var(--text-2);
+      line-height: 1.45;
+    }
+
+    /* ================================================================
+       LEGEND
+    ================================================================ */
+    .legend {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-bottom: 12px;
+      align-items: center;
+    }
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 10px;
+      color: var(--text-3);
+      letter-spacing: .04em;
+      text-transform: uppercase;
+    }
+    .legend-box { width: 9px; height: 9px; border: 1px solid; flex-shrink: 0; }
+    .leg-auto { background: var(--accent-2); border-color: var(--accent); }
+    .leg-calc { background: var(--surface-2); border-color: var(--border-2); }
+    .leg-manual { background: var(--surface); border-color: var(--border-2); }
+
+    /* ================================================================
+       FORMULA FLOWCHART
+    ================================================================ */
+    .flow-section { margin-bottom: 14px; }
+
+    .flow-bar {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--accent);
+      padding: 18px 24px;
+      display: flex;
+      align-items: center;
+      gap: 0;
+      overflow: hidden;
+    }
+
+    .flow-step {
+      flex: 1;
+      text-align: center;
+      position: relative;
+    }
+    .flow-step-label {
+      font-size: 9.5px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: .1em;
+      color: var(--text-3);
+      margin-bottom: 6px;
+      font-family: var(--sans);
+    }
+    .flow-step-val {
+      font-family: var(--mono);
+      font-size: 26px;
+      font-weight: 500;
+      color: var(--text);
+      line-height: 1;
+      letter-spacing: -0.5px;
+    }
+    .flow-step-unit {
+      font-size: 10px;
+      color: var(--text-3);
+      margin-top: 4px;
+      font-family: var(--mono);
+    }
+    .flow-step-sub {
+      font-size: 9.5px;
+      color: var(--text-3);
+      margin-top: 5px;
+      font-family: var(--sans);
+    }
+
+    .flow-arrow {
+      flex: 0 0 52px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 3px;
+      padding: 0 4px;
+    }
+    .flow-arrow-line {
+      width: 36px;
+      height: 1px;
+      background: var(--border-2);
+      position: relative;
+    }
+    .flow-arrow-line::after {
+      content: '';
+      position: absolute;
+      right: -1px;
+      top: -3.5px;
+      border: 4px solid transparent;
+      border-left: 6px solid var(--border-2);
+      border-top: 4px solid transparent;
+      border-bottom: 4px solid transparent;
+    }
+    .flow-arrow-label {
+      font-size: 8px;
+      color: var(--text-3);
+      letter-spacing: .04em;
+      text-transform: uppercase;
+      font-family: var(--mono);
+    }
+
+    .flow-cost {
+      flex: 0 0 190px;
+      text-align: center;
+      border-left: 1px solid var(--border);
+      padding-left: 24px;
+    }
+    .flow-cost-label {
+      font-size: 9.5px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: .1em;
+      color: var(--text-3);
+      margin-bottom: 5px;
+    }
+    .flow-cost-val {
+      font-family: var(--mono);
+      font-size: 46px;
+      font-weight: 500;
+      color: var(--accent);
+      line-height: 1;
+      letter-spacing: -2px;
+    }
+    .flow-cost-unit {
+      font-size: 12px;
+      color: var(--text-2);
+      font-family: var(--mono);
+    }
+
+    /* ================================================================
+       TWO-COLUMN CALC GRID
+    ================================================================ */
+    .calc-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      border: 1px solid var(--border);
+      margin-bottom: 14px;
+      background: var(--surface);
+    }
+    @media (max-width: 960px) { .calc-grid { grid-template-columns: 1fr; } }
+
+    .calc-grid .card:first-child { border-right: 1px solid var(--border); }
+    @media (max-width: 960px) { .calc-grid .card:first-child { border-right: none; border-bottom: 1px solid var(--border); } }
+
+    .card { overflow: hidden; }
+
+    .card-hd {
+      padding: 9px 16px;
+      font-size: 9.5px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: var(--text-3);
+      background: var(--surface-2);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .mode-toggle {
+      display: flex;
+      background: var(--border);
+      margin-left: auto;
+      border: 1px solid var(--border-2);
+    }
+    .mode-btn {
+      padding: 3px 10px;
+      border: none;
+      font-size: 9.5px;
+      font-weight: 600;
+      font-family: var(--sans);
+      cursor: pointer;
+      transition: all .1s;
+      background: transparent;
+      color: var(--text-3);
+      letter-spacing: .04em;
+      text-transform: uppercase;
+    }
+    .mode-btn.active-self { background: var(--surface); color: var(--text); }
+    .mode-btn.active-rent { background: var(--accent); color: #fff; }
+
+    .rent-badge {
+      display: inline-block;
+      background: var(--accent-2);
+      color: var(--accent);
+      font-size: 8.5px;
+      font-weight: 700;
+      padding: 1px 5px;
+      margin-left: 4px;
+      font-family: var(--mono);
+      letter-spacing: .04em;
+      vertical-align: middle;
+      border: 1px solid var(--accent-3);
+    }
+
+    .p-row {
+      display: grid;
+      grid-template-columns: 1fr 90px 44px 1fr;
+      gap: 8px;
+      padding: 5px 16px;
+      align-items: center;
+      border-bottom: 1px solid var(--border);
+      transition: background .06s;
+    }
+    .p-row:last-child { border-bottom: none; }
+    .p-row:hover { background: var(--bg); }
+    .p-row.row-calc { background: var(--surface-2); }
+
+    .p-label { font-size: 12px; color: var(--text); line-height: 1.35; }
+    .p-unit { font-size: 10px; color: var(--text-3); font-family: var(--mono); text-align: center; }
+    .p-note { font-size: 10px; color: var(--text-3); line-height: 1.4; }
+
+    .p-input {
+      padding: 4px 7px;
+      border: 1px solid var(--border-2);
+      font-size: 12px;
+      font-family: var(--mono);
+      text-align: right;
+      width: 100%;
+      outline: none;
+      transition: border-color .1s;
+      background: var(--surface);
+      color: var(--text);
+      border-radius: 0;
+    }
+    .p-input:focus { border-color: var(--accent); background: #fff; }
+    .p-input.autofill { background: var(--accent-2); border-color: var(--accent); color: var(--accent); }
+    .p-input.calcval { background: var(--surface-2); border-color: var(--border); color: var(--text-2); font-weight: 500; pointer-events: none; }
+
+    .p-select {
+      padding: 4px 22px 4px 6px;
+      border: 1px solid var(--border-2);
+      font-size: 11px;
+      font-family: var(--sans);
+      width: 100%;
+      outline: none;
+      background: var(--surface) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='9' height='5'%3E%3Cpath d='M0 0l4.5 5 4.5-5z' fill='%238A97A8'/%3E%3C/svg%3E") no-repeat right 7px center;
+      color: var(--text);
+      cursor: pointer;
+      -webkit-appearance: none;
+      border-radius: 0;
+    }
+    .p-select:focus { border-color: var(--accent); }
+    .p-select.autofill { background-color: var(--accent-2); border-color: var(--accent); color: var(--accent); }
+
+    /* ================================================================
+       RESULTS SECTION
+    ================================================================ */
+    .results-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      margin-bottom: 14px;
+      overflow: hidden;
+    }
+    .results-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+    }
+    @media (max-width: 1100px) { .results-grid { grid-template-columns: repeat(2, 1fr); } }
+
+    .res-section {
+      padding: 12px 16px;
+      border-right: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+    .res-section:last-child, .res-section:nth-child(4) { border-right: none; }
+    .res-section:nth-child(n+3) { border-bottom: none; }
+
+    .res-title {
+      font-size: 9px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .1em;
+      color: var(--text-3);
+      margin-bottom: 9px;
+      padding-bottom: 6px;
+      border-bottom: 1px solid var(--border);
+      font-family: var(--sans);
+    }
+    .res-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 6px;
+      padding: 2px 0;
+    }
+    .res-label { font-size: 11px; color: var(--text-2); flex: 1; }
+    .res-val { font-size: 11.5px; font-weight: 500; font-family: var(--mono); color: var(--text); white-space: nowrap; }
+    .res-unit { font-size: 9.5px; color: var(--text-3); margin-left: 2px; font-family: var(--mono); }
+    .res-note { font-size: 9px; color: var(--text-3); margin-left: 3px; }
+
+    /* ================================================================
+       DATA TABLES
+    ================================================================ */
+    .tbl-toolbar {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+    }
+    .tbl-search {
+      padding: 7px 11px;
+      border: 1px solid var(--border-2);
+      font-size: 12px;
+      font-family: var(--sans);
+      outline: none;
+      width: 260px;
+      background: var(--surface);
+      border-radius: 0;
+      color: var(--text);
+    }
+    .tbl-search:focus { border-color: var(--accent); }
+    .tbl-count {
+      font-size: 10px;
+      color: var(--text-3);
+      margin-left: auto;
+      font-family: var(--mono);
+    }
+    .tbl-wrap {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      overflow: auto;
+    }
+    .dtbl {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+    }
+    .dtbl th {
+      background: var(--surface-2);
+      padding: 7px 12px;
+      text-align: left;
+      font-weight: 600;
+      font-size: 9px;
+      color: var(--text-3);
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      border-bottom: 1px solid var(--border-2);
+      white-space: nowrap;
+      position: sticky;
+      top: 0;
+      z-index: 2;
+      font-family: var(--sans);
+    }
+    .dtbl td {
+      padding: 6px 12px;
+      border-bottom: 1px solid var(--border);
+      vertical-align: middle;
+    }
+    .dtbl tr:hover td { background: var(--bg); }
+    .dtbl tr:last-child td { border-bottom: none; }
+    .dtbl td.num { text-align: right; font-family: var(--mono); font-size: 11px; }
+
+    .badge {
+      display: inline-block;
+      padding: 1px 6px;
+      font-size: 10px;
+      font-weight: 600;
+      font-family: var(--sans);
+      letter-spacing: .02em;
+      border: 1px solid;
+    }
+    .b-moe    { background: #FEF0E8; color: #B5460A; border-color: #FDCFAB; }
+    .b-dense  { background: var(--surface-2); color: var(--text-2); border-color: var(--border-2); }
+    .b-open   { background: #E8F5EF; color: #0A6B3F; border-color: #B0DFC5; }
+    .b-closed { background: #F2F0F9; color: #5A40A8; border-color: #C8BCF0; }
+
+    .tbl-action {
+      padding: 2px 9px;
+      font-size: 10.5px;
+      border: 1px solid var(--border-2);
+      border-radius: 0;
+      background: var(--surface);
+      color: var(--text-2);
+      cursor: pointer;
+      font-family: var(--sans);
+      font-weight: 500;
+      transition: all .1s;
+    }
+    .tbl-action:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-2); }
+
+    /* ================================================================
+       RENTAL ROW HIGHLIGHT
+    ================================================================ */
+    #row-rent-price {
+      background: var(--accent-2) !important;
+      border-left: 2px solid var(--accent) !important;
+    }
+    #row-rent-price .p-label { color: var(--accent); font-weight: 600; }
+
+    /* ================================================================
+       ERROR / WARN
+    ================================================================ */
+    .err-val { color: var(--negative) !important; }
+    .warn-val { color: #C07020 !important; }
+
+    /* ================================================================
+       SECTION LABEL
+    ================================================================ */
+    .section-label {
+      font-size: 9px;
+      font-weight: 700;
+      color: var(--text-3);
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      padding: 4px 0;
+      margin: 8px 0 4px;
+    }
+
+    /* ================================================================
+       PREFILL / DECODE SPLIT — FLOW BAR
+    ================================================================ */
+    .flow-tps-block {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+    .flow-tps-row { width: 100%; padding: 5px 8px; }
+    .flow-tps-sep { width: 60%; height: 1px; background: var(--border); margin: 0 auto; }
+    .flow-tps-tag {
+      font-size: 7.5px;
+      font-weight: 700;
+      letter-spacing: .1em;
+      padding: 1px 6px;
+      display: inline-block;
+      margin-bottom: 3px;
+      border: 1px solid;
+    }
+    .decode-tag  { background: var(--surface-2); color: var(--text-3);  border-color: var(--border-2); }
+    .prefill-tag { background: var(--accent-2);  color: var(--accent);   border-color: var(--accent-3); }
+    .flow-tps-val {
+      font-family: var(--mono);
+      font-size: 20px;
+      font-weight: 500;
+      color: var(--text);
+      line-height: 1;
+      letter-spacing: -.5px;
+    }
+    .flow-tps-unit { font-size: 9px; color: var(--text-3); margin-top: 2px; font-family: var(--mono); }
+
+    .flow-cost-block {
+      flex: 0 0 230px;
+      border-left: 1px solid var(--border);
+      padding-left: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .flow-cost-secondary {
+      display: flex;
+      gap: 14px;
+      padding-top: 8px;
+      border-top: 1px solid var(--border);
+    }
+    .flow-cost-sec-item { flex: 1; }
+    .flow-sec-label {
+      font-size: 9px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: var(--text-3);
+      margin-bottom: 2px;
+    }
+    .flow-sec-val {
+      font-family: var(--mono);
+      font-size: 15px;
+      font-weight: 500;
+      color: var(--text-2);
+    }
+    .flow-sec-unit { font-size: 9px; color: var(--text-3); font-family: var(--mono); margin-top: 1px; }
+
+    /* ================================================================
+       TAB SPLIT — left: calculator / right: revenue panel
+    ================================================================ */
+    .tab-split {
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+    }
+    .split-left { flex: 1 1 0; min-width: 0; }
+    .split-right {
+      flex: 0 0 390px;
+      position: sticky;
+      top: 54px;
+      max-height: calc(100vh - 70px);
+      overflow-y: auto;
+    }
+    .split-right::-webkit-scrollbar { width: 4px; }
+    .split-right::-webkit-scrollbar-thumb { background: var(--border-2); }
+
+    /* ================================================================
+       REVENUE PANEL
+    ================================================================ */
+    .rev-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-top: 3px solid var(--positive);
+      overflow: hidden;
+    }
+    .rev-hd {
+      padding: 8px 14px;
+      font-size: 9.5px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: var(--text-3);
+      background: var(--surface-2);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .rev-badge {
+      font-size: 7.5px;
+      font-weight: 700;
+      letter-spacing: .08em;
+      padding: 1px 5px;
+      border: 1px solid;
+      font-family: var(--mono);
+      background: #E8F5EF;
+      color: var(--positive);
+      border-color: #B0DFC5;
+    }
+    .rev-inputs { border-bottom: 1px solid var(--border); }
+    .rev-row {
+      display: grid;
+      grid-template-columns: 1fr 90px 36px;
+      gap: 8px;
+      padding: 5px 16px;
+      align-items: center;
+      border-bottom: 1px solid var(--border);
+    }
+    .rev-row:last-child { border-bottom: none; }
+    .rev-row:hover { background: var(--bg); }
+    .rev-label { font-size: 11.5px; color: var(--text); line-height: 1.3; }
+    .rev-label small { color: var(--text-3); font-size: 10px; }
+
+    /* Hero result */
+    .rev-hero {
+      padding: 16px 18px 12px;
+      border-bottom: 1px solid var(--border);
+      background: #F4FAF7;
+    }
+    .rev-hero-tag {
+      font-size: 8.5px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .1em;
+      color: var(--positive);
+      margin-bottom: 3px;
+    }
+    .rev-hero-val {
+      font-family: var(--mono);
+      font-size: 38px;
+      font-weight: 500;
+      color: var(--text);
+      line-height: 1;
+      letter-spacing: -1.5px;
+    }
+    .rev-hero-unit { font-size: 11px; color: var(--text-2); font-family: var(--mono); margin-top: 2px; }
+    .rev-hero-sub { font-size: 10px; color: var(--text-3); margin-top: 5px; }
+
+    /* KPI 2-up */
+    .rev-kpi-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      border-bottom: 1px solid var(--border);
+    }
+    .rev-kpi {
+      padding: 10px 16px;
+      border-right: 1px solid var(--border);
+    }
+    .rev-kpi:last-child { border-right: none; }
+    .rev-kpi-label { font-size: 8.5px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: var(--text-3); margin-bottom: 2px; }
+    .rev-kpi-val { font-family: var(--mono); font-size: 22px; font-weight: 500; color: var(--text); line-height: 1; }
+    .rev-kpi-unit { font-size: 9px; color: var(--text-3); font-family: var(--mono); margin-top: 1px; }
+    .rev-kpi-note { font-size: 9.5px; margin-top: 3px; font-weight: 600; }
+
+    /* Margin bar */
+    .rev-margin-bar {
+      height: 3px;
+      background: var(--border);
+      margin-top: 6px;
+      overflow: hidden;
+    }
+    .rev-margin-fill { height: 100%; background: var(--positive); transition: width .35s; }
+    .rev-margin-fill.neg { background: var(--negative); }
+
+    /* Detail section */
+    .rev-detail {
+      padding: 9px 16px;
+      border-bottom: 1px solid var(--border);
+    }
+    .rev-detail:last-child { border-bottom: none; }
+    .rev-detail-title {
+      font-size: 8.5px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: var(--text-3);
+      margin-bottom: 5px;
+      padding-bottom: 4px;
+      border-bottom: 1px solid var(--border);
+    }
+    .rev-dr {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      padding: 2px 0;
+      font-size: 11px;
+    }
+    .rev-dr.strong { border-top: 1px solid var(--border); padding-top: 4px; margin-top: 3px; }
+    .rev-dl { color: var(--text-2); }
+    .rev-dl.bold { font-weight: 700; color: var(--text); }
+    .rev-dv { font-family: var(--mono); font-weight: 500; color: var(--text); }
+    .rev-du { font-size: 9px; color: var(--text-3); font-family: var(--mono); margin-left: 2px; }
+
+    /* ================================================================
+       MOBILE  (≤ 768px)
+    ================================================================ */
+    .m-tab-bar { display: none; }
+
+    @media (max-width: 768px) {
+
+      /* ── body padding for bottom bar */
+      body { padding-bottom: 60px; }
+
+      /* ── masthead compact */
+      .masthead { padding: 0 12px; height: 46px; }
+      .masthead-title { font-size: 13px; }
+      .masthead-sub { display: none; }
+
+      /* ── top selectors stack */
+      .sel-row { flex-wrap: wrap; gap: 6px; padding: 8px 12px; }
+      .sel-group { flex: 1 1 calc(50% - 6px); min-width: 0; }
+      .sel-group select { font-size: 12px; }
+
+      /* ── presets: 1 column */
+      .preset-bar { grid-template-columns: 1fr 1fr; gap: 6px; margin: 0 0 10px; }
+      .preset-btn { min-height: 52px; padding: 8px 10px; }
+      .preset-meta { display: none; }
+
+      /* ── legend hide */
+      .legend { display: none; }
+
+      /* ── split layout: vertical, full width */
+      .tab-split { flex-direction: column; gap: 0; }
+      .split-left { width: 100%; }
+      .split-right {
+        position: static;
+        max-height: none;
+        width: 100%;
+        flex: 1 1 auto;
+      }
+
+      /* ── flowchart: horizontal scroll */
+      .flow-section { overflow-x: auto; -webkit-overflow-scrolling: touch; margin-bottom: 10px; }
+      .flow-bar { min-width: 680px; padding: 12px 10px; gap: 8px; }
+
+      /* ── calc-grid: always 1 col */
+      .calc-grid { grid-template-columns: 1fr; gap: 0; border-radius: 0; }
+      .calc-grid .card:first-child { border-right: none; border-bottom: 1px solid var(--border); }
+
+      /* ── results grid: 2 col */
+      .results-grid { grid-template-columns: repeat(2, 1fr); }
+
+      /* ── inputs touch-friendly */
+      .p-input, .p-select { height: 36px; font-size: 14px; }
+      .p-row { padding: 7px 14px; gap: 6px; }
+      .p-label { font-size: 11px; min-width: 100px; }
+      .p-note { display: none; }   /* hide hints on mobile to save space */
+
+      /* ── card heading */
+      .card-hd { padding: 10px 14px; font-size: 11.5px; }
+      .card-bd { padding: 0; }
+
+      /* ── rev panel */
+      .rev-row { padding: 8px 14px; }
+      .rev-label { font-size: 12px; }
+      .rev-inputs .p-input { height: 36px; font-size: 14px; }
+
+      /* ── mobile section hide/show (JS toggles .m-hidden) */
+      .m-hidden { display: none !important; }
+
+      /* ── bottom tab bar */
+      .m-tab-bar {
+        display: flex;
+        position: fixed;
+        bottom: 0; left: 0; right: 0;
+        height: 54px;
+        background: var(--surface);
+        border-top: 1px solid var(--border);
+        z-index: 200;
+        box-shadow: 0 -2px 12px rgba(0,0,0,.06);
+      }
+      .m-tab {
+        flex: 1;
+        border: none;
+        background: none;
+        font-family: var(--sans);
+        font-size: 12px;
+        color: var(--text-3);
+        cursor: pointer;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 2px;
+        transition: color .15s, background .15s;
+        -webkit-tap-highlight-color: transparent;
+      }
+      .m-tab.active {
+        color: var(--accent);
+        background: var(--accent-2);
+        font-weight: 600;
+      }
+      .m-tab:active { background: var(--bg); }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ================================================================ MASTHEAD -->
+<header class="masthead anim-header">
+  <div class="masthead-brand">
+    <a class="masthead-back" href="../../../总看板.html">← 总看板</a>
+    <div class="masthead-icon"><span>TCO</span></div>
+    <div>
+      <div class="masthead-title">AI 推理成本计算器</div>
+      <div class="masthead-sub">Cost/1M = TCO ÷ (TPS × time) × 10⁶</div>
+    </div>
+  </div>
+  <div class="masthead-meta">
+    <span class="masthead-pill">TMT Research</span>
+    <div class="masthead-date" id="hdr-date"></div>
+  </div>
+</header>
+
+<!-- ================================================================ NAV -->
+<nav class="tab-nav anim-nav">
+  <button class="tab-btn active" onclick="switchTab('calc')">计算器</button>
+  <button class="tab-btn" onclick="switchTab('models')">模型库</button>
+  <button class="tab-btn" onclick="switchTab('gpus')">GPU库</button>
+</nav>
+
+<!-- ================================================================ PAGE -->
+<div class="page">
+
+<!-- ===================================================== TAB 1: CALC -->
+<div id="tab-calc" class="tab-content active">
+
+  <!-- Selection bar -->
+  <div class="selection-bar anim-grid">
+    <div class="sel-group">
+      <label>选择模型</label>
+      <select id="sel-model" onchange="onModelChange()">
+        <option value="">—— 手动输入 ——</option>
+        <optgroup label="DeepSeek">
+          <option value="DeepSeek V4-Pro">DeepSeek V4-Pro (1.6T A49B MoE) 🆕</option>
+          <option value="DeepSeek V4-Flash">DeepSeek V4-Flash (284B A13B MoE) 🆕</option>
+          <option value="DeepSeek V3.2">DeepSeek V3.2</option>
+          <option value="DeepSeek R1">DeepSeek R1</option>
+          <option value="DeepSeek R1-Distill-Qwen-32B">R1-Distill-Qwen-32B</option>
+          <option value="DeepSeek R1-Distill-Llama-70B">R1-Distill-Llama-70B</option>
+        </optgroup>
+        <optgroup label="Meta">
+          <option value="Llama 4 Scout">Llama 4 Scout (109B MoE)</option>
+          <option value="Llama 4 Maverick">Llama 4 Maverick (400B MoE)</option>
+          <option value="Llama 3.3 70B">Llama 3.3 70B (Dense)</option>
+          <option value="Llama 3.1 405B">Llama 3.1 405B (Dense)</option>
+          <option value="Llama 3.1 70B">Llama 3.1 70B (Dense)</option>
+        </optgroup>
+        <optgroup label="Alibaba">
+          <option value="Qwen3.5 397B">Qwen3.5 397B (MoE)</option>
+          <option value="Qwen3-235B">Qwen3-235B (MoE)</option>
+          <option value="Qwen3-30B-A3B">Qwen3-30B-A3B (MoE)</option>
+          <option value="Qwen3-32B">Qwen3-32B (Dense)</option>
+          <option value="Qwen3-14B">Qwen3-14B (Dense)</option>
+          <option value="Qwen3-8B">Qwen3-8B (Dense)</option>
+          <option value="Qwen2.5 72B">Qwen2.5 72B (Dense)</option>
+        </optgroup>
+        <optgroup label="Tencent">
+          <option value="Hy3 preview">Hy3 preview (295B A21B MoE)</option>
+        </optgroup>
+        <optgroup label="Zhipu AI">
+          <option value="GLM-4.7">GLM-4.7</option>
+          <option value="GLM-5">GLM-5 (744B MoE)</option>
+          <option value="GLM-5.1">GLM-5.1 (744B MoE)</option>
+        </optgroup>
+        <optgroup label="Xiaomi">
+          <option value="MiMo V2 Flash">MiMo V2 Flash</option>
+          <option value="MiMo V2 Pro">MiMo V2 Pro</option>
+        </optgroup>
+        <optgroup label="MiniMax">
+          <option value="MiniMax M2.1">MiniMax M2.1</option>
+          <option value="MiniMax M2.5">MiniMax M2.5 (230B MoE)</option>
+          <option value="MiniMax M2.7">MiniMax M2.7</option>
+        </optgroup>
+        <optgroup label="Moonshot AI">
+          <option value="Kimi K2.6">Kimi K2.6 (~1T MoE) 🆕</option>
+          <option value="Kimi K2 Thinking">Kimi K2 Thinking</option>
+          <option value="Kimi K2.5">Kimi K2.5 (~1T MoE)</option>
+        </optgroup>
+        <optgroup label="StepFun">
+          <option value="Step 3.5 Flash">Step 3.5 Flash</option>
+        </optgroup>
+        <optgroup label="OpenAI">
+          <option value="GPT-5.4">GPT-5.4</option>
+          <option value="GPT-5.4 mini">GPT-5.4 mini</option>
+          <option value="GPT-5.4 nano">GPT-5.4 nano</option>
+          <option value="gpt-oss-120B">gpt-oss-120B</option>
+          <option value="gpt-oss-20B">gpt-oss-20B</option>
+        </optgroup>
+        <optgroup label="Anthropic">
+          <option value="Claude Opus 4.7">Claude Opus 4.7</option>
+          <option value="Claude Sonnet 4.6">Claude Sonnet 4.6</option>
+          <option value="Claude Haiku 4.5">Claude Haiku 4.5</option>
+        </optgroup>
+        <optgroup label="Google">
+          <option value="Gemini 3.1 Pro Preview">Gemini 3.1 Pro Preview</option>
+          <option value="Gemini 3 Flash">Gemini 3 Flash</option>
+          <option value="Gemini 3.1 Flash-Lite">Gemini 3.1 Flash-Lite</option>
+          <option value="Gemini 2.5 Pro">Gemini 2.5 Pro</option>
+          <option value="Gemini 2.5 Flash">Gemini 2.5 Flash</option>
+          <option value="Gemma 3 27B">Gemma 3 27B (Dense, 开源)</option>
+        </optgroup>
+        <optgroup label="Microsoft">
+          <option value="Phi-4">Phi-4 14B (Dense)</option>
+        </optgroup>
+        <optgroup label="Mistral">
+          <option value="Mistral Small 3.1 24B">Mistral Small 3.1 24B (Dense)</option>
+        </optgroup>
+        <optgroup label="xAI">
+          <option value="Grok-4.20">Grok-4.20</option>
+          <option value="Grok 4.1 Fast">Grok 4.1 Fast</option>
+        </optgroup>
+        <optgroup label="其他">
+          <option value="Terminus">Terminus</option>
+        </optgroup>
+      </select>
+    </div>
+    <div class="sel-group">
+      <label>选择 GPU</label>
+      <select id="sel-gpu" onchange="onGpuChange()">
+        <option value="">—— 手动输入 ——</option>
+        <optgroup label="── NVIDIA ──">
+          <option value="A100 80GB SXM">A100 80GB SXM</option>
+          <option value="H100 SXM">H100 SXM 80GB</option>
+          <option value="H200 SXM">H200 SXM 141GB</option>
+          <option value="H20">H20 96GB (CN)</option>
+          <option value="B100">B100 192GB</option>
+          <option value="B200 SXM">B200 SXM 192GB</option>
+          <option value="B300 SXM">B300 SXM 288GB (2025H2)</option>
+        </optgroup>
+        <optgroup label="── Google TPU ──">
+          <option value="TPU v5e Viperlite">TPU v5e Viperlite 16GB</option>
+          <option value="TPU v5p Viperfish">TPU v5p Viperfish 95GB</option>
+          <option value="TPU v6 Trillium">TPU v6 Trillium 32GB</option>
+          <option value="TPU v7 Ironwood">TPU v7 Ironwood 192GB</option>
+          <option value="TPU 8t">TPU 8t 216GB (训练)</option>
+          <option value="TPU 8i">TPU 8i 288GB (推理)</option>
+        </optgroup>
+        <optgroup label="── AWS Trainium ──">
+          <option value="Trainium 1 Trn1">Trainium 1 (Trn1) 32GB</option>
+          <option value="Trainium 2 Trn2">Trainium 2 (Trn2) 96GB</option>
+          <option value="Trainium 3 Trn3">Trainium 3 (Trn3) 144GB</option>
+        </optgroup>
+      </select>
+    </div>
+    <button class="btn-reset" onclick="resetAll()">↺ 重置</button>
+  </div>
+
+  <!-- Legend -->
+  <div class="legend anim-grid">
+    <span class="legend-item"><span class="legend-box leg-auto"></span>自动填充（来自数据库）</span>
+    <span class="legend-item"><span class="legend-box leg-calc"></span>自动计算（只读）</span>
+    <span class="legend-item"><span class="legend-box leg-manual"></span>手动输入</span>
+  </div>
+
+  <div class="preset-bar anim-grid">
+    <button class="preset-btn active" id="preset-research" onclick="applyPreset('research')">
+      <span class="preset-title">投研基准</span>
+      <span class="preset-meta">Batch 25 / MBU 40% / Util 75%<br>日常横向比较，偏中性</span>
+    </button>
+    <button class="preset-btn" id="preset-benchmark" onclick="applyPreset('benchmark')">
+      <span class="preset-title">Benchmark / Max Throughput</span>
+      <span class="preset-meta">Batch 128 / MBU 65% / Util 85%<br>对标公开吞吐，不代表线上 SLA</span>
+    </button>
+    <button class="preset-btn" id="preset-serving" onclick="applyPreset('serving')">
+      <span class="preset-title">线上服务 / SLA</span>
+      <span class="preset-meta">Batch 16 / MBU 32% / Util 65%<br>延迟约束成本，更保守</span>
+    </button>
+  </div>
+
+  <!-- Mobile bottom tab nav -->
+  <nav class="m-tab-bar" id="m-tab-bar">
+    <button class="m-tab active" onclick="mTab('params')">⚙️ 参数</button>
+    <button class="m-tab" onclick="mTab('cost')">💰 成本</button>
+    <button class="m-tab" onclick="mTab('rev')">📈 反推</button>
+  </nav>
+
+  <div class="tab-split">
+  <!-- ========== LEFT: EXISTING CALCULATOR ========== -->
+  <div class="split-left">
+
+  <!-- ================================================ FORMULA FLOWCHART -->
+  <div class="flow-section anim-flow" id="m-section-cost">
+    <div class="flow-bar">
+      <!-- TCO -->
+      <div class="flow-step">
+        <div class="flow-step-label">年化 TCO</div>
+        <div class="flow-step-val" id="fl-tco">—</div>
+        <div class="flow-step-unit">$/年</div>
+        <div class="flow-step-sub" id="fl-tco-sub">硬件折旧 + 电力 + 运维</div>
+      </div>
+
+      <div class="flow-arrow">
+        <div class="flow-arrow-line"></div>
+        <div class="flow-arrow-label">÷ TPS × 时间</div>
+      </div>
+
+      <!-- TPS：Decode（带宽限制）+ Prefill（算力限制）-->
+      <div class="flow-tps-block">
+        <div class="flow-tps-row">
+          <div class="flow-tps-tag decode-tag">DECODE</div>
+          <div class="flow-tps-val" id="fl-tps">—</div>
+          <div class="flow-tps-unit">tok/s · output</div>
+        </div>
+        <div class="flow-tps-sep"></div>
+        <div class="flow-tps-row">
+          <div class="flow-tps-tag prefill-tag">PREFILL</div>
+          <div class="flow-tps-val" id="fl-prefill-tps">—</div>
+          <div class="flow-tps-unit">tok/s · input</div>
+        </div>
+      </div>
+
+      <div class="flow-arrow">
+        <div class="flow-arrow-line"></div>
+        <div class="flow-arrow-label">× 10⁶</div>
+      </div>
+
+      <!-- 成本：Output（主）+ Input + Blended -->
+      <div class="flow-cost-block">
+        <div>
+          <div class="flow-cost-label">★ Output Cost / 1M</div>
+          <div class="flow-cost-val" id="fl-cost">—</div>
+          <div class="flow-cost-unit">$ / 1M output tokens</div>
+        </div>
+        <div class="flow-cost-secondary">
+          <div class="flow-cost-sec-item">
+            <div class="flow-sec-label">Input / 1M</div>
+            <div class="flow-sec-val" id="fl-cost-in">—</div>
+            <div class="flow-sec-unit">$ / 1M in</div>
+          </div>
+          <div class="flow-cost-sec-item">
+            <div class="flow-sec-label">Blended / 1M</div>
+            <div class="flow-sec-val" id="fl-cost-blend">—</div>
+            <div class="flow-sec-unit">@ ISL:OSL mix</div>
+          </div>
+        </div>
+      </div>
+
+
+    </div>
+  </div>
+
+  <!-- ================================================ CALC GRID -->
+  <div class="calc-grid anim-grid" id="m-section-params">
+
+    <!-- LEFT: Hardware -->
+    <div class="card">
+      <div class="card-hd">
+        <span>一、硬件与基础设施参数（分子 · TCO）</span>
+        <div class="mode-toggle">
+          <button class="mode-btn active-self" id="btn-selfbuild" onclick="setHwMode('selfbuild')">自建</button>
+          <button class="mode-btn" id="btn-rental" onclick="setHwMode('rental')">云租赁</button>
+        </div>
+      </div>
+      <div class="card-bd">
+        <div class="p-row row-calc">
+          <div class="p-label">GPU 卡数 <small style="color:#CEC8C1">（自动）</small></div>
+          <input class="p-input calcval" id="in-gpucount" value="24" readonly>
+          <div class="p-unit">张</div>
+          <div class="p-note">= CEILING(最小卡数, 8)，按节点采购</div>
+        </div>
+        <!-- Rental mode -->
+        <div class="p-row" id="row-rent-price" style="display:none">
+          <div class="p-label">Cloud Rate <span class="rent-badge">租赁</span></div>
+          <input class="p-input" id="in-rent-price" value="2.6" oninput="calc()">
+          <div class="p-unit">$/GPU/hr</div>
+          <div class="p-note">按需实例，含电力与运维</div>
+        </div>
+        <!-- Self-build mode -->
+        <div class="p-row" id="row-price8">
+          <div class="p-label">单节点（8卡）采购价</div>
+          <input class="p-input" id="in-price8" value="160000" oninput="calc()">
+          <div class="p-unit">USD</div>
+          <div class="p-note">H100 ~$160K, H200 ~$240K, B200 ~$320K</div>
+        </div>
+        <div class="p-row" id="row-capex-mult">
+          <div class="p-label">基础设施 CapEx 倍数</div>
+          <input class="p-input" id="in-capex-mult" value="2.8" oninput="calc()">
+          <div class="p-unit">×</div>
+          <div class="p-note">全口径 CapEx ÷ 服务器采购价｜服务器仅占总 CapEx 的 30–40%（含网络、供电、制冷、机房）｜自建机房 2.5–3.5×｜IDC 托管 1.8–2.5×｜云 ≈ 3–5×（含运维溢价）</div>
+        </div>
+        <div class="p-row" id="row-salvage">
+          <div class="p-label">Salvage Value</div>
+          <input class="p-input" id="in-salvage" value="0" oninput="calc()">
+          <div class="p-unit">USD</div>
+          <div class="p-note">折旧期满后残值（含全口径 CapEx 残值）</div>
+        </div>
+        <div class="p-row" id="row-depr">
+          <div class="p-label">折旧年限</div>
+          <input class="p-input" id="in-depr" value="5" oninput="calc()">
+          <div class="p-unit">yrs</div>
+          <div class="p-note">通常 3–5 年</div>
+        </div>
+        <div class="p-row" id="row-tdp">
+          <div class="p-label">单卡功耗 TDP</div>
+          <input class="p-input" id="in-tdp" value="0.7" oninput="calc()">
+          <div class="p-unit">kW</div>
+          <div class="p-note">H100≈0.7, B200≈1.0</div>
+        </div>
+        <div class="p-row" id="row-pue">
+          <div class="p-label">PUE</div>
+          <input class="p-input" id="in-pue" value="1.3" oninput="calc()">
+          <div class="p-unit">—</div>
+          <div class="p-note">数据中心能效比，通常 1.2–1.5</div>
+        </div>
+        <div class="p-row" id="row-elec">
+          <div class="p-label">电价</div>
+          <input class="p-input" id="in-elec" value="0.06" oninput="calc()">
+          <div class="p-unit">$/kWh</div>
+          <div class="p-note">美国均价 ~$0.06</div>
+        </div>
+        <div class="p-row" id="row-net">
+          <div class="p-label">网络 + 运维（占折旧 %）</div>
+          <input class="p-input" id="in-net" value="10" oninput="calc()">
+          <div class="p-unit">%</div>
+          <div class="p-note">通常占折旧 5%–15%</div>
+        </div>
+        <div class="p-row">
+          <div class="p-label">GPU 利用率（时间维度）</div>
+          <input class="p-input" id="in-util" value="85" oninput="calc()">
+          <div class="p-unit">%</div>
+          <div class="p-note">年均有效运行时间占比</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT: Model -->
+    <div class="card">
+      <div class="card-hd">二、模型与吞吐参数（分母 · Token 产出）</div>
+      <div class="card-bd">
+        <div class="p-row">
+          <div class="p-label">架构类型</div>
+          <select class="p-select" id="in-arch" onchange="onArchChange()">
+            <option value="1">MoE（稀疏）</option>
+            <option value="0">Dense（稠密）</option>
+          </select>
+          <div class="p-unit">—</div>
+          <div class="p-note">MoE 时仅读激活参数权重</div>
+        </div>
+        <div class="p-row">
+          <div class="p-label">总参数量</div>
+          <input class="p-input" id="in-total" value="671" oninput="calc()">
+          <div class="p-unit">B</div>
+          <div class="p-note">所有专家权重，显存须常驻</div>
+        </div>
+        <div class="p-row" id="row-active">
+          <div class="p-label">激活参数量（MoE）</div>
+          <input class="p-input" id="in-active" value="37" oninput="calc()">
+          <div class="p-unit">B</div>
+          <div class="p-note">MoE 每次推理激活；Dense 填 = 总参数</div>
+        </div>
+        <div class="p-row">
+          <div class="p-label">精度</div>
+          <select class="p-select" id="in-prec" onchange="onPrecChange()">
+            <option value="2">BF16 / FP16 (2 Bytes)</option>
+            <option value="1">INT8 / FP8 (1 Byte)</option>
+            <option value="0.5">INT4 / FP4 (0.5 Byte)</option>
+          </select>
+          <div class="p-unit">—</div>
+          <div class="p-note">量化精度；同步更新 TFLOPS 字段</div>
+        </div>
+        <div class="p-row">
+          <div class="p-label">单卡显存带宽</div>
+          <input class="p-input" id="in-bw" value="3350" oninput="calc()">
+          <div class="p-unit">GB/s</div>
+          <div class="p-note">H100=3350，H200=4800，B200=8000</div>
+        </div>
+        <div class="p-row">
+          <div class="p-label">单卡算力 TFLOPS <small style="color:var(--text-3)">(与精度匹配)</small></div>
+          <input class="p-input" id="in-tflops" value="1979" oninput="calc()">
+          <div class="p-unit">TFLOPs</div>
+          <div class="p-note">Prefill 计算瓶颈；GPU 下拉 + 精度联动自动更新｜H100/H200 FP8=1979T｜B200 FP8=5000T｜TPU v7 FP8=4614T</div>
+        </div>
+        <div class="p-row">
+          <div class="p-label">单卡显存容量</div>
+          <input class="p-input" id="in-vram" value="80" oninput="calc()">
+          <div class="p-unit">GB</div>
+          <div class="p-note">H100=80，H200=141，B200=192</div>
+        </div>
+        <div class="p-row">
+          <div class="p-label">KV Cache 计算模式</div>
+          <select class="p-select" id="in-kvmode" onchange="onKvModeChange()">
+            <option value="1">精确模式（需 L、H 参数）</option>
+            <option value="0">系数模式（闭源/参数未知）</option>
+          </select>
+          <div class="p-unit">—</div>
+          <div class="p-note">开源模型用精确；闭源用系数</div>
+        </div>
+        <div class="p-row" id="row-L">
+          <div class="p-label">模型层数 L</div>
+          <input class="p-input" id="in-L" value="61" oninput="calc()">
+          <div class="p-unit">layers</div>
+          <div class="p-note">HF config.json: num_hidden_layers</div>
+        </div>
+        <div class="p-row" id="row-H">
+          <div class="p-label">隐藏维度 H</div>
+          <input class="p-input" id="in-H" value="7168" oninput="calc()">
+          <div class="p-unit">—</div>
+          <div class="p-note">HF config.json: hidden_size（仅用于 MHA；GQA/MLA 请填 nKV 覆盖）</div>
+        </div>
+        <div class="p-row" id="row-nkv">
+          <div class="p-label">KV 宽度 nKV <small style="color:var(--accent);font-size:10px">GQA/MLA</small></div>
+          <input class="p-input" id="in-nkv" value="" placeholder="留空=用H" oninput="calc()">
+          <div class="p-unit">—</div>
+          <div class="p-note">n_kv_heads×head_dim｜GQA 8组≈1024｜MLA(DeepSeek)≈4352｜留空则回退到H（MHA）</div>
+        </div>
+        <div class="p-row" id="row-kv-coeff" style="display:none">
+          <div class="p-label">KV Cache 系数</div>
+          <input class="p-input" id="in-kvcoeff" value="0.15" oninput="calc()">
+          <div class="p-unit">—</div>
+          <div class="p-note">= KV 占权重比，经验值 0.10–0.20</div>
+        </div>
+        <div class="p-row">
+          <div class="p-label">ISL（输入序列长度）</div>
+          <input class="p-input" id="in-isl" value="1024" oninput="calc()">
+          <div class="p-unit">tokens</div>
+          <div class="p-note">Chat/API：512–2K｜RAG/企业：2K–32K｜长上下文：32K–128K｜NVIDIA benchmark：1,024</div>
+        </div>
+        <div class="p-row">
+          <div class="p-label">OSL（输出序列长度）</div>
+          <input class="p-input" id="in-osl" value="2048" oninput="calc()">
+          <div class="p-unit">tokens</div>
+          <div class="p-note">Chat：256–512｜代码/分析：512–2K｜推理链（CoT）：2K–4K｜MLPerf DeepSeek-R1 均值：3,880</div>
+        </div>
+        <div class="p-row">
+          <div class="p-label">目标 Batch Size</div>
+          <input class="p-input" id="in-batch" value="25" oninput="calc()">
+          <div class="p-unit">reqs</div>
+          <div class="p-note">延迟测试：1｜轻量生产：8–16｜大模型MoE（671B）实测最优：19–27｜小模型高吞吐：64–512｜受 VRAM KV Cache 上限约束</div>
+        </div>
+        <div class="p-row">
+          <div class="p-label">通信开销系数</div>
+          <input class="p-input" id="in-comm" value="0.05" oninput="calc()">
+          <div class="p-unit">—</div>
+          <div class="p-note">跨卡通信占比，单卡≈0，多卡 0.05–0.15</div>
+        </div>
+        <div class="p-row">
+          <div class="p-label">MBU 显存带宽利用率 <small style="color:var(--text-3)">(Decode)</small></div>
+          <input class="p-input" id="in-mbu" value="65" oninput="calc()">
+          <div class="p-unit">%</div>
+          <div class="p-note">Decode 阶段，带宽受限；H100/H200 实测 50–70%｜生产环境 40–60%｜已修正GQA/批次缩放后，DeepSeek R1 H200 NVL8 benchmark（9,728 t/s）对应 MBU≈67%</div>
+        </div>
+        <div class="p-row">
+          <div class="p-label">MFU 算力利用率 <small style="color:var(--text-3)">(Prefill)</small></div>
+          <input class="p-input" id="in-mfu" value="35" oninput="calc()">
+          <div class="p-unit">%</div>
+          <div class="p-note">Prefill 阶段，计算受限（与 MBU 含义不同）；H100/H200 实测 30–45%｜A100 文献值 40–46%</div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /calc-grid -->
+
+  <!-- ================================================ RESULTS ENGINE -->
+  <div class="results-card anim-grid" id="m-section-cost-results">
+    <div class="card-hd">三、计算引擎（四层嵌套·自动推导）</div>
+    <div class="results-grid">
+
+      <div class="res-section">
+        <div class="res-title">GPU &amp; Batch 推导</div>
+        <div class="res-row"><span class="res-label">模型总权重显存</span><span class="res-val" id="r-wvram">—</span><span class="res-unit">GB</span></div>
+        <div class="res-row"><span class="res-label">KV Cache（VRAM / TPS）</span><span class="res-val" id="r-kv">—</span><span class="res-unit">GB</span></div>
+        <div class="res-row"><span class="res-label">总显存需求</span><span class="res-val" id="r-totalvram">—</span><span class="res-unit">GB</span></div>
+        <div class="res-row"><span class="res-label">最小 GPU 卡数</span><span class="res-val" id="r-mingpu">—</span><span class="res-unit">张</span></div>
+        <div class="res-row"><span class="res-label">实际卡数（8 的倍数）</span><span class="res-val" id="r-actualgpu">—</span><span class="res-unit">张</span></div>
+        <div class="res-row"><span class="res-label">节点数</span><span class="res-val" id="r-nodes">—</span><span class="res-unit">nodes</span></div>
+        <div class="res-row"><span class="res-label">Batch_max 验证</span><span class="res-val" id="r-batchmax">—</span><span class="res-unit"><span class="res-note" id="r-batchmaxnote"></span></span></div>
+      </div>
+
+      <div class="res-section">
+        <div class="res-title">【第四层】每轮解码带宽 D_decode</div>
+        <div class="res-row"><span class="res-label">有效参数量（推理读取）</span><span class="res-val" id="r-effp">—</span><span class="res-unit">B</span></div>
+        <div class="res-row"><span class="res-label">D_weight（权重，共享）</span><span class="res-val" id="r-dw">—</span><span class="res-unit">GB</span></div>
+        <div class="res-row"><span class="res-label">D_KV 单seq / ×batch 合计</span><span class="res-val" id="r-dkv">—</span><span class="res-unit">GB</span></div>
+        <div class="res-row"><span class="res-label">D_comm（通信调度）</span><span class="res-val" id="r-dcomm">—</span><span class="res-unit">GB</span></div>
+        <div class="res-row" style="border-top:1px solid var(--border);padding-top:5px;margin-top:5px">
+          <span class="res-label" style="font-weight:700">D_decode 合计（每轮）</span><span class="res-val" id="r-dt">—</span><span class="res-unit">GB/step</span>
+        </div>
+      </div>
+
+      <div class="res-section">
+        <div class="res-title">【第三层】有效 TPS</div>
+        <div class="res-row"><span class="res-label">单卡理论 Decode TPS</span><span class="res-val" id="r-th-tps">—</span><span class="res-unit">tok/s</span></div>
+        <div class="res-row"><span class="res-label">单卡有效 Decode TPS (×MBU)</span><span class="res-val" id="r-eff-tps">—</span><span class="res-unit">tok/s</span></div>
+        <div class="res-row" style="border-top:1px solid var(--border);padding-top:5px;margin-top:5px">
+          <span class="res-label" style="font-weight:700">节点 Decode TPS（Output）</span><span class="res-val" id="r-node-tps">—</span><span class="res-unit">tok/s</span>
+        </div>
+        <div class="res-row" style="margin-top:4px">
+          <span class="res-label" style="font-weight:700;color:var(--accent)">节点 Prefill TPS（Input）</span><span class="res-val" id="r-prefill-tps" style="color:var(--accent)">—</span><span class="res-unit">tok/s</span>
+        </div>
+      </div>
+
+      <div class="res-section">
+        <div class="res-title">【第二层】年化 TCO 拆解</div>
+        <div class="res-row" id="tco-row-hw"><span class="res-label" id="tco-label-hw">C_hardware</span><span class="res-val" id="r-c-hw">—</span><span class="res-unit">$/年</span></div>
+        <div class="res-row" id="tco-row-pw"><span class="res-label">C_power（电力成本）</span><span class="res-val" id="r-c-pw">—</span><span class="res-unit">$/年</span></div>
+        <div class="res-row" id="tco-row-op"><span class="res-label">C_opex（运维摊销）</span><span class="res-val" id="r-c-op">—</span><span class="res-unit">$/年</span></div>
+        <div class="res-row" style="border-top:1px solid var(--border);padding-top:5px;margin-top:5px">
+          <span class="res-label" style="font-weight:700">年化 TCO 合计</span><span class="res-val" id="r-tco-total">—</span><span class="res-unit">$/年</span>
+        </div>
+        <div class="res-row" style="margin-top:6px"><span class="res-label">Output 年产出（Decode）</span><span class="res-val" id="r-ann-tokens">—</span><span class="res-unit">B tok/yr</span></div>
+        <div class="res-row"><span class="res-label">Input 年产能（Prefill）</span><span class="res-val" id="r-ann-input">—</span><span class="res-unit">B tok/yr</span></div>
+      </div>
+
+    </div>
+  </div>
+
+  </div><!-- /split-left -->
+
+  <!-- ========== RIGHT: REVENUE → GPU PANEL ========== -->
+  <div class="split-right" id="m-section-rev">
+    <div class="rev-card">
+      <div class="rev-hd">
+        <span>收入 → 算力反推</span>
+        <span class="rev-badge">REVERSE</span>
+      </div>
+
+      <!-- Inputs -->
+      <div class="rev-inputs">
+        <div class="rev-row">
+          <div class="rev-label">年收入目标</div>
+          <input class="p-input" id="rv-revenue" value="10" oninput="calcRevenue()">
+          <div class="p-unit">$M</div>
+        </div>
+        <div class="rev-row">
+          <div class="rev-label">Output 定价 <small>($/1M)</small></div>
+          <input class="p-input" id="rv-price-out" value="" placeholder="—" oninput="calcRevenue()">
+          <div class="p-unit">out</div>
+        </div>
+        <div class="rev-row">
+          <div class="rev-label">Input 定价 <small>($/1M)</small></div>
+          <input class="p-input" id="rv-price-in" value="" placeholder="—" oninput="calcRevenue()">
+          <div class="p-unit">in</div>
+        </div>
+        <div class="rev-row">
+          <div class="rev-label">Cached Input <small>($/1M, 命中)</small></div>
+          <input class="p-input" id="rv-price-in-cached" value="" placeholder="留空=同input" oninput="calcRevenue()">
+          <div class="p-unit">hit</div>
+        </div>
+        <div class="rev-row">
+          <div class="rev-label">缓存命中率 <small>(长对话/agent)</small></div>
+          <input class="p-input" id="rv-cache-hit" value="0" oninput="calcRevenue()">
+          <div class="p-unit">%</div>
+        </div>
+        <div class="rev-row">
+          <div class="rev-label">目标毛利率</div>
+          <input class="p-input" id="rv-target-margin" value="50" oninput="calcRevenue()">
+          <div class="p-unit">%</div>
+        </div>
+      </div>
+
+      <!-- Hero: GPU count -->
+      <div class="rev-hero">
+        <div class="rev-hero-tag">★ 所需 GPU 卡数</div>
+        <div class="rev-hero-val" id="rv-gpus">—</div>
+        <div class="rev-hero-unit">张 &nbsp;·&nbsp; <span id="rv-nodes-txt">—</span> 节点</div>
+        <div class="rev-hero-sub" id="rv-vs-current">—</div>
+      </div>
+
+      <!-- KPI: margin + profit -->
+      <div class="rev-kpi-row">
+        <div class="rev-kpi">
+          <div class="rev-kpi-label">实际毛利率</div>
+          <div class="rev-kpi-val" id="rv-margin-val">—</div>
+          <div class="rev-kpi-unit">%</div>
+          <div class="rev-margin-bar"><div class="rev-margin-fill" id="rv-margin-bar" style="width:0%"></div></div>
+          <div class="rev-kpi-note" id="rv-margin-vs"></div>
+        </div>
+        <div class="rev-kpi">
+          <div class="rev-kpi-label">毛利润</div>
+          <div class="rev-kpi-val" id="rv-profit-val">—</div>
+          <div class="rev-kpi-unit" id="rv-profit-unit">$/yr</div>
+          <div class="rev-kpi-note" id="rv-profit-note" style="margin-top:4px"></div>
+        </div>
+      </div>
+
+      <!-- Breakdown -->
+      <div class="rev-detail">
+        <div class="rev-detail-title">拆解</div>
+        <div class="rev-dr"><span class="rev-dl">年 Output Token 需求</span><span><span class="rev-dv" id="rv-ann-out">—</span><span class="rev-du">B tok/yr</span></span></div>
+        <div class="rev-dr"><span class="rev-dl">所需 Decode TPS</span><span><span class="rev-dv" id="rv-tps-need">—</span><span class="rev-du">tok/s</span></span></div>
+        <div class="rev-dr"><span class="rev-dl">单节点 Decode TPS</span><span><span class="rev-dv" id="rv-tps-node">—</span><span class="rev-du">tok/s</span></span></div>
+        <div class="rev-dr strong">
+          <span class="rev-dl bold">所需节点数</span>
+          <span><span class="rev-dv" id="rv-nodes-need">—</span><span class="rev-du">nodes</span></span>
+        </div>
+        <div class="rev-dr"><span class="rev-dl">年化 TCO（所需节点）</span><span><span class="rev-dv" id="rv-tco-need">—</span><span class="rev-du">$/yr</span></span></div>
+      </div>
+
+      <!-- CapEx 反推 -->
+      <div class="rev-detail">
+        <div class="rev-detail-title">CapEx 反推</div>
+        <div class="rev-dr"><span class="rev-dl">单节点服务器采购价</span><span><span class="rev-dv" id="rv-price8">—</span><span class="rev-du">$/node</span></span></div>
+        <div class="rev-dr"><span class="rev-dl">服务器 CapEx（所需节点）</span><span><span class="rev-dv" id="rv-server-capex">—</span><span class="rev-du">$</span></span></div>
+        <div class="rev-dr"><span class="rev-dl">基础设施 CapEx 倍数</span><span><span class="rev-dv" id="rv-capex-mult">—</span><span class="rev-du">×</span></span></div>
+        <div class="rev-dr strong">
+          <span class="rev-dl bold">全口径 CapEx</span>
+          <span><span class="rev-dv" id="rv-total-capex">—</span><span class="rev-du">$</span></span>
+        </div>
+        <div class="rev-dr"><span class="rev-dl" style="color:var(--text-3);font-size:10px">服务器占全口径比例</span><span><span class="rev-dv" style="font-size:13px;color:var(--text-3)" id="rv-server-pct">—</span><span class="rev-du">%</span></span></div>
+      </div>
+
+      <!-- Breakeven -->
+      <div class="rev-detail">
+        <div class="rev-detail-title">盈亏平衡分析</div>
+        <div class="rev-dr">
+          <span class="rev-dl">有效 Input 价 <small style="color:var(--text-3)">(hit-blended)</small></span>
+          <span><span class="rev-dv" id="rv-effective-in">—</span><span class="rev-du">$/1M</span></span>
+        </div>
+        <div class="rev-dr">
+          <span class="rev-dl">混合 $/1M out <small style="color:var(--text-3)">(含 input amortized)</small></span>
+          <span><span class="rev-dv" id="rv-blended-perm">—</span><span class="rev-du">$/1M</span></span>
+        </div>
+        <div class="rev-dr">
+          <span class="rev-dl">当前节点收入上限</span>
+          <span><span class="rev-dv" id="rv-capacity">—</span><span class="rev-du">$M/yr</span></span>
+        </div>
+        <div class="rev-dr">
+          <span class="rev-dl">达目标毛利所需收入</span>
+          <span><span class="rev-dv" id="rv-breakeven">—</span><span class="rev-du">$M/yr</span></span>
+        </div>
+        <div class="rev-dr">
+          <span class="rev-dl">单节点年 TCO</span>
+          <span><span class="rev-dv" id="rv-tco-per-node">—</span><span class="rev-du">$/node/yr</span></span>
+        </div>
+      </div>
+    </div>
+  </div><!-- /split-right -->
+
+  </div><!-- /tab-split -->
+
+</div><!-- /tab-calc -->
+
+<!-- ===================================================== TAB 2: MODELS -->
+<div id="tab-models" class="tab-content">
+  <div class="tbl-toolbar anim-table">
+    <input class="tbl-search" id="model-search" placeholder="搜索模型名称 / 厂商..." oninput="filterModels()">
+    <span class="tbl-count" id="model-count"></span>
+  </div>
+  <div class="tbl-wrap">
+    <table class="dtbl" id="model-table">
+      <thead>
+        <tr>
+          <th>厂商</th>
+          <th>选择模型</th>
+          <th>发布日期</th>
+          <th>架构</th>
+          <th>总参数</th>
+          <th>激活参数</th>
+          <th>层数 L</th>
+          <th>维度 H</th>
+          <th>上下文</th>
+          <th>多模态</th>
+          <th>开源</th>
+          <th>输入 $/M</th>
+          <th>输出 $/M</th>
+          <th>货币</th>
+          <th>AA Score</th>
+          <th>速度 t/s</th>
+          <th>TTFT(s)</th>
+          <th>操作</th>
+        </tr>
+      </thead>
+      <tbody id="model-tbody"></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ===================================================== TAB 3: GPUS -->
+<div id="tab-gpus" class="tab-content">
+  <div class="tbl-toolbar anim-table">
+    <input class="tbl-search" id="gpu-search" placeholder="搜索 GPU 型号..." oninput="filterGpus()">
+    <span class="tbl-count" id="gpu-count"></span>
+  </div>
+  <div class="tbl-wrap">
+    <table class="dtbl" id="gpu-table">
+      <thead>
+        <tr>
+          <th>厂商</th>
+          <th>型号</th>
+          <th>级别</th>
+          <th>架构</th>
+          <th>工艺</th>
+          <th>TDP (W)</th>
+          <th>显存 (GB)</th>
+          <th>类型</th>
+          <th>带宽 (TB/s)</th>
+          <th>BF16 TFLOPs</th>
+          <th>FP8 TFLOPs</th>
+          <th>FP4 TFLOPs</th>
+          <th>单卡参考价</th>
+          <th>8卡节点价</th>
+          <th>云租赁 $/hr</th>
+          <th>适用场景</th>
+          <th>操作</th>
+        </tr>
+      </thead>
+      <tbody id="gpu-tbody"></tbody>
+    </table>
+  </div>
+</div>
+
+</div><!-- /page -->
+
+<script>
+// ============================================================
+// DATA
+// ============================================================
+
+const MODEL_DB = [
+  // ── DeepSeek ──────────────────────────────────────────────────────────────
+  { vendor:'DeepSeek', name:'DeepSeek V4-Pro',         date:'2026.4.24', arch:'MoE',      totalB:1600, activeB:49,  L:61,  H:7168,  kvMode:1, context:'1,000K',   modal:'文本',         open:'开源',      pIn:1.74, pOut:3.48,  cur:'USD', aaScore:null,aaSpeed:null,aaLatency:null, note:'deepseek_v4架构（非MLA）；num_key_value_heads=1,head_dim=512 → nKV=512；128 Q heads；384路由+1共享专家；8/token；33T预训练数据；缓存命中$0.145/M in' },
+  { vendor:'DeepSeek', name:'DeepSeek V4-Flash',       date:'2026.4.24', arch:'MoE',      totalB:284,  activeB:13,  L:43,  H:4096,  kvMode:1, context:'1,000K',   modal:'文本',         open:'开源',      pIn:0.14, pOut:0.28,  cur:'USD', aaScore:null,aaSpeed:null,aaLatency:null, note:'deepseek_v4架构（非MLA）；num_key_value_heads=1,head_dim=512 → nKV=512；64 Q heads；256路由+1共享专家；8/token；32T预训练数据；缓存命中$0.028/M in；替代deepseek-chat端点' },
+  { vendor:'DeepSeek', name:'DeepSeek V3.2',      date:'2025.9.29', arch:'MoE',      totalB:671,  activeB:37,  L:61,  H:7168,  kvMode:1, context:'128K',     modal:'文本',         open:'开源',      pIn:0.28, pOut:0.42,  cur:'USD', aaScore:42, aaSpeed:32,  aaLatency:1.45 },
+  { vendor:'DeepSeek', name:'DeepSeek R1',              date:'2025.1.20', arch:'MoE',   totalB:671,  activeB:37,  L:61,  H:7168,  kvMode:1, context:'128K',   modal:'文本', open:'开源',      pIn:1.74, pOut:3.48,  cur:'USD', aaScore:null,aaSpeed:null,aaLatency:null, note:'deepseek-reasoner端点已迁移至V4-Pro思考模式；定价同V4-Pro' },
+  { vendor:'DeepSeek', name:'DeepSeek R1-Distill-Qwen-32B', date:'2025.1.20', arch:'Dense', totalB:32,  activeB:32,  L:64,  H:5120,  kvMode:1, context:'128K',   modal:'文本', open:'开源',      pIn:null, pOut:null, cur:'-',   aaScore:null,aaSpeed:null,aaLatency:null, note:'基于Qwen2基座蒸馏自R1；GQA 8组(nKV=1024)' },
+  { vendor:'DeepSeek', name:'DeepSeek R1-Distill-Llama-70B',date:'2025.1.20', arch:'Dense', totalB:70,  activeB:70,  L:80,  H:8192,  kvMode:1, context:'128K',   modal:'文本', open:'开源',      pIn:null, pOut:null, cur:'-',   aaScore:null,aaSpeed:null,aaLatency:null, note:'基于Llama-3基座蒸馏自R1；GQA 8组(nKV=1024)' },
+  // ── Meta ──────────────────────────────────────────────────────────────────
+  { vendor:'Meta',     name:'Llama 4 Scout',       date:'2025.4.5',  arch:'MoE(16E)', totalB:109,  activeB:17,  L:null,H:null,  kvMode:0, context:'10,000K',  modal:'文本+Image',   open:'开源',      pIn:null, pOut:null,  cur:'-',   aaScore:14, aaSpeed:133, aaLatency:0.80 },
+  { vendor:'Meta',     name:'Llama 4 Maverick',    date:'2025.4.5',  arch:'MoE(128E)',totalB:400,  activeB:17,  L:null,H:null,  kvMode:0, context:'-',        modal:'文本+Image',   open:'开源',      pIn:null, pOut:null,  cur:'-',   aaScore:18, aaSpeed:114, aaLatency:1.03 },
+  { vendor:'Meta',     name:'Llama 3.1 405B',      date:'2024.7',    arch:'Dense',    totalB:405,  activeB:405, L:126, H:16384, kvMode:1, context:'128K',     modal:'文本',         open:'开源',      pIn:null, pOut:null,  cur:'-',   aaScore:17, aaSpeed:29,  aaLatency:2.42 },
+  { vendor:'Meta',     name:'Llama 3.3 70B',       date:'2024.12.6', arch:'Dense',    totalB:70,   activeB:70,  L:80,  H:8192,  kvMode:1, context:'128K',     modal:'文本',         open:'开源',      pIn:null, pOut:null,  cur:'-',   aaScore:null,aaSpeed:null,aaLatency:null, note:'GQA 8组(nKV=1024)；Llama 3.1 70B升级版' },
+  { vendor:'Meta',     name:'Llama 3.1 70B',       date:'2024.7',    arch:'Dense',    totalB:70,   activeB:70,  L:80,  H:8192,  kvMode:1, context:'128K',     modal:'文本',         open:'开源',      pIn:null, pOut:null,  cur:'-',   aaScore:null,aaSpeed:null,aaLatency:null },
+  // ── Alibaba ───────────────────────────────────────────────────────────────
+  { vendor:'Alibaba',  name:'Qwen3.5 397B',         date:'2026.3',    arch:'MoE',      totalB:397,  activeB:17,  L:null,H:null,  kvMode:0, context:'262K',     modal:'文本',         open:'开源',      pIn:0.60, pOut:3.60,  cur:'USD', aaScore:45, aaSpeed:53,  aaLatency:2.60, note:'官方型号名Qwen3.5-397B-A17B（17B激活/397B总参）；AA定价；GQA架构，nKV=2' },
+  { vendor:'Alibaba',  name:'Qwen3-235B',           date:'2025.7.25', arch:'MoE',      totalB:235,  activeB:22,  L:null,H:null,  kvMode:0, context:'-',        modal:'文本',         open:'开源',      pIn:2.0,  pOut:8.0,   cur:'CNY', aaScore:null,aaSpeed:null,aaLatency:null },
+  { vendor:'Alibaba',  name:'Qwen3-30B-A3B',        date:'2025.4.29', arch:'MoE',      totalB:30,   activeB:3,   L:48,  H:2048,  kvMode:1, context:'40K',      modal:'文本',         open:'开源',      pIn:null, pOut:null,  cur:'-',   aaScore:null,aaSpeed:null,aaLatency:null, note:'128路由+1共享专家；nKV=512(4组GQA)；单GPU可跑' },
+  { vendor:'Alibaba',  name:'Qwen3-32B',             date:'2025.4.29', arch:'Dense',    totalB:32,   activeB:32,  L:64,  H:5120,  kvMode:1, context:'40K',      modal:'文本',         open:'开源',      pIn:null, pOut:null,  cur:'-',   aaScore:null,aaSpeed:null,aaLatency:null, note:'GQA 8组(nKV=1024)' },
+  { vendor:'Alibaba',  name:'Qwen3-14B',             date:'2025.4.29', arch:'Dense',    totalB:14,   activeB:14,  L:40,  H:5120,  kvMode:1, context:'40K',      modal:'文本',         open:'开源',      pIn:null, pOut:null,  cur:'-',   aaScore:null,aaSpeed:null,aaLatency:null, note:'GQA 8组(nKV=1024)' },
+  { vendor:'Alibaba',  name:'Qwen3-8B',              date:'2025.4.29', arch:'Dense',    totalB:8,    activeB:8,   L:36,  H:4096,  kvMode:1, context:'40K',      modal:'文本',         open:'开源',      pIn:null, pOut:null,  cur:'-',   aaScore:null,aaSpeed:null,aaLatency:null, note:'GQA 8组(nKV=1024)' },
+  { vendor:'Alibaba',  name:'Qwen2.5 72B',          date:'2024.9',    arch:'Dense',    totalB:72,   activeB:72,  L:80,  H:8192,  kvMode:1, context:'128K',     modal:'文本',         open:'开源',      pIn:null, pOut:null,  cur:'-',   aaScore:null,aaSpeed:null,aaLatency:null },
+  { vendor:'Alibaba',  name:'Qwen-Max',             date:'-',         arch:'MoE',      totalB:null, activeB:null,L:null,H:null,  kvMode:0, context:'32K',      modal:'文本',         open:'闭源(API)', pIn:2.4,  pOut:9.6,   cur:'CNY', aaScore:null,aaSpeed:null,aaLatency:null },
+  { vendor:'Alibaba',  name:'Qwen-Plus',            date:'-',         arch:'MoE',      totalB:null, activeB:null,L:null,H:null,  kvMode:0, context:'128K',     modal:'文本',         open:'闭源(API)', pIn:0.8,  pOut:2.0,   cur:'CNY', aaScore:null,aaSpeed:null,aaLatency:null },
+  { vendor:'Alibaba',  name:'Qwen-Turbo',           date:'-',         arch:'MoE',      totalB:null, activeB:null,L:null,H:null,  kvMode:0, context:'1,000K',   modal:'文本',         open:'闭源(API)', pIn:0.3,  pOut:0.6,   cur:'CNY', aaScore:null,aaSpeed:null,aaLatency:null },
+  // ── Tencent ───────────────────────────────────────────────────────────────
+  { vendor:'Tencent',  name:'Hy3 preview',           date:'2026.4.23', arch:'MoE',      totalB:295,  activeB:21,  L:80,  H:4096,  kvMode:1, context:'256K',     modal:'文本',         open:'开源',      pIn:1.2,  pOut:4.0,   cur:'CNY', aaScore:null,aaSpeed:null,aaLatency:null, note:'295B A21B；GQA 8组(nKV=1024)；192路由+1共享专家；SWE-bench 74.4%；2026-04发布' },
+  // ── Zhipu AI ──────────────────────────────────────────────────────────────
+  { vendor:'Zhipu AI', name:'GLM-4.7',             date:'2026.3',    arch:'MoE',      totalB:null, activeB:null,L:null,H:null,  kvMode:0, context:'-',        modal:'文本+Image',   open:'闭源',      pIn:0.60, pOut:2.20,  cur:'USD', aaScore:null,aaSpeed:null,aaLatency:null, note:'Artificial Analysis 定价数据' },
+  { vendor:'Zhipu AI', name:'GLM-5',               date:'2026.2.12', arch:'MoE',      totalB:744,  activeB:40,  L:78,  H:6144,  kvMode:0, context:'128K',     modal:'文本+Image',   open:'开源',      pIn:1.00, pOut:3.20,  cur:'USD', aaScore:50, aaSpeed:69,  aaLatency:1.78, note:'Artificial Analysis 定价数据' },
+  { vendor:'Zhipu AI', name:'GLM-5.1',             date:'2026.4.7',  arch:'MoE',      totalB:744,  activeB:40,  L:78,  H:6144,  kvMode:1, context:'200K',     modal:'文本+Image',   open:'开源',      pIn:1.40, pOut:4.40,  cur:'USD', aaScore:51, aaSpeed:45,  aaLatency:1.63, note:'MIT开源；glm_moe_dsa架构；MLA(kv_lora_rank=512)；nKV=2304=(512+64×64)/2；256路由+1共享；8/token；从HF/ModelScope验证总参744B' },
+  // ── Xiaomi ────────────────────────────────────────────────────────────────
+  { vendor:'Xiaomi',   name:'MiMo V2 Flash',        date:'2026.2',    arch:'MoE',      totalB:null, activeB:null,L:null,H:null,  kvMode:0, context:'256K',     modal:'文本',         open:'闭源',      pIn:0.09, pOut:0.29,  cur:'USD', aaScore:41, aaSpeed:132, aaLatency:2.11, note:'Artificial Analysis 定价数据；MiMo = 小米自研模型系列' },
+  { vendor:'Xiaomi',   name:'MiMo V2 Pro',          date:'2026.3',    arch:'MoE',      totalB:null, activeB:null,L:null,H:null,  kvMode:0, context:'1,000K',   modal:'文本',         open:'闭源',      pIn:null, pOut:null,  cur:'-',   aaScore:49, aaSpeed:70,  aaLatency:3.26, note:'小米自研模型系列' },
+  // ── MiniMax ───────────────────────────────────────────────────────────────
+  { vendor:'MiniMax',  name:'MiniMax M2.1',         date:'2026.1',    arch:'MoE',      totalB:null, activeB:null,L:null,H:null,  kvMode:0, context:'-',        modal:'文本',         open:'闭源',      pIn:0.30, pOut:1.20,  cur:'USD', aaScore:null,aaSpeed:null,aaLatency:null, note:'Artificial Analysis 定价数据' },
+  { vendor:'MiniMax',  name:'MiniMax M2.5',         date:'2026.2.13', arch:'MoE',      totalB:230,  activeB:10,  L:null,H:null,  kvMode:0, context:'192K',     modal:'文本',         open:'闭源',      pIn:0.30, pOut:1.20,  cur:'USD', aaScore:null,aaSpeed:null,aaLatency:null, note:'总参数230B / 激活10B（来源：百度百科）；Artificial Analysis 定价数据' },
+  { vendor:'MiniMax',  name:'MiniMax M2.7',         date:'2026.3',    arch:'MoE',      totalB:null, activeB:null,L:null,H:null,  kvMode:0, context:'205K',     modal:'文本',         open:'闭源',      pIn:0.30, pOut:1.20,  cur:'USD', aaScore:50, aaSpeed:48,  aaLatency:2.10, note:'Artificial Analysis 定价数据' },
+  // ── Moonshot AI ───────────────────────────────────────────────────────────
+  { vendor:'Moonshot AI',name:'Kimi K2 Thinking',   date:'2026.3',    arch:'MoE',      totalB:null, activeB:null,L:null,H:null,  kvMode:0, context:'-',        modal:'文本+Image',   open:'闭源',      pIn:0.60, pOut:2.50,  cur:'USD', aaScore:null,aaSpeed:null,aaLatency:null, note:'Artificial Analysis 定价数据' },
+  { vendor:'Moonshot AI',name:'Kimi K2.5',           date:'2026.4',    arch:'MoE',      totalB:1000, activeB:32,  L:61,  H:7168,  kvMode:1, context:'256K',     modal:'文本+Image',   open:'闭源',      pIn:0.44, pOut:2.00,  cur:'USD', aaScore:47, aaSpeed:37,  aaLatency:2.82, note:'K2.5与K2.6共享kimi_k25基座架构；MLA(kv_lora_rank=512)；nKV≈2304；384路由+1共享专家；8/token；AA定价' },
+  { vendor:'Moonshot AI',name:'Kimi K2.6',           date:'2026.4.20', arch:'MoE',      totalB:1000, activeB:32,  L:61,  H:7168,  kvMode:1, context:'256K',     modal:'文本+Image',   open:'闭源',      pIn:0.95, pOut:4.00,  cur:'USD', aaScore:null,aaSpeed:null,aaLatency:null, note:'kimi_k25架构；MLA(kv_lora_rank=512)；nKV=2304=(512+64×64)/2；384路由+1共享专家；8/token；多模态(1.1T含视觉参数)；从HF moonshotai/Kimi-K2.6验证' },
+  // ── StepFun ───────────────────────────────────────────────────────────────
+  { vendor:'StepFun',  name:'Step 3.5 Flash',       date:'2026.3',    arch:'MoE',      totalB:null, activeB:null,L:null,H:null,  kvMode:0, context:'256K',     modal:'文本',         open:'闭源',      pIn:null, pOut:null,  cur:'-',   aaScore:38, aaSpeed:173, aaLatency:1.05, note:'AA blended $0.15/M（3:1 比例）' },
+  // ── OpenAI ────────────────────────────────────────────────────────────────
+  { vendor:'OpenAI',   name:'GPT-5.4',              date:'2026.3.6',  arch:'N/A',      totalB:null, activeB:null,L:null,H:null,  kvMode:0, context:'1,050K',   modal:'文本+Image',   open:'闭源',      pIn:2.50, pOut:15.00, cur:'USD', aaScore:57, aaSpeed:80,  aaLatency:231.16, note:'AA速度为xhigh推理模式（含长思考）' },
+  { vendor:'OpenAI',   name:'GPT-5.4 mini',         date:'2026.3.6',  arch:'N/A',      totalB:null, activeB:null,L:null,H:null,  kvMode:0, context:'400K',     modal:'文本+Image',   open:'闭源',      pIn:0.75, pOut:4.50,  cur:'USD', aaScore:49, aaSpeed:180, aaLatency:9.00 },
+  { vendor:'OpenAI',   name:'GPT-5.4 nano',         date:'2026.3.6',  arch:'N/A',      totalB:null, activeB:null,L:null,H:null,  kvMode:0, context:'400K',     modal:'文本+Image',   open:'闭源',      pIn:0.20, pOut:1.25,  cur:'USD', aaScore:44, aaSpeed:159, aaLatency:4.46 },
+  { vendor:'OpenAI',   name:'gpt-oss-120B',         date:'-',         arch:'Dense',    totalB:120,  activeB:120, L:null,H:null,  kvMode:0, context:'131K',     modal:'文本',         open:'开源',      pIn:null, pOut:null,  cur:'-',   aaScore:33, aaSpeed:211, aaLatency:0.90, note:'AA blended $0.26/M（3:1 比例）' },
+  { vendor:'OpenAI',   name:'gpt-oss-20B',          date:'-',         arch:'Dense',    totalB:20,   activeB:20,  L:null,H:null,  kvMode:0, context:'131K',     modal:'文本',         open:'开源',      pIn:null, pOut:null,  cur:'-',   aaScore:24, aaSpeed:266, aaLatency:0.68, note:'AA blended $0.10/M（3:1 比例）' },
+  // ── Anthropic ─────────────────────────────────────────────────────────────
+  { vendor:'Anthropic',name:'Claude Opus 4.7',      date:'2026.2.6',  arch:'Dense',    totalB:null, activeB:null,L:null,H:null,  kvMode:0, context:'1,000K',   modal:'文本+Image',   open:'闭源',      pIn:5.00, pOut:25.00, cur:'USD', aaScore:57, aaSpeed:45,  aaLatency:9.80 },
+  { vendor:'Anthropic',name:'Claude Sonnet 4.6',    date:'2026.2.18', arch:'Dense',    totalB:null, activeB:null,L:null,H:null,  kvMode:0, context:'1,000K',   modal:'文本+Image',   open:'闭源',      pIn:3.00, pOut:15.00, cur:'USD', aaScore:52, aaSpeed:50,  aaLatency:126.07, note:'AA速度为max推理模式（含长思考）' },
+  { vendor:'Anthropic',name:'Claude Haiku 4.5',     date:'2025.10.15',arch:'Dense',    totalB:null, activeB:null,L:null,H:null,  kvMode:0, context:'200K',     modal:'文本+Image',   open:'闭源',      pIn:1.00, pOut:5.00,  cur:'USD', aaScore:31, aaSpeed:92,  aaLatency:0.80 },
+  // ── Google ────────────────────────────────────────────────────────────────
+  { vendor:'Google',   name:'Gemini 3.1 Pro Preview',date:'2026.4',   arch:'MoE',      totalB:null, activeB:null,L:null,H:null,  kvMode:0, context:'1,000K',   modal:'文本+Image+Video',open:'闭源',    pIn:2.00, pOut:12.00, cur:'USD', aaScore:57, aaSpeed:132, aaLatency:29.55, note:'Artificial Analysis 定价数据' },
+  { vendor:'Google',   name:'Gemini 3 Flash',        date:'2026.3',    arch:'MoE',      totalB:null, activeB:null,L:null,H:null,  kvMode:0, context:'1,000K',   modal:'文本+Image+Audio',open:'闭源',   pIn:0.50, pOut:3.00,  cur:'USD', aaScore:46, aaSpeed:163, aaLatency:7.28, note:'Artificial Analysis 定价数据（推理模式）' },
+  { vendor:'Google',   name:'Gemini 3.1 Flash-Lite', date:'2026.4',   arch:'MoE',      totalB:null, activeB:null,L:null,H:null,  kvMode:0, context:'1,000K',   modal:'文本+Image+Audio',open:'闭源',   pIn:null, pOut:null,  cur:'-',   aaScore:34, aaSpeed:339, aaLatency:5.41, note:'AA blended $0.56/M（3:1 比例）' },
+  { vendor:'Google',   name:'Gemini 2.5 Pro',        date:'2025.3.25', arch:'MoE',      totalB:null, activeB:null,L:null,H:null,  kvMode:0, context:'1,000K',   modal:'文本+Image+Video',open:'闭源',   pIn:1.25, pOut:10.00, cur:'USD', aaScore:35, aaSpeed:128, aaLatency:23.75 },
+  { vendor:'Google',   name:'Gemini 2.5 Flash',      date:'2025.4.17', arch:'MoE',      totalB:null, activeB:null,L:null,H:null,  kvMode:0, context:'1,000K',   modal:'文本+Image+Audio',open:'闭源',   pIn:0.30, pOut:2.50,  cur:'USD', aaScore:null,aaSpeed:null,aaLatency:null },
+  { vendor:'Google',   name:'Gemini 2.5 Flash-Lite', date:'2025.6.17', arch:'MoE',      totalB:null, activeB:null,L:null,H:null,  kvMode:0, context:'1,000K',   modal:'文本+Image+Audio',open:'闭源',   pIn:0.10, pOut:0.40,  cur:'USD', aaScore:null,aaSpeed:null,aaLatency:null },
+  { vendor:'Google',   name:'Gemma 3 27B',           date:'2025.3.12', arch:'Dense',    totalB:27,   activeB:27,  L:62,  H:5376,  kvMode:1, context:'128K',     modal:'文本+Image',   open:'开源',      pIn:null, pOut:null,  cur:'-',   aaScore:null,aaSpeed:null,aaLatency:null, note:'GQA 16组(nKV=2048)；交替使用滑窗(1K)与全局注意力层' },
+  // ── Microsoft ─────────────────────────────────────────────────────────────
+  { vendor:'Microsoft',name:'Phi-4',                 date:'2024.12.12',arch:'Dense',    totalB:14,   activeB:14,  L:40,  H:5120,  kvMode:1, context:'16K',      modal:'文本',         open:'开源',      pIn:null, pOut:null,  cur:'-',   aaScore:null,aaSpeed:null,aaLatency:null, note:'GQA 10组(nKV=1280)；上下文仅16K' },
+  // ── Mistral ───────────────────────────────────────────────────────────────
+  { vendor:'Mistral',  name:'Mistral Small 3.1 24B', date:'2025.3',    arch:'Dense',    totalB:24,   activeB:24,  L:40,  H:5120,  kvMode:1, context:'128K',     modal:'文本+Image',   open:'开源',      pIn:null, pOut:null,  cur:'-',   aaScore:null,aaSpeed:null,aaLatency:null, note:'GQA 8组(nKV=1024)；支持Function Calling' },
+  // ── xAI ───────────────────────────────────────────────────────────────────
+  { vendor:'xAI',      name:'Grok-4.20',             date:'2026.2.18', arch:'MoE',      totalB:null, activeB:null,L:null,H:null,  kvMode:0, context:'256K/2M',  modal:'文本+Image',   open:'闭源',      pIn:2.00, pOut:4.40,  cur:'USD', aaScore:49, aaSpeed:182, aaLatency:13.55, note:'Artificial Analysis 定价数据（O3O9 v2版本）' },
+  { vendor:'xAI',      name:'Grok 4.1 Fast',         date:'2026.3',    arch:'MoE',      totalB:null, activeB:null,L:null,H:null,  kvMode:0, context:'2M',       modal:'文本+Image',   open:'闭源',      pIn:0.20, pOut:0.50,  cur:'USD', aaScore:39, aaSpeed:152, aaLatency:6.30, note:'AA blended $0.28/M（3:1 比例）' },
+  // ── ByteDance ─────────────────────────────────────────────────────────────
+  { vendor:'ByteDance',name:'Doubao Seed 2.0 Pro',   date:'-',         arch:'MoE',      totalB:null, activeB:null,L:null,H:null,  kvMode:0, context:'128K',     modal:'文本+Image',   open:'闭源',      pIn:3.2,  pOut:16,    cur:'CNY', aaScore:null,aaSpeed:null,aaLatency:null },
+  // ── 其他 ──────────────────────────────────────────────────────────────────
+  { vendor:'其他',     name:'Terminus',               date:'-',         arch:'N/A',      totalB:null, activeB:null,L:null,H:null,  kvMode:0, context:'-',        modal:'文本',         open:'闭源',      pIn:1.64, pOut:2.75,  cur:'USD', aaScore:null,aaSpeed:null,aaLatency:null, note:'Artificial Analysis 定价数据' },
+];
+
+const MODEL_PARAMS = {
+  // nKV = n_kv_heads × head_dim（GQA/MLA 修正）
+  // MLA (DeepSeek): nKV = (d_c + n_heads×d_r)/2 = (512 + 128×64)/2 = 4352
+  // GQA 8 groups (Llama/Qwen 70B class): nKV = n_kv_heads×head_dim = 8×128 = 1024
+  // GQA 8 groups (Llama 405B): nKV = 8×128 = 1024 (vs H=16384, 16× compression)
+  'DeepSeek V4-Pro':  { arch:1, totalB:1600, activeB:49,   L:61, H:7168, nKV:512,  kvMode:1, pIn:1.74, pInCached:0.145, pOut:3.48, cur:'USD' },
+  'DeepSeek V4-Flash':{ arch:1, totalB:284,  activeB:13,   L:43, H:4096, nKV:512,  kvMode:1, pIn:0.14, pInCached:0.028, pOut:0.28, cur:'USD' },
+  'DeepSeek V3.2':   { arch:1, totalB:671, activeB:37, L:61, H:7168, nKV:4352, kvMode:1, pIn:0.28, pInCached:0.028, pOut:0.42, cur:'USD' },
+  'DeepSeek R1':                    { arch:1, totalB:671, activeB:37,  L:61,  H:7168,  nKV:4352, kvMode:1, pIn:1.74, pInCached:0.145, pOut:3.48, cur:'USD' },
+  'DeepSeek R1-Distill-Qwen-32B':  { arch:0, totalB:32,  activeB:32,  L:64,  H:5120,  nKV:1024, kvMode:1 },
+  'DeepSeek R1-Distill-Llama-70B': { arch:0, totalB:70,  activeB:70,  L:80,  H:8192,  nKV:1024, kvMode:1 },
+  'Llama 4 Scout':   { arch:1, totalB:109, activeB:17, L:null, H:null, kvMode:0 },
+  'Llama 4 Maverick':{ arch:1, totalB:400, activeB:17, L:null, H:null, kvMode:0 },
+  'Llama 3.3 70B':   { arch:0, totalB:70,  activeB:70,  L:80,  H:8192,  nKV:1024, kvMode:1 },
+  'Llama 3.1 405B':  { arch:0, totalB:405, activeB:405, L:126, H:16384, nKV:1024, kvMode:1 },
+  'Llama 3.1 70B':   { arch:0, totalB:70,  activeB:70,  L:80,  H:8192,  nKV:1024, kvMode:1 },
+  'Qwen3-235B':      { arch:1, totalB:235, activeB:22,  L:null,H:null,  kvMode:0, pIn:2.0, pOut:8.0, cur:'CNY' },
+  'Qwen3-30B-A3B':   { arch:1, totalB:30,  activeB:3,   L:48,  H:2048,  nKV:512,  kvMode:1 },
+  'Qwen3-32B':       { arch:0, totalB:32,  activeB:32,  L:64,  H:5120,  nKV:1024, kvMode:1 },
+  'Qwen3-14B':       { arch:0, totalB:14,  activeB:14,  L:40,  H:5120,  nKV:1024, kvMode:1 },
+  'Qwen3-8B':        { arch:0, totalB:8,   activeB:8,   L:36,  H:4096,  nKV:1024, kvMode:1 },
+  'Qwen2.5 72B':     { arch:0, totalB:72,  activeB:72,  L:80,  H:8192,  nKV:1024, kvMode:1 },
+  'Hy3 preview':      { arch:1, totalB:295, activeB:21,  L:80,  H:4096,  nKV:1024, kvMode:1, pIn:1.2, pOut:4.0, cur:'CNY' },
+  'GLM-4.7':         { arch:1, totalB:null, activeB:null, L:null, H:null, kvMode:0, pIn:0.60, pOut:2.20, cur:'USD' },
+  'GLM-5':           { arch:1, totalB:744, activeB:40, L:78, H:6144, kvMode:0, pIn:1.00, pOut:3.20, cur:'USD' },
+  'GLM-5.1':         { arch:1, totalB:744, activeB:40, L:78, H:6144, nKV:2304, kvMode:1, pIn:1.40, pInCached:0.28, pOut:4.40, cur:'USD' },
+  'MiMo V2 Flash':   { arch:1, totalB:null, activeB:null, L:null, H:null, kvMode:0, pIn:0.09, pOut:0.29, cur:'USD' },
+  'MiMo V2 Pro':     { arch:1, totalB:null, activeB:null, L:null, H:null, kvMode:0 },
+  'MiniMax M2.1':    { arch:1, totalB:null, activeB:null, L:null, H:null, kvMode:0, pIn:0.30, pOut:1.20, cur:'USD' },
+  'MiniMax M2.5':    { arch:1, totalB:230, activeB:10,  L:null, H:null, kvMode:0, pIn:0.30, pOut:1.20, cur:'USD' },
+  'MiniMax M2.7':    { arch:1, totalB:null, activeB:null, L:null, H:null, kvMode:0, pIn:0.30, pOut:1.20, cur:'USD' },
+  'Kimi K2 Thinking':{ arch:1, totalB:null, activeB:null, L:null, H:null, kvMode:0, pIn:0.60, pOut:2.50, cur:'USD' },
+  'Kimi K2.5':       { arch:1, totalB:1000,activeB:32,  L:61,   H:7168, nKV:2304, kvMode:1, pIn:0.44, pOut:2.00, cur:'USD' },
+  'Kimi K2.6':       { arch:1, totalB:1000,activeB:32,  L:61,   H:7168, nKV:2304, kvMode:1, pIn:0.95, pInCached:0.15, pOut:4.00, cur:'USD' },
+  'GPT-5.4':         { arch:1, totalB:null, activeB:null, L:null, H:null, kvMode:0, pIn:2.50, pInCached:0.25, pOut:15.00, cur:'USD' },
+  'GPT-5.4 mini':    { arch:1, totalB:null, activeB:null, L:null, H:null, kvMode:0, pIn:0.75, pInCached:0.075, pOut:4.50, cur:'USD' },
+  'GPT-5.4 nano':    { arch:1, totalB:null, activeB:null, L:null, H:null, kvMode:0, pIn:0.20, pInCached:0.02,  pOut:1.25, cur:'USD' },
+  'Claude Opus 4.7': { arch:0, totalB:null, activeB:null, L:null, H:null, kvMode:0, pIn:5.00, pInCached:0.50, pOut:25.00, cur:'USD' },
+  'Claude Sonnet 4.6':{ arch:0, totalB:null, activeB:null, L:null, H:null, kvMode:0, pIn:3.00, pInCached:0.30, pOut:15.00, cur:'USD' },
+  'Claude Haiku 4.5':{ arch:0, totalB:null, activeB:null, L:null, H:null, kvMode:0, pIn:1.00, pInCached:0.10, pOut:5.00, cur:'USD' },
+  'Gemini 3 Flash':  { arch:1, totalB:null, activeB:null, L:null, H:null, kvMode:0, pIn:0.50, pInCached:0.125, pOut:3.00, cur:'USD' },
+  'Gemini 3.1 Pro Preview':{ arch:1, totalB:null, activeB:null, L:null, H:null, kvMode:0, pIn:2.00, pInCached:0.50, pOut:12.00, cur:'USD' },
+  'Gemini 2.5 Pro':  { arch:1, totalB:null, activeB:null, L:null, H:null, kvMode:0, pIn:1.25, pInCached:0.31, pOut:10.00, cur:'USD' },
+  'Gemini 2.5 Flash':{ arch:1, totalB:null, activeB:null, L:null, H:null, kvMode:0, pIn:0.30, pInCached:0.075, pOut:2.50, cur:'USD' },
+  'Gemma 3 27B':     { arch:0, totalB:27,  activeB:27,  L:62,  H:5376,  nKV:2048, kvMode:1 },
+  'Phi-4':           { arch:0, totalB:14,  activeB:14,  L:40,  H:5120,  nKV:1280, kvMode:1 },
+  'Mistral Small 3.1 24B': { arch:0, totalB:24, activeB:24, L:40, H:5120, nKV:1024, kvMode:1 },
+  'Grok-4.20':       { arch:1, totalB:null, activeB:null, L:null, H:null, kvMode:0, pIn:2.00, pOut:4.40, cur:'USD' },
+  'Grok 4.1 Fast':   { arch:1, totalB:null, activeB:null, L:null, H:null, kvMode:0, pIn:0.20, pOut:0.50, cur:'USD' },
+  'Qwen3.5 397B':    { arch:1, totalB:397, activeB:17, L:null, H:null, kvMode:0, pIn:0.60, pOut:3.60, cur:'USD' },
+  'Step 3.5 Flash':  { arch:1, totalB:null, activeB:null, L:null, H:null, kvMode:0 },
+  'gpt-oss-120B':    { arch:0, totalB:120, activeB:120, L:null, H:null, kvMode:0 },
+  'gpt-oss-20B':     { arch:0, totalB:20,  activeB:20,  L:null, H:null, kvMode:0 },
+  'Gemini 3.1 Flash-Lite':{ arch:1, totalB:null, activeB:null, L:null, H:null, kvMode:0 },
+  'Terminus':        { arch:0, totalB:null, activeB:null, L:null, H:null, kvMode:0, pIn:1.64, pOut:2.75, cur:'USD' },
+};
+
+const GPU_DB = [
+  // ── NVIDIA Chip Level ──────────────────────────────────────────────────────
+  { vendor:'NVIDIA', name:'A100 80GB SXM', level:'Chip', arch:'Ampere',           process:'7nm',  tdpW:400,  vram:80,     vramType:'HBM2e',  bwTB:2.0,   fp16:312,    fp8:null,   fp4:null,   price1:'~$15K',  price8:'~$120K',  cloud:'$2.0',  usecase:'训练/推理（上一代）',       note:'正逐步被 H100 替代；A100官方规格未列FP8' },
+  { vendor:'NVIDIA', name:'H100 SXM',      level:'Chip', arch:'Hopper',           process:'4NP',  tdpW:700,  vram:80,     vramType:'HBM3',   bwTB:3.35,  fp16:990,    fp8:1979,   fp4:null,   price1:'~$20K',  price8:'~$160K',  cloud:'$2.6',  usecase:'训练/推理（当前主流）',     note:'DGX H100标配；FP8采用benchmark sustained口径' },
+  { vendor:'NVIDIA', name:'H200 SXM',      level:'Chip', arch:'Hopper',           process:'4NP',  tdpW:700,  vram:141,    vramType:'HBM3e',  bwTB:4.8,   fp16:990,    fp8:1979,   fp4:null,   price1:'~$30K',  price8:'~$240K',  cloud:'$3.8',  usecase:'大模型推理（大显存）',     note:'H100升级版，显存+带宽大幅提升；FP8采用benchmark sustained口径' },
+  { vendor:'NVIDIA', name:'H20',           level:'Chip', arch:'Hopper (CN)',      process:'4NP',  tdpW:400,  vram:96,     vramType:'HBM3',   bwTB:4.0,   fp16:148,    fp8:296,    fp4:null,   price1:'~$10K',  price8:'~$80K',   cloud:'$1.4',  usecase:'中国市场推理',             note:'出口管制版；计算受限但带宽高' },
+  { vendor:'NVIDIA', name:'B100',          level:'Chip', arch:'Blackwell',        process:'4NP',  tdpW:700,  vram:192,    vramType:'HBM3e',  bwTB:8.0,   fp16:3500,   fp8:7000,   fp4:14000,  price1:'~$25K',  price8:'~$200K',  cloud:'$4.0',  usecase:'Training & Inference',     note:'Blackwell入门级；TDP与B200 Chip相同' },
+  { vendor:'NVIDIA', name:'B200 SXM',      level:'Chip', arch:'Blackwell',        process:'4NP',  tdpW:700,  vram:192,    vramType:'HBM3e',  bwTB:8.0,   fp16:2500,   fp8:5000,   fp4:10000,  price1:'~$40K',  price8:'~$320K',  cloud:'$6.0',  usecase:'Training & Inference',     note:'Chip TDP=700W；GB200(+Grace CPU) TDP=1,200W；FP4=10 PFLOPs' },
+  { vendor:'NVIDIA', name:'B300 SXM',      level:'Chip', arch:'Blackwell Ultra',  process:'4NP',  tdpW:1100, vram:288,    vramType:'HBM3e',  bwTB:16.0,  fp16:3750,   fp8:7500,   fp4:15000,  price1:'TBD',    price8:'TBD',     cloud:'TBD',   usecase:'Training & Inference (2025 H2)', note:'Chip TDP=1,100W；GB300(+Grace)=1,400W；FP4=15 PFLOPs；2025 H2量产' },
+  // ── NVIDIA System Level ────────────────────────────────────────────────────
+  { vendor:'NVIDIA', name:'GB200 NVL2',    level:'System', arch:'Blackwell',        process:'4NP',  tdpW:1200, vram:384,    vramType:'HBM3e',  bwTB:16.0,  fp16:5000,   fp8:10000,  fp4:20000,  price1:'N/A',    price8:'N/A',     cloud:'N/A',   usecase:'超大模型训练/推理',         note:'Grace CPU + 2×B200；系统TDP=1,200W；NVLink 1.8 TB/s双向' },
+  { vendor:'NVIDIA', name:'GB200 NVL72',   level:'System', arch:'Blackwell',        process:'4NP',  tdpW:null, vram:13824,  vramType:'HBM3e',  bwTB:576,   fp16:180000, fp8:360000, fp4:720000, price1:'N/A',    price8:'N/A',     cloud:'N/A',   usecase:'大规模训练/推理集群（整机柜）', note:'72×B200 GPU；FP4=720 PFLOPs；System BW=576 TB/s；2025主力训练平台' },
+  { vendor:'NVIDIA', name:'GB300 NVL2',    level:'System', arch:'Blackwell Ultra',  process:'4NP',  tdpW:1400, vram:576,    vramType:'HBM3e',  bwTB:32.0,  fp16:7500,   fp8:15000,  fp4:30000,  price1:'TBD',    price8:'TBD',     cloud:'TBD',   usecase:'下一代超大模型（2026H1）',   note:'Grace CPU + 2×B300；系统TDP=1,400W' },
+  // ── Google TPU Chip Level ──────────────────────────────────────────────────
+  { vendor:'Google', name:'TPU v5e Viperlite', level:'Chip', arch:'TPU v5e',      process:'N5',   tdpW:300,  vram:16,     vramType:'HBM2e',  bwTB:0.819, fp16:197,    fp8:null,   fp4:null,   price1:'~$3K',   price8:'~$24K',   cloud:'~$1.2', usecase:'Google Cloud 推理（经济型）', note:'BF16=197 TFLOPs；INT8=394 TOPS；256 chips/pod；4Q23量产；单卡价为分析师内部成本估算，Google不直接出售' },
+  { vendor:'Google', name:'TPU v5p Viperfish', level:'Chip', arch:'TPU v5p',      process:'N5',   tdpW:550,  vram:95,     vramType:'HBM2e',  bwTB:2.765, fp16:459,    fp8:459,    fp4:null,   price1:'~$6K',   price8:'~$48K',   cloud:'~$4.2', usecase:'Google Cloud 大模型训练/推理', note:'BF16=FP8=459 TFLOPs；8,960 chips/pod；1Q24量产；单卡价为分析师内部成本估算，Google不直接出售' },
+  { vendor:'Google', name:'TPU v6 Trillium',   level:'Chip', arch:'TPU v6',       process:'N5P',  tdpW:390,  vram:32,     vramType:'HBM3',   bwTB:1.64,  fp16:918,    fp8:918,    fp4:null,   price1:'~$4K',   price8:'~$32K',   cloud:'~$2.7', usecase:'Google Cloud 高效训练/推理', note:'BF16=FP8=918 TFLOPs（v5e×4.7）；256 chips/pod；4Q24量产；单卡价为分析师内部成本估算，Google不直接出售' },
+  { vendor:'Google', name:'TPU v7 Ironwood',   level:'Chip', arch:'TPU v7',       process:'N3E',  tdpW:980,  vram:192,    vramType:'HBM3e',  bwTB:7.38,  fp16:2307,   fp8:4614,   fp4:null,   price1:'~$15K',  price8:'~$120K',  cloud:'TBD',   usecase:'Google Cloud 下一代超大模型', note:'BF16=2,307 TFLOPs；INT8=FP8=4,614 TOPS；9,216 chips/pod；4Q25预计；单卡价来自X/行业泄露的内部成本估算，Google不直接出售' },
+  { vendor:'Google', name:'TPU 8t',            level:'Chip', arch:'TPU v8t',      process:'TBD',  tdpW:null, vram:216,    vramType:'HBM3e',  bwTB:6.528, fp16:null,   fp8:null,   fp4:12600,  price1:'N/A',    price8:'N/A',     cloud:'TBD',   usecase:'Google Cloud 大规模预训练（专用）', note:'FP4=12.6 PFLOPs；216GB HBM3e；Virgo网络；9,600芯片/Superpod；训练性价比vs Ironwood +2.7×；能效比+2×；2026-04发布；TDP/价格未披露' },
+  { vendor:'Google', name:'TPU 8i',            level:'Chip', arch:'TPU v8i',      process:'TBD',  tdpW:null, vram:288,    vramType:'HBM3e',  bwTB:8.601, fp16:null,   fp8:null,   fp4:10100,  price1:'N/A',    price8:'N/A',     cloud:'TBD',   usecase:'Google Cloud 推理服务/采样（专用）', note:'FP4=10.1 PFLOPs；288GB HBM3e；片上SRAM=384MB（3×上代）；Boardfly拓扑7跳 vs 3D Torus 16跳；推理性价比vs Ironwood +80%；能效比+2×；2026-04发布；TDP/价格未披露' },
+  // ── AWS Trainium Chip Level ────────────────────────────────────────────────
+  { vendor:'AWS',    name:'Trainium 1 Trn1',   level:'Chip', arch:'NeuronCore-v2', process:'7nm', tdpW:null, vram:32,     vramType:'HBM2e',  bwTB:0.9,   fp16:191,    fp8:191,    fp4:null,   price1:'N/A',    price8:'N/A',     cloud:'~$1.3', usecase:'AWS 自研 AI 训练（第一代）', note:'BF16=FP8=191 TFLOPs；Trn1.32xl 16芯片/$21.5/hr；TDP未公开' },
+  { vendor:'AWS',    name:'Trainium 2 Trn2',   level:'Chip', arch:'NeuronCore-v3', process:'3nm', tdpW:null, vram:96,     vramType:'HBM2e',  bwTB:2.7,   fp16:691,    fp8:1299,   fp4:null,   price1:'N/A',    price8:'N/A',     cloud:'~$2.6', usecase:'AWS 自研 AI 训练/推理（第二代）', note:'FP8=1,299 TFLOPs；BF16=691 TFLOPs；NeuronLink3 Scale-up' },
+  { vendor:'AWS',    name:'Trainium 3 Trn3',   level:'Chip', arch:'NeuronCore-v4', process:'N3P', tdpW:null, vram:144,    vramType:'HBM3e',  bwTB:4.9,   fp16:671,    fp8:2517,   fp4:null,   price1:'N/A',    price8:'N/A',     cloud:'TBD',   usecase:'AWS 自研 AI 训练/推理（第三代）', note:'FP8=2,517 TFLOPs；BF16/FP16=671 TFLOPs；NeuronLink4；2026 预计量产；TDP未公开' },
+];
+
+const GPU_PARAMS = {
+  // NVIDIA ─ Chip Level               tdp   bw     vram  price8   cloud   fp16   fp8    fp4
+  'A100 80GB SXM':     { tdp:0.4,  bw:2000,  vram:80,  price8:120000, cloudPrice:2.0,  fp16:312,  fp8:null, fp4:null  },
+  'H100 SXM':          { tdp:0.7,  bw:3350,  vram:80,  price8:160000, cloudPrice:2.6,  fp16:990,  fp8:1979, fp4:null  },
+  'H200 SXM':          { tdp:0.7,  bw:4800,  vram:141, price8:240000, cloudPrice:3.8,  fp16:990,  fp8:1979, fp4:null  },
+  'H20':               { tdp:0.4,  bw:4000,  vram:96,  price8:80000,  cloudPrice:1.4,  fp16:148,  fp8:296,  fp4:null  },
+  'B100':              { tdp:0.7,  bw:8000,  vram:192, price8:200000, cloudPrice:4.0,  fp16:3500, fp8:7000, fp4:14000 },
+  'B200 SXM':          { tdp:0.7,  bw:8000,  vram:192, price8:320000, cloudPrice:6.0,  fp16:2500, fp8:5000, fp4:10000 },
+  'B300 SXM':          { tdp:1.1,  bw:16000, vram:288, price8:null,   cloudPrice:null, fp16:3750, fp8:7500, fp4:15000 },
+  // Google TPU ─ Chip Level
+  'TPU v5e Viperlite': { tdp:0.3,  bw:819,   vram:16,  price8:null,   cloudPrice:1.2,  fp16:197,  fp8:null, fp4:null  },
+  'TPU v5p Viperfish': { tdp:0.55, bw:2765,  vram:95,  price8:null,   cloudPrice:4.2,  fp16:459,  fp8:459,  fp4:null  },
+  'TPU v6 Trillium':   { tdp:0.39, bw:1640,  vram:32,  price8:null,   cloudPrice:2.7,  fp16:918,  fp8:918,  fp4:null  },
+  'TPU v7 Ironwood':   { tdp:0.98, bw:7380,  vram:192, price8:null,   cloudPrice:null, fp16:2307, fp8:4614, fp4:null  },
+  'TPU 8t':            { tdp:null, bw:6528,  vram:216, price8:null,   cloudPrice:null, fp16:null, fp8:null, fp4:12600 },
+  'TPU 8i':            { tdp:null, bw:8601,  vram:288, price8:null,   cloudPrice:null, fp16:null, fp8:null, fp4:10100 },
+  // AWS Trainium ─ Chip Level
+  'Trainium 1 Trn1':   { tdp:null, bw:900,   vram:32,  price8:null,   cloudPrice:1.3,  fp16:191,  fp8:191,  fp4:null  },
+  'Trainium 2 Trn2':   { tdp:null, bw:2700,  vram:96,  price8:null,   cloudPrice:2.6,  fp16:691,  fp8:1299, fp4:null  },
+  'Trainium 3 Trn3':   { tdp:null, bw:4900,  vram:144, price8:null,   cloudPrice:null, fp16:671,  fp8:2517, fp4:null  },
+};
+
+// ============================================================
+// SHARED STATE  (populated by calc(), read by calcRevenue())
+// ============================================================
+let _cs = {
+  nodeTPS: 0, nodes: 0, tco: 0,
+  tcoPerNode: 0, tpsPerNode: 0,
+  annSeconds: 0, actualGpus: 0,
+  isl: 0, osl: 0,
+  apiPriceOut: null, apiPriceIn: null,
+};
+
+// ============================================================
+// TAB SWITCHING
+// ============================================================
+function switchTab(id) {
+  document.querySelectorAll('.tab-btn').forEach((b,i) => b.classList.toggle('active', ['calc','models','gpus'][i] === id));
+  document.querySelectorAll('.tab-content').forEach(c => c.classList.toggle('active', c.id === 'tab-'+id));
+  if (id==='models') renderModelTable();
+  if (id==='gpus') renderGpuTable();
+}
+
+// ============================================================
+// MODEL SELECTION
+// ============================================================
+function onModelChange() {
+  const key = document.getElementById('sel-model').value;
+  const m = MODEL_PARAMS[key];
+  if (!m) return;
+  const af = (id, val, isAuto=true) => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.value = val !== null && val !== undefined ? val : '';
+    el.classList.toggle('autofill', isAuto);
+  };
+  const archSel = document.getElementById('in-arch');
+  archSel.value = m.arch;
+  archSel.classList.add('autofill');
+  af('in-total', m.totalB !== null ? m.totalB : '');
+  af('in-active', m.activeB !== null ? m.activeB : (m.arch===1 ? '' : m.totalB));
+  const kvSel = document.getElementById('in-kvmode');
+  kvSel.value = m.kvMode;
+  kvSel.classList.add('autofill');
+  if (m.L !== null) af('in-L', m.L); else af('in-L', '', false);
+  if (m.H !== null) af('in-H', m.H); else af('in-H', '', false);
+  if (m.nKV !== null && m.nKV !== undefined) af('in-nkv', m.nKV); else af('in-nkv', '', false);
+  onArchChange();
+  onKvModeChange();
+  // Auto-fill revenue panel API pricing from model DB
+  if (m.pOut !== null && m.pOut !== undefined) {
+    const priceUSD = m.cur === 'CNY' ? m.pOut / 7.2 : m.pOut;
+    const el = document.getElementById('rv-price-out');
+    if (el) { el.value = parseFloat(priceUSD.toFixed(4)); el.classList.add('autofill'); }
+  }
+  if (m.pIn !== null && m.pIn !== undefined) {
+    const priceUSD = m.cur === 'CNY' ? m.pIn / 7.2 : m.pIn;
+    const el = document.getElementById('rv-price-in');
+    if (el) { el.value = parseFloat(priceUSD.toFixed(4)); el.classList.add('autofill'); }
+  }
+  // Auto-fill cached input price (blank if model doesn't publish a cache hit price)
+  {
+    const el = document.getElementById('rv-price-in-cached');
+    if (el) {
+      if (m.pInCached !== null && m.pInCached !== undefined) {
+        const priceUSD = m.cur === 'CNY' ? m.pInCached / 7.2 : m.pInCached;
+        el.value = parseFloat(priceUSD.toFixed(4));
+        el.classList.add('autofill');
+      } else {
+        el.value = '';
+        el.classList.remove('autofill');
+      }
+    }
+  }
+  calc();
+}
+
+function onGpuChange() {
+  const key = document.getElementById('sel-gpu').value;
+  const g = GPU_PARAMS[key];
+  if (!g) return;
+  const af = (id, val) => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.value = val !== null && val !== undefined ? val : '';
+    el.classList.toggle('autofill', val !== null && val !== undefined);
+  };
+  af('in-tdp', g.tdp);
+  af('in-bw', g.bw);
+  af('in-vram', g.vram);
+  af('in-price8', g.price8);
+  af('in-rent-price', g.cloudPrice);
+  updateTflops();
+  calc();
+}
+
+// 精度变更：同步更新 TFLOPS 并重算
+function onPrecChange() {
+  updateTflops();
+  calc();
+}
+
+// 根据当前 GPU 选择 + 精度，自动填入对应 TFLOPS
+function updateTflops() {
+  const key = document.getElementById('sel-gpu').value;
+  const g = GPU_PARAMS[key];
+  if (!g) return;
+  const prec = parseFloat(document.getElementById('in-prec').value);
+  let tflops = null;
+  if (prec >= 2)       tflops = g.fp16;   // BF16 / FP16
+  else if (prec >= 1)  tflops = g.fp8;    // FP8
+  else                 tflops = g.fp4;    // FP4
+  const el = document.getElementById('in-tflops');
+  if (!el) return;
+  if (tflops !== null && tflops !== undefined) {
+    el.value = tflops;
+    el.classList.add('autofill');
+  } else {
+    // 该精度无官方数据，清空并提示手动填
+    el.value = '';
+    el.classList.remove('autofill');
+  }
+}
+
+function setHwMode(mode) {
+  const isRental = mode === 'rental';
+  document.getElementById('btn-selfbuild').className = 'mode-btn' + (isRental ? '' : ' active-self');
+  document.getElementById('btn-rental').className = 'mode-btn' + (isRental ? ' active-rent' : '');
+  ['row-price8','row-capex-mult','row-salvage','row-depr','row-tdp','row-pue','row-elec','row-net'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.style.display = isRental ? 'none' : '';
+  });
+  document.getElementById('row-rent-price').style.display = isRental ? '' : 'none';
+  calc();
+}
+
+function onArchChange() {
+  const isMoe = document.getElementById('in-arch').value === '1';
+  const activeRow = document.getElementById('row-active');
+  if (activeRow) activeRow.style.opacity = isMoe ? '1' : '0.4';
+  calc();
+}
+
+function onKvModeChange() {
+  const isPrecise = document.getElementById('in-kvmode').value === '1';
+  document.getElementById('row-L').style.display = isPrecise ? '' : 'none';
+  document.getElementById('row-H').style.display = isPrecise ? '' : 'none';
+  document.getElementById('row-nkv').style.display = isPrecise ? '' : 'none';
+  document.getElementById('row-kv-coeff').style.display = isPrecise ? 'none' : '';
+  calc();
+}
+
+const PRESETS = {
+  research: {
+    'in-isl':'1024', 'in-osl':'2048', 'in-batch':'25', 'in-comm':'0.05',
+    'in-mbu':'40', 'in-mfu':'35', 'in-util':'75',
+    'in-capex-mult':'2.8', 'in-pue':'1.3', 'in-elec':'0.06', 'in-net':'10',
+  },
+  benchmark: {
+    'in-isl':'1024', 'in-osl':'2048', 'in-batch':'128', 'in-comm':'0.05',
+    'in-mbu':'65', 'in-mfu':'40', 'in-util':'85',
+    'in-capex-mult':'2.8', 'in-pue':'1.3', 'in-elec':'0.06', 'in-net':'10',
+  },
+  serving: {
+    'in-isl':'1024', 'in-osl':'2048', 'in-batch':'16', 'in-comm':'0.08',
+    'in-mbu':'32', 'in-mfu':'30', 'in-util':'65',
+    'in-capex-mult':'3.2', 'in-pue':'1.4', 'in-elec':'0.07', 'in-net':'12',
+  },
+};
+
+function applyPreset(name) {
+  const preset = PRESETS[name] || PRESETS.research;
+  Object.entries(preset).forEach(([id, val]) => {
+    const el = document.getElementById(id);
+    if (el) el.value = val;
+  });
+  document.querySelectorAll('.preset-btn').forEach(btn => btn.classList.remove('active'));
+  const active = document.getElementById('preset-' + name);
+  if (active) active.classList.add('active');
+  calc();
+}
+
+function resetAll() {
+  document.querySelectorAll('.autofill').forEach(el => el.classList.remove('autofill'));
+  // 重置到 NVIDIA benchmark 默认值：DeepSeek-R1 / H100 SXM / FP8 / Jan 2025
+  document.getElementById('sel-model').value = 'DeepSeek R1';
+  onModelChange();
+  document.getElementById('sel-gpu').value = 'H200 SXM';
+  onGpuChange();
+  const defaults = {
+    'in-salvage':'0','in-depr':'5',
+  };
+  Object.entries(defaults).forEach(([id,val]) => { const el=document.getElementById(id); if(el) el.value=val; });
+  applyPreset('research');
+  document.getElementById('in-prec').value = '1';   // FP8
+  updateTflops();
+  setHwMode('selfbuild');
+  onArchChange();
+  onKvModeChange();
+  calc();
+}
+
+// ============================================================
+// CALCULATION ENGINE
+// ============================================================
+function getNum(id) { return parseFloat(document.getElementById(id).value) || 0; }
+function getInt(id) { return parseInt(document.getElementById(id).value) || 0; }
+
+function fmt(n, decimals=2) {
+  if (!isFinite(n) || isNaN(n)) return '—';
+  return n.toLocaleString('en-US', { minimumFractionDigits: decimals, maximumFractionDigits: decimals });
+}
+function fmtK(n) {
+  if (!isFinite(n) || isNaN(n)) return '—';
+  if (n >= 1e12) return (n/1e12).toFixed(2) + 'T';
+  if (n >= 1e9) return (n/1e9).toFixed(2) + 'B';
+  if (n >= 1e6) return (n/1e6).toFixed(2) + 'M';
+  if (n >= 1e3) return (n/1e3).toFixed(1) + 'K';
+  return n.toFixed(1);
+}
+
+function set(id, val) { const el=document.getElementById(id); if(el) el.textContent=val; }
+
+function calc() {
+  const price8      = getNum('in-price8');
+  const capexMult   = getNum('in-capex-mult') || 1;
+  const salvage     = getNum('in-salvage');
+  const deprYrs     = getNum('in-depr');
+  const tdp      = getNum('in-tdp');
+  const pue      = getNum('in-pue');
+  const elec     = getNum('in-elec');
+  const netPct   = getNum('in-net') / 100;
+  const util     = getNum('in-util') / 100;
+  const archType = getInt('in-arch');
+  const totalB   = getNum('in-total');
+  const activeB  = getNum('in-active');
+  const prec     = getNum('in-prec');
+  const bw       = getNum('in-bw');
+  const vram     = getNum('in-vram');
+  const kvMode   = getInt('in-kvmode');
+  const L        = getNum('in-L');
+  const H        = getNum('in-H');
+  const nKVInput = getNum('in-nkv');
+  const nKV      = nKVInput > 0 ? nKVInput : H;   // Bug 1 fix: use GQA/MLA-corrected KV width
+  const kvCoeff  = getNum('in-kvcoeff');
+  const isl      = getNum('in-isl');
+  const osl      = getNum('in-osl');
+  const ctxVram  = isl + osl;
+  const ctxTps   = isl + osl / 2;
+  const batch    = getNum('in-batch');
+  const commCoef = getNum('in-comm');
+  const mbu      = getNum('in-mbu') / 100;
+
+  if (!totalB || !vram || !bw) { resetOutputs(); return; }
+
+  const modelWeightVram = totalB * prec;
+  let kvVram, kvTps;
+  if (kvMode === 1) {
+    // Bug 1 fix: use nKV (n_kv_heads×head_dim) instead of H (hidden_size)
+    // For MHA: nKV = H. For GQA 8-group: nKV ≈ 1024. For MLA (DeepSeek): nKV ≈ 4352.
+    kvVram = 2 * L * nKV * ctxVram * prec / 1e9;
+    kvTps  = 2 * L * nKV * ctxTps  * prec / 1e9;
+  } else {
+    const effB = archType === 1 ? activeB : totalB;
+    const dW = effB * prec;
+    kvVram = dW * kvCoeff;
+    kvTps  = dW * kvCoeff * (ctxTps / Math.max(ctxVram, 1));
+  }
+  if (!kvVram || kvVram <= 0) kvVram = modelWeightVram * 0.15;
+  if (!kvTps  || kvTps  <= 0) kvTps  = modelWeightVram * 0.10;
+
+  const totalVram = modelWeightVram + batch * kvVram;
+  const minGpus   = Math.ceil(totalVram / vram);
+  const actualGpus= Math.ceil(minGpus / 8) * 8 || 8;
+  const nodes     = actualGpus / 8;
+  const batchMax  = Math.floor((actualGpus * vram - modelWeightVram) / kvVram);
+
+  const gpuIn = document.getElementById('in-gpucount');
+  if (gpuIn) gpuIn.value = actualGpus;
+
+  const effB  = archType === 1 ? activeB : totalB;
+  const dW    = effB * prec;
+  const dKV   = kvTps;                             // per-sequence KV data movement (GB)
+  const dComm = dW * commCoef;
+  // Bug 2 fix: D_KV scales with batch (each seq has its own KV cache to load)
+  // D_decode = D_weight (shared) + D_KV_per_seq × batch + D_comm (inter-node, fixed)
+  const dToken = dW + dKV * batch + dComm;
+
+  const thTPS   = (bw * batch) / dToken;
+  const effTPS  = thTPS * mbu;
+  const nodeTPS = effTPS * actualGpus;
+
+  const isRental = document.getElementById('btn-rental').classList.contains('active-rent');
+  let cHw, cPwr, cOpex, cRent, tco;
+  if (isRental) {
+    const rentPrice = getNum('in-rent-price');
+    cRent = rentPrice * actualGpus * 8760;
+    cHw = 0; cPwr = 0; cOpex = 0;
+    tco = cRent;
+  } else {
+    cRent = 0;
+    cHw   = (nodes * price8 * capexMult - salvage) / deprYrs;
+    cPwr  = tdp * actualGpus * 8760 * pue * elec;
+    cOpex = cHw * netPct;
+    tco   = cHw + cPwr + cOpex;
+  }
+
+  // ── Prefill TPS（计算密集型，TFLOPS × MFU）
+  // 公式：TPS_prefill = TFLOPS_per_chip × chips × MFU × 1e12 / (2 × effB × 1e9)
+  //      = tflops × actualGpus × mfu × 500 / effB   [tok/s]
+  const tflops        = getNum('in-tflops');
+  const mfu           = getNum('in-mfu') / 100;
+  const tpsPrefill    = (tflops > 0 && effB > 0) ? tflops * actualGpus * mfu * 500 / effB : 0;
+
+  // ── 年有效秒数
+  const annSeconds = 31536000 * util;   // 8760h × 3600s × util
+
+  // ── 三口径成本
+  const costPerMOut   = (nodeTPS > 0 && tco > 0)  ? tco / (nodeTPS   * annSeconds) * 1e6 : Infinity;
+  const costPerMIn    = (tpsPrefill > 0 && tco > 0) ? tco / (tpsPrefill * annSeconds) * 1e6 : Infinity;
+  const costPerMBlend = (isFinite(costPerMIn) && isFinite(costPerMOut) && (isl + osl) > 0)
+    ? (isl * costPerMIn + osl * costPerMOut) / (isl + osl) : Infinity;
+
+  // ── FLOWCHART 更新
+  set('fl-tco', '$'+fmtK(tco));
+  set('fl-tps', fmtK(nodeTPS));
+  set('fl-prefill-tps', tpsPrefill > 0 ? fmtK(tpsPrefill) : '—');
+  set('fl-cost',       isFinite(costPerMOut)   ? fmt(costPerMOut, 3)   : '—');
+  set('fl-cost-in',    isFinite(costPerMIn)    ? fmt(costPerMIn, 3)    : '—');
+  set('fl-cost-blend', isFinite(costPerMBlend) ? fmt(costPerMBlend, 3) : '—');
+  document.getElementById('fl-tco-sub').textContent = isRental
+    ? '租赁费用（含电力与运维）'
+    : '硬件折旧 + 电力 + 运维';
+
+  // ── API 价格对比（input 对标 input，output 对标 output）
+  const modelKey = document.getElementById('sel-model').value;
+  const mp = MODEL_PARAMS[modelKey];
+  // Results rows
+  set('r-wvram',    fmt(modelWeightVram));
+  set('r-kv',       fmt(kvVram, 3) + ' / ' + fmt(kvTps, 3));
+  set('r-totalvram',fmt(totalVram, 1));
+  set('r-mingpu',   minGpus);
+  set('r-actualgpu',actualGpus);
+  set('r-nodes',    nodes);
+  set('r-batchmax', batchMax);
+  const batchNote = document.getElementById('r-batchmaxnote');
+  if (batchNote) {
+    if (batchMax >= batch) { batchNote.textContent='✓ ≥ 目标'; batchNote.style.color='#065F46'; }
+    else { batchNote.textContent='⚠ < 目标！需增加节点'; batchNote.style.color='#B91C1C'; }
+  }
+
+  set('r-effp',   archType===1 ? activeB+' (active)' : totalB+' (full)');
+  set('r-dw',     fmt(dW));
+  set('r-dkv',    fmt(dKV, 3) + ' / ' + fmt(dKV * batch, 2));
+  set('r-dcomm',  fmt(dComm, 3));
+  set('r-dt',     fmt(dToken));
+
+  set('r-th-tps',     fmtK(thTPS));
+  set('r-eff-tps',    fmtK(effTPS));
+  set('r-node-tps',   fmtK(nodeTPS));
+  set('r-prefill-tps', tpsPrefill > 0 ? fmtK(tpsPrefill) : '—');
+
+  if (isRental) {
+    set('tco-label-hw', 'C_rental（云租赁）');
+    set('r-c-hw', '$'+fmt(cRent, 0));
+    document.getElementById('tco-row-pw').style.display = 'none';
+    document.getElementById('tco-row-op').style.display = 'none';
+  } else {
+    set('tco-label-hw', 'C_hardware（硬件折旧）');
+    set('r-c-hw', '$'+fmt(cHw, 0));
+    set('r-c-pw', '$'+fmt(cPwr, 0));
+    set('r-c-op', '$'+fmt(cOpex, 0));
+    document.getElementById('tco-row-pw').style.display = '';
+    document.getElementById('tco-row-op').style.display = '';
+  }
+  const annOutputTokens = nodeTPS   * annSeconds;
+  const annInputTokens  = tpsPrefill * annSeconds;
+  set('r-tco-total',  '$'+fmt(tco, 0));
+  set('r-ann-tokens', fmtK(annOutputTokens/1e9)+'B');
+  set('r-ann-input',  tpsPrefill > 0 ? fmtK(annInputTokens/1e9)+'B' : '—');
+
+  // ── 保存共享状态供收入反推面板使用
+  _cs = {
+    nodeTPS, nodes, tco,
+    tcoPerNode: nodes > 0 ? tco / nodes : 0,
+    tpsPerNode: nodes > 0 ? nodeTPS / nodes : 0,
+    annSeconds, actualGpus, isl, osl,
+    apiPriceOut: mp ? (mp.cur==='CNY' ? mp.pOut/7.2 : mp.pOut) : null,
+    apiPriceIn:  mp ? (mp.cur==='CNY' ? mp.pIn /7.2 : mp.pIn)  : null,
+  };
+  calcRevenue();
+}
+
+// ============================================================
+// REVENUE → GPU BACKSOLVING
+// ============================================================
+function calcRevenue() {
+  const setR = (id, val) => { const el=document.getElementById(id); if(el) el.textContent=val; };
+  const cls  = (id, c, add) => { const el=document.getElementById(id); if(el) el.classList.toggle(c, add); };
+
+  const revenueM   = parseFloat(document.getElementById('rv-revenue')?.value)       || 0;
+  const priceOut   = parseFloat(document.getElementById('rv-price-out')?.value)     || 0;
+  const priceIn    = parseFloat(document.getElementById('rv-price-in')?.value)      || 0;
+  const priceInCachedRaw = parseFloat(document.getElementById('rv-price-in-cached')?.value);
+  const priceInCached = isNaN(priceInCachedRaw) ? priceIn : priceInCachedRaw;
+  const hitRateP   = parseFloat(document.getElementById('rv-cache-hit')?.value) || 0;
+  const hitRate    = Math.max(0, Math.min(100, hitRateP)) / 100;
+  // Blended effective input price = (hit × cachedPrice) + (miss × fullPrice)
+  const effectivePriceIn = hitRate * priceInCached + (1 - hitRate) * priceIn;
+  const tgtMarginP = parseFloat(document.getElementById('rv-target-margin')?.value) || 0;
+
+  const revenue   = revenueM * 1e6;
+  const tgtMargin = tgtMarginP / 100;
+
+  const invalidCapacity =
+    !isFinite(_cs.tpsPerNode) || _cs.tpsPerNode <= 0 ||
+    !isFinite(_cs.tcoPerNode) || _cs.tcoPerNode <= 0 ||
+    !isFinite(_cs.annSeconds) || _cs.annSeconds <= 0;
+
+  if (!priceOut || !revenue || invalidCapacity) {
+    ['rv-gpus','rv-nodes-txt','rv-margin-val','rv-profit-val',
+     'rv-ann-out','rv-tps-need','rv-tps-node','rv-nodes-need','rv-tco-need',
+     'rv-capacity','rv-breakeven','rv-tco-per-node','rv-effective-in','rv-blended-perm'].forEach(id => setR(id,'—'));
+    setR('rv-vs-current', _cs.annSeconds <= 0 ? '有效运行时间为 0，无法计算收入反推' : '请先在左侧完成有效参数配置');
+    return;
+  }
+
+  // ── 1. 收入拆分：output + input 按 ISL:OSL 比例
+  //    API 通常按 output 定价为主；input token 量 ≈ output × (ISL/OSL)
+  //    Input 按"缓存命中率"混合计价：effectivePriceIn = hit×cached + miss×full
+  const islOslRatio = _cs.osl > 0 ? _cs.isl / _cs.osl : 1;
+  // 混合收入 per output token = pOut + effectivePriceIn × (ISL/OSL)
+  const blendedRevPerOutToken = priceOut / 1e6 + (effectivePriceIn > 0 ? effectivePriceIn / 1e6 * islOslRatio : 0);
+
+  // ── 2. 年 output token 需求（基于 blended 收入）
+  const annOutTokensNeeded = blendedRevPerOutToken > 0 ? revenue / blendedRevPerOutToken : 0;
+
+  // ── 3. 需要的 Decode TPS
+  const tpsNeeded = _cs.annSeconds > 0 ? annOutTokensNeeded / _cs.annSeconds : 0;
+
+  // ── 4. 需要的节点数 / GPU 数
+  const nodesNeeded = Math.max(1, Math.ceil(tpsNeeded / _cs.tpsPerNode));
+  const gpusNeeded  = nodesNeeded * 8;
+
+  // ── 5. 年化 TCO（按需要节点数伸缩）
+  const tcoTotal  = nodesNeeded * _cs.tcoPerNode;
+  const grossPnL  = revenue - tcoTotal;
+  const grossMarg = revenue > 0 ? grossPnL / revenue : 0;
+  const grossMargP = grossMarg * 100;
+
+  // ── 6. 当前节点（左侧计算器）收入上限
+  const capacityPerOutToken = blendedRevPerOutToken;
+  const capacityRevM = _cs.nodes * _cs.tpsPerNode * _cs.annSeconds * capacityPerOutToken / 1e6;
+
+  // ── 7. 达目标毛利率所需收入（基于 nodesNeeded × tcoPerNode）
+  const breakevenRevM = tgtMargin < 1 && tcoTotal > 0 ? (tcoTotal / (1 - tgtMargin)) / 1e6 : Infinity;
+
+  // ── 更新 UI
+  setR('rv-gpus',      gpusNeeded.toLocaleString());
+  setR('rv-nodes-txt', nodesNeeded.toLocaleString());
+  setR('rv-vs-current', `vs 当前节点 ${_cs.nodes} nodes（${_cs.actualGpus} 张）` +
+    (nodesNeeded > _cs.nodes
+      ? `，需扩容 ${nodesNeeded - _cs.nodes} nodes`
+      : nodesNeeded < _cs.nodes
+        ? `，当前闲置 ${_cs.nodes - nodesNeeded} nodes`
+        : '，容量刚好匹配'));
+
+  setR('rv-margin-val', fmt(grossMargP, 1));
+  setR('rv-profit-val', fmtK(Math.abs(grossPnL)));
+  setR('rv-profit-unit', (grossPnL >= 0 ? '' : '亏损 ') + '$/yr');
+
+  const bar = document.getElementById('rv-margin-bar');
+  if (bar) {
+    bar.style.width = Math.max(0, Math.min(100, grossMargP)) + '%';
+    bar.className = 'rev-margin-fill' + (grossMargP < 0 ? ' neg' : '');
+  }
+
+  const mvEl = document.getElementById('rv-margin-vs');
+  if (mvEl) {
+    const diff = grossMargP - tgtMarginP;
+    if (diff >= 0) {
+      mvEl.textContent = `✓ 超目标 +${fmt(diff,1)}pp`;
+      mvEl.style.color = 'var(--positive)';
+    } else {
+      mvEl.textContent = `⚠ 低于目标 ${fmt(diff,1)}pp`;
+      mvEl.style.color = 'var(--negative)';
+    }
+  }
+
+  const pnEl = document.getElementById('rv-profit-note');
+  if (pnEl) {
+    pnEl.textContent = grossPnL >= 0 ? '盈利' : '亏损';
+    pnEl.style.color = grossPnL >= 0 ? 'var(--positive)' : 'var(--negative)';
+  }
+
+  setR('rv-ann-out',     fmtK(annOutTokensNeeded / 1e9));
+  setR('rv-tps-need',    fmtK(tpsNeeded));
+  setR('rv-tps-node',    fmtK(_cs.tpsPerNode));
+  setR('rv-nodes-need',  nodesNeeded.toLocaleString());
+  setR('rv-tco-need',    '$' + fmtK(tcoTotal));
+  setR('rv-capacity',    fmt(capacityRevM, 2));
+  setR('rv-breakeven',   isFinite(breakevenRevM) ? fmt(breakevenRevM, 2) : '—');
+  setR('rv-tco-per-node','$' + fmtK(_cs.tcoPerNode));
+  // blended 有效 input 价（命中率加权）+ 混合 $/1M output
+  setR('rv-effective-in', priceIn > 0 ? '$'+fmt(effectivePriceIn, 3) : '—');
+  setR('rv-blended-perm', blendedRevPerOutToken > 0 ? '$'+fmt(blendedRevPerOutToken * 1e6, 2) : '—');
+
+  // ── CapEx 反推（与左侧倍数联动）
+  const price8     = parseFloat(document.getElementById('in-price8')?.value)      || 0;
+  const capexMult  = parseFloat(document.getElementById('in-capex-mult')?.value)  || 1;
+  const isRental   = document.getElementById('btn-rental')?.classList.contains('active-rent');
+  if (!isRental && price8 > 0) {
+    const serverCapex = nodesNeeded * price8;
+    const totalCapex  = serverCapex * capexMult;
+    const serverPct   = 100 / capexMult;
+    setR('rv-price8',       '$' + fmtK(price8));
+    setR('rv-server-capex', '$' + fmtK(serverCapex));
+    setR('rv-capex-mult',   fmt(capexMult, 1));
+    setR('rv-total-capex',  '$' + fmtK(totalCapex));
+    setR('rv-server-pct',   fmt(serverPct, 1));
+    document.getElementById('rv-capex-section') && (document.getElementById('rv-capex-section').style.display = '');
+  } else {
+    // 租赁模式下 CapEx 无意义，显示提示
+    ['rv-price8','rv-server-capex','rv-capex-mult','rv-total-capex','rv-server-pct']
+      .forEach(id => setR(id, isRental ? '云租赁' : '—'));
+  }
+}
+
+function resetOutputs() {
+  ['r-wvram','r-kv','r-totalvram','r-mingpu','r-actualgpu','r-nodes','r-batchmax',
+   'r-effp','r-dw','r-dkv','r-dcomm','r-dt',
+   'r-th-tps','r-eff-tps','r-node-tps','r-prefill-tps',
+   'r-c-hw','r-c-pw','r-c-op','r-tco-total','r-ann-tokens','r-ann-input',
+   'fl-tco','fl-tps','fl-prefill-tps','fl-cost','fl-cost-in','fl-cost-blend'
+  ].forEach(id => set(id,'—'));
+  const batchNote = document.getElementById('r-batchmaxnote');
+  if (batchNote) batchNote.textContent = '';
+}
+
+// ============================================================
+// MODEL TABLE
+// ============================================================
+function renderModelTable() { renderFilteredModels(MODEL_DB); }
+function filterModels() {
+  const q = document.getElementById('model-search').value.toLowerCase();
+  renderFilteredModels(MODEL_DB.filter(m => (m.vendor+m.name+m.arch).toLowerCase().includes(q)));
+}
+function renderFilteredModels(data) {
+  const tip = (val, note, isWarn) => val === null || val === undefined || val === '-' || val === 'N/A'
+    ? `<span class="tip-wrap"><span class="num ${isWarn?'tip-warn':'tip-note'}">-</span><span class="tip">${note||'数据未公开'}</span></span>`
+    : `<span class="tip-wrap"><span class="num">${val}</span>${note?`<span class="tip tip-note">${note}</span>`:''}</span>`;
+
+  const num = (v, note) => tip(v, note);
+  const txt = (v, note) => v && note ? `<span class="tip-wrap">${v}<span class="tip">${note}</span></span>` : (v||'-');
+
+  const tbody = document.getElementById('model-tbody');
+  document.getElementById('model-count').textContent = `共 ${data.length} 条`;
+  tbody.innerHTML = data.map(m => {
+    const note = m.note||'';
+    const priceNote = (m.pIn===null && m.pOut===null) ? '定价未公开' : (m.cur==='CNY' && note.includes('订阅') ? note : '');
+    return `<tr>
+      <td>${txt(m.vendor)}</td>
+      <td style="font-weight:600">${m.name}${note&&note.includes('技术参数')?`<span class="tip-wrap"> ⚠️<span class="tip tip-warn">${note}</span></span>`:''}</td>
+      <td>${num(m.date)}</td>
+      <td>${m.arch.includes('MoE')||m.arch==='MoE'?'<span class="badge b-moe">'+m.arch+'</span>':(m.arch==='Dense'?'<span class="badge b-dense">Dense</span>':m.arch)}</td>
+      <td class="num">${num(m.totalB, '参数未公开')}</td>
+      <td class="num">${num(m.activeB, '参数未公开')}</td>
+      <td class="num">${num(m.L, '参数未公开')}</td>
+      <td class="num">${num(m.H, '参数未公开')}</td>
+      <td>${txt(m.context)}</td>
+      <td>${m.modal||'-'}</td>
+      <td>${m.open==='开源'?'<span class="badge b-open">'+m.open+'</span>':'<span class="badge b-closed">'+m.open+'</span>'}</td>
+      <td class="num">${num(m.pIn, priceNote||'定价未公开')}</td>
+      <td class="num">${num(m.pOut, priceNote||'定价未公开')}</td>
+      <td>${m.cur||'-'}</td>
+      <td class="num">${m.aaScore != null ? `<span class="tip-wrap"><b style="color:var(--accent)">${m.aaScore}</b><span class="tip">AA Intelligence Index（满分约60，来源 Artificial Analysis）</span></span>` : `<span class="tip-wrap"><span class="num tip-note">-</span><span class="tip">未收录</span></span>`}</td>
+      <td class="num">${m.aaSpeed != null ? `<span class="tip-wrap">${m.aaSpeed}<span class="tip">API实测单用户输出速度（tokens/s）；系统总TPS = 此值 × 有效并发数</span></span>` : `<span class="tip-wrap"><span class="num tip-note">-</span><span class="tip">未收录</span></span>`}</td>
+      <td class="num">${m.aaLatency != null ? `<span class="tip-wrap">${m.aaLatency}<span class="tip">首 token 延迟（秒）；含服务器排队+推理等待时间</span></span>` : `<span class="tip-wrap"><span class="num tip-note">-</span><span class="tip">未收录</span></span>`}</td>
+      <td><button class="tbl-action" onclick="loadModelToCalc('${m.name}')">→ 加载</button></td>
+    </tr>`;
+  }).join('');
+}
+function loadModelToCalc(name) {
+  const sel = document.getElementById('sel-model');
+  if (sel) { sel.value = name; onModelChange(); }
+  switchTab('calc');
+}
+
+// ============================================================
+// GPU TABLE
+// ============================================================
+function renderGpuTable() { renderFilteredGpus(GPU_DB.filter(g => g.level !== 'System')); }
+function filterGpus() {
+  const q = document.getElementById('gpu-search').value.toLowerCase();
+  renderFilteredGpus(GPU_DB.filter(g => g.level !== 'System' && (g.vendor+g.name+g.arch+g.usecase+g.level).toLowerCase().includes(q)));
+}
+function renderFilteredGpus(data) {
+  const tip = (val, note) => val === null || val === undefined || val === 'N/A' || val === 'TBD'
+    ? `<span class="tip-wrap"><span class="num tip-warn">-</span><span class="tip">${note||'数据未公开'}</span></span>`
+    : `<span class="tip-wrap"><span class="num">${val}</span>${note?`<span class="tip tip-note">${note}</span>`:''}</span>`;
+  const num = (v, note) => tip(v, note);
+
+  const vendorBadge = v => {
+    const m = { 'NVIDIA':'b-dense', 'Google':'b-moe', 'AWS':'b-open' };
+    return `<span class="badge ${m[v]||''}" style="font-size:10px">${v}</span>`;
+  };
+  const levelBadge = l => l === 'System'
+    ? `<span class="badge" style="background:#e8e0f8;color:#6e44c8;font-size:10px">System</span>`
+    : `<span class="badge" style="background:#e8f0fe;color:#1a73e8;font-size:10px">Chip</span>`;
+
+  const tbody = document.getElementById('gpu-tbody');
+  document.getElementById('gpu-count').textContent = `共 ${data.length} 条`;
+  tbody.innerHTML = data.map(g => `
+    <tr>
+      <td style="white-space:nowrap">${vendorBadge(g.vendor)}</td>
+      <td style="font-weight:600;white-space:nowrap">${g.name}</td>
+      <td>${levelBadge(g.level)}</td>
+      <td>${g.arch}</td>
+      <td>${g.process||'-'}</td>
+      <td class="num">${num(g.tdpW, '数据未公开')}</td>
+      <td class="num" style="font-weight:600">${g.vram >= 1000 ? (g.vram/1000).toFixed(1)+'K' : Number(g.vram).toFixed(1)}</td>
+      <td>${g.vramType}</td>
+      <td class="num" style="font-weight:600">${num(g.bwTB != null ? Number(g.bwTB).toFixed(1) : null, '数据未公开')}</td>
+      <td class="num">${num(g.fp16 >= 1000 ? Math.round(g.fp16/1000)+'K' : g.fp16, '数据未公开')}</td>
+      <td class="num">${num(g.fp8  >= 1000 ? Math.round(g.fp8/1000)+'K'  : g.fp8,  '数据未公开')}</td>
+      <td class="num">${num(g.fp4  >= 1000 ? Math.round(g.fp4/1000)+'K'  : g.fp4,  '数据未公开')}</td>
+      <td>${g.price1||'-'}</td>
+      <td>${g.price8||'-'}</td>
+      <td>${g.cloud||'-'}</td>
+      <td style="font-size:11.5px;max-width:160px">${g.usecase}${g.note?`<span class="tip-wrap"> ℹ️<span class="tip tip-note">${g.note}</span></span>`:''}</td>
+      <td>${g.level==='Chip'?`<button class="tbl-action" onclick="loadGpuToCalc('${g.name}')">→ 加载</button>`:'-'}</td>
+    </tr>`).join('');
+}
+function loadGpuToCalc(name) {
+  const sel = document.getElementById('sel-gpu');
+  if (sel) { sel.value = name; onGpuChange(); }
+  switchTab('calc');
+}
+
+// ============================================================
+// INIT  — 默认加载 NVIDIA benchmark: DeepSeek-R1 × H200 SXM × FP8 × Mar 2025
+// ============================================================
+document.getElementById('hdr-date').textContent = new Date().toLocaleDateString('en-US', { year:'numeric', month:'long', day:'numeric' });
+// 1. 模型：DeepSeek R1
+document.getElementById('sel-model').value = 'DeepSeek R1';
+onModelChange();
+// 2. GPU：H200 SXM
+document.getElementById('sel-gpu').value = 'H200 SXM';
+onGpuChange();
+// 3. 默认采用投研基准预设；Benchmark / SLA 可在页面上切换
+document.getElementById('in-prec').value  = '1';    // FP8
+applyPreset('research');                            // default research baseline
+updateTflops();                                      // 同步 TFLOPS = H200 FP8 = 1979
+onKvModeChange();
+onArchChange();
+calc();
+
+// ── Mobile tab switching ─────────────────────────────────────────────────────
+function mTab(name) {
+  if (window.innerWidth > 768) return;
+  const sections = {
+    params: ['m-section-params'],
+    cost:   ['m-section-cost', 'm-section-cost-results'],
+    rev:    ['m-section-rev'],
+  };
+  const all = ['m-section-params','m-section-cost','m-section-cost-results','m-section-rev'];
+  // hide all managed sections
+  all.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.classList.add('m-hidden');
+  });
+  // show selected group
+  (sections[name] || []).forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.classList.remove('m-hidden');
+  });
+  // update tab active state
+  document.querySelectorAll('.m-tab').forEach(btn => btn.classList.remove('active'));
+  const tabs = ['params','cost','rev'];
+  const idx = tabs.indexOf(name);
+  const tabBtns = document.querySelectorAll('.m-tab');
+  if (tabBtns[idx]) tabBtns[idx].classList.add('active');
+}
+
+// init mobile tabs on load
+(function initMobileTabs() {
+  if (window.innerWidth <= 768) {
+    // default: show cost (flowchart is the key result)
+    mTab('cost');
+  }
+  window.addEventListener('resize', () => {
+    if (window.innerWidth > 768) {
+      // restore all sections on desktop
+      ['m-section-params','m-section-cost','m-section-cost-results','m-section-rev'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.classList.remove('m-hidden');
+      });
+    } else {
+      // re-apply current active tab on resize to mobile
+      const active = document.querySelector('.m-tab.active');
+      if (!active) mTab('cost');
+    }
+  });
+})();
+</script>
+</body>
+</html>

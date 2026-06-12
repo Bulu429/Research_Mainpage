@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>行业基本面入口</title>
+<style>
+:root {
+  --bg: #f4f6f1;
+  --paper: #ffffff;
+  --ink: #1d292c;
+  --muted: #667477;
+  --line: #dce2d8;
+  --deep: #23483f;
+  --green: #247052;
+  --blue: #2d6386;
+  --gold: #9a6a1d;
+  --red: #9b3d34;
+  --soft-green: #e7f1ea;
+  --soft-blue: #e7f0f5;
+  --soft-gold: #f3ead7;
+  --shadow: 0 16px 36px rgba(29,41,44,.08);
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  color: var(--ink);
+  font-family: "Microsoft YaHei", "PingFang SC", "Segoe UI", sans-serif;
+  background:
+    linear-gradient(90deg, rgba(35,72,63,.05) 1px, transparent 1px),
+    linear-gradient(180deg, rgba(35,72,63,.04) 1px, transparent 1px),
+    var(--bg);
+  background-size: 30px 30px;
+  font-size: 14px;
+  line-height: 1.58;
+}
+a { color: inherit; text-decoration: none; }
+.page { max-width: 1440px; margin: 0 auto; padding: 24px 28px 42px; }
+.top {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 18px;
+  align-items: start;
+  margin-bottom: 20px;
+}
+.eyebrow {
+  color: var(--green);
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: .08em;
+}
+h1 {
+  margin: 4px 0 10px;
+  font-size: clamp(30px, 4vw, 54px);
+  line-height: 1.05;
+  letter-spacing: 0;
+}
+.lead { margin: 0; color: var(--muted); max-width: 780px; }
+.actions { display: flex; flex-wrap: wrap; gap: 8px; justify-content: flex-end; }
+.btn, .chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 32px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: rgba(255,255,255,.86);
+  color: var(--muted);
+  font-size: 12px;
+  white-space: nowrap;
+}
+.btn { color: var(--deep); font-weight: 800; }
+.btn:hover { border-color: #aab8aa; background: #fff; }
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(340px, .85fr);
+  gap: 16px;
+  margin-bottom: 16px;
+}
+.panel {
+  background: rgba(255,255,255,.9);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  box-shadow: var(--shadow);
+}
+.radar { padding: 20px; }
+.radar h2, .section h2 { margin: 0 0 10px; font-size: 17px; }
+.radar-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 16px;
+}
+.radar-cell {
+  min-height: 92px;
+  padding: 13px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fff;
+}
+.radar-cell strong { display: block; font-size: 16px; margin-bottom: 5px; }
+.radar-cell small { color: var(--muted); }
+.radar-cell:nth-child(1),
+.radar-cell:nth-child(2),
+.radar-cell:nth-child(5) { background: var(--soft-green); }
+.radar-cell:nth-child(3),
+.radar-cell:nth-child(4),
+.radar-cell:nth-child(8) { background: var(--soft-blue); }
+.radar-cell:nth-child(6),
+.radar-cell:nth-child(7),
+.radar-cell:nth-child(9) { background: var(--soft-gold); }
+.flow { padding: 20px; }
+.flow ol {
+  list-style: none;
+  margin: 16px 0 0;
+  padding: 0;
+  display: grid;
+  gap: 10px;
+}
+.flow li {
+  display: grid;
+  grid-template-columns: 34px 1fr;
+  gap: 10px;
+  align-items: start;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--line);
+}
+.flow li:last-child { border-bottom: 0; padding-bottom: 0; }
+.num {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: var(--deep);
+  color: #fff;
+  font-weight: 900;
+}
+.flow strong { display: block; margin-bottom: 2px; }
+.flow span { color: var(--muted); }
+.layout {
+  display: grid;
+  grid-template-columns: 250px 1fr;
+  gap: 16px;
+  align-items: start;
+}
+.nav {
+  position: sticky;
+  top: 16px;
+  padding: 14px;
+}
+.nav-title { color: var(--muted); font-size: 12px; font-weight: 800; margin: 4px 6px 10px; }
+.nav a {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 10px 11px;
+  border-radius: 6px;
+  color: var(--muted);
+}
+.nav a:hover { background: #eef3ec; color: var(--ink); }
+.content { display: grid; gap: 16px; }
+.section { padding: 18px; }
+.section-head {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 14px;
+}
+.sub { color: var(--muted); font-size: 13px; }
+.cards {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+.card {
+  min-height: 210px;
+  padding: 15px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: transform .16s ease, box-shadow .16s ease, border-color .16s ease;
+}
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 30px rgba(29,41,44,.1);
+  border-color: #bdc8bd;
+}
+.card h3 { margin: 0 0 8px; font-size: 19px; }
+.card p { margin: 0; color: var(--muted); }
+.line {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  align-items: center;
+  margin-bottom: 12px;
+}
+.code {
+  width: 42px;
+  height: 42px;
+  border-radius: 8px;
+  display: grid;
+  place-items: center;
+  background: var(--green);
+  color: #fff;
+  font-weight: 900;
+}
+.card:nth-child(3n+2) .code { background: var(--blue); }
+.card:nth-child(3n) .code { background: var(--gold); }
+.foot {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 18px;
+}
+.open { font-weight: 900; color: var(--green); }
+.tag {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 24px;
+  padding: 3px 8px;
+  border-radius: 999px;
+  border: 1px solid #b9c7ba;
+  background: #f6faf6;
+  color: var(--green);
+  font-size: 12px;
+  white-space: nowrap;
+}
+.tag.blue { color: var(--blue); background: #edf5fa; border-color: #afc7d8; }
+.tag.gold { color: var(--gold); background: #fbf5e8; border-color: #dbc08b; }
+.tag.red { color: var(--red); background: #fbefed; border-color: #d6aaa5; }
+.matrix {
+  display: grid;
+  grid-template-columns: 1.1fr 1fr 1fr 1fr;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  overflow: hidden;
+  background: #fff;
+}
+.matrix div {
+  padding: 11px 12px;
+  border-right: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  min-height: 44px;
+}
+.matrix div:nth-child(4n) { border-right: 0; }
+.matrix div:nth-last-child(-n+4) { border-bottom: 0; }
+.matrix .head {
+  background: #f2f5f0;
+  font-weight: 800;
+  color: var(--deep);
+}
+.matrix .muted { color: var(--muted); }
+.footer {
+  margin-top: 18px;
+  color: var(--muted);
+  text-align: center;
+  font-size: 12px;
+  padding: 18px 0 4px;
+}
+@media (max-width: 1100px) {
+  .hero, .layout { grid-template-columns: 1fr; }
+  .nav { position: static; }
+  .cards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 720px) {
+  .page { padding: 18px 14px 30px; }
+  .top, .section-head { grid-template-columns: 1fr; display: block; }
+  .actions { justify-content: flex-start; margin-top: 12px; }
+  .radar-grid, .cards { grid-template-columns: 1fr; }
+  .matrix { grid-template-columns: 1fr; }
+  .matrix div { border-right: 0; }
+}
+</style>
+</head>
+<body>
+<main class="page">
+  <header class="top">
+    <div>
+      <div class="eyebrow">FUNDAMENTAL RESEARCH HUB</div>
+      <h1>行业基本面入口</h1>
+      <p class="lead">把 TMT 产业链研究从“文件夹”整理成“研究路径”：先定位主线，再进入行业看板，最后回到原始数据、纪要和公司材料做交叉验证。</p>
+    </div>
+    <div class="actions">
+      <a class="btn" href="../../../总看板.html">返回总看板</a>
+      <a class="btn" href="roadmap.html" target="_blank">技术路线图</a>
+      <a class="btn" href="00_INDEX.md" target="_blank">行业索引</a>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="radar panel">
+      <h2>九个方向，一张产业链地图</h2>
+      <p class="sub">入口按 AI 基建链条重新组织：算力芯片与封装、网络互联、材料设备、散热供电、光通信传输。</p>
+      <div class="radar-grid">
+        <a class="radar-cell" href="#compute"><strong>算力与国产替代</strong><small>国产 AI 算力、国产半导体</small></a>
+        <a class="radar-cell" href="#optical"><strong>光模块与光通信</strong><small>光模块、光通信、光纤光缆</small></a>
+        <a class="radar-cell" href="#materials"><strong>材料与设备</strong><small>PCB、先进封装、液冷</small></a>
+        <a class="radar-cell" href="#network"><strong>网络互联</strong><small>交换芯片、光电协同</small></a>
+        <a class="radar-cell" href="#workflow"><strong>研究流程</strong><small>信号、逻辑、数据、结论</small></a>
+        <a class="radar-cell" href="#matrix"><strong>映射矩阵</strong><small>问题、证据和下钻方向</small></a>
+      </div>
+    </div>
+    <aside id="workflow" class="flow panel">
+      <h2>推荐使用方式</h2>
+      <ol>
+        <li><span class="num">1</span><div><strong>先看方向</strong><span>从周频信号里挑出强弱变化最大的产业链。</span></div></li>
+        <li><span class="num">2</span><div><strong>再看行业看板</strong><span>进入对应行业页，确认景气、供需、价格和竞争格局。</span></div></li>
+        <li><span class="num">3</span><div><strong>回到原始证据</strong><span>查看 Excel、纪要、报告和公司材料，避免只看结论。</span></div></li>
+        <li><span class="num">4</span><div><strong>输出投资判断</strong><span>落实到催化剂、估值、风险和组合动作。</span></div></li>
+      </ol>
+    </aside>
+  </section>
+
+  <div class="layout">
+    <nav class="nav panel">
+      <div class="nav-title">页面导航</div>
+      <a href="#optical"><span>光通信链条</span><span>3</span></a>
+      <a href="#materials"><span>材料设备散热</span><span>3</span></a>
+      <a href="#network"><span>网络互联</span><span>1</span></a>
+      <a href="#compute"><span>国产算力与半导体</span><span>2</span></a>
+      <a href="#matrix"><span>研究矩阵</span><span>框架</span></a>
+    </nav>
+
+    <div class="content">
+<section id="optical" class="section panel">
+        <div class="section-head">
+          <div>
+            <h2>光通信链条</h2>
+            <div class="sub">关注北美 CapEx、800G/1.6T 代际升级、光芯片供需和传输侧补涨。</div>
+          </div>
+          <span class="chip">验证重点：海外需求</span>
+        </div>
+        <div class="cards">
+          <a class="card" href="光模块/光模块_看板.html" target="_blank">
+            <div>
+              <div class="line"><h3>光模块</h3><span class="code">OM</span></div>
+              <p>800G、1.6T、CPO、光芯片和主要公司收入弹性，是 AI 基建最直接映射方向。</p>
+            </div>
+            <div class="foot"><span class="tag">核心景气</span><span class="open">进入看板</span></div>
+          </a>
+          <a class="card" href="光通信/光通信_看板.html" target="_blank">
+            <div>
+              <div class="line"><h3>光通信</h3><span class="code">OC</span></div>
+              <p>光模块之外的传输、器件和网络侧研究，用来观察产业链扩散。</p>
+            </div>
+            <div class="foot"><span class="tag blue">链条扩散</span><span class="open">进入看板</span></div>
+          </a>
+          <a class="card" href="光纤光缆/光纤光缆_看板.html" target="_blank">
+            <div>
+              <div class="line"><h3>光纤光缆</h3><span class="code">FC</span></div>
+              <p>光纤预制棒、光缆、海缆和供给周期，适合跟踪传输侧周期变化。</p>
+            </div>
+            <div class="foot"><span class="tag gold">周期品</span><span class="open">进入看板</span></div>
+          </a>
+        </div>
+      </section>
+
+      <section id="materials" class="section panel">
+        <div class="section-head">
+          <div>
+            <h2>材料、设备与散热</h2>
+            <div class="sub">关注 AI 服务器升级带来的材料规格、制程变化、散热功率密度和设备投资。</div>
+          </div>
+          <span class="chip">跟踪重点：量价变化</span>
+        </div>
+        <div class="cards">
+          <a class="card" href="PCB/PCB_看板.html" target="_blank">
+            <div>
+              <div class="line"><h3>PCB</h3><span class="code">PCB</span></div>
+              <p>高多层板、CCL、电子布、铜箔和钻孔设备，适合跟踪材料涨价和扩产节奏。</p>
+            </div>
+            <div class="foot"><span class="tag">材料涨价</span><span class="open">进入看板</span></div>
+          </a>
+          <a class="card" href="先进封装/先进封装_看板.html" target="_blank">
+            <div>
+              <div class="line"><h3>先进封装</h3><span class="code">PKG</span></div>
+              <p>CoWoS、TSV、RDL、HBM 和国产设备，连接算力芯片和封装瓶颈。</p>
+            </div>
+            <div class="foot"><span class="tag blue">封装瓶颈</span><span class="open">进入看板</span></div>
+          </a>
+          <a class="card" href="液冷/液冷_看板.html" target="_blank">
+            <div>
+              <div class="line"><h3>液冷</h3><span class="code">LC</span></div>
+              <p>冷板、浸没、CDU、精密温控和机柜功率，跟踪从可选到刚需的拐点。</p>
+            </div>
+            <div class="foot"><span class="tag gold">散热升级</span><span class="open">进入看板</span></div>
+          </a>
+        </div>
+      </section>
+
+      <section id="network" class="section panel">
+        <div class="section-head">
+          <div>
+            <h2>网络互联</h2>
+            <div class="sub">关注交换芯片、SerDes、Scale-out/Scale-up 和超节点网络架构变化。</div>
+          </div>
+          <span class="chip">映射重点：AVGO / MRVL</span>
+        </div>
+        <div class="cards">
+          <a class="card" href="交换芯片/交换芯片_看板.html" target="_blank">
+            <div>
+              <div class="line"><h3>交换芯片</h3><span class="code">SW</span></div>
+              <p>Switch ASIC、SerDes、超节点和光电协同，用来验证国产交换芯片的放量窗口。</p>
+            </div>
+            <div class="foot"><span class="tag">网络核心</span><span class="open">进入看板</span></div>
+          </a>
+        </div>
+      </section>
+
+
+      <section id="compute" class="section panel">
+        <div class="section-head">
+          <div>
+            <h2>国产算力与半导体</h2>
+            <div class="sub">关注国产替代、交付能力、制程瓶颈、设备材料自主化。</div>
+          </div>
+          <span class="chip">主线级别：高</span>
+        </div>
+        <div class="cards">
+          <a class="card" href="国产AI算力/国产AI算力_看板.html" target="_blank">
+            <div>
+              <div class="line"><h3>国产 AI 算力</h3><span class="code">AI</span></div>
+              <p>AI 芯片、超节点、国产替代、服务器和生态适配，是国产算力主线的核心入口。</p>
+            </div>
+            <div class="foot"><span class="tag">算力主线</span><span class="open">进入看板</span></div>
+          </a>
+          <a class="card" href="国产半导体/国产半导体_看板.html" target="_blank">
+            <div>
+              <div class="line"><h3>国产半导体</h3><span class="code">SE</span></div>
+              <p>设备、材料、晶圆、封装、设计链条，用来验证国产化进度和利润弹性。</p>
+            </div>
+            <div class="foot"><span class="tag blue">国产替代</span><span class="open">进入看板</span></div>
+          </a>
+        </div>
+      </section>
+
+      
+
+      <section id="matrix" class="section panel">
+        <div class="section-head">
+          <div>
+            <h2>研究矩阵</h2>
+            <div class="sub">每个行业看板都按同一套问题下钻，方便横向比较。</div>
+          </div>
+          <a class="chip" href="工作日志_20260526.md" target="_blank">工作日志</a>
+        </div>
+        <div class="matrix">
+          <div class="head">研究问题</div><div class="head">优先证据</div><div class="head">看板位置</div><div class="head">输出动作</div>
+          <div>景气是否上行</div><div class="muted">订单、价格、CapEx、产能利用率</div><div class="muted">行业看板核心结论</div><div class="muted">判断是否进入跟踪池</div>
+          <div>供需是否紧张</div><div class="muted">扩产周期、交付周期、库存水位</div><div class="muted">原始数据和纪要</div><div class="muted">寻找量价弹性标的</div>
+          <div>竞争格局是否改善</div><div class="muted">份额、客户、产品代际和壁垒</div><div class="muted">公司对比表</div><div class="muted">确定核心公司排序</div>
+          <div>估值是否匹配</div><div class="muted">TTM、未来增速、海外映射</div><div class="muted">财务数据库和美股映射</div><div class="muted">形成投资建议</div>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <footer class="footer">行业基本面入口 · workwork 顶层看板 · 链接均指向本地研究项目</footer>
+</main>
+</body>
+</html>
