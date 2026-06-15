@@ -301,8 +301,8 @@ a:hover{text-decoration:underline}
       </div>
       <div class="bk-arrow">→</div>
       <div class="bk-split">
-        <div class="bk-mini"><div class="v">321 亿$</div><div class="l">软件（VMware 236 + 基础 85）</div></div>
-        <div class="bk-mini"><div class="v">349 / 222</div><div class="l"><b style="color:var(--dn)">AI</b> 内部：定制 XPU / AI 互联（亿$）</div></div>
+        <div class="bk-mini"><div class="v">349 亿$</div><div class="l">定制 <b style="color:var(--dn)">XPU</b>（AI）</div></div>
+        <div class="bk-mini"><div class="v">222 亿$</div><div class="l"><b style="color:var(--dn)">AI</b> 互联</div></div>
       </div>
     </div>
 
@@ -463,6 +463,64 @@ a:hover{text-decoration:underline}
       <div><span class="pn" style="background:var(--accent)">3</span><b>网络是 XPU 的搭售壁垒</b>：Q2 网络占 AI 营收约 <b>40%</b>（阶段性峰值），管理层指长期回归 <b>~30%</b>；XPU 每放量一分，网络引擎就同步多收一分，构成竞争对手难以拆解的捆绑护城河。</div>
     </div>
 
+    <div class="gs-cap" style="margin-top:16px">🔧 DSP 在光模块内部的拓扑位置<span>｜博通 1.6T DSP = 光模块内部的"电信号处理芯片"</span></div>
+    <div style="background:#fff;border:1px solid var(--border);border-radius:8px;padding:14px 10px;margin-bottom:10px">
+      <svg viewBox="0 0 780 230" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;font-family:inherit">
+        <defs>
+          <marker id="avgoArrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M0,0 L10,5 L0,10 z" fill="var(--text2)"></path>
+          </marker>
+        </defs>
+
+        <!-- 光模块边界 -->
+        <rect x="150" y="20" width="540" height="180" rx="10" fill="none" stroke="var(--neu-bd)" stroke-width="1.5" stroke-dasharray="5 4"></rect>
+        <text x="166" y="40" font-size="12" font-weight="700" fill="var(--neu)">光模块（Optical Module / AOC）</text>
+
+        <!-- 主机芯片 -->
+        <rect x="10" y="75" width="110" height="80" rx="8" fill="var(--neu-bg)" stroke="var(--neu-bd)" stroke-width="1.5"></rect>
+        <text x="65" y="103" text-anchor="middle" font-size="12" font-weight="700" fill="var(--neu-ink)">主机芯片</text>
+        <text x="65" y="120" text-anchor="middle" font-size="10.5" fill="var(--text2)">XPU / 交换 ASIC</text>
+        <text x="65" y="135" text-anchor="middle" font-size="10.5" fill="var(--text2)">PAM4 电信号</text>
+
+        <!-- Host SerDes -->
+        <rect x="175" y="75" width="85" height="80" rx="8" fill="var(--neu-bg)" stroke="var(--neu-bd)" stroke-width="1.5"></rect>
+        <text x="217" y="108" text-anchor="middle" font-size="12" font-weight="700" fill="var(--neu-ink)">Host 电接口</text>
+        <text x="217" y="124" text-anchor="middle" font-size="10.5" fill="var(--text2)">SerDes PHY</text>
+
+        <!-- DSP（博通） -->
+        <rect x="290" y="55" width="140" height="120" rx="8" fill="var(--accent-bg)" stroke="var(--accent2)" stroke-width="2.5"></rect>
+        <text x="360" y="88" text-anchor="middle" font-size="13" font-weight="800" fill="var(--accent)">DSP 芯片</text>
+        <text x="360" y="105" text-anchor="middle" font-size="10.5" font-weight="700" fill="var(--accent)">博通 1.6T · 独家</text>
+        <text x="360" y="124" text-anchor="middle" font-size="10.5" fill="var(--accent-ink)">CDR / 均衡 / 重定时</text>
+        <text x="360" y="140" text-anchor="middle" font-size="10.5" fill="var(--accent-ink)">FEC 编解码</text>
+
+        <!-- Driver / TIA -->
+        <rect x="465" y="75" width="85" height="80" rx="8" fill="var(--neu-bg)" stroke="var(--neu-bd)" stroke-width="1.5"></rect>
+        <text x="507" y="108" text-anchor="middle" font-size="12" font-weight="700" fill="var(--neu-ink)">Driver / TIA</text>
+        <text x="507" y="124" text-anchor="middle" font-size="10.5" fill="var(--text2)">模拟前端</text>
+
+        <!-- TOSA / ROSA -->
+        <rect x="585" y="75" width="85" height="80" rx="8" fill="var(--neu-bg)" stroke="var(--neu-bd)" stroke-width="1.5"></rect>
+        <text x="627" y="103" text-anchor="middle" font-size="12" font-weight="700" fill="var(--neu-ink)">TOSA / ROSA</text>
+        <text x="627" y="120" text-anchor="middle" font-size="10.5" fill="var(--text2)">激光器 / 探测器</text>
+        <text x="627" y="135" text-anchor="middle" font-size="10.5" fill="var(--text2)">光电转换</text>
+
+        <!-- 光纤 -->
+        <text x="700" y="103" text-anchor="middle" font-size="12" font-weight="700" fill="var(--neu-ink)">光纤</text>
+        <text x="700" y="120" text-anchor="middle" font-size="10.5" fill="var(--text2)">→ 对端模块</text>
+
+        <!-- 箭头 -->
+        <line x1="120" y1="115" x2="173" y2="115" stroke="var(--text2)" stroke-width="1.5" marker-end="url(#avgoArrow)"></line>
+        <line x1="260" y1="115" x2="288" y2="115" stroke="var(--text2)" stroke-width="1.5" marker-end="url(#avgoArrow)"></line>
+        <line x1="430" y1="115" x2="463" y2="115" stroke="var(--text2)" stroke-width="1.5" marker-end="url(#avgoArrow)"></line>
+        <line x1="550" y1="115" x2="583" y2="115" stroke="var(--text2)" stroke-width="1.5" marker-end="url(#avgoArrow)"></line>
+        <line x1="670" y1="115" x2="676" y2="115" stroke="var(--text2)" stroke-width="1.5" marker-end="url(#avgoArrow)"></line>
+
+        <text x="420" y="200" text-anchor="middle" font-size="10.5" fill="var(--text2)">实际信号双向对称（TX/RX 均经过 DSP），上图简化为单向示意</text>
+      </svg>
+    </div>
+    <div class="gs-note">📌 DSP 是光模块内部的<b>"电信号处理芯片"</b>，夹在 Host 电接口与 TOSA/ROSA 光电转换之间，负责 <b>CDR / 均衡 / 重定时 / FEC</b>——光模块每放量，DSP 基本<b>同步放量</b>（除非客户改用 LPO/LRO 线性直驱方案、省掉独立 DSP）。博通在 1.6T 代际为<b>独家供应</b>，因此 DSP 出货可作为光模块放量的<b>同步指标</b>。</div>
+
     <div class="note">数据：Q2 FY2026 业绩会——网络占 AI 营收约 40%（峰值），长期回归 ~30%；Tomahawk 6 持续大量出货，200G SerDes DSP 保持独家。网络在互联各层的<b>具体卡位</b>见 2，<b>三强竞争格局</b>见 3。</div>
 
   </div>
@@ -490,6 +548,73 @@ a:hover{text-decoration:underline}
       </tbody>
     </table>
 
+  </div>
+</section>
+
+<!-- 💡 财报后为什么跌 · 预期差 -->
+<section class="sec mid">
+  <div class="sec-hd" onclick="toggleSec(this)">
+    <div class="sec-ttl"><span style="font-size:14px">💡</span>财报后为什么反而跌？· 预期差拆解</div>
+    <span class="sec-arrow">▼</span>
+  </div>
+  <div class="sec-body">
+
+    <div class="mid-thesis">
+      💡 核心判断：<span class="em">强财报 ≠ 上涨</span>。这份 Q2 FY2026 本质是"<b>数字兑现 + 指引再抬高</b>"的好财报，但<b>不是简单的 beat-and-raise</b>——
+      Q2 只是<b>微超</b>（收入 $221.87 亿 vs 指引 $220 亿、EPS $2.44 vs 共识 $2.40–2.43），Q3 指引虽强却<b>落在"中性偏强"、没够到多头上沿</b>。
+      博通是"预期已打满"的主线票，<b>跌的是预期差，不是基本面</b>。
+    </div>
+
+    <div style="font-size:12px;font-weight:700;color:var(--text);margin:4px 0 8px">① 业绩前 · 市场把预期分成三档（财报前的分歧）</div>
+    <table class="exp-tb">
+      <thead><tr><th style="width:110px">预期档</th><th>财报前怎么想</th><th style="width:150px">Q3 想看到</th><th style="width:96px">实际落点</th></tr></thead>
+      <tbody>
+        <tr>
+          <td class="camp" style="color:#15803d">🐻 保守</td>
+          <td>Anthropic 从 full-rack 转向标准 ASIC 芯片销售 → 收入确认低于整机架口径，担心 Q2→Q3 <b>不能继续加速</b></td>
+          <td>Q3 &lt; $290 亿</td>
+          <td class="hit" style="color:var(--up)">✅ 被证伪<br><span style="font-weight:400;color:var(--text2)">指引远超</span></td>
+        </tr>
+        <tr>
+          <td class="camp" style="color:#b45309">😐 中性（共识）</td>
+          <td>Q2 贴近 $220 亿指引；关键看 Q3 <b>能否站上 $290 亿</b>。只要略超即可维持"ASIC 龙头 + 软件现金流"高估值</td>
+          <td>Q3 ~$290 亿（Citi）</td>
+          <td class="hit" style="color:var(--up)">✅ 达到<br><span style="font-weight:400;color:var(--text2)">$294 亿略超</span></td>
+        </tr>
+        <tr style="background:var(--dn-bg)">
+          <td class="camp" style="color:var(--dn)">🐂 乐观（多头）</td>
+          <td>2H26 = Google TPU v7 + Meta ASIC + Anthropic + 网络<b>四引擎齐放</b>；赌 2027 AI 跃迁 &gt;$1,000 亿</td>
+          <td>Q3 $307 亿 / AI $190 亿（HSBC 上沿）</td>
+          <td class="hit" style="color:var(--dn)">❌ 未达<br><span style="font-weight:400;color:var(--text2)">$294/$160 &lt; 上沿</span></td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="note">📌 官方指引落在<b>"中性偏强"</b>：确认 2H26 加速，但<b>没有把 2027 预期一次性提前兑现</b>。满足了共识，却<b>没喂饱多头</b>——而股价里 price-in 的是多头剧本，于是拥挤的获利盘开始了结。</div>
+
+    <div style="font-size:12px;font-weight:700;color:var(--text);margin:18px 0 8px">② 业绩后 · 为什么"利好出尽"还跌（5 个引爆点）</div>
+    <div class="plist">
+      <div><span class="pn" style="background:var(--blue)">1</span><b>只是"微超"，不是"炸裂超"</b>：AI $108 亿 vs 指引 $107 亿、EPS $2.44 vs 共识 $2.40–2.43——对早已 price-in 多头剧本的仓位，这点 beat <b>不够喂动量</b>。</div>
+      <div><span class="pn" style="background:var(--blue)">2</span><b>Q3 指引没够到多头上沿</b>：$294 亿 / AI $160 亿，高于共识但<b>低于 HSBC 的 $307 亿 / AI $190 亿</b>。"达标但不惊艳" = 多头剧本被证伪。</div>
+      <div><span class="pn" style="background:var(--blue)">3</span><b>最肥的网络在"正常化"</b>：网络占 AI 从 40% 峰值回落到 ~30%——被解读为最高毛利环节降速。</div>
+      <div><span class="pn" style="background:var(--blue)">4</span><b>关键目标"重申 ≠ 上修"</b>：FY2027 &gt;$100B 是<b>维持</b>而非上调；20GW 平台是愿景、没给数字——<b>没有新的向上催化</b>。</div>
+      <div><span class="pn" style="background:var(--blue)">5</span><b>高估值 + 拥挤多头</b>：任何"不完美"都触发获利了结与去杠杆（vol-crush）。</div>
+    </div>
+
+    <div style="font-size:12px;font-weight:700;color:var(--text);margin:18px 0 8px">③ 但请注意 · 这是一份"高质量"财报（跌的是预期，不是公司）</div>
+    <div class="plist">
+      <div><span class="pn" style="background:var(--up)">A</span><b>增长非单客户</b>：AI 由<b>定制计算 + 网络共同推高</b>，不是单个 TPU 代际拉货 → 估值从"项目收入"向"平台收入"迁移。</div>
+      <div><span class="pn" style="background:var(--up)">B</span><b>经营杠杆没垮</b>：AI 硬件 mix 上升，但调整后 EBITDA 仍 <b>69%</b>，Q3 指引经营利润率 ~67%、EBITDA ~68%——<b>不是低质量放量</b>。</div>
+      <div><span class="pn" style="background:var(--up)">C</span><b>软件现金流没失速</b>：基础设施软件 $71.78 亿（+9% YoY / +5.6% QoQ），高黏性续费托住利润表底盘。</div>
+      <div><span class="pn" style="background:var(--up)">D</span><b>极低资本开支</b>：capex 仅 $2.31 亿（占营收 <b>1.0%</b>）→ 博通是<b>把客户 capex 转成自己 FCF</b> 的轻资产卖水人，不靠自建资产赌兑现。</div>
+    </div>
+
+    <div class="concl">
+      🎯 <b>方法论沉淀</b>：对博通这种<b>高预期主线票</b>，要看的不是"增速多高"（市场早 price-in 了），而是<b>三件边际事</b>——
+      ① <b>预期差</b>：实际 vs 买方 whisper（不是 vs 官方指引）；
+      ② <b>指引上修的幅度</b>（重申还是上调、有没有够到多头上沿）；
+      ③ <b>毛利率 / 网络占比 / 客户 PO 等"次级指标"的边际方向</b>。
+      <br><b style="color:var(--accent)">这恰恰印证"报表难有惊喜"——驱动股价的是预期与仓位；而对我们的映射，博通的价值不在它的股价波动，在于它是 ASIC / 网络景气度的「先行指标」（见下）。</b>
+    </div>
   </div>
 </section>
 
@@ -669,73 +794,6 @@ a:hover{text-decoration:underline}
       🎯 <b>一句话</b>：盯博通 = 盯上面这几个口径有没有<b>向上"跳台阶"</b>。常规的"符合指引"只能维持估值；真正的大行情来自<b>口径本身的跳变</b>——<b>新客户落地、全年 AI 上修、可见度再延一个财年</b>。这也是为什么每次财报，市场第一眼找的不是 EPS，而是这几个数字。
     </div>
 
-  </div>
-</section>
-
-<!-- 💡 财报后为什么跌 · 预期差 -->
-<section class="sec mid">
-  <div class="sec-hd" onclick="toggleSec(this)">
-    <div class="sec-ttl"><span class="sec-num" style="width:auto;padding:0 9px;border-radius:11px;font-size:9.5px">💡 我的分析</span>财报后为什么反而跌？· 预期差拆解</div>
-    <span class="sec-arrow">▼</span>
-  </div>
-  <div class="sec-body">
-
-    <div class="mid-thesis">
-      💡 核心判断：<span class="em">强财报 ≠ 上涨</span>。这份 Q2 FY2026 本质是"<b>数字兑现 + 指引再抬高</b>"的好财报，但<b>不是简单的 beat-and-raise</b>——
-      Q2 只是<b>微超</b>（收入 $221.87 亿 vs 指引 $220 亿、EPS $2.44 vs 共识 $2.40–2.43），Q3 指引虽强却<b>落在"中性偏强"、没够到多头上沿</b>。
-      博通是"预期已打满"的主线票，<b>跌的是预期差，不是基本面</b>。
-    </div>
-
-    <div style="font-size:12px;font-weight:700;color:var(--text);margin:4px 0 8px">① 业绩前 · 市场把预期分成三档（财报前的分歧）</div>
-    <table class="exp-tb">
-      <thead><tr><th style="width:110px">预期档</th><th>财报前怎么想</th><th style="width:150px">Q3 想看到</th><th style="width:96px">实际落点</th></tr></thead>
-      <tbody>
-        <tr>
-          <td class="camp" style="color:#15803d">🐻 保守</td>
-          <td>Anthropic 从 full-rack 转向标准 ASIC 芯片销售 → 收入确认低于整机架口径，担心 Q2→Q3 <b>不能继续加速</b></td>
-          <td>Q3 &lt; $290 亿</td>
-          <td class="hit" style="color:var(--up)">✅ 被证伪<br><span style="font-weight:400;color:var(--text2)">指引远超</span></td>
-        </tr>
-        <tr>
-          <td class="camp" style="color:#b45309">😐 中性（共识）</td>
-          <td>Q2 贴近 $220 亿指引；关键看 Q3 <b>能否站上 $290 亿</b>。只要略超即可维持"ASIC 龙头 + 软件现金流"高估值</td>
-          <td>Q3 ~$290 亿（Citi）</td>
-          <td class="hit" style="color:var(--up)">✅ 达到<br><span style="font-weight:400;color:var(--text2)">$294 亿略超</span></td>
-        </tr>
-        <tr style="background:var(--dn-bg)">
-          <td class="camp" style="color:var(--dn)">🐂 乐观（多头）</td>
-          <td>2H26 = Google TPU v7 + Meta ASIC + Anthropic + 网络<b>四引擎齐放</b>；赌 2027 AI 跃迁 &gt;$1,000 亿</td>
-          <td>Q3 $307 亿 / AI $190 亿（HSBC 上沿）</td>
-          <td class="hit" style="color:var(--dn)">❌ 未达<br><span style="font-weight:400;color:var(--text2)">$294/$160 &lt; 上沿</span></td>
-        </tr>
-      </tbody>
-    </table>
-    <div class="note">📌 官方指引落在<b>"中性偏强"</b>：确认 2H26 加速，但<b>没有把 2027 预期一次性提前兑现</b>。满足了共识，却<b>没喂饱多头</b>——而股价里 price-in 的是多头剧本，于是拥挤的获利盘开始了结。</div>
-
-    <div style="font-size:12px;font-weight:700;color:var(--text);margin:18px 0 8px">② 业绩后 · 为什么"利好出尽"还跌（5 个引爆点）</div>
-    <div class="plist">
-      <div><span class="pn" style="background:var(--blue)">1</span><b>只是"微超"，不是"炸裂超"</b>：AI $108 亿 vs 指引 $107 亿、EPS $2.44 vs 共识 $2.40–2.43——对早已 price-in 多头剧本的仓位，这点 beat <b>不够喂动量</b>。</div>
-      <div><span class="pn" style="background:var(--blue)">2</span><b>Q3 指引没够到多头上沿</b>：$294 亿 / AI $160 亿，高于共识但<b>低于 HSBC 的 $307 亿 / AI $190 亿</b>。"达标但不惊艳" = 多头剧本被证伪。</div>
-      <div><span class="pn" style="background:var(--blue)">3</span><b>最肥的网络在"正常化"</b>：网络占 AI 从 40% 峰值回落到 ~30%——被解读为最高毛利环节降速。</div>
-      <div><span class="pn" style="background:var(--blue)">4</span><b>关键目标"重申 ≠ 上修"</b>：FY2027 &gt;$100B 是<b>维持</b>而非上调；20GW 平台是愿景、没给数字——<b>没有新的向上催化</b>。</div>
-      <div><span class="pn" style="background:var(--blue)">5</span><b>高估值 + 拥挤多头</b>：任何"不完美"都触发获利了结与去杠杆（vol-crush）。</div>
-    </div>
-
-    <div style="font-size:12px;font-weight:700;color:var(--text);margin:18px 0 8px">③ 但请注意 · 这是一份"高质量"财报（跌的是预期，不是公司）</div>
-    <div class="plist">
-      <div><span class="pn" style="background:var(--up)">A</span><b>增长非单客户</b>：AI 由<b>定制计算 + 网络共同推高</b>，不是单个 TPU 代际拉货 → 估值从"项目收入"向"平台收入"迁移。</div>
-      <div><span class="pn" style="background:var(--up)">B</span><b>经营杠杆没垮</b>：AI 硬件 mix 上升，但调整后 EBITDA 仍 <b>69%</b>，Q3 指引经营利润率 ~67%、EBITDA ~68%——<b>不是低质量放量</b>。</div>
-      <div><span class="pn" style="background:var(--up)">C</span><b>软件现金流没失速</b>：基础设施软件 $71.78 亿（+9% YoY / +5.6% QoQ），高黏性续费托住利润表底盘。</div>
-      <div><span class="pn" style="background:var(--up)">D</span><b>极低资本开支</b>：capex 仅 $2.31 亿（占营收 <b>1.0%</b>）→ 博通是<b>把客户 capex 转成自己 FCF</b> 的轻资产卖水人，不靠自建资产赌兑现。</div>
-    </div>
-
-    <div class="concl">
-      🎯 <b>方法论沉淀</b>：对博通这种<b>高预期主线票</b>，要看的不是"增速多高"（市场早 price-in 了），而是<b>三件边际事</b>——
-      ① <b>预期差</b>：实际 vs 买方 whisper（不是 vs 官方指引）；
-      ② <b>指引上修的幅度</b>（重申还是上调、有没有够到多头上沿）；
-      ③ <b>毛利率 / 网络占比 / 客户 PO 等"次级指标"的边际方向</b>。
-      <br><b style="color:var(--accent)">这恰恰印证"报表难有惊喜"——驱动股价的是预期与仓位；而对我们的映射，博通的价值不在它的股价波动，在于它是 ASIC / 网络景气度的「先行指标」（见下）。</b>
-    </div>
   </div>
 </section>
 
