@@ -528,6 +528,21 @@ a:hover{text-decoration:underline}
     </div>
     <div class="gs-note">📌 DSP 是光模块内部的<b>"电信号处理芯片"</b>，夹在 Host 电接口与 TOSA/ROSA 光电转换之间，负责 <b>CDR / 均衡 / 重定时 / FEC</b>——光模块每放量，DSP 基本<b>同步放量</b>（除非客户改用 LPO/LRO 线性直驱方案、省掉独立 DSP）。博通在 1.6T 代际为<b>独家供应</b>，因此 DSP 出货可作为光模块放量的<b>同步指标</b>。</div>
 
+    <div style="margin-top:10px;padding:10px 12px;background:var(--accent-bg);border:1px solid var(--accent2);border-radius:8px;font-size:11px;color:var(--text2);line-height:1.7">
+      <b style="color:var(--accent)">📖 名词解释</b>
+      <div style="margin-top:4px"><b style="color:var(--text)">DSP</b>（Digital Signal Processor，数字信号处理芯片）：光模块里的"信号修复大脑"——对收发的高速电信号做 <b>CDR（时钟数据恢复）/ 均衡 / 重定时 / FEC 编解码</b>，补偿信号在 PCB 走线和光纤中的损耗与抖动，保证误码率达标；是光模块中复杂度和单价最高的电芯片。</div>
+      <div style="margin-top:4px"><b style="color:var(--text)">Driver / TIA</b>（驱动器 / 跨阻放大器）：光电转换两端的"模拟前端"——<b>Driver</b> 把 DSP 输出的电信号放大后驱动激光器（TOSA）发光；<b>TIA</b>（Trans-Impedance Amplifier）把探测器（ROSA）接收到的微弱光电流放大成 DSP 可处理的电压信号。结构更简单、单价远低于 DSP。</div>
+    </div>
+
+    <div class="concl">
+      🎯 <b>LPO / NPO / CPO 演进中，博通的角色会怎么变</b>：三种方案本质是<b>把"电信号修复"这件事放在哪里做</b>——
+      <div style="margin-top:6px"><b>① 传统可插拔 + DSP</b>（现状）：光模块内置独立 DSP 芯片做完整信号修复——博通是这颗 DSP 芯片的卖方，与 Marvell 直接竞争"芯片级"份额。</div>
+      <div style="margin-top:4px"><b>② LPO（Linear Pluggable Optics，线性直驱）</b>：去掉光模块里的 DSP，仅留 Driver/TIA 做线性放大，信号修复交给<b>主机侧（交换芯片/XPU）的 SerDes 均衡能力</b>承担——独立 DSP 芯片这个产品形态被削弱，但<b>对主机 SerDes 的要求陡增</b>。博通自己的 Tomahawk 224G SerDes 越强，越能把"DSP 的活"内化到自己的交换芯片里，<b style="color:var(--accent)">从"卖配套 DSP"变成"自家交换芯片性能溢价"</b>。</div>
+      <div style="margin-top:4px"><b>③ NPO（Near-Package Optics，近封装光学）</b>：光引擎搬到交换芯片旁的基板上（贴近但不同封装），仍保留简化版 DSP/Retimer，但电信号走线大幅缩短、功耗下降。博通可以把"交换芯片 + 近封装光引擎"打包成<b>系统级方案</b>一起卖，而不是让客户单独采购 DSP。</div>
+      <div style="margin-top:4px"><b>④ CPO（Co-Packaged Optics，共封装光学）</b>：光引擎与交换芯片<b>封装在同一个 package 内</b>（如博通自己的 Davisson CPO 交换芯片）——DSP/光引擎被整合进博通自家的交换芯片产品线，博通的角色从<b>"配套芯片供应商"升级为"交换芯片+光引擎一体化系统集成商"</b>，单芯片价值量和议价权显著提升。</div>
+      <div style="margin-top:6px"><b style="color:var(--accent)">对比 Marvell</b>：Marvell 的核心资产正是这颗"独立 DSP 芯片"，LPO/CPO 演进对其冲击更直接——而博通因为<b>同时拥有交换 ASIC（Tomahawk）</b>，无论信号修复挪到主机侧（LPO）还是被集成进自家封装（CPO），都能把价值<b>留在自己的交换芯片里</b>。这也是为什么博通的 CPO 路线图，被市场视为对 Marvell 光 DSP 业务的潜在替代威胁。</div>
+    </div>
+
     <div class="note">数据：Q2 FY2026 业绩会——网络占 AI 营收约 40%（峰值），长期回归 ~30%；Tomahawk 6 持续大量出货，200G SerDes DSP 保持独家。网络在互联各层的<b>具体卡位</b>见 2，<b>三强竞争格局</b>见 3。</div>
 
   </div>
