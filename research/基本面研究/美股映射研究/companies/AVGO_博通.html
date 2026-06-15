@@ -413,6 +413,13 @@ a:hover{text-decoration:underline}
       所以"交换芯片第一（博通）＋ DSP 第一（Marvell）= ASIC 双寡头"<b style="color:var(--accent)">不是巧合，是同一种能力的三种变现</b>——谁的 SerDes 最强、最省电、最领先，谁就能帮客户把 XPU"连"出去。这也是 COT（客户纯自研）威胁被夸大的根因。
     </div>
 
+    <div style="margin-top:10px;padding:10px 12px;background:var(--accent-bg);border:1px solid var(--accent2);border-radius:8px;font-size:11px;color:var(--text2);line-height:1.7">
+      <b style="color:var(--accent)">📖 名词解释</b>
+      <div style="margin-top:4px"><b style="color:var(--text)">SerDes</b>（Serializer/Deserializer，串并转换器）：芯片间高速信号收发的模拟混合信号电路——把芯片内部的并行低速信号"串行化"成高速串行信号发出，对端再"反串行化"还原。是 PCIe、以太网、HBM、芯粒互联等几乎所有高速接口的物理层基础，也是 SerDes IP 厂商（博通/Marvell/Alphawave 等）的核心护城河。</div>
+      <div style="margin-top:4px"><b style="color:var(--text)">PHY</b>（Physical Layer，物理层）：协议栈最底层，负责把数字信号转换成可在铜线/光纤上传输的电气或光信号；SerDes 是 PHY 的核心电路，但不同协议（PCIe PHY、以太网 PHY、HBM PHY）需要针对性设计不同的 PHY IP。</div>
+      <div style="margin-top:4px"><b style="color:var(--text)">D2D</b>（Die-to-Die，芯粒互联）：同一封装内多个裸片（die）之间的短距离高速互联接口（如 UCIe 标准），用于把计算 die、I/O die、HBM 等多个"芯粒"拼接成一个完整 ASIC——是 3.5D / Chiplet 先进封装的关键互联技术。</div>
+    </div>
+
     <div style="font-size:11px;font-weight:700;color:var(--text2);margin:18px 0 8px;letter-spacing:.3px">引擎 A 客户阵容 = "去英伟达"阵营点名册（6 家核心客户）</div>
     <table class="ctable">
       <thead><tr><th>客户</th><th>协议 / 体量</th><th>博通卡位 / 份额</th><th style="width:110px">性质</th></tr></thead>
