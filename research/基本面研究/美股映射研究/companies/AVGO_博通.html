@@ -42,7 +42,8 @@ a:hover{text-decoration:underline}
 .sec-hd{padding:11px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;cursor:pointer;background:#fafbfc;user-select:none}
 .sec-hd:hover{background:#f1f3f5}
 .sec-ttl{font-size:13px;font-weight:700;display:flex;align-items:center;gap:8px}
-.sec-num{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:50%;background:var(--accent);color:#fff;font-size:11px;font-weight:800;flex-shrink:0}
+.sec-num{display:inline-flex;align-items:center;justify-content:center;min-width:20px;height:20px;padding:0 6px;border-radius:10px;background:var(--accent);color:#fff;font-size:11px;font-weight:800;flex-shrink:0;font-variant-numeric:tabular-nums}
+.sec-num.sub{background:var(--accent-bg);color:var(--accent);border:1px solid var(--accent2);font-size:10px}
 .sec-arrow{font-size:12px;color:var(--text2);transition:transform .2s}
 .sec-hd.collapsed .sec-arrow{transform:rotate(-90deg)}
 .sec-body{padding:18px}
@@ -203,6 +204,7 @@ a:hover{text-decoration:underline}
 .gsfc .yoy td:first-child{color:var(--text2);font-weight:700}
 .gs-note{font-size:10.5px;color:var(--text2);margin:8px 0 4px;line-height:1.55}
 .gs-note b{color:var(--text)}
+.gco{color:var(--dn)}
 </style>
 </head>
 <body>
@@ -278,7 +280,7 @@ a:hover{text-decoration:underline}
 <!-- ① 业务拆解 -->
 <section class="sec">
   <div class="sec-hd" onclick="toggleSec(this)">
-    <div class="sec-ttl"><span class="sec-num">①</span>业务拆解</div>
+    <div class="sec-ttl"><span class="sec-num">1</span>业务拆解</div>
     <span class="sec-arrow">▼</span>
   </div>
   <div class="sec-body">
@@ -293,14 +295,14 @@ a:hover{text-decoration:underline}
       <div class="bk-arrow">→</div>
       <div class="bk-box dc">
         <div class="bk-val dc">751<span style="font-size:13px">亿$</span></div>
-        <div class="bk-lbl">半导体（AI 571 + 非AI 180）</div>
+        <div class="bk-lbl">半导体（<b style="color:var(--dn)">AI 571</b> + 非AI 180）</div>
         <div style="margin-top:4px"><span class="bk-pct dc">占总营收 70%</span></div>
-        <div style="margin-top:5px;font-size:11px;color:var(--text2)">AI 占总营收 <strong style="color:var(--up)">53%</strong></div>
+        <div style="margin-top:5px;font-size:11px;color:var(--text2)"><b style="color:var(--dn)">AI</b> 占总营收 <strong style="color:var(--dn)">53%</strong></div>
       </div>
       <div class="bk-arrow">→</div>
       <div class="bk-split">
         <div class="bk-mini"><div class="v">321 亿$</div><div class="l">软件（VMware 236 + 基础 85）</div></div>
-        <div class="bk-mini"><div class="v">349 / 222</div><div class="l">AI 内部：定制 XPU / AI 互联（亿$）</div></div>
+        <div class="bk-mini"><div class="v">349 / 222</div><div class="l"><b style="color:var(--dn)">AI</b> 内部：定制 XPU / AI 互联（亿$）</div></div>
       </div>
     </div>
 
@@ -310,7 +312,7 @@ a:hover{text-decoration:underline}
       <tbody>
         <tr><td><b>定制计算 Custom Compute（XPU）</b></td><td class="num">129</td><td class="num">349</td><td class="num">801</td><td class="num"><b>1,164</b></td><td class="num" style="color:var(--text3)">67.7%</td><td><span class="tag tag-ac">AI 第一块</span></td></tr>
         <tr><td><b>AI 互联 AI Connectivity（网络）</b></td><td class="num">74</td><td class="num">222</td><td class="num">529</td><td class="num"><b>765</b></td><td class="num" style="color:var(--text3)">67.7%</td><td><span class="tag tag-ac">AI 第二块</span></td></tr>
-        <tr class="latest"><td><b>＝ AI 半导体</b></td><td class="num">202</td><td class="num">571</td><td class="num">1,330</td><td class="num"><b>1,929</b></td><td class="num" style="color:var(--text3)">67.7%</td><td><span style="color:var(--accent);font-weight:700;font-size:10px">占半导体 76%→91%</span></td></tr>
+        <tr class="latest"><td><b style="color:var(--dn)">＝ AI 半导体</b></td><td class="num">202</td><td class="num">571</td><td class="num">1,330</td><td class="num"><b>1,929</b></td><td class="num" style="color:var(--text3)">67.7%</td><td><span style="color:var(--accent);font-weight:700;font-size:10px">占半导体 76%→91%</span></td></tr>
         <tr><td>非 AI 半导体（周期业务）</td><td class="num">167</td><td class="num">180</td><td class="num">190</td><td class="num">194</td><td class="num" style="color:var(--text3)">67.7%</td><td><span class="tag tag-est">周期底部</span></td></tr>
         <tr class="latest"><td><b>＝ 半导体合计</b></td><td class="num">369</td><td class="num">751</td><td class="num">1,520</td><td class="num"><b>2,123</b></td><td class="num"><b>67.7%</b></td><td><span style="color:var(--accent);font-weight:700;font-size:10px">占总 70%→85%</span></td></tr>
         <tr><td>基础设施软件（VMware + 基础）</td><td class="num">270</td><td class="num">321</td><td class="num">350</td><td class="num">370</td><td class="num"><b style="color:var(--up)">92.4%</b></td><td><span class="tag tag-est">高毛利稳定器</span></td></tr>
@@ -318,7 +320,7 @@ a:hover{text-decoration:underline}
       </tbody>
     </table>
     <div class="note">📌 <b>毛利率口径</b>：高盛模型（excl. SBC）只披露<b>半导体 67.7%</b> / <b>软件 92.4%</b>（VMware 92.5%、基础软件 92.0%）两大类，未细拆到 XPU / 互联 / 非AI——故半导体各行同标 67.7%（浅色）。<b>软件毛利率（92%）远高于半导体（68%），但占比只剩 15% 且增长慢</b>，所以 AI（半导体）放量会让整体毛利率被结构性稀释至 FY28E ~71%——这也是 KPI 里"毛利率 79%→77%缓降"的根因。</div>
-    <div class="note">📌 <b>关于 FY25 的 $129 亿定制</b>：这不是"新冒出的 AI ASIC 需求"，而是博通做了近十年的<b>存量生意</b>——主力是 <b>Google TPU</b>（博通自 TPU v1 / 2016 起的联合设计 + 后端伙伴）＋ <b>Meta MTIA</b>，跟 ChatGPT 引爆 AI 没有先后关系。真正的"新需求"是 <b>FY26E 从 129→349（+170%）</b> 这一跳：来自 <b>TPU v7 放量 + OpenAI / Anthropic / 新 Tier-1 客户量产</b>。换言之：<b>$129 亿是老客户（Google/Meta）基本盘，349→1,164 的增量才是"6 客户齐放量"的新故事</b>——这也是 FY27 AI &gt;$1,000 亿指引的底气（已签约客户的 GW 时刻表兑现，而非赌新需求凭空出现）。</div>
+    <div class="note">📌 <b>关于 FY25 的 $129 亿定制</b>：这不是"新冒出的 AI ASIC 需求"，而是博通做了近十年的<b>存量生意</b>——主力是 <b>Google TPU</b>（博通自 TPU v1 / 2016 起的联合设计 + 后端伙伴）＋ <b>Meta MTIA</b>，跟 ChatGPT 引爆 AI 没有先后关系。真正的"新需求"是 <b>FY26E 从 129→349（+170%）</b> 这一跳：来自 <b>TPU v7 放量 + OpenAI / Anthropic / 新 Tier-1 客户量产</b>。换言之：<b>$129 亿是老客户（Google/Meta）基本盘，349→1,164 的增量才是"6 客户齐放量"的新故事</b>——这也是 <b class="gco">FY27 AI &gt;$1,000 亿</b>指引的底气（已签约客户的 GW 时刻表兑现，而非赌新需求凭空出现）。</div>
 
     <div style="font-size:11px;font-weight:700;color:var(--text2);margin:22px 0 10px;letter-spacing:.3px">AI 半导体季度轨迹（爆发曲线）</div>
     <table class="ctable">
@@ -343,7 +345,7 @@ a:hover{text-decoration:underline}
 <!-- ② AI 双引擎 -->
 <section class="sec">
   <div class="sec-hd" onclick="toggleSec(this)">
-    <div class="sec-ttl"><span class="sec-num">②</span>引擎 A · 定制 XPU（ASIC）</div>
+    <div class="sec-ttl"><span class="sec-num sub">1.1</span>引擎 A · 定制 XPU（ASIC）</div>
     <span class="sec-arrow">▼</span>
   </div>
   <div class="sec-body">
@@ -351,7 +353,7 @@ a:hover{text-decoration:underline}
     <div class="eng" style="border-top-color:var(--accent);margin-bottom:16px">
       <div class="eng-hd" style="color:var(--accent)">🧩 唯一规模化的定制 ASIC 平台<span class="pct" style="background:var(--accent)">占 AI ~60%</span></div>
       <div class="eng-bd">
-        全球<b>唯一规模化</b>的 AI 定制 ASIC 平台（MRVL 规模远小）。给"去英伟达"阵营造芯片：<b>每多卖一颗 XPU，副干就壮大一分</b>。护城河 = SerDes + 硅设计 + 先进封装（3.5D）+ 网络的全栈复用，领先 12-18 个月。（AI 网络业务见 ③）
+        全球<b>唯一规模化</b>的 AI 定制 ASIC 平台（MRVL 规模远小）。给"去英伟达"阵营造芯片：<b>每多卖一颗 XPU，副干就壮大一分</b>。护城河 = SerDes + 硅设计 + 先进封装（3.5D）+ 网络的全栈复用，领先 12-18 个月。（AI 网络业务见 1.2）
       </div>
     </div>
 
@@ -433,7 +435,7 @@ a:hover{text-decoration:underline}
 <!-- ③ 引擎 B · AI 网络 -->
 <section class="sec">
   <div class="sec-hd" onclick="toggleSec(this)">
-    <div class="sec-ttl"><span class="sec-num">③</span>引擎 B · AI 网络（以太网交换 + 光 DSP）</div>
+    <div class="sec-ttl"><span class="sec-num sub">1.2</span>引擎 B · AI 网络（以太网交换 + 光 DSP）</div>
     <span class="sec-arrow">▼</span>
   </div>
   <div class="sec-body">
@@ -461,7 +463,32 @@ a:hover{text-decoration:underline}
       <div><span class="pn" style="background:var(--accent)">3</span><b>网络是 XPU 的搭售壁垒</b>：Q2 网络占 AI 营收约 <b>40%</b>（阶段性峰值），管理层指长期回归 <b>~30%</b>；XPU 每放量一分，网络引擎就同步多收一分，构成竞争对手难以拆解的捆绑护城河。</div>
     </div>
 
-    <div class="note">数据：Q2 FY2026 业绩会——网络占 AI 营收约 40%（峰值），长期回归 ~30%；Tomahawk 6 持续大量出货，200G SerDes DSP 保持独家。网络在互联各层的<b>具体卡位</b>见 ④，<b>三强竞争格局</b>见 ⑤。</div>
+    <div class="note">数据：Q2 FY2026 业绩会——网络占 AI 营收约 40%（峰值），长期回归 ~30%；Tomahawk 6 持续大量出货，200G SerDes DSP 保持独家。网络在互联各层的<b>具体卡位</b>见 2，<b>三强竞争格局</b>见 3。</div>
+
+  </div>
+</section>
+
+<!-- 近 8 场业绩会交流重点 -->
+<section class="sec">
+  <div class="sec-hd" onclick="toggleSec(this)">
+    <div class="sec-ttl"><span style="font-size:14px">📋</span>近 8 场业绩会交流重点</div>
+    <span class="sec-arrow">▼</span>
+  </div>
+  <div class="sec-body">
+
+    <table class="ctable">
+      <thead><tr><th>季度（日期）</th><th>沟通重点变化</th><th>AI 营收 / 指引</th></tr></thead>
+      <tbody>
+        <tr><td><b>Q3 FY24</b><br><span style="color:var(--text2);font-size:11px">2024-09</span></td><td>AI $31 亿（+180%）；FY2024 AI 目标上调至 $120 亿；VMware $38 亿（+200%）</td><td class="gco">FY24 AI 上调至 $120 亿</td></tr>
+        <tr><td><b>Q4 FY24</b><br><span style="color:var(--text2);font-size:11px">2024-12</span></td><td>FY2024 AI $122 亿（+220%）；首提 <b>2027 SAM $600-900 亿</b>（3 客户，各 100 万 XPU 集群）</td><td class="gco">2027 SAM $600-900 亿</td></tr>
+        <tr><td><b>Q1 FY25</b><br><span style="color:var(--text2);font-size:11px">2025-03</span></td><td>AI $41 亿（+77%）；4 家新增潜在客户在开发；2nm XPU 3.5D 封装；VCF 70% 采用</td><td>—</td></tr>
+        <tr><td><b>Q2 FY25</b><br><span style="color:var(--text2);font-size:11px">2025-06</span></td><td>AI $44 亿（+46%）；Tomahawk 6 突破；首提 <b>AI CAGR ~60%</b>（FY25-26）；2027 三客户各 100 万集群</td><td class="gco">AI CAGR ~60%（FY25-26）</td></tr>
+        <tr><td><b>Q3 FY25</b><br><span style="color:var(--text2);font-size:11px">2025-09</span></td><td>AI $52 亿（+63%），积压 $1,100 亿；<b>第 4 家客户</b> $100 亿+ 订单；XPU 占 AI 65%</td><td class="gco">FY26 增速将超 FY25（+65%）</td></tr>
+        <tr><td><b>Q4 FY25</b><br><span style="color:var(--text2);font-size:11px">2025-12</span></td><td>FY2025 AI $200 亿（+65%）；积压 $730 亿/18 个月；<b>第 5 家客户</b> $100 亿；OpenAI 10GW 框架协议</td><td class="gco">Q1 FY26 AI guide $82 亿（+100%）</td></tr>
+        <tr><td><b>Q1 FY26</b><br><span style="color:var(--text2);font-size:11px">2026-03</span></td><td>AI $84 亿（+106%）；<b>6 客户成形</b>（Google/Anthropic/Meta/OpenAI+2）；首提 <b>FY2027 &gt;$1,000 亿</b>，2027 ~10GW</td><td class="gco">FY27 AI &gt;$1,000 亿</td></tr>
+        <tr class="latest"><td><b>Q2 FY26 ★</b><br><span style="color:var(--text2);font-size:11px">2026-06</span></td><td>AI $108 亿（+143%）；H1 $180 亿/H2 翻倍；<b>Google 长协 + Anthropic 6GW</b>；<b>20GW 平台</b>（Apollo/Blackstone 首期 $350 亿）；FY2028 可见度建立</td><td class="gco">FY26 $560 亿（+180%），Q3 guide $160 亿（+200%）</td></tr>
+      </tbody>
+    </table>
 
   </div>
 </section>
@@ -469,7 +496,7 @@ a:hover{text-decoration:underline}
 <!-- ④ ★博通在互联中的位置 -->
 <section class="sec">
   <div class="sec-hd" onclick="toggleSec(this)">
-    <div class="sec-ttl"><span class="sec-num">④</span>★ 博通在互联中的位置 · 每一层都有它</div>
+    <div class="sec-ttl"><span class="sec-num">2</span>★ 博通在互联中的位置 · 每一层都有它</div>
     <span class="sec-arrow">▼</span>
   </div>
   <div class="sec-body">
@@ -565,7 +592,7 @@ a:hover{text-decoration:underline}
 <!-- ⑤ AI 网络控制权之战 -->
 <section class="sec">
   <div class="sec-hd" onclick="toggleSec(this)">
-    <div class="sec-ttl"><span class="sec-num">⑤</span>AI 网络控制权之战 · 闭环 vs 开放 vs 桥</div>
+    <div class="sec-ttl"><span class="sec-num">3</span>AI 网络控制权之战 · 闭环 vs 开放 vs 桥</div>
     <span class="sec-arrow">▼</span>
   </div>
   <div class="sec-body">
@@ -597,7 +624,7 @@ a:hover{text-decoration:underline}
 <!-- ⑥ 跟踪框架：该看什么 -->
 <section class="sec">
   <div class="sec-hd" onclick="toggleSec(this)">
-    <div class="sec-ttl"><span class="sec-num">⑥</span>跟踪博通该看什么 · 市场最关心的指引口径</div>
+    <div class="sec-ttl"><span class="sec-num">4</span>跟踪博通该看什么 · 市场最关心的指引口径</div>
     <span class="sec-arrow">▼</span>
   </div>
   <div class="sec-body">
@@ -642,41 +669,6 @@ a:hover{text-decoration:underline}
       🎯 <b>一句话</b>：盯博通 = 盯上面这几个口径有没有<b>向上"跳台阶"</b>。常规的"符合指引"只能维持估值；真正的大行情来自<b>口径本身的跳变</b>——<b>新客户落地、全年 AI 上修、可见度再延一个财年</b>。这也是为什么每次财报，市场第一眼找的不是 EPS，而是这几个数字。
     </div>
 
-  </div>
-</section>
-
-<!-- ⑦ 双主干位置 + A股映射 -->
-<section class="sec">
-  <div class="sec-hd" onclick="toggleSec(this)">
-    <div class="sec-ttl"><span class="sec-num">⑦</span>在双主干格局中的位置 · A 股映射</div>
-    <span class="sec-arrow">▼</span>
-  </div>
-  <div class="sec-body">
-
-    <div class="spine-intro">
-      用 W1 的"双主干"坐标看博通：它是<b>唯一同时给两边供货的互联军火商</b>——副干的芯片它造（TPU/MTIA），开放网络它垄断（Tomahawk），连 NVDA 闭环外溢的以太网需求它也接。<b>ASIC 副干每长大一分，博通的两台引擎就同时多收一分税。</b>
-    </div>
-
-    <div class="split3">
-      <div class="s3" style="border-top-color:var(--up)">
-        <div class="s3-t" style="color:var(--up-ink)">✅ A股直接对标（W2 交换芯片链）</div>
-        <div class="s3-d"><b>交换芯片</b>（盛科通信等）——对标 Tomahawk 的国产替代叙事；<b>SerDes / 接口 IP</b>、<b>Retimer</b>。博通的产品节奏（TH6→TH7、200G→400G SerDes）就是这条链的<b>技术路标</b>。</div>
-      </div>
-      <div class="s3" style="border-top-color:var(--accent)">
-        <div class="s3-t" style="color:var(--accent)">🔗 博通放量 → 供应链传导</div>
-        <div class="s3-d">XPU 放量同样吃 <b>CoWoS / ABF / HBM</b>（与 NVDA 共抢产能 → 涨价弹性）；交换机放量拉 <b>高速 PCB / CCL / 连接器</b>；1.6T DSP 出货 = <b>光模块放量的同步指标</b>（W3）。</div>
-      </div>
-      <div class="s3" style="border-top-color:var(--neu)">
-        <div class="s3-t" style="color:var(--neu-ink)">📊 跟踪意义（先行指标）</div>
-        <div class="s3-d">博通 AI 营收/指引 = <b>ASIC 副干景气度温度计</b>；网络占比 = 互联墙资本开支强度；客户 GW 时刻表（2027 ~10GW）= A 股 ASIC/光/铜链的<b>放量日历</b>。</div>
-      </div>
-    </div>
-
-    <div class="concl">
-      🎯 <b>映射结论</b>：博通是"<b>两根主干都吃</b>"逻辑的极致体现——而且它自己就是收税人而非赌徒。
-      对 A 股：W2 交换芯片链拿它当<b>技术路标</b>，W3 光链拿它的 DSP 出货当<b>同步指标</b>，W5 ASIC 链拿它的客户时刻表当<b>放量日历</b>。
-      <b>跟着博通的财报抄作业，等于同时监控了开放网络和 ASIC 两条战线。</b>
-    </div>
   </div>
 </section>
 
@@ -780,6 +772,46 @@ a:hover{text-decoration:underline}
     <div class="note" style="margin-top:14px">
       ⚠️ <b>证伪清单</b>：① 大客户项目推迟 / COT（客户自研设计）侵蚀；② 先进封装（3.5D/CoWoS）或 2nm 晶圆卡产能；③ NVDA 闭环在高端训练守住份额 → SUE 渗透不及预期；④ 网络占比回落快于预期拖累总增速；⑤ 把订单写成利润——毛利率 Q3 指引 74%（-310bp）需持续跟踪。
       <br><span style="color:#94a3b8">资料来源：AVGO 业绩会档案（Q1FY2024–Q2FY2026）、AI 网络控制权研报（JPM/UBS/Bernstein/GS 综述）、瑞穗 TPU 重估、博通财报深度解读。市值为约数。</span>
+    </div>
+  </div>
+</section>
+
+<!-- ⑦ 双主干位置 + A股映射 -->
+<section class="sec">
+  <div class="sec-hd" onclick="toggleSec(this)">
+    <div class="sec-ttl"><span class="sec-num">5</span>在双主干格局中的位置 · A 股映射</div>
+    <span class="sec-arrow">▼</span>
+  </div>
+  <div class="sec-body">
+
+    <div class="atom">
+      对 A 股的映射：<b>简单映射是交换芯片</b>——对标 Tomahawk 的国产替代（盛科通信等）；<br>
+      但<b style="color:var(--dn)">更重要的是映射整个 ASIC 生态</b>——XPU 放量拉动 CoWoS / HBM / 高速 PCB 的全链条需求，比单一交换芯片标的的弹性更大。
+    </div>
+
+    <div class="spine-intro">
+      用 W1 的"双主干"坐标看博通：它是<b>唯一同时给两边供货的互联角色</b>——副干的芯片它造（TPU/MTIA），开放网络它垄断（Tomahawk），连 NVDA 闭环外溢的以太网需求它也接。<b>ASIC 副干每长大一分，博通的两台引擎就同时多收一分税。</b>
+    </div>
+
+    <div class="split3">
+      <div class="s3" style="border-top-color:var(--up)">
+        <div class="s3-t" style="color:var(--up-ink)">✅ A股直接对标（W2 交换芯片链）</div>
+        <div class="s3-d"><b>交换芯片</b>（盛科通信等）——对标 Tomahawk 的国产替代叙事；<b>SerDes / 接口 IP</b>、<b>Retimer</b>。博通的产品节奏（TH6→TH7、200G→400G SerDes）就是这条链的<b>技术路标</b>。</div>
+      </div>
+      <div class="s3" style="border-top-color:var(--accent)">
+        <div class="s3-t" style="color:var(--accent)">🔗 博通放量 → 供应链传导</div>
+        <div class="s3-d">XPU 放量同样吃 <b>CoWoS / ABF / HBM</b>（与 NVDA 共抢产能 → 涨价弹性）；交换机放量拉 <b>高速 PCB / CCL / 连接器</b>；1.6T DSP 出货 = <b>光模块放量的同步指标</b>（W3）。</div>
+      </div>
+      <div class="s3" style="border-top-color:var(--neu)">
+        <div class="s3-t" style="color:var(--neu-ink)">📊 跟踪意义（先行指标）</div>
+        <div class="s3-d">博通 AI 营收/指引 = <b>ASIC 副干景气度温度计</b>；网络占比 = 互联墙资本开支强度；客户 GW 时刻表（2027 ~10GW）= A 股 ASIC/光/铜链的<b>放量日历</b>。</div>
+      </div>
+    </div>
+
+    <div class="concl">
+      🎯 <b>映射结论</b>：博通是"<b>两根主干都吃</b>"逻辑的极致体现——而且它自己就是收税人而非赌徒。
+      对 A 股：W2 交换芯片链拿它当<b>技术路标</b>，W3 光链拿它的 DSP 出货当<b>同步指标</b>，W5 ASIC 链拿它的客户时刻表当<b>放量日历</b>。
+      <b>跟着博通的财报抄作业，等于同时监控了开放网络和 ASIC 两条战线。</b>
     </div>
   </div>
 </section>
