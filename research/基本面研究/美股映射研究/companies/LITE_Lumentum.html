@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LITE Lumentum · 美股映射（AI 光学基础设施）</title>
+<style>
+:root{
+  --bg:#f7f8fa;--card:#fff;--border:#e6e8eb;
+  --text:#1a1d21;--text2:#586271;--text3:#8a94a3;
+  /* LITE 品牌色：激光紫 */
+  --accent:#7c3aed;--accent2:#c4b5fd;--accent-bg:#f5f3ff;--accent-ink:#6d28d9;
+  --up:#15803d;--up-bg:#eaf6ee;--up-ink:#136130;
+  --dn:#c01d24;--dn-bg:#fbeaeb;--dn-ink:#9a161c;
+  --warn:#b45309;--warn-bg:#fdf4e7;
+  --neu:#475569;--neu-bg:#eef1f5;--neu-bd:#c3cdd9;--neu-ink:#334155;
+  --neu2:#64748b;--neu2-bg:#f4f6f9;--neu2-bd:#d7dee6;
+  --sh:0 1px 3px rgba(0,0,0,.07);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;background:var(--bg);color:var(--text);font-size:14px;line-height:1.6}
+a{color:var(--accent);text-decoration:none}
+a:hover{text-decoration:underline}
+/* ─── Header ─── */
+.hdr{background:var(--card);border-bottom:1px solid var(--border);padding:14px 32px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:var(--sh)}
+.hdr-l{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.hdr-title{font-size:19px;font-weight:800}
+.hdr-sub{font-size:11px;color:var(--text2);margin-top:1px}
+.badge{display:inline-flex;align-items:center;padding:3px 10px;border-radius:12px;font-size:11px;font-weight:700;white-space:nowrap}
+.b-ac{background:var(--accent-bg);color:var(--accent);border:1px solid var(--accent2)}
+.b-neu{background:var(--neu-bg);color:var(--neu-ink);border:1px solid var(--neu-bd)}
+.hdr-back{display:inline-flex;align-items:center;gap:5px;padding:5px 12px;border:1px solid var(--accent2);border-radius:8px;background:var(--accent-bg);color:var(--accent);font-size:12px;font-weight:700;text-decoration:none;transition:all .15s}
+.hdr-back:hover{background:var(--accent);color:#fff}
+.hdr-meta{font-size:10.5px;color:var(--text2);text-align:right;line-height:1.7}
+/* ─── Layout ─── */
+.wrap{max-width:1080px;margin:0 auto;padding:20px 32px 60px}
+/* ─── Sections ─── */
+.sec{margin-bottom:16px;background:var(--card);border:1px solid var(--border);border-radius:10px;box-shadow:var(--sh);overflow:hidden}
+.sec-hd{padding:11px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;cursor:pointer;background:#fafbfc;user-select:none}
+.sec-hd:hover{background:#f1f3f5}
+.sec-ttl{font-size:13px;font-weight:700;display:flex;align-items:center;gap:8px}
+.sec-num{display:inline-flex;align-items:center;justify-content:center;min-width:20px;height:20px;padding:0 6px;border-radius:10px;background:var(--accent);color:#fff;font-size:11px;font-weight:800;flex-shrink:0}
+.sec-arrow{font-size:12px;color:var(--text2);transition:transform .2s}
+.sec-hd.collapsed .sec-arrow{transform:rotate(-90deg)}
+.sec-body{padding:18px}
+.sec-body.collapsed{display:none}
+/* ─── Breakdown top ─── */
+.breakdown-top{display:grid;grid-template-columns:1fr auto 1fr auto 1fr;align-items:center;gap:0;margin-bottom:20px}
+.bk-box{text-align:center;padding:14px 16px;border-radius:10px;border:2px solid}
+.bk-box.total{border-color:var(--accent);background:var(--accent-bg)}
+.bk-box.comp{border-color:var(--accent2);background:var(--accent-bg)}
+.bk-box.sys{border-color:var(--neu-bd);background:var(--neu-bg)}
+.bk-val{font-size:22px;font-weight:900;letter-spacing:-.5px}
+.bk-val.total{color:var(--accent)}
+.bk-val.comp{color:var(--accent)}
+.bk-val.sys{color:var(--neu-ink)}
+.bk-lbl{font-size:11px;color:var(--text2);margin-top:3px}
+.bk-pct{font-size:10px;font-weight:700;margin-top:4px;padding:1px 6px;border-radius:4px;display:inline-block}
+.bk-pct.ac{background:var(--accent);color:#fff}
+.bk-pct.neu{background:var(--neu);color:#fff}
+.bk-arrow{font-size:20px;color:var(--text2);padding:0 8px;text-align:center}
+.bk-split{display:flex;flex-direction:column;gap:8px}
+.bk-mini{border:1.5px solid var(--neu-bd);background:#fff;border-radius:8px;padding:8px 10px;text-align:center}
+.bk-mini .v{font-size:13px;font-weight:900;color:var(--neu-ink)}
+.bk-mini .v.ac{color:var(--accent)}
+.bk-mini .l{font-size:10px;color:var(--text2)}
+/* ─── Tables ─── */
+.ctable{width:100%;border-collapse:collapse;font-size:12.5px}
+.ctable th{background:#f1f3f5;padding:7px 10px;text-align:left;font-weight:700;border-bottom:2px solid var(--border);font-size:11.5px;color:var(--text2);white-space:nowrap}
+.ctable td{padding:7px 10px;border-bottom:1px solid #f1f3f5;vertical-align:middle}
+.ctable tr:last-child td{border-bottom:none}
+.ctable .num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.ctable .latest{background:var(--accent-bg)}
+.ctable .latest td{font-weight:600}
+/* ─── Tags ─── */
+.tag{display:inline-block;padding:1px 6px;border-radius:4px;font-size:10px;font-weight:700;border:1px solid;white-space:nowrap}
+.tag-ac{background:var(--accent-bg);color:var(--accent);border-color:var(--accent2)}
+.tag-est{background:#f1f5f9;color:var(--text2);border-color:#cbd5e1}
+.tag-up{background:var(--up-bg);color:var(--up);border-color:#86efac}
+.tag-dn{background:var(--dn-bg);color:var(--dn);border-color:#fca5a5}
+.tag-warn{background:var(--warn-bg);color:var(--warn);border-color:#fcd34d}
+/* ─── Note / foot ─── */
+.note{font-size:11px;color:var(--text2);margin-top:10px;line-height:1.6}
+.foot{text-align:center;font-size:11px;color:var(--text2);padding:14px;margin-top:10px}
+/* ─── KPI strip ─── */
+.kpi-ttl{font-size:11px;font-weight:700;color:var(--text2);letter-spacing:.3px;margin:2px 0 8px}
+.kpi-strip{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;margin-bottom:18px}
+@media(max-width:980px){.kpi-strip{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:560px){.kpi-strip{grid-template-columns:repeat(2,1fr)}}
+.kpi{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:11px 13px;box-shadow:var(--sh);display:flex;flex-direction:column}
+.kpi.accent{border:1.5px solid var(--accent2);background:var(--accent-bg)}
+.kpi .k-lbl{font-size:11px;color:var(--text2);font-weight:600}
+.kpi .k-val{font-size:19px;font-weight:900;letter-spacing:-.5px;margin-top:3px;line-height:1.1}
+.kpi.accent .k-val{color:var(--accent)}
+.kpi .k-unit{font-size:11px;font-weight:700;color:var(--text2);margin-left:2px}
+.kpi .k-sub{font-size:10px;color:var(--text2);margin-top:4px}
+.kpi .k-sub b{color:var(--up)}
+/* ─── Why box ─── */
+.why-wrap{border:1.5px dashed var(--accent2);background:var(--accent-bg);border-radius:10px;padding:15px 16px;margin-bottom:20px}
+.why-hd{font-size:12.5px;font-weight:800;color:var(--accent);margin-bottom:10px}
+/* ─── Three engines ─── */
+.eng3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:14px}
+@media(max-width:760px){.eng3{grid-template-columns:1fr}}
+.eng{border:1px solid var(--border);border-top:3px solid;border-radius:10px;overflow:hidden;background:var(--card)}
+.eng-hd{padding:10px 14px;font-size:13px;font-weight:800;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.eng-hd .pct{margin-left:auto;font-size:10px;font-weight:800;color:#fff;border-radius:5px;padding:2px 8px}
+.eng-bd{padding:0 14px 14px;font-size:11.5px;color:var(--text2);line-height:1.85}
+.eng-bd b{color:var(--text)}
+/* ─── Supply chain spine ─── */
+.spine{border:1px solid var(--border);border-radius:9px;overflow:hidden}
+.lane{display:flex;gap:12px;align-items:stretch;padding:13px 14px;border-bottom:1px solid #f1f3f5}
+.lane:last-child{border-bottom:none}
+.lane-req{width:185px;flex-shrink:0;border-left:4px solid;padding-left:11px}
+.lr-t{font-size:12.5px;font-weight:800}
+.lr-d{font-size:10px;color:var(--text2);line-height:1.5;margin-top:3px}
+.lr-d em{font-style:normal;font-weight:700}
+.lane-arrow{display:flex;align-items:center;color:#cbd5e1;font-weight:900;font-size:17px;flex-shrink:0}
+.lane-fill{flex:1;display:flex;flex-wrap:wrap;gap:7px;align-items:center}
+.fchip{font-size:11px;font-weight:700;border-radius:6px;padding:5px 11px;border:1.5px solid;background:var(--card)}
+.lane-w{width:160px;flex-shrink:0;display:flex;flex-direction:column;gap:4px;align-items:flex-end;justify-content:center}
+@media(max-width:840px){.lane{flex-direction:column;gap:9px}.lane-req,.lane-w{width:auto}.lane-arrow{display:none}.lane-w{flex-direction:row;justify-content:flex-start}}
+/* ─── Concl / analysis box ─── */
+.concl{margin-top:16px;border:1.5px solid var(--accent2);border-radius:9px;background:var(--accent-bg);padding:14px 16px;font-size:12px;line-height:1.95;color:var(--text)}
+.concl b{color:#4c1d95}
+/* ─── Insight point list ─── */
+.plist{display:flex;flex-direction:column;gap:9px}
+.plist>div{line-height:1.85;font-size:11.5px;color:var(--text2)}
+.plist>div b{color:var(--text)}
+.pn{display:inline-flex;align-items:center;justify-content:center;width:17px;height:17px;border-radius:50%;font-size:9.5px;font-weight:800;color:#fff;margin-right:6px;vertical-align:1px;flex-shrink:0}
+/* ─── Cognition grid ─── */
+.sec.mid{border:1.5px solid var(--accent2);background:linear-gradient(180deg,var(--accent-bg) 0%,#fff 60%)}
+.sec.mid .sec-hd{background:var(--accent-bg)}
+.mid-thesis{font-size:13px;font-weight:800;color:#3b0764;background:var(--accent-bg);border:1px solid var(--accent2);border-radius:8px;padding:13px 16px;margin-bottom:16px;line-height:1.9}
+.mid-thesis .em{color:var(--dn)}
+.cog-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+@media(max-width:840px){.cog-grid{grid-template-columns:1fr}}
+.cog-card{border:1px solid var(--border);border-radius:10px;padding:14px 14px 12px;background:var(--card);box-shadow:var(--sh);position:relative;display:flex;flex-direction:column}
+.cog-card .cog-no{position:absolute;top:-10px;left:14px;width:24px;height:24px;border-radius:50%;background:var(--accent);color:#fff;font-size:12px;font-weight:900;display:flex;align-items:center;justify-content:center;box-shadow:var(--sh)}
+.cog-card .cog-tt{font-size:13px;font-weight:800;margin:8px 0 8px;line-height:1.45;color:var(--text)}
+.cog-card .cog-tt b{color:var(--accent)}
+.cog-card .cog-body{font-size:11.5px;color:var(--text2);line-height:1.8;flex:1}
+.cog-card .cog-body b{color:var(--text)}
+.cog-card .cog-tag{margin-top:10px;font-size:10.5px;font-weight:700;color:#6d28d9;background:#fff;border:1px solid var(--accent2);border-radius:6px;padding:5px 9px;line-height:1.5}
+.cog-card .cog-tag .k{color:var(--text2);font-weight:400}
+/* ─── Caption ─── */
+.gs-cap{font-size:11.5px;font-weight:700;color:var(--accent);margin:14px 0 8px}
+.gs-cap span{color:var(--text2);font-weight:400;font-size:10.5px}
+.gs-note{font-size:10.5px;color:var(--text2);margin:8px 0 4px;line-height:1.55}
+</style>
+</head>
+<body>
+
+<header class="hdr">
+  <div class="hdr-l">
+    <a class="hdr-back" href="../美股映射研究_看板.html">← 返回看板</a>
+    <div>
+      <div class="hdr-title">🔮 LITE · Lumentum Holdings</div>
+      <div class="hdr-sub">NASDAQ · InP 光芯片 / EML 激光器 / OCS 光交换 / CPO 高功率激光 · <b>AI 光学基础设施核心供应商</b></div>
+    </div>
+    <span class="badge b-ac">W3 光器件</span>
+    <span class="badge b-neu">EML · OCS · CPO</span>
+  </div>
+  <div class="hdr-meta">
+    更新：2026-06-17<br>最新季度：Q3 FY2026（2026-05-07）
+  </div>
+</header>
+
+<div class="wrap">
+
+<!-- 定位说明 -->
+<div class="why-wrap">
+  <div class="why-hd">🧭 Lumentum 是什么角色？——AI 算力互联扩张的"光燃料"供应商</div>
+  <div style="font-size:11.5px;color:var(--text2);line-height:1.7">
+    算力集群越来越大，连接 GPU / ASIC 的铜缆已到物理极限，<b style="color:var(--text)">光互联是唯一出路</b>。所有光互联方案——无论 400G/800G 光模块、1.6T 硅光收发器、OCS 光交换机还是下一代 CPO——内部都必须有一个东西：<b style="color:var(--accent)">激光器</b>。Lumentum 是全球磷化铟（InP）晶圆厂最多、EML 产能最大、超高功率激光器技术最领先的公司，<b style="color:var(--text)">是整条光模块链最上游的"光燃料"供应商</b>。<br>
+    本页的核心问题是：<b style="color:var(--accent)">LITE 的三条产品线（EML / 泵浦+窄线宽 / OCS+CPO）分别卡住了哪个环节、映射哪条 A 股链</b>——定价权来自 InP 产能稀缺性，而非技术协议层竞争（这一点与 AVGO / MRVL 完全不同）。
+  </div>
+</div>
+
+<!-- KPI -->
+<div class="kpi-ttl">关键指标 · Q3 FY2026 实际数据 + 管理层长期目标（FY = 7 月–6 月）</div>
+<div class="kpi-strip">
+  <div class="kpi accent">
+    <div class="k-lbl">Q3 FY2026 营收</div>
+    <div class="k-val">8.08<span class="k-unit">亿$</span></div>
+    <div class="k-sub">同比 <b>+90%</b> · 历史新高</div>
+  </div>
+  <div class="kpi">
+    <div class="k-lbl">FY26E 全年营收</div>
+    <div class="k-val">~30<span class="k-unit">亿$</span></div>
+    <div class="k-sub">FY25 $16.5亿 · YoY <b>+82%E</b></div>
+  </div>
+  <div class="kpi">
+    <div class="k-lbl">Q3 非GAAP 毛利率</div>
+    <div class="k-val">47.9<span class="k-unit">%</span></div>
+    <div class="k-sub">环比 <b>+540bps</b> · 历史新高</div>
+  </div>
+  <div class="kpi">
+    <div class="k-lbl">Q4 FY2026 指引</div>
+    <div class="k-val">9.85<span class="k-unit">亿$</span></div>
+    <div class="k-sub">区间 $9.6–10.1亿 · OM 35–36%</div>
+  </div>
+  <div class="kpi accent">
+    <div class="k-lbl">长期目标（18–24 个月）</div>
+    <div class="k-val">$20<span class="k-unit">亿/季</span></div>
+    <div class="k-sub">GM <b>49–52%</b> · OM 38–42%</div>
+  </div>
+  <div class="kpi">
+    <div class="k-lbl">NVIDIA 战略投资</div>
+    <div class="k-val">$20<span class="k-unit">亿</span></div>
+    <div class="k-sub">+ 数十亿采购承诺 · CPO 战略背书</div>
+  </div>
+</div>
+
+<!-- ① 业务拆解 -->
+<section class="sec">
+  <div class="sec-hd" onclick="toggleSec(this)">
+    <div class="sec-ttl"><span class="sec-num">1</span>业务拆解</div>
+    <span class="sec-arrow">▼</span>
+  </div>
+  <div class="sec-body">
+
+    <div style="font-size:11px;font-weight:700;color:var(--text2);margin-bottom:12px;letter-spacing:.3px">Q3 FY2026 营收结构（最新季度实际数据；Components = 激光芯片/组件，Systems = 光模块+OCS+工业）</div>
+    <div class="breakdown-top">
+      <div class="bk-box total">
+        <div class="bk-val total">8.08<span style="font-size:13px">亿$</span></div>
+        <div class="bk-lbl">Q3 FY2026 总营收</div>
+        <div style="margin-top:6px;font-size:11px;color:var(--text2)">同比 <strong style="color:var(--up)">+90%</strong> · 创历史新高</div>
+      </div>
+      <div class="bk-arrow">→</div>
+      <div class="bk-split">
+        <div class="bk-box comp">
+          <div class="bk-val comp">5.33<span style="font-size:13px">亿$</span></div>
+          <div class="bk-lbl">组件（Components）</div>
+          <div style="margin-top:4px"><span class="bk-pct ac">占比 66% · 环比+20%</span></div>
+        </div>
+        <div class="bk-box sys">
+          <div class="bk-val sys">2.75<span style="font-size:13px">亿$</span></div>
+          <div class="bk-lbl">系统（Systems）</div>
+          <div style="margin-top:4px"><span class="bk-pct neu">占比 34% · 环比+24%</span></div>
+        </div>
+      </div>
+      <div class="bk-arrow">→</div>
+      <div class="bk-split">
+        <div class="bk-mini"><div class="v ac">EML 激光器</div><div class="l">400G/800G 光模块核心光源 · 出货创纪录 · 200G EML 占比快速提升</div></div>
+        <div class="bk-mini"><div class="v ac">泵浦 / 窄线宽激光器</div><div class="l">Scale-Across · 同比+80~120% · 供需最紧张品类</div></div>
+        <div class="bk-mini"><div class="v ac">CW / UHP 激光器</div><div class="l">CPO 超高功率激光 · 英国+圣何塞工厂重点爬坡</div></div>
+        <div style="height:2px;background:var(--border);border-radius:2px;margin:2px 0"></div>
+        <div class="bk-mini"><div class="v">云收发器（Cloud Light）</div><div class="l">泰国 Nava 工厂扩产 · 1.6T 毛利率更高</div></div>
+        <div class="bk-mini"><div class="v">OCS 光电路交换</div><div class="l">积压 >$4亿 · 3客户 · 2027年 >$10亿/年</div></div>
+        <div class="bk-mini"><div class="v">工业激光器</div><div class="l">持平 · 非战略重点</div></div>
+      </div>
+    </div>
+
+    <div class="gs-cap">📊 季度营收演变 · FY2025 Q1 → FY2026 Q3<span>｜单位：百万美元；GM = 非GAAP 毛利率；FY 截至每年 6 月底</span></div>
+    <table class="ctable">
+      <thead>
+        <tr><th>季度</th><th>日历区间</th><th class="num">营收（M$）</th><th class="num">同比</th><th class="num">非GAAP GM</th><th>核心叙事 / 关键数据</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Q1 FY2025</td><td style="font-size:11px;color:var(--text2)">2024-07~09</td>
+          <td class="num">336.9</td><td class="num" style="color:var(--up)">+23%</td><td class="num">~32%</td>
+          <td>同比反弹；EML 仍处分配制，供不应求格局确认</td>
+        </tr>
+        <tr>
+          <td>Q2 FY2025</td><td style="font-size:11px;color:var(--text2)">2024-10~12</td>
+          <td class="num">402.2</td><td class="num" style="color:var(--up)">+19%</td><td class="num">32.3%</td>
+          <td>云模块环比 +50%，超指引上限；EML 2026年需求仍将超供应</td>
+        </tr>
+        <tr>
+          <td>Q3 FY2025</td><td style="font-size:11px;color:var(--text2)">2025-01~03</td>
+          <td class="num">425.2</td><td class="num" style="color:var(--up)">+16%</td><td class="num">35.2%</td>
+          <td>毛利率质量拐点 <b style="color:var(--up)">+290bp</b>；提出 2028 年季收入 $750M 目标（后持续上调）</td>
+        </tr>
+        <tr>
+          <td>Q4 FY2025</td><td style="font-size:11px;color:var(--text2)">2025-04~06</td>
+          <td class="num">480.7</td><td class="num" style="color:var(--up)">+23%</td><td class="num">~37%</td>
+          <td><b>OCS 首笔商业收入</b>（向 2 家客户出货）；<b>CPO 获历史最大采购承诺</b></td>
+        </tr>
+        <tr>
+          <td>Q1 FY2026</td><td style="font-size:11px;color:var(--text2)">2025-07~09</td>
+          <td class="num">533.0</td><td class="num" style="color:var(--up)">+58%</td><td class="num">39.4%</td>
+          <td>10 年历史新高；GM 接近 40% 里程碑；产能扩张 40% 推进中</td>
+        </tr>
+        <tr>
+          <td>Q2 FY2026</td><td style="font-size:11px;color:var(--text2)">2025-10~12</td>
+          <td class="num">665.5</td><td class="num" style="color:var(--up)">+65%</td><td class="num">42.5%</td>
+          <td><b>NVIDIA $20亿战略投资</b>；OCS 提前 3 个月破 $10M/Q；CPO 追加数亿订单；第 5 座晶圆厂确认</td>
+        </tr>
+        <tr class="latest">
+          <td><b>Q3 FY2026</b></td><td style="font-size:11px;color:var(--text2)">2026-01~03</td>
+          <td class="num"><b>808.4</b></td><td class="num" style="color:var(--up)"><b>+90%</b></td><td class="num"><b>47.9%</b></td>
+          <td><span style="color:var(--dn);font-weight:700">EML 缺口扩至 >30%（上次 25~30%）；GM 跳升 +540bp；全品类供不应求；定价权确立</span></td>
+        </tr>
+        <tr>
+          <td><span class="tag tag-est">Q4 FY2026E</span></td><td style="font-size:11px;color:var(--text2)">2026-04~06</td>
+          <td class="num">~985</td><td class="num" style="color:var(--up)">~+75%E</td><td class="num">—</td>
+          <td>指引 $960–1010M；OM 35–36%；EPS $2.85–3.05；1.6T 开始放量；CW 自产占比升至 ~20%</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="note">📌 FY2024 全年 $1,360M（同比 -23%，周期底部）→ FY2025 $1,650M（+21%）→ FY2026E ~$3,000M（+82%E）。管理层长期目标：9–12 个月 $1.25B/季（GM 45–48%），18–24 个月 $2.0B/季（GM 49–52%）。</div>
+
+    <div style="margin-top:18px">
+    <div class="gs-cap" style="margin-top:0">🏭 产能布局 · 4 座 InP 晶圆厂运营 + 第 5 座在建<span>｜磷化铟（InP）是高速激光器的核心材料，建厂周期 3–5 年，产能即护城河</span></div>
+    <table class="ctable">
+      <thead><tr><th>工厂</th><th>地点</th><th>主要产品</th><th>当前状态</th></tr></thead>
+      <tbody>
+        <tr><td><b>相模原厂（Sagamihara）</b></td><td>日本</td><td>EML 激光器 · CW 激光器（100G / 200G）</td><td><span class="tag tag-dn">满负荷 · 已全部分配</span></td></tr>
+        <tr><td><b>高雄厂（Takao）</b></td><td>日本</td><td>EML · 电信激光器 · CW</td><td><span class="tag tag-dn">满负荷 · 产能爬坡中</span></td></tr>
+        <tr><td><b>卡斯维尔厂（Caswell）</b></td><td>英国</td><td>CPO 高功率激光器（原 EML 为主，逐步转型）</td><td><span class="tag tag-ac">CPO 转型 · 爬坡中</span></td></tr>
+        <tr><td><b>圣何塞厂（San Jose）</b></td><td>美国</td><td>CPO 超高功率激光器（已完全转向 CPO）</td><td><span class="tag tag-ac">专注 CPO · 利用率快速提升</span></td></tr>
+        <tr class="latest"><td><b>格林斯博罗厂（Greensboro）</b></td><td>美国（北卡）</td><td>InP 全产品线（收购 Qorvo GaAs 工厂，改造为 InP）</td><td><span class="tag tag-est">2028 年投产 · 增量空间 >$50亿</span></td></tr>
+      </tbody>
+    </table>
+    <div class="note">📌 InP 衬底安全：已与非中国供应商签署 7 年长期协议（覆盖至 2030 年代中期），规避中国出口管制风险——日本两座晶圆厂均得到衬底供应保障。</div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ② LITE 在 AI 光学产业链的位置 -->
+<section class="sec">
+  <div class="sec-hd" onclick="toggleSec(this)">
+    <div class="sec-ttl"><span class="sec-num">2</span>LITE 在 AI 光学产业链的位置</div>
+    <span class="sec-arrow">▼</span>
+  </div>
+  <div class="sec-body">
+
+    <div class="why-wrap" style="margin-bottom:16px">
+      <div class="why-hd">🎯 一句话定位：LITE 是光互联产业链的"最上游光源"，稀缺性来自 InP 晶圆厂产能壁垒</div>
+      <div style="font-size:11.5px;color:var(--text2);line-height:1.75">
+        无论哪种光互联方案，核心都是光子——而产生光子的是激光器。LITE 的 EML 激光器是 400G/800G 光模块的默认光源；泵浦 / 窄线宽是相干 DCI 模块的核心；超高功率激光器是 CPO 共封装光学的关键器件；OCS 光交换机可能替代传统电交换机的 Spine 层。
+        <b style="color:var(--accent)">LITE 不做光模块整机（系统集成），而是光模块厂商必须采购的上游激光芯片——产能约束即稀缺性，稀缺性即定价权。</b>
+      </div>
+    </div>
+
+    <!-- 三驾马车 -->
+    <div class="gs-cap" style="margin-top:0">⚡ 三驾马车 · 产品线 × 下游客户 × A 股映射逻辑</div>
+    <div class="eng3">
+      <div class="eng" style="border-top-color:var(--accent)">
+        <div class="eng-hd" style="color:var(--accent)">
+          🔴 EML 激光器（基石）
+          <span class="pct" style="background:var(--accent)">当前主营</span>
+        </div>
+        <div class="eng-bd">
+          <b>核心地位</b>：全球最大 InP EML 产能，400G/800G 光模块标配光源<br>
+          <b>供需状态</b>：缺口 >30%，处于严格分配制；2027–2028 产能已通过 LTA 全部锁定<br>
+          <b>产品升级</b>：200G EML（高 ASP，约为 100G 的 2×）占比从 5% 提升至年底 25%<br>
+          <b>2026 展望</b>：EML 年出货量较 2025 年底增长 >50%；供需缺口仍将扩大<br>
+          <b>下游客户</b>：COHR · 中际旭创 · 新易盛 · 天孚通信 · Fabrinet<br>
+          <b style="color:var(--dn)">A股映射</b>：<span style="color:var(--dn)">EML 出货好 = 光模块出货好 → 映射光模块链全体（中际旭创 / 新易盛 / 天孚通信 / 华工科技）</span>
+        </div>
+      </div>
+      <div class="eng" style="border-top-color:var(--warn)">
+        <div class="eng-hd" style="color:var(--warn)">
+          🟠 OCS 光电路交换（颠覆者）
+          <span class="pct" style="background:var(--warn)">高速爬坡</span>
+        </div>
+        <div class="eng-bd">
+          <b>产品定义</b>：MEMS 光交换机，替代传统电交换机（AVGO Tomahawk / MRVL Spectrum）的 Spine 层<br>
+          <b>关键指标</b>：订单积压 >$4亿；3 家客户；2027 年目标 >$10亿/年收入<br>
+          <b>竞争护城河</b>："未来 1 年内无竞争对手可推出同等规模方案"（管理层，2026-05）<br>
+          <b>应用场景</b>：Spine 替换 · Scale-Across · 网络保护 / 冗余 · DCI<br>
+          <b>下游客户</b>：Google（最大客户，v7→v8 架构升级带来增量）+ 2 家其他超大规模（未披露）<br>
+          <b style="color:var(--dn)">A股映射</b>：<span style="color:var(--dn)">OCS 起量 = 光交换替代电交换趋势确立 → 光器件 / MEMS 上游供应链受益</span>
+        </div>
+      </div>
+      <div class="eng" style="border-top-color:var(--up)">
+        <div class="eng-hd" style="color:var(--up)">
+          🟢 CPO 超高功率激光（战略高地）
+          <span class="pct" style="background:var(--up)">NVIDIA 锁定</span>
+        </div>
+        <div class="eng-bd">
+          <b>技术来源</b>：海底泵浦激光器延伸——400mW 超高功率 + 24h 老化测试，解决 CPO 激光可靠性痛点<br>
+          <b>战略背书</b>：NVIDIA $20亿战略投资 + 数十亿采购承诺（史上首个此类供应商协议）<br>
+          <b>ELS 机会</b>：外部光源模块（交钥匙方案）ASP 是纯激光器的 2–2.5×<br>
+          <b>产能路径</b>：英国 Caswell + 圣何塞工厂全面转向；Greensboro 2028 年增量 >$50亿<br>
+          <b>时间节点</b>：2026Q4 首个 ~$5000万季收入；2027H1 数亿美元订单交付<br>
+          <b>下游客户</b>：NVIDIA（Blackwell / Rubin CPO）+ 其他超大规模数据中心
+        </div>
+      </div>
+    </div>
+
+    <!-- 产业链层级图 -->
+    <div class="gs-cap">🗺 产业链层级 · LITE 激光器向下游的价值传递路径</div>
+    <div class="spine">
+      <div class="lane">
+        <div class="lane-req" style="border-left-color:var(--accent)">
+          <div class="lr-t" style="color:var(--accent)">① LITE 激光器（上游）</div>
+          <div class="lr-d">EML / CW / UHP / 泵浦 / 窄线宽<br><em style="color:var(--accent)">光源 · 最上游</em></div>
+        </div>
+        <div class="lane-arrow">→</div>
+        <div class="lane-fill">
+          <span class="fchip" style="border-color:var(--accent2);color:var(--accent)">COHR · 相干光通信</span>
+          <span class="fchip" style="border-color:var(--accent2);color:var(--accent)">中际旭创</span>
+          <span class="fchip" style="border-color:var(--accent2);color:var(--accent)">新易盛</span>
+          <span class="fchip" style="border-color:var(--accent2);color:var(--accent)">天孚通信</span>
+          <span class="fchip" style="border-color:var(--accent2);color:var(--accent)">Fabrinet</span>
+          <span class="fchip" style="border-color:var(--accent2);color:var(--accent)">Cloud Light（自有）</span>
+        </div>
+        <div class="lane-w">
+          <span style="font-size:9.5px;font-weight:700;color:var(--text2)">→ 光模块厂商</span>
+          <span style="font-size:9.5px;color:var(--text2)">EML 是 800G / 1.6T 主流光源</span>
+        </div>
+      </div>
+      <div class="lane">
+        <div class="lane-req" style="border-left-color:var(--warn)">
+          <div class="lr-t" style="color:var(--warn)">② 光模块（中间层）</div>
+          <div class="lr-d">800G / 1.6T 可插拔收发器<br><em style="color:var(--warn)">承上启下</em></div>
+        </div>
+        <div class="lane-arrow">→</div>
+        <div class="lane-fill">
+          <span class="fchip" style="border-color:var(--neu-bd);color:var(--neu-ink)">AVGO Tomahawk（以太网交换）</span>
+          <span class="fchip" style="border-color:var(--neu-bd);color:var(--neu-ink)">MRVL（DSP + 交换芯片）</span>
+          <span class="fchip" style="border-color:var(--neu-bd);color:var(--neu-ink)">NVDA NVLink / InfiniBand</span>
+        </div>
+        <div class="lane-w">
+          <span style="font-size:9.5px;font-weight:700;color:var(--text2)">→ 交换 / 计算芯片</span>
+          <span style="font-size:9.5px;color:var(--text2)">插入交换机端口，实现互联</span>
+        </div>
+      </div>
+      <div class="lane">
+        <div class="lane-req" style="border-left-color:var(--up)">
+          <div class="lr-t" style="color:var(--up)">③ OCS + CPO（直连路径）</div>
+          <div class="lr-d">光交换 / 共封装光学<br><em style="color:var(--up)">绕过中间层</em></div>
+        </div>
+        <div class="lane-arrow">→</div>
+        <div class="lane-fill">
+          <span class="fchip" style="border-color:#86efac;color:var(--up)">Google（OCS · Spine 替代）</span>
+          <span class="fchip" style="border-color:#86efac;color:var(--up)">NVIDIA（CPO · Blackwell/Rubin）</span>
+          <span class="fchip" style="border-color:#86efac;color:var(--up)">超大规模客户 ②③（OCS · 未披露）</span>
+        </div>
+        <div class="lane-w">
+          <span style="font-size:9.5px;font-weight:700;color:var(--up)">→ 直达最终算力客户</span>
+          <span style="font-size:9.5px;color:var(--text2)">跳过可插拔光模块中间层</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="concl">
+      🎯 <b>为什么 LITE 是 W3 最关键的观察标的？</b>——它是光互联产业链中稀缺性最高的环节。<br>
+      <b>EML 方向</b>：InP 晶圆厂建设周期 3–5 年，现有产能已通过长期协议锁定至 2027–2028，竞争对手（COHR / II-VI）无法快速追赶，LITE 已享有实质定价权——Q3 GM 从 32% 升至 47.9%，就是定价权的直接体现。<br>
+      <b>OCS 方向</b>：MEMS 光交换技术壁垒极高，先发优势难被复制；若 Google v8 架构大规模部署 OCS，将触发行业级跟随效应。<br>
+      <b>CPO 方向</b>：NVIDIA 用资本锁定 InP 产能，LITE 用采购承诺换晶圆厂建设资金——双绑定结构意味着 CPO 路线一旦规模化，LITE 是首要受益方。
+    </div>
+
+  </div>
+</section>
+
+<!-- ③ 近期业绩会交流重点 -->
+<section class="sec">
+  <div class="sec-hd" onclick="toggleSec(this)">
+    <div class="sec-ttl"><span class="sec-num">3</span>近 8 场业绩会 · 叙事演变与关键信号</div>
+    <span class="sec-arrow">▼</span>
+  </div>
+  <div class="sec-body">
+
+    <table class="ctable">
+      <thead>
+        <tr><th style="width:100px">季度</th><th class="num" style="width:70px">营收</th><th class="num" style="width:55px">GM</th><th>核心叙事变化</th><th>本期关键数据 / 信号</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Q1 FY2025<br><span style="font-size:10px;color:var(--text2)">2024-11</span></td>
+          <td class="num">$336.9M</td><td class="num">~32%</td>
+          <td>同比反弹，EML 进入分配制</td>
+          <td>云和网络同比 +23%；EML 处严格产能分配；Q2 指引 $380–400M</td>
+        </tr>
+        <tr>
+          <td>Q2 FY2025<br><span style="font-size:10px;color:var(--text2)">2025-02</span></td>
+          <td class="num">$402.2M</td><td class="num">32.3%</td>
+          <td>云模块爆发，目标年底破 $500M</td>
+          <td>云模块环比 +50%，超指引上限；EML 2026年需求仍将超供应；Q3 指引 $415–435M</td>
+        </tr>
+        <tr>
+          <td>Q3 FY2025<br><span style="font-size:10px;color:var(--text2)">2025-05</span></td>
+          <td class="num">$425.2M</td><td class="num">35.2%</td>
+          <td>毛利率质量拐点，三产品线并跑</td>
+          <td>GM +290bp（质量改善开始）；2028 年季目标 $750M；云和网络利润率达 20%</td>
+        </tr>
+        <tr>
+          <td>Q4 FY2025<br><span style="font-size:10px;color:var(--text2)">2025-08</span></td>
+          <td class="num">$480.7M</td><td class="num">~37%</td>
+          <td><b>OCS 首笔商业收入 · CPO 历史最大采购承诺</b></td>
+          <td>OCS 首笔商业出货（2 家客户）；FY2025 全年 $1.65B（+21%）；路径 $500M→$600M 清晰</td>
+        </tr>
+        <tr>
+          <td>Q1 FY2026<br><span style="font-size:10px;color:var(--text2)">2025-11</span></td>
+          <td class="num">$533.0M</td><td class="num">39.4%</td>
+          <td>10 年历史新高，量利齐升加速</td>
+          <td>GM 接近 40% 里程碑；原计划 40% 产能扩张已完成 >50%；Q2 指引中点 $650M</td>
+        </tr>
+        <tr>
+          <td>Q2 FY2026<br><span style="font-size:10px;color:var(--text2)">2026-02</span></td>
+          <td class="num">$665.5M</td><td class="num">42.5%</td>
+          <td><b>NVIDIA $20亿投资 · OCS 积压 >$4亿 · 第 5 座晶圆厂</b></td>
+          <td>GM +310bp；OCS 提前 3 个月破 $10M/Q；CPO 追加数亿订单；Greensboro 工厂收购确认；Q3 指引中点 $805M</td>
+        </tr>
+        <tr class="latest">
+          <td><b>Q3 FY2026</b><br><span style="font-size:10px;color:var(--text2)">2026-05</span></td>
+          <td class="num"><b>$808.4M</b></td><td class="num"><b>47.9%</b></td>
+          <td><b style="color:var(--dn)">EML 缺口扩大至 >30%，全品类供不应求，定价权确立</b></td>
+          <td><span style="color:var(--dn);font-weight:700">GM 跳升 +540bp；泵浦/窄线宽供需最紧张；OCS 多年期数十亿采购协议；200G EML 单季翻倍</span></td>
+        </tr>
+        <tr>
+          <td><span class="tag tag-est">Q4 FY2026E</span><br><span style="font-size:10px;color:var(--text2)">2026-08</span></td>
+          <td class="num">$960–1010M</td><td class="num">—</td>
+          <td>1.6T 光模块放量；CPO UHP 大规模出货开始</td>
+          <td>指引 OM 35–36%；EPS $2.85–3.05；1.6T 出货放量；CW 自产比例升至 ~20%</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="note">📌 管理层可信度跟踪：2024年初曾过度乐观（FY2024 Q4 $500M 目标实际 $308M，大幅落空）；但 FY2025 Q1 以来连续 7 个季度超预期，指引质量显著恢复，保守倾向明显。</div>
+
+    <div style="margin-top:16px;padding:12px 16px;background:var(--warn-bg);border:1.5px solid #fcd34d;border-radius:9px;font-size:11.5px;color:var(--text2);line-height:1.7">
+      <b style="color:var(--warn)">💡 Q3 FY2026 关键增量信息（叙事升级）</b>
+      <div style="margin-top:8px" class="plist">
+        <div><span class="pn" style="background:var(--dn)">!</span><b>EML 缺口扩大至 >30%（上次 25~30%）</b>——供应约束从"短期瓶颈"变为"中长期现实"，已无法满足核心客户新增需求</div>
+        <div><span class="pn" style="background:var(--dn)">!</span><b>泵浦 / 窄线宽激光器首次成为最紧张品类，缺口 >30%</b>——此前未预期，需求爆发突然；未来 4 个季度 Rose Orchard 工厂提升产能</div>
+        <div><span class="pn" style="background:var(--accent)">★</span><b>OCS 签署多年期、数十亿美元采购协议</b>——长期可见度大幅提升；潜在新订单规模与已披露 2027 年交付量级相当（暗示翻倍空间）</div>
+        <div><span class="pn" style="background:var(--up)">↑</span><b>代工模式（CM）首次确认可提升毛利率</b>——代工厂通用组件效率优势 > 代工费用，战略边界不再是"全自制"</div>
+        <div><span class="pn" style="background:var(--up)">↑</span><b>Greensboro 第 5 座 InP 晶圆厂</b>正式从 GaAs 改造为 InP，2028 年投产，增量 >$50亿收入（未纳入当前指引）</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ④ 认知沉淀 -->
+<section class="sec mid">
+  <div class="sec-hd" onclick="toggleSec(this)">
+    <div class="sec-ttl"><span class="sec-num">4</span>认知沉淀 · 为什么 LITE 是 W3 光通信的核心观察标的</div>
+    <span class="sec-arrow">▼</span>
+  </div>
+  <div class="sec-body">
+
+    <div class="mid-thesis">
+      核心论点：LITE 不是"光模块公司"，而是光模块最上游的<b>"光燃料"供应商</b>——它的 EML 激光器出货量是光模块产能的先行指标，它的毛利率改善是上游稀缺性定价权的直接体现，它的 OCS / CPO 产品线是光互联下一阶段的颠覆性押注。<span class="em">理解 LITE = 理解整条 AI 光互联产业链的供需格局与定价权归属。</span>
+    </div>
+
+    <div class="cog-grid">
+
+      <div class="cog-card">
+        <div class="cog-no">1</div>
+        <div class="cog-tt">EML 供需缺口：<b>为什么定价权是真实的</b></div>
+        <div class="cog-body">
+          InP 激光器晶圆厂建设周期 3–5 年，不可能靠"提前备货"解决短缺。2023 年以来 LITE 产量提升 8 倍，供需缺口从 25% 扩大至 >30%——供应扩张速度慢于需求扩张速度。关键证据：<b>2027–2028 产能已全部通过 LTA 锁定，含涨价条款</b>——这意味着即使宏观环境逆转，收入能见度极高。<br>对比 2024 年大跌：那次 $500M 目标落空，核心原因是 100G→400G 产品换代期 ASP 下压；今天的驱动力是供需结构性逆转，性质完全不同。
+        </div>
+        <div class="cog-tag"><span class="k">A股映射信号：</span> LITE EML 出货量同比大幅增长 → 中际旭创 / 新易盛光模块订单跟进</div>
+      </div>
+
+      <div class="cog-card">
+        <div class="cog-no">2</div>
+        <div class="cog-tt">毛利率路径：<b>从 32% 到 50%+ 的结构性提升</b></div>
+        <div class="cog-body">
+          LITE GM 从 2024 年 32–33% 提升至 Q3 FY2026 的 47.9%，五重驱动：<b>①</b> 产能利用率提升（固定成本摊薄）；<b>②</b> 产品结构从低毛利光模块 → 高毛利激光芯片 + Scale-Across；<b>③</b> 供应紧张下的提价（仍有进一步空间）；<b>④</b> 1.6T 毛利率显著高于 800G；<b>⑤</b> 代工模式引入（通用组件效率优势 > 代工费）。<br>管理层目标：9–12 个月 GM 45–48%，18–24 个月 49–52%。若 OCS + CPO 占比加速提升，改善可能快于计划。
+        </div>
+        <div class="cog-tag"><span class="k">观察指标：</span> 每季 GM 变化 + 200G EML 占比 + OCS 季度收入绝对值</div>
+      </div>
+
+      <div class="cog-card">
+        <div class="cog-no">3</div>
+        <div class="cog-tt">NVIDIA $20亿投资：<b>CPO 战略路线的主权卡位</b></div>
+        <div class="cog-body">
+          NVIDIA 向 LITE 投资 $20亿（史上首次此类供应商战略投资），同时与 COHR 也有类似绑定——本质是<b>用资本锁定全球稀缺 InP 磷化铟产能</b>。背后逻辑：铜互连已到物理极限，下一代 Blackwell+ / Rubin GPU 集群必须引入光互联，CPO 是确定路径，而 InP 高功率激光器是 CPO 唯一选项，全球产能极度有限。NVIDIA 用资本换产能优先权，LITE 用采购承诺换晶圆厂建设资金——双赢绑定结构，一旦成立就是多年可见度。
+        </div>
+        <div class="cog-tag"><span class="k">里程碑验证：</span> 2026Q4 CPO 首个 ~$5000万季收入 → 2027H1 数亿美元订单交付</div>
+      </div>
+
+      <div class="cog-card">
+        <div class="cog-no">4</div>
+        <div class="cog-tt">OCS：<b>颠覆性机会，但节奏需跟踪</b></div>
+        <div class="cog-body">
+          OCS 用 MEMS 光交换替代传统电交换机 Spine 层，可降延迟、降功耗、降 TCO。当前 Google 是最大客户，其 v7→v8 架构升级对 OCS 有显著增量；订单积压 >$4亿、多年期数十亿采购协议确定性强。需警惕：<b>①</b> 客户爬坡节奏（数据中心网络架构重构是缓慢的结构性变革）；<b>②</b> 竞争对手进入风险（管理层预计 1 年内无竞争，但 2–3 年后不确定）；<b>③</b> OCS 三大爬坡（泵浦+OCS+CPO）同时推进的执行压力。
+        </div>
+        <div class="cog-tag"><span class="k">关键指标：</span> OCS 季度收入绝对值 + 第 4 家新客户时间 + 非 Google 占比变化</div>
+      </div>
+
+      <div class="cog-card">
+        <div class="cog-no">5</div>
+        <div class="cog-tt">核心风险：<b>三大爬坡同时推进的执行考验</b></div>
+        <div class="cog-body">
+          Q3 管理层明确：公司同时推进<b>泵浦激光器 + OCS + CPO 高功率激光器</b>三大核心爬坡，产能资源、工程人员、晶圆厂改造同步推进，执行难度极高。具体风险点：<b>①</b> 2027 年 InP 衬底供应能否匹配大规模出货（管理层："基本可控但仍需大量工作"）；<b>②</b> 光模块毛利率仍不及同行约 40%（LITE 自有 Cloud Light 在改善中）；<b>③</b> Greensboro 工厂从 GaAs 到 InP 改造的技术执行风险；<b>④</b> 2024 年历史教训——单点出错（产品换代节奏）即引发大跌。
+        </div>
+        <div class="cog-tag"><span class="k">跟踪重点：</span> 季度 CapEx 强度 + Greensboro 改造进度披露 + 衬底长协到期时间</div>
+      </div>
+
+      <div class="cog-card">
+        <div class="cog-no">6</div>
+        <div class="cog-tt">LITE vs COHR：<b>同为光器件，定位不同</b></div>
+        <div class="cog-body">
+          两者都是光器件 / 激光器公司，但竞争重心不同：LITE 优势在 <b>EML（直接调制）+ OCS（MEMS 光交换）+ CPO 超高功率激光器</b>（三条均有技术壁垒）；COHR 优势在<b>相干光通信全栈（含 DSP）+ 硅光 + 更广泛的激光器产品线</b>。关键交叉：CPO 超高功率激光器上两者均是 NVIDIA 供应商（竞争）；但 EML 和 OCS 两条线 LITE 目前独占优势。LITE 的 GM 提升速度（32%→48% 两年）和 OCS 先发优势是当前区分两者的核心指标。
+        </div>
+        <div class="cog-tag"><span class="k">竞争观察：</span> COHR CPO 激光器进展 + II-VI / MACOM 在 EML 的追赶速度</div>
+      </div>
+
+    </div>
+
+  </div>
+</section>
+
+<div class="foot">LITE · Lumentum Holdings · 数据来源：公司业绩电话会（FY2025 Q1–FY2026 Q3）· OFC 2026 前瞻交流 · Morgan Stanley 科技大会纪要 · 网络趋势研讨会 · 更新 2026-06-17</div>
+</div>
+
+<script>
+function toggleSec(hd){
+  hd.classList.toggle('collapsed');
+  hd.nextElementSibling.classList.toggle('collapsed');
+}
+</script>
+</body>
+</html>
