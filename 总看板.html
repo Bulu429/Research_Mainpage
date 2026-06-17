@@ -16,6 +16,7 @@
   --blue: #285f8f;
   --amber: #9a6418;
   --red: #9b3b33;
+  --violet: #6a4f8f;
   --shadow: 0 10px 28px rgba(31, 42, 46, .08);
 }
 * { box-sizing: border-box; }
@@ -165,6 +166,7 @@ h1 {
 .tag.blue { color: var(--blue); border-color: #aac3d8; background: #eef5fa; }
 .tag.amber { color: var(--amber); border-color: #dcc18f; background: #fbf5e8; }
 .tag.red { color: var(--red); border-color: #d8aaa5; background: #fbefed; }
+.tag.violet { color: var(--violet); border-color: #c3b3d6; background: #f3eef8; }
 .layout {
   display: grid;
   grid-template-columns: 260px 1fr;
@@ -245,6 +247,7 @@ h1 {
 .project:nth-child(2) .mark { background: var(--blue); }
 .project:nth-child(3) .mark { background: var(--amber); }
 .project:nth-child(4) .mark { background: var(--red); }
+.project:nth-child(5) .mark { background: var(--violet); }
 .project-foot {
   display: flex;
   flex-wrap: wrap;
@@ -260,6 +263,7 @@ h1 {
 .project:nth-child(2) .open { color: var(--blue); }
 .project:nth-child(3) .open { color: var(--amber); }
 .project:nth-child(4) .open { color: var(--red); }
+.project:nth-child(5) .open { color: var(--violet); }
 .link-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -355,7 +359,7 @@ h1 {
   <div class="layout">
     <nav class="nav panel">
       <div class="nav-title">快速导航</div>
-      <a href="#core"><span>核心入口</span><span>4</span></a>
+      <a href="#core"><span>核心入口</span><span>5</span></a>
       <a href="#industry"><span>行业基本面</span><span>9</span></a>
       <a href="#oversea"><span>美股映射</span><span>4</span></a>
       <a href="#tools"><span>工具区</span><span>1</span></a>
@@ -410,6 +414,16 @@ h1 {
               <div class="mark">U</div>
             </div>
             <div class="project-foot"><span class="tag red">海外映射</span><span class="open">进入项目看板</span></div>
+          </a>
+          <a class="project" href="knowledge/database/INDEX.md" target="_blank">
+            <div class="project-top">
+              <div>
+                <h3>数据库</h3>
+                <p>财务数据、量化策略回测和原始数据合集，作为各项研究的底层数据支撑入口（持续更新中）。</p>
+              </div>
+              <div class="mark">D</div>
+            </div>
+            <div class="project-foot"><span class="tag violet">数据资产</span><span class="open">打开数据库索引</span></div>
           </a>
         </div>
       </section>
