@@ -48,6 +48,29 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Micr
 .tab-btn.active{color:var(--accent);border-bottom-color:var(--accent)}
 .tab-pane{display:none}
 .tab-pane.active{display:block}
+.hist{display:inline-flex;align-items:center;justify-content:center;width:14px;height:14px;margin-left:4px;border-radius:50%;font-size:9px;font-weight:800;color:#1d4ed8;background:#dbeafe;border:1px solid #93c5fd;cursor:help;position:relative;vertical-align:middle}
+.hist::after{content:attr(data-tip);position:absolute;left:50%;top:calc(100% + 8px);transform:translateX(-50%);width:max-content;max-width:320px;padding:8px 10px;border-radius:6px;background:#0f172a;color:#f8fafc;font-size:11px;line-height:1.55;font-weight:500;white-space:pre-line;box-shadow:0 8px 24px rgba(15,23,42,.22);opacity:0;visibility:hidden;pointer-events:none;z-index:200}
+.hist::before{content:"";position:absolute;left:50%;top:calc(100% + 2px);transform:translateX(-50%);border:6px solid transparent;border-bottom-color:#0f172a;opacity:0;visibility:hidden;z-index:201}
+.hist:hover::after,.hist:hover::before{opacity:1;visibility:visible}
+.model-wrap{overflow:visible;border:1px solid #dbe3ee;border-radius:8px;margin-bottom:14px;background:#fff;box-shadow:0 1px 2px rgba(15,23,42,.04)}
+.model-table{width:100%;table-layout:fixed;border-collapse:separate;border-spacing:0;font-size:12px;line-height:1.35}
+.model-table th{background:#eef4ff;color:#1e3a8a;font-weight:800;text-align:right;padding:8px 10px;border-right:1px solid #dbe3ee;border-bottom:1px solid #bfdbfe;white-space:nowrap}
+.model-table th:first-child{width:230px;text-align:left;color:#0f172a;background:#f8fafc}
+.model-table th:not(:first-child){width:calc((100% - 230px)/6)}
+.model-table td{padding:6px 10px;border-right:1px solid #edf2f7;border-bottom:1px solid #edf2f7;text-align:right;white-space:nowrap;background:#fff}
+.model-table td:first-child{width:230px;text-align:left;font-weight:700;color:#111827;background:#fbfdff}
+.model-table tbody tr:nth-child(even):not(.section-row) td{background:#fcfdff}
+.model-table tbody tr:hover td{background:#f8fbff}
+.model-table .section-row td{background:#e8f0fb!important;color:#0f172a;font-weight:900;border-top:2px solid #94a3b8;border-bottom:1px solid #cbd5e1;text-align:left;letter-spacing:.2px;padding:7px 10px}
+.model-table .subtle td{color:#64748b;font-size:10px}
+.model-table .subtle td:first-child{font-weight:600;color:#64748b}
+.model-table .assump{background:#fff7cc!important;color:#92400e;font-weight:900}
+.model-table .hist-cell{background:#eaf3ff!important;color:#1d4ed8;font-weight:900}
+.model-table .blank{color:#cbd5e1}
+.model-table td[data-tip]{position:relative;cursor:help;box-shadow:inset 0 0 0 1px rgba(37,99,235,.16)}
+.model-table td[data-tip]::after{content:attr(data-tip);position:absolute;right:0;top:calc(100% + 8px);width:320px;max-width:70vw;padding:9px 11px;border-radius:6px;background:#0f172a;color:#f8fafc;font-size:11px;line-height:1.55;font-weight:500;white-space:pre-line;text-align:left;box-shadow:0 8px 24px rgba(15,23,42,.24);opacity:0;visibility:hidden;pointer-events:none;z-index:320}
+.model-table td[data-tip]::before{content:"";position:absolute;right:18px;top:calc(100% + 2px);border:6px solid transparent;border-bottom-color:#0f172a;opacity:0;visibility:hidden;z-index:321}
+.model-table td[data-tip]:hover::after,.model-table td[data-tip]:hover::before{opacity:1;visibility:visible}
 
 .ctable{width:100%;border-collapse:collapse;margin-bottom:14px;font-size:12px}
 .ctable th{text-align:left;padding:6px 8px;font-size:10px;font-weight:600;color:var(--text2);background:var(--bg);border-bottom:1px solid var(--border);white-space:nowrap}
@@ -106,6 +129,9 @@ code{font-size:10px;background:var(--tag-bg);color:var(--tag);padding:1px 5px;bo
 .kpi-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px}
 
 @media(max-width:900px){.kpi-g{grid-template-columns:repeat(2,1fr)}.chart-row,.b-grid,.j-grid{grid-template-columns:1fr}}
+/* 图/SVG 限宽居中：避免被容器拉伸导致图内文字过大 */
+.sec-body svg{display:block;margin:8px auto;max-width:720px;width:100%}
+.sec-body img{display:block;margin:0 auto;max-width:680px!important;height:auto}
 </style>
 </head>
 <body>
@@ -272,7 +298,7 @@ code{font-size:10px;background:var(--tag-bg);color:var(--tag);padding:1px 5px;bo
 <!-- 光芯片供需缺口说明 -->
 <div class="card" style="margin-bottom:0">
   <div style="font-size:12px;font-weight:700;margin-bottom:4px">光芯片供需平衡表（260602 原表口径）</div>
-  <div style="font-size:10px;color:var(--text2);margin-bottom:12px">单位除特别标注外均为万颗/万只；该表对应 Excel「光芯片供需缺口测算」，不是光模块成品供需表。</div>
+  <div style="font-size:11px;color:var(--text2);margin-bottom:12px">单位除特别标注外均为万颗/万只；该表对应 Excel「光芯片供需缺口测算」，不是光模块成品供需表。</div>
 
   <div style="font-size:11px;font-weight:700;margin:8px 0 6px;color:var(--accent)">1）需求端：光模块方案拆分（万只，括号内为方案占比）</div>
   <div style="overflow-x:auto">
@@ -339,7 +365,7 @@ code{font-size:10px;background:var(--tag-bg);color:var(--tag);padding:1px 5px;bo
   </div>
 
   <div style="font-size:11px;font-weight:700;margin:14px 0 6px;color:var(--accent)">4）供需缺口：考虑模块良率后的实际出货产能 vs 全行业需求</div>
-  <table class="ctable" style="font-size:11px">
+  <table class="ctable" style="font-size:12px">
     <thead><tr><th>年份</th><th>项目</th><th>100G EML</th><th>200G EML</th><th>CW DFB</th><th>判断</th></tr></thead>
     <tbody>
       <tr><td rowspan="4"><strong>2026E</strong></td><td>模块良率</td><td>90%</td><td>85%</td><td>90%</td><td rowspan="4" style="font-size:11px">100G EML小幅过剩；<strong style="color:var(--dn)">200G EML缺口最明显</strong>；CW DFB仍偏紧。</td></tr>
@@ -360,7 +386,7 @@ code{font-size:10px;background:var(--tag-bg);color:var(--tag);padding:1px 5px;bo
 
   <div style="font-size:11px;font-weight:700;margin:14px 0 6px;color:var(--accent)">5）供给实际可满足的出货 CASE：反推可交付光模块量</div>
   <div style="overflow-x:auto">
-  <table class="ctable" style="font-size:11px;min-width:820px">
+  <table class="ctable" style="font-size:12px;min-width:820px">
     <thead><tr><th>年份</th><th>项目</th><th>400G</th><th>800G</th><th>1.6T</th><th>100G EML需求</th><th>200G EML需求</th><th>CW DFB需求</th><th>CASE供需结论</th></tr></thead>
     <tbody>
       <tr style="background:#eff6ff"><td rowspan="2"><strong>2026E</strong></td><td>可满足光模块出货</td><td>2,000</td><td>5,356</td><td>2,556</td><td rowspan="2">22,482</td><td rowspan="2">6,182</td><td rowspan="2">19,579</td><td rowspan="2">三类芯片均可满足 CASE 出货，CW DFB安全垫约14.9%；200G EML安全垫约10.0%。</td></tr>
@@ -377,7 +403,7 @@ code{font-size:10px;background:var(--tag-bg);color:var(--tag);padding:1px 5px;bo
 <div class="st" onclick="toggleSec(this)">📐 速率演进与产品升级时间轴<span class="st-arrow">▾</span></div>
 <div class="sec-body" style="margin-bottom:16px">
 <div class="card">
-  <div style="font-size:10px;color:var(--text2);margin-bottom:14px">产品代际演进 · 技术方案变化 · A股受益标的　｜　更新规则：每次收到新纪要在里程碑栏追加 <code>[YYMMDD] 来源→事件</code></div>
+  <div style="font-size:11px;color:var(--text2);margin-bottom:14px">产品代际演进 · 技术方案变化 · A股受益标的　｜　更新规则：每次收到新纪要在里程碑栏追加 <code>[YYMMDD] 来源→事件</code></div>
 
   <!-- 时间轴可视化 -->
   <div style="display:flex;align-items:flex-start;gap:0;margin-bottom:20px;padding:0 4px;overflow-x:auto">
@@ -425,7 +451,7 @@ code{font-size:10px;background:var(--tag-bg);color:var(--tag);padding:1px 5px;bo
       <div style="font-size:9px;color:#1e40af;margin-top:3px;background:#dbeafe;padding:2px 5px;border-radius:3px">旭创 · 新易盛 · 天孚</div>
     </div>
     <!-- 1.6T -->
-    <div style="flex:1.3;min-width:110px;text-align:center">
+    <div style="flex:1.2;min-width:105px;text-align:center">
       <div style="display:flex;align-items:center;margin-bottom:8px">
         <div style="flex:1;height:2px;background:#7c3aed"></div>
         <div style="width:34px;height:34px;border-radius:50%;background:#7c3aed;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#fff;flex-shrink:0">1.6T</div>
@@ -435,6 +461,18 @@ code{font-size:10px;background:var(--tag-bg);color:var(--tag);padding:1px 5px;bo
       <div style="font-size:9px;color:#fff;margin-top:3px;padding:1px 7px;background:#7c3aed;border-radius:3px;display:inline-block;font-weight:600">🔵 2026H2放量</div>
       <div style="font-size:9px;color:#6d28d9;margin-top:3px">GB300 / R系列<br>200G EML缺货</div>
       <div style="font-size:9px;color:#4c1d95;margin-top:3px;background:#f5f3ff;padding:2px 5px;border-radius:3px">旭创 · 新易盛 · 天孚</div>
+    </div>
+    <!-- NPO -->
+    <div style="flex:1.05;min-width:95px;text-align:center">
+      <div style="display:flex;align-items:center;margin-bottom:8px">
+        <div style="flex:1;height:2px;background:#a855f7"></div>
+        <div style="width:32px;height:32px;border-radius:50%;background:#a855f7;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:#fff;flex-shrink:0">NPO</div>
+        <div style="flex:1;height:2px;background:#a855f7;border-top:2px dashed #c084fc"></div>
+      </div>
+      <div style="font-size:10px;font-weight:700;color:#9333ea">2027放量</div>
+      <div style="font-size:9px;color:#fff;margin-top:3px;padding:1px 7px;background:#a855f7;border-radius:3px;display:inline-block;font-weight:600">AWS 1000万只</div>
+      <div style="font-size:9px;color:#6b21a8;margin-top:3px">6.4T NPO<br>低功耗互联</div>
+      <div style="font-size:9px;color:#4c1d95;margin-top:3px;background:#faf5ff;padding:2px 5px;border-radius:3px">旭创 · 新易盛</div>
     </div>
     <!-- CPO -->
     <div style="flex:1;min-width:90px;text-align:center;opacity:0.7">
@@ -450,7 +488,7 @@ code{font-size:10px;background:var(--tag-bg);color:var(--tag);padding:1px 5px;bo
   </div>
 
   <!-- 详情对照表 -->
-  <table class="ctable" style="font-size:11px">
+  <table class="ctable" style="font-size:12px">
     <thead>
       <tr><th>速率</th><th>主流方案</th><th>商用状态</th><th>A股核心受益</th><th>价格区间（USD）</th><th>关键里程碑</th></tr>
     </thead>
@@ -460,9 +498,638 @@ code{font-size:10px;background:var(--tag-bg);color:var(--tag);padding:1px 5px;bo
       <tr><td><strong>400G</strong></td><td>EML DR/FR/LPO</td><td>🟠 成熟/过剩</td><td>旭创（降价）、新易盛</td><td>$210-290</td><td>旭创400G出货：440万→257万（2025E→2026E 下滑）</td></tr>
       <tr style="background:#eff6ff"><td><strong>800G</strong></td><td>EML/硅光 SR/DR/LPO</td><td><strong style="color:var(--accent)">🟢 放量主力</strong></td><td><strong>旭创 · 新易盛 · 天孚（光引擎）</strong></td><td>$340-680</td><td>2026E实际出货 5,229万颗（+124% YoY）；硅光渗透率 20%→45%→60%（2024/25E/26E）</td></tr>
       <tr style="background:#f5f3ff"><td><strong>1.6T</strong></td><td>EML/硅光 DR/FR/LPO</td><td><strong style="color:#7c3aed">🔵 导入爆发</strong></td><td><strong>旭创 · 新易盛 · 天孚 · 源杰（CW激光器）</strong></td><td>$850-1200</td><td>2026E 有效需求3000万颗（+23×）；200G EML为核心短缺；硅光60%→80%渗透率</td></tr>
+      <tr style="background:#faf5ff"><td><strong>NPO</strong></td><td>6.4T NPO / 板载低功耗互联</td><td><strong style="color:#9333ea">🟣 2027放量</strong></td><td><strong>旭创 · 新易盛</strong></td><td>TBD</td><td>2027E AWS 1000万只；旭创模型新增6.4T NPO收入710亿元，新易盛新增426亿元</td></tr>
       <tr><td><strong>CPO</strong></td><td>硅光+CW 激光器</td><td>🟡 早期导入</td><td>天孚通信 · 腾景科技</td><td>TBD</td><td>2026-2027为送样→量产窗口期；消除 pluggable 功耗损耗</td></tr>
     </tbody>
   </table>
+</div>
+</div>
+
+<!-- ── 技术路线科普：LPO / NPO / CPO ── -->
+<div class="st" onclick="toggleSec(this)">🔬 技术路线科普：LPO / NPO / CPO<span class="st-arrow">▾</span></div>
+<div class="sec-body" style="margin-bottom:16px">
+<div class="card">
+  <div style="font-size:12px;color:var(--text2);line-height:1.8;margin-bottom:16px;background:var(--bg);border-radius:6px;padding:12px 14px;border-left:3px solid var(--accent)">
+    <strong style="color:var(--text)">一句话主线：</strong>三条路线都在解决同一个问题——<strong>AI 算力指数级增长，光互联的「功耗 / 时延 / 密度」成为瓶颈</strong>。解法是让<strong>光电转换点不断靠近交换芯片（ASIC）</strong>，缩短高速电信号在 PCB 上的走线、去掉耗电的 DSP。代价是<strong>可维护性变差、制造难度上升</strong>。
+    本质是一道<strong>「省功耗 ↔ 可插拔/易维护 ↔ 量产成熟度」的三角取舍</strong>。
+  </div>
+
+  <!-- 光引擎位置示意图 -->
+  <div style="font-size:12px;font-weight:700;margin-bottom:4px">📍 光电转换点离交换芯片越来越近</div>
+  <div style="font-size:11px;color:var(--text2);margin-bottom:12px">蓝色＝交换芯片 ASIC ｜ 橙色＝DSP（数字信号处理，功耗大头）｜ 绿色＝光引擎/光器件 ｜ 走线越长＝高速电信号损耗越大、越耗电</div>
+  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:8px">
+
+    <!-- 可插拔 -->
+    <div style="border:1px solid var(--border);border-radius:8px;padding:10px;background:#fff">
+      <div style="font-size:11px;font-weight:800;color:#64748b;margin-bottom:2px">① 传统可插拔</div>
+      <div style="font-size:9px;color:var(--text2);margin-bottom:8px">Pluggable（含 DSP）· 当前主流</div>
+      <div style="display:flex;align-items:center;gap:0;font-size:8px;margin-bottom:6px">
+        <div style="background:#2563eb;color:#fff;padding:6px 4px;border-radius:4px;font-weight:700;text-align:center;flex-shrink:0">ASIC</div>
+        <div style="flex:1;height:0;border-top:2px dotted #dc2626;min-width:24px"></div>
+        <div style="background:#d97706;color:#fff;padding:6px 3px;border-radius:4px 0 0 4px;font-weight:700;flex-shrink:0">DSP</div>
+        <div style="background:#16a34a;color:#fff;padding:6px 3px;border-radius:0 4px 4px 0;font-weight:700;flex-shrink:0">光</div>
+      </div>
+      <div style="font-size:9px;color:#dc2626;font-weight:700">走线最长 · 功耗最高</div>
+      <div style="font-size:9px;color:var(--text2);margin-top:3px">前面板可插拔，坏了直接换模块</div>
+    </div>
+
+    <!-- LPO -->
+    <div style="border:1px solid #bfdbfe;border-radius:8px;padding:10px;background:#f8fbff">
+      <div style="font-size:11px;font-weight:800;color:#1d4ed8;margin-bottom:2px">② LPO 线性直驱</div>
+      <div style="font-size:9px;color:var(--text2);margin-bottom:8px">仍是可插拔，但<strong>去掉 DSP</strong></div>
+      <div style="display:flex;align-items:center;gap:0;font-size:8px;margin-bottom:6px">
+        <div style="background:#2563eb;color:#fff;padding:6px 4px;border-radius:4px;font-weight:700;text-align:center;flex-shrink:0">ASIC</div>
+        <div style="flex:1;height:0;border-top:2px solid #d97706;min-width:24px"></div>
+        <div style="background:#16a34a;color:#fff;padding:6px 5px;border-radius:4px;font-weight:700;flex-shrink:0">光引擎</div>
+      </div>
+      <div style="font-size:9px;color:#d97706;font-weight:700">SerDes 直接驱动 · 功耗-50%</div>
+      <div style="font-size:9px;color:var(--text2);margin-top:3px">保留可插拔，改动最小</div>
+    </div>
+
+    <!-- NPO -->
+    <div style="border:1px solid #e9d5ff;border-radius:8px;padding:10px;background:#faf5ff">
+      <div style="font-size:11px;font-weight:800;color:#9333ea;margin-bottom:2px">③ NPO 近封装</div>
+      <div style="font-size:9px;color:var(--text2);margin-bottom:8px">光引擎搬到 ASIC <strong>旁边同一块板</strong></div>
+      <div style="display:flex;align-items:center;gap:0;font-size:8px;margin-bottom:6px">
+        <div style="background:#2563eb;color:#fff;padding:6px 4px;border-radius:4px;font-weight:700;text-align:center;flex-shrink:0">ASIC</div>
+        <div style="width:14px;height:0;border-top:2px solid #16a34a"></div>
+        <div style="background:#16a34a;color:#fff;padding:6px 5px;border-radius:4px;font-weight:700;flex-shrink:0">光引擎</div>
+      </div>
+      <div style="font-size:9px;color:#9333ea;font-weight:700">走线变短 · CPO 过渡形态</div>
+      <div style="font-size:9px;color:var(--text2);margin-top:3px">不可插拔 / 半可插拔</div>
+    </div>
+
+    <!-- CPO -->
+    <div style="border:1px solid #86efac;border-radius:8px;padding:10px;background:#f0fdf4">
+      <div style="font-size:11px;font-weight:800;color:#15803d;margin-bottom:2px">④ CPO 共封装</div>
+      <div style="font-size:9px;color:var(--text2);margin-bottom:8px">光引擎与 ASIC <strong>封进同一颗芯片</strong></div>
+      <div style="display:flex;align-items:center;gap:0;font-size:8px;margin-bottom:6px">
+        <div style="background:linear-gradient(90deg,#2563eb 55%,#16a34a 55%);color:#fff;padding:6px 8px;border-radius:4px;font-weight:700;text-align:center;flex-shrink:0">ASIC+光</div>
+        <div style="width:10px;height:0;border-top:2px dashed #94a3b8"></div>
+        <div style="background:#fff;border:1px dashed #16a34a;color:#15803d;padding:5px 3px;border-radius:4px;font-weight:700;flex-shrink:0;font-size:7px">外置<br>光源</div>
+      </div>
+      <div style="font-size:9px;color:#15803d;font-weight:700">走线最短 · 功耗/密度最优</div>
+      <div style="font-size:9px;color:var(--text2);margin-top:3px">需外置 CW 光源（利好源杰）</div>
+    </div>
+  </div>
+
+  <!-- 结构图详解（来源：SemiAnalysis CPO 报告） -->
+  <div style="font-size:12px;font-weight:700;margin-top:22px;margin-bottom:4px">🖼 结构图详解：光引擎放在哪里，决定了一切</div>
+  <div style="font-size:11px;color:var(--text2);margin-bottom:12px">原始架构图来源：SemiAnalysis《Co-Packaged Optics (CPO) – Scaling with Light》（2026-01）｜ 配中文解读</div>
+
+  <div style="display:flex;flex-direction:column;gap:16px">
+
+    <!-- 图1 传统可插拔 -->
+    <div style="border:1px solid var(--border);border-radius:10px;overflow:hidden">
+      <div style="background:#f8fafc;padding:7px 13px;border-bottom:1px solid var(--border);font-size:12px;font-weight:800;color:#64748b">① 传统可插拔 Pluggable —— 电信号要走 15-30cm 长铜走线到面板</div>
+      <div style="padding:12px 14px;background:#fff;text-align:center"><img src="assets/cpo/02_pluggable.png" alt="Pluggable Optics 架构" style="max-width:100%;height:auto;border-radius:6px"></div>
+      <div style="padding:9px 14px;font-size:12px;line-height:1.75;color:var(--text);background:#fbfdff;border-top:1px solid var(--border)">
+        交换芯片（Switch ASIC）的电信号要经 Substrate → Host PCB 上的<strong>铜走线（Copper Trace）走 15-30cm</strong>，再经 QSFP 连接器进到面板上的可插拔模块（Transceiver），在模块里完成光电转换、接光纤。走线长 → 信号衰减大 → 需要大功率长距 SerDes 和 DSP 来补偿。<strong>优点是模块可热插拔、易维护、标准化。</strong>
+        <div style="margin-top:6px;font-size:10px;color:var(--text2)">📍 <strong>这里 MPO 在哪？</strong>可插拔的对外光口（LC 或 MPO）在<strong>模块前脸</strong>（图中 Fiber 引出处）——光缆跳线直接插在模块正面。注意图里的「QSFP Connector」是<strong>电接口</strong>（模块金手指插进面板笼子），不是光口，别混淆。</div>
+      </div>
+    </div>
+
+    <!-- 图2 DSP模块内部 + LPO -->
+    <div style="border:1px solid #bfdbfe;border-radius:10px;overflow:hidden">
+      <div style="background:#eff6ff;padding:7px 13px;border-bottom:1px solid #bfdbfe;font-size:12px;font-weight:800;color:#1d4ed8">② 拆开一个 DSP 模块 —— LPO 干的事就是「删掉那颗橙色 DSP」</div>
+      <div style="padding:12px 14px;background:#fff;text-align:center"><img src="assets/cpo/03_dsp_engine.png" alt="DSP 收发模块内部框图" style="max-width:100%;height:auto;border-radius:6px"></div>
+      <div style="padding:10px 14px;font-size:12px;line-height:1.75;color:var(--text);background:#f8fbff;border-top:1px solid #dbeafe">
+        <div style="margin-bottom:7px">模块里的<strong>光引擎（OE）</strong>＝发射侧 TOSA（Driver 驱动 + Laser/Modulator 激光器/调制器）＋ 接收侧 ROSA（Photodetector 光电探测器 + TIA 跨阻放大器）。右边橙色的 <strong>Optical DSP</strong> 负责重定时、纠错、信号恢复——但它<strong>吃掉整个模块约 50% 的功耗、20-30% 的 BOM 成本</strong>，是「头号公敌」。</div>
+        <div style="margin-bottom:6px"><strong style="color:#1d4ed8">核心变化：</strong>LPO（线性直驱）＝去掉这颗 DSP，由交换芯片 SerDes 直接线性驱动光器件，形态仍是标准可插拔。</div>
+        <div style="margin-bottom:6px"><strong style="color:var(--up)">优势：</strong>单模块功耗约降 50%（省掉 DSP 4-7W）、时延更低、BOM 与成本下降，且<strong>沿用现有可插拔生态、改动最小</strong>。</div>
+        <div style="margin-bottom:6px"><strong style="color:var(--dn)">挑战：</strong>无 DSP 纠错/均衡 → 对信道完整性、激光器线性度要求高，<strong>传输距离受限（主打 DR 短距）</strong>；交换芯片与光模块需协同认证，互操作性是门槛。变体 LRO（接收侧保留 retimer）。</div>
+        <div style="margin-bottom:6px"><strong style="color:var(--warn)">节奏：</strong>OFC 持续送样，2025-2026 小批量，云厂主推短距场景。</div>
+        <div style="font-size:10px;color:var(--text2);background:#eef4ff;border-radius:5px;padding:6px 8px"><strong>对 A 股：</strong>同形态、国产模块厂可直接做（旭创/新易盛/天孚）。注意 DSP 原由博通/Marvell 外购，去 DSP 对国产厂 BOM/毛利的净影响需跟踪。</div>
+        <div style="border-top:1px dashed #bfdbfe;margin-top:9px;padding-top:8px">
+          <div style="font-size:11px;font-weight:700;color:#1d4ed8;margin-bottom:5px">❓ 没了 DSP 为什么还能跑？谁接手了它的活？价值量会因此增加吗？</div>
+          <div style="font-size:12px;line-height:1.8;margin-bottom:7px">DSP 原来干 4 件事：<strong>重定时（CDR）、均衡（补偿信道损耗/ISI）、纠错（FEC）、PAM4 编码</strong>。LPO 不是让这些活消失，而是<strong>重新分配 + 靠更好的信道少干活</strong>：</div>
+          <div style="font-size:12px;line-height:1.75;margin-bottom:5px"><strong style="color:#1d4ed8">· 均衡 → 交换芯片 SerDes + 模块内 Driver/TIA 接手：</strong>交换 ASIC 的 SerDes 本身就带强大的均衡能力，LPO 让它<strong>直接线性驱动</strong>光器件，这部分活由 SerDes 扛；模块内的 Driver、TIA 也升级为带模拟均衡（linear EQ）的<strong>高线性度</strong>版本。</div>
+          <div style="font-size:12px;line-height:1.75;margin-bottom:5px"><strong style="color:#1d4ed8">· 纠错 FEC → 留在交换芯片：</strong>FEC 本就是端到端、锚在交换/网卡的 MAC/PHY 里，不依赖模块 DSP。</div>
+          <div style="font-size:12px;line-height:1.75;margin-bottom:7px"><strong style="color:#1d4ed8">· 靠短距：</strong>LPO 主打 DR 短距，信道损耗小，本来就不需要 DSP 那么强的补偿——「信道够好的地方才用」。</div>
+          <div style="font-size:11px;font-weight:700;color:#1d4ed8;margin-bottom:4px">价值量会因此增加吗？——不是简单的"增加"，而是结构迁移：</div>
+          <div style="font-size:12px;line-height:1.75;margin-bottom:5px">· DSP 占可插拔模块 BOM 约 <strong>30%</strong>、且是国产模块厂<strong>外购</strong>（Marvell/Inphi）→ 去掉后<strong>模块整体 BOM/ASP 下降</strong>。</div>
+          <div style="font-size:12px;line-height:1.75;margin-bottom:5px">· 接手 DSP 工作的大头是<strong>交换芯片 SerDes</strong>（博通/Marvell/英伟达，<span style="color:#dc2626">A 股进不去</span>）→ 价值往交换芯片迁移；模块内 <strong>Driver/TIA 价值占比上升</strong>（要求更高、更线性），但绝对量小、也多为外购 IC。</div>
+          <div style="font-size:10px;color:var(--text2);background:#eff6ff;border-left:3px solid #1d4ed8;border-radius:4px;padding:6px 9px">对国产模块厂（旭创/新易盛）：<strong>单模块收入 ↓</strong>（丢了 DSP 转手收入），但<strong>毛利率可能 ↑</strong>（去掉低毛利外购件）+ <strong>技术壁垒 ↑</strong>（线性设计、与交换芯片协同认证更难）。→ 是「毛利结构 + 壁垒」的故事，不是单纯价值量增加，净影响需跟踪。</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 图3 NPO -->
+    <div style="border:1px solid #e9d5ff;border-radius:10px;overflow:hidden">
+      <div style="background:#faf5ff;padding:7px 13px;border-bottom:1px solid #e9d5ff;font-size:12px;font-weight:800;color:#9333ea">③ NPO 近封装 —— 光引擎做成「可拆的独立基板」，挪到 ASIC 旁边</div>
+      <div style="padding:12px 14px;background:#fff;text-align:center"><img src="assets/cpo/04_npo.png" alt="2.5D Near-Packaged Optics 架构" style="max-width:100%;height:auto;border-radius:6px"></div>
+      <div style="padding:10px 14px;font-size:12px;line-height:1.75;color:var(--text);background:#fdfaff;border-top:1px solid #e9d5ff">
+        <div style="margin-bottom:6px"><strong style="color:#9333ea">核心变化：</strong>光引擎（PIC 光子芯片 + EIC 电芯片）不直接坐在 ASIC 基板上，而是做成<strong>独立的 Engine Substrate、通过 socket 可拆卸</strong>，紧挨 ASIC。电信号仍经一小段铜通道到光引擎，但远短于面板可插拔；激光器外置（Remote Laser Source），光纤经 FAU 耦合出来。</div>
+        <div style="margin-bottom:6px"><strong style="color:var(--up)">优势：</strong>走线短 → 功耗、信号完整性优于可插拔；是<strong>迈向 CPO 的工程过渡</strong>，制造难度低于 CPO，且 OE 可拆卸、维护性好于 CPO。</div>
+        <div style="margin-bottom:6px"><strong style="color:var(--dn)">挑战：</strong>不可插拔或半可插拔，<strong>可维护性较可插拔下降</strong>；标准化弱，更多是定制方案。</div>
+        <div style="margin-bottom:6px"><strong style="color:var(--warn)">节奏：</strong>博通等早有 NPO 方案，本测算表中 <strong>AWS 6.4T NPO 2027 放量约 1000 万只</strong>，是中期重要增量。</div>
+        <div style="font-size:10px;color:var(--text2);background:#faf5ff;border-radius:5px;padding:6px 8px"><strong>对 A 股：</strong>旭创/新易盛模型已新增 6.4T NPO 收入（旭创 +710 亿、新易盛 +426 亿），光引擎利好天孚。</div>
+        <div style="border-top:1px dashed #e9d5ff;margin-top:9px;padding-top:8px">
+          <div style="font-size:11px;font-weight:700;color:#9333ea;margin-bottom:5px">❓ 为什么前面可插拔图里没有、NPO/CPO 图里却冒出了 FAU 和外置光源？</div>
+          <div style="font-size:12px;line-height:1.8;margin-bottom:7px">核心原因：可插拔时代，<strong>激光器和光纤耦合这两件事都被"藏"在密封的模块内部</strong>（模块厂出厂时就做好了），示意图上只画一根光纤从模块出来。一旦进入 NPO/CPO，<strong>面板模块消失、光引擎变成裸露在基板上的芯片</strong>，这两件原本封在模块里的事就必须拿到系统层面显式处理，于是图里多出来：</div>
+          <div style="font-size:12px;line-height:1.75;margin-bottom:6px"><strong style="color:#9333ea">· 外置光源（ELS / Remote Laser Source）：</strong>硅光的 PIC 自己不发光（硅是间接带隙），必须靠 III-V（InP）激光器供光。而激光器又是<strong>最易失效、最怕热</strong>的器件——若集成进紧挨高温 ASIC 的光引擎，一旦损坏会拖垮整颗芯片（blast radius 大）。所以业界共识是把激光器做成<strong>独立、可插拔的外置模块</strong>，用光纤喂给光引擎、坏了能单独换。→ 利好 CW DFB 光源（<strong>源杰</strong>）。</div>
+          <div style="font-size:12px;line-height:1.75;margin-bottom:6px"><strong style="color:#9333ea">· FAU（Fiber Array Unit，光纤阵列单元）：</strong>可插拔模块里，光纤与芯片的耦合用预对准的标准化连接器、在模块内部完成。到了 CPO，光纤要<strong>直接亚微米级对准到 PIC 上的波导/光栅耦合器</strong>，这道工序靠一个 FAU（玻璃块，精确固定光纤阵列）完成，并做成可拆卸以便换纤。<strong>耦合点从"模块内"挪到了"光引擎上"</strong>，FAU 就成了显式的关键部件。→ 利好 FAU/光器件（<strong>天孚</strong>）、连接器（<strong>太辰光</strong>）。</div>
+          <div style="font-size:10px;color:var(--text2);background:#faf5ff;border-left:3px solid #9333ea;border-radius:4px;padding:6px 9px">一句话：<strong>可插拔把激光器和耦合都封在模块里看不见；CPO 把模块拆开，这两件事就暴露成了独立的系统级部件。</strong></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 图4 CPO -->
+    <div style="border:1px solid #86efac;border-radius:10px;overflow:hidden">
+      <div style="background:#f0fdf4;padding:7px 13px;border-bottom:1px solid #86efac;font-size:12px;font-weight:800;color:#15803d">④ CPO 共封装 —— 光引擎与 ASIC 同坐一块基板，电走线只剩 ~10mm</div>
+      <div style="padding:12px 14px;background:#fff;text-align:center"><img src="assets/cpo/05_cpo.png" alt="Co-Packaged Optics on Substrate 架构" style="max-width:100%;height:auto;border-radius:6px"></div>
+      <div style="padding:10px 14px;font-size:12px;line-height:1.75;color:var(--text);background:#f7fef9;border-top:1px solid #86efac">
+        <div style="margin-bottom:6px"><strong style="color:#15803d">核心变化：</strong>光引擎与 Switch ASIC <strong>共封装在同一块 ASIC Substrate 上、间距仅约 10mm</strong>（对比可插拔的 150-300mm），彻底取消面板可插拔模块，基于硅光。电走线缩到最短 → DSP 可彻底取消、改用短距 SerDes 甚至 Wide I/O。光引擎初期放在 substrate，未来上移到 interposer。</div>
+        <div style="margin-bottom:6px;font-size:10px;color:var(--text2)">📍 <strong>MPO 在哪？</strong>本图（及上方 NPO 图）<strong>最右的「Connector」就是交换机面板的 MPO/LC 光连接器</strong>——机内光纤从 FAU 一路引到面板，在这里经 MPO（内含 MT 插芯、一个连接器接多芯光纤）对外接光缆。英伟达 Quantum-X 即有 144 个物理 MPO 端口。利好太辰光/致尚。</div>
+        <div style="margin-bottom:6px"><strong style="color:var(--up)">优势：</strong>功耗最低、密度/带宽最高，是 AI 大规模组网的<strong>终极形态方向</strong>。</div>
+        <div style="margin-bottom:6px"><strong style="color:var(--dn)">挑战：</strong>良率/制造难、热管理复杂、<strong>可维护性差（光器件坏需换整机）</strong>、标准化早期；激光器必须<strong>外置（External Laser Source / ELS）</strong>以便维护。</div>
+        <div style="margin-bottom:6px"><strong style="color:var(--warn)">节奏：</strong>英伟达 Quantum-X / Spectrum-X、博通 CPO 交换机 2026-2027 导入，<strong>先在交换机侧落地，与可插拔长期共存</strong>。</div>
+        <div style="font-size:10px;color:var(--text2);background:#f0fdf4;border-radius:5px;padding:6px 8px"><strong>对 A 股：</strong>外置 <strong style="color:#15803d">CW 光源大幅利好源杰</strong>；光引擎/封装利好天孚；无源/连接器利好腾景、太辰光、致尚。对旭创/新易盛是中长期形态变化点。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 光引擎 概念小模块 -->
+  <div style="margin-top:18px;border:1px solid #67e8f9;border-radius:10px;overflow:hidden">
+    <div style="background:#0891b2;color:#fff;padding:8px 13px;font-size:12px;font-weight:800">🔆 光引擎（Optical Engine, OE）到底是什么？<div style="font-size:9px;font-weight:500;opacity:.9;margin-top:1px">贯穿可插拔 / NPO / CPO 的「干活核心」——上面四张图里反复出现的那个东西</div></div>
+    <div style="padding:12px 14px;font-size:12px;line-height:1.8;color:var(--text);background:#f7feff">
+
+      <div style="margin-bottom:9px"><strong style="color:#0e7490">定义：</strong>光引擎是光模块/CPO 里<strong>完成电↔光转换的核心功能单元</strong>。发射侧：Driver 驱动 Modulator/Laser 把电信号变成光；接收侧：Photodetector（PD）收光、TIA 放大还原成电。<strong>无论可插拔、NPO 还是 CPO，光引擎都是那颗"干活的核心"，区别只在于它放在哪、怎么集成</strong>（前面板模块内 → ASIC 旁 → ASIC 同封装内）。</div>
+
+      <div style="font-size:11px;line-height:1.85;background:#ecfeff;border-left:3px solid #0e7490;border-radius:4px;padding:8px 11px;margin-bottom:10px"><strong style="color:#0e7490">🔗 和"硅光模块"什么关系？——别把两个轴混了。</strong>光引擎有两个<strong>正交</strong>的轴：「<strong>用什么做</strong>」（EML 分立 / 硅光 PIC / TFLN，<strong>技术轴</strong>）× 「<strong>放在哪</strong>」（可插拔 / NPO / CPO，<strong>位置轴</strong>）。<strong>CPO/NPO 的光引擎本质就是一颗硅光 PIC，和光芯片章节里"硅光模块"用的那颗同源</strong>——区别只是把它从可插拔位置搬到 ASIC 旁 / 封装内、并去掉 DSP。所以：<strong>硅光 ≠ CPO</strong>——硅光是"引擎用什么材料"，CPO 是"引擎放哪"；硅光模块＝硅光引擎 + 可插拔位置，CPO＝（通常也是）硅光引擎 + 共封装位置。</div>
+
+      <!-- TOSA/ROSA vs PIC/EIC 对照 -->
+      <div style="font-size:11px;font-weight:700;color:#0e7490;margin:10px 0 5px">为什么以前叫 TOSA/ROSA，现在叫 PIC/EIC？——同一批器件，换了切分维度</div>
+      <table class="ctable" style="font-size:12px;margin-bottom:6px">
+        <thead>
+          <tr><th style="width:170px">功能块</th><th>旧分组：按「收发功能」横切<br><span style="font-weight:400;color:var(--text2)">分立组件 · EML 可插拔时代</span></th><th>新分组：按「光/电芯片域」竖切<br><span style="font-weight:400;color:var(--text2)">芯片集成 · 硅光/共封装时代</span></th></tr>
+        </thead>
+        <tbody>
+          <tr><td style="font-weight:700">调制器 / 激光器 Modulator</td><td>TOSA（发射光组件）</td><td class="c-acc"><strong>PIC</strong>（光子集成电路）</td></tr>
+          <tr><td style="font-weight:700">光电探测器 PD</td><td>ROSA（接收光组件）</td><td class="c-acc"><strong>PIC</strong></td></tr>
+          <tr><td style="font-weight:700">驱动器 Driver</td><td>TOSA</td><td class="c-warn"><strong>EIC</strong>（电子集成电路）</td></tr>
+          <tr><td style="font-weight:700">跨阻放大 TIA</td><td>ROSA</td><td class="c-warn"><strong>EIC</strong></td></tr>
+        </tbody>
+      </table>
+      <div style="font-size:11px;color:var(--text2);margin-bottom:10px">· <strong>TOSA/ROSA</strong>＝按<strong>发射/接收</strong>分的<strong>分立封装子组件</strong>（拼装视角）；<strong>PIC/EIC</strong>＝按<strong>光/电</strong>分的<strong>集成芯片裸 die</strong>（集成视角）。在一颗 PIC 上，发射用的调制器和接收用的 PD 共存 → 收发的物理边界消失，自然改用"光 vs 电"来切分。</div>
+
+      <!-- 集成方式图 -->
+      <div style="font-size:11px;font-weight:700;color:#0e7490;margin:6px 0 4px">PIC + EIC 怎么集成在一起？（集成度越高 → 寄生越小、带宽密度越高）</div>
+      <div style="text-align:center;background:#fff;border:1px solid #cffafe;border-radius:6px;padding:10px"><img src="assets/cpo/06_pic_eic.png" alt="PIC-EIC 集成方式：2D/2.5D/3D/单片" style="max-width:100%;height:auto;border-radius:4px"></div>
+      <div style="font-size:10px;color:var(--text2);margin-top:6px">从上到下集成度递增：<strong>2D（打线 wirebond）→ 2.5D → 3D 混合键合（hybrid bonding）→ 单片（monolithic）</strong>。
+        <strong>单片</strong>（GF 45nm，Ayar Labs 早期）最优雅但受光子制程 ~35nm 限制、难 scale；<strong>异质集成（PIC 用硅光制程 + EIC 用 CMOS，分两颗 die 键合）成为主流</strong>，因为光器件用成熟节点（如 N65）、Driver/TIA 要先进节点（如 N6/N7），<strong>制程不同必须分开做</strong>。其中 <strong>3D 混合键合（台积电 SoIC，即 COUPE）</strong>走线最短、寄生最小，<strong>带宽密度比传统 bump 高 &gt;23×</strong>，是 CPO 的性能首选。</div>
+
+      <div style="font-size:10px;color:var(--text2);background:#ecfeff;border:1px solid #a5f3fc;border-radius:5px;padding:7px 9px;margin-top:9px"><strong style="color:#0e7490">对 A 股：</strong>光引擎的<strong>封装/组装与光器件是天孚通信的核心增量</strong>；<strong>TSMC COUPE</strong>（PIC+EIC 异质集成）正成为封装事实标准，可联动「先进封装」看板。激光器在硅光/CPO 中被挪出光引擎、改为外置 CW 光源（ELS）→ 利好源杰。</div>
+
+    </div>
+  </div>
+
+  <!-- 多维对照表 -->
+  <table class="ctable" style="font-size:12px;margin-top:20px">
+    <thead>
+      <tr>
+        <th style="width:90px">维度</th>
+        <th>传统可插拔（DSP）</th>
+        <th>LPO 线性直驱</th>
+        <th>NPO 近封装</th>
+        <th>CPO 共封装</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td style="font-weight:700">光电转换位置</td><td>前面板模块内</td><td>前面板模块内</td><td>ASIC 旁同板</td><td>ASIC 同一封装内</td></tr>
+      <tr><td style="font-weight:700">是否含 DSP</td><td>有（功耗大头）</td><td class="yp">无（直接线性驱动）</td><td>多无</td><td class="yp">无</td></tr>
+      <tr><td style="font-weight:700">相对功耗</td><td>基准 100%</td><td>≈ 50-70%（省 DSP）</td><td>≈ 40-50%</td><td class="yp">≈ 30% 或更低</td></tr>
+      <tr><td style="font-weight:700">时延</td><td>较高（DSP 处理）</td><td class="yp">低</td><td>低</td><td class="yp">最低</td></tr>
+      <tr><td style="font-weight:700">可插拔/维护</td><td class="yp">可插拔，最易维护</td><td class="yp">可插拔</td><td>差</td><td class="yn">最差（坏需换整机）</td></tr>
+      <tr><td style="font-weight:700">量产成熟度</td><td class="yp">成熟（主流）</td><td>小批量送样</td><td>少量部署</td><td class="yn">早期导入</td></tr>
+      <tr><td style="font-weight:700">技术基础</td><td>EML / 硅光</td><td>硅光 / EML，强调线性度</td><td>硅光</td><td>硅光 + 外置 CW 光源</td></tr>
+      <tr><td style="font-weight:700">主要推动者</td><td>全行业</td><td>Meta 等云厂、博通</td><td>博通（早期）</td><td>英伟达 / 博通（交换机侧）</td></tr>
+      <tr style="background:#eff6ff"><td style="font-weight:800">A股核心受益</td><td>旭创·新易盛·天孚</td><td>旭创·新易盛·天孚</td><td>旭创·新易盛·天孚</td><td><strong>天孚（光引擎）·源杰（CW光源）·腾景/太辰光（无源）</strong></td></tr>
+    </tbody>
+  </table>
+
+  <!-- CPO 产业链环节 → A股映射表 -->
+  <div style="font-size:12px;font-weight:700;margin-top:22px;margin-bottom:4px">🔗 光互联零部件 价值量 × A 股映射（可插拔 / CPO / OCS）</div>
+  <div style="font-size:11px;color:var(--text2);margin-bottom:8px">价值量＝该零部件占整机 BOM 的百分比（红色＝该场景独有/高价值环节）；<strong>OCS＝光路交换</strong>（Google/Meta 用，MEMS 微镜方案）。<strong style="background:#bbf7d0;padding:0 4px;border-radius:3px">■</strong> 已供货/主力　<strong style="background:#fed7aa;padding:0 4px;border-radius:3px">■</strong> 布局/潜在　｜ 归属色：<span style="color:#7c3aed">紫=可插拔独有</span> <span style="color:#1d4ed8">蓝=CPO独有</span> <span style="color:#d97706">橙=OCS独有</span> <span style="color:#16a34a">绿=三者共用</span>。<span style="color:#dc2626">色块为按用户图转录，请核对。</span></div>
+
+  <div style="overflow-x:auto">
+  <table style="border-collapse:collapse;font-size:10px;width:100%;min-width:880px;line-height:1.3">
+    <thead>
+      <tr style="background:#1e3a5f;color:#fff">
+        <th style="text-align:left;padding:5px 7px;min-width:152px;border:1px solid #2c4a6e">零部件</th>
+        <th style="padding:5px 4px;min-width:64px;border:1px solid #2c4a6e">归属</th>
+        <th style="padding:5px 3px;width:42px;border:1px solid #2c4a6e">可插拔<br>价值量</th>
+        <th style="padding:5px 3px;width:42px;border:1px solid #2c4a6e">CPO<br>价值量</th>
+        <th style="padding:5px 3px;width:42px;border:1px solid #2c4a6e">OCS<br>价值量</th>
+        <th style="padding:5px 2px;width:42px;border:1px solid #2c4a6e">天孚<br>通信</th>
+        <th style="padding:5px 2px;width:42px;border:1px solid #2c4a6e">腾景<br>科技</th>
+        <th style="padding:5px 2px;width:42px;border:1px solid #2c4a6e">光库<br>科技</th>
+        <th style="padding:5px 2px;width:42px;border:1px solid #2c4a6e">仕佳<br>光子</th>
+        <th style="padding:5px 2px;width:42px;border:1px solid #2c4a6e">德科立</th>
+        <th style="padding:5px 2px;width:42px;border:1px solid #2c4a6e">炬光<br>科技</th>
+        <th style="padding:5px 2px;width:42px;border:1px solid #2c4a6e">源杰<br>科技</th>
+        <th style="padding:5px 2px;width:42px;border:1px solid #2c4a6e">福晶<br>科技</th>
+        <th style="padding:5px 2px;width:42px;border:1px solid #2c4a6e">致尚<br>科技</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- 光源·激光器 -->
+      <tr><td colspan="14" style="background:#dbe7f3;color:#1e3a5f;font-weight:800;padding:4px 8px;border:1px solid #c3d4e6">光源 · 激光器</td></tr>
+      <tr>
+        <td style="padding:4px 7px;font-weight:600;border:1px solid #e2e8f0">激光二极管（LD/DFB）</td>
+        <td style="text-align:center;color:#16a34a;font-weight:600;border:1px solid #e2e8f0">三者共用</td>
+        <td style="text-align:center;border:1px solid #e2e8f0">10%</td><td style="text-align:center;border:1px solid #e2e8f0">—</td><td style="text-align:center;border:1px solid #e2e8f0">—</td>
+        <td style="border:1px solid #e2e8f0"></td><td style="border:1px solid #e2e8f0"></td><td style="border:1px solid #e2e8f0"></td><td style="background:#fed7aa;border:1px solid #e2e8f0"></td><td style="border:1px solid #e2e8f0"></td><td style="background:#fed7aa;border:1px solid #e2e8f0"></td><td style="background:#fed7aa;border:1px solid #e2e8f0"></td><td style="border:1px solid #e2e8f0"></td><td style="border:1px solid #e2e8f0"></td>
+      </tr>
+      <tr>
+        <td style="padding:4px 7px;font-weight:600;border:1px solid #e2e8f0">ELS 外置激光模块（ELSFP）</td>
+        <td style="text-align:center;color:#1d4ed8;font-weight:600;border:1px solid #e2e8f0">CPO独有</td>
+        <td style="text-align:center;border:1px solid #e2e8f0">—</td><td style="text-align:center;color:#dc2626;font-weight:700;border:1px solid #e2e8f0">20%</td><td style="text-align:center;border:1px solid #e2e8f0">—</td>
+        <td style="background:#fed7aa;border:1px solid #e2e8f0"></td><td style="border:1px solid #e2e8f0"></td><td style="border:1px solid #e2e8f0"></td><td style="border:1px solid #e2e8f0"></td><td style="border:1px solid #e2e8f0"></td><td style="background:#fed7aa;border:1px solid #e2e8f0"></td><td style="background:#bbf7d0;border:1px solid #e2e8f0"></td><td style="border:1px solid #e2e8f0"></td><td style="border:1px solid #e2e8f0"></td>
+      </tr>
+
+      <!-- 光电转换·调制解调 -->
+      <tr><td colspan="14" style="background:#dbe7f3;color:#1e3a5f;font-weight:800;padding:4px 8px;border:1px solid #c3d4e6">光电转换 · 调制解调</td></tr>
+      <tr>
+        <td style="padding:4px 7px;font-weight:600;border:1px solid #e2e8f0">DSP 芯片（oDSP）</td>
+        <td style="text-align:center;color:#7c3aed;font-weight:600;border:1px solid #e2e8f0">可插拔独有</td>
+        <td style="text-align:center;color:#dc2626;font-weight:700;border:1px solid #e2e8f0">30%</td><td style="text-align:center;border:1px solid #e2e8f0">—</td><td style="text-align:center;border:1px solid #e2e8f0">—</td>
+        <td colspan="9" style="background:#f1f5f9;color:#64748b;text-align:center;border:1px solid #e2e8f0">✕ 无法切入，被 Marvell / Inphi 垄断</td>
+      </tr>
+      <tr>
+        <td style="padding:4px 7px;font-weight:600;border:1px solid #e2e8f0">调制器（MZM/EAM/MRM）</td>
+        <td style="text-align:center;color:#16a34a;font-weight:600;border:1px solid #e2e8f0">三者共用</td>
+        <td style="text-align:center;border:1px solid #e2e8f0">8%</td><td style="text-align:center;color:#dc2626;font-weight:700;border:1px solid #e2e8f0">20%</td><td style="text-align:center;border:1px solid #e2e8f0">—</td>
+        <td style="border:1px solid #e2e8f0"></td><td style="border:1px solid #e2e8f0"></td><td style="background:#bbf7d0;border:1px solid #e2e8f0"></td><td style="border:1px solid #e2e8f0"></td><td style="border:1px solid #e2e8f0"></td><td style="border:1px solid #e2e8f0"></td><td style="border:1px solid #e2e8f0"></td><td style="border:1px solid #e2e8f0"></td><td style="border:1px solid #e2e8f0"></td>
+      </tr>
+      <tr>
+        <td style="padding:4px 7px;font-weight:600;border:1px solid #e2e8f0">光电二极管 + TIA（PD+TIA）</td>
+        <td style="text-align:center;color:#16a34a;font-weight:600;border:1px solid #e2e8f0">三者共用</td>
+        <td style="text-align:center;border:1px solid #e2e8f0">15%</td><td style="text-align:center;border:1px solid #e2e8f0">10%</td><td style="text-align:center;border:1px solid #e2e8f0">—</td>
+        <td style="border:1px solid #e2e8f0"></td><td style="border:1px solid #e2e8f0"></td><td style="border:1px solid #e2e8f0"></td><td style="border:1px solid #e2e8f0"></td><td style="border:1px solid #e2e8f0"></td><td style="border:1px solid #e2e8f0"></td><td style="border:1px solid #e2e8f0"></td><td style="border:1px solid #e2e8f0"></td><td style="border:1px solid #e2e8f0"></td>
+      </tr>
+      <tr>
+        <td style="padding:4px 7px;font-weight:600;border:1px solid #e2e8f0">PIC 光子集成芯片</td>
+        <td style="text-align:center;color:#1d4ed8;font-weight:600;border:1px solid #e2e8f0">CPO独有</td>
+        <td style="text-align:center;border:1px solid #e2e8f0">—</td><td style="text-align:center;color:#dc2626;font-weight:700;border:1px solid #e2e8f0">20%</td><td style="text-align:center;border:1px solid #e2e8f0">—</td>
+        <td colspan="9" style="background:#f1f5f9;color:#64748b;text-align:center;border:1px solid #e2e8f0">✕ 无法切入，由 Lumentum / Coherent / TSMC 主导</td>
+      </tr>
+      <tr>
+        <td style="padding:4px 7px;font-weight:600;border:1px solid #e2e8f0">Switch ASIC</td>
+        <td style="text-align:center;color:#1d4ed8;font-weight:600;border:1px solid #e2e8f0">CPO独有</td>
+        <td style="text-align:center;border:1px solid #e2e8f0">—</td><td style="text-align:center;border:1px solid #e2e8f0">自研</td><td style="text-align:center;border:1px solid #e2e8f0">—</td>
+        <td colspan="9" style="background:#f1f5f9;color:#64748b;text-align:center;border:1px solid #e2e8f0">✕ 无法切入，与 PIC 共封装；Broadcom / Nvidia 垄断</td>
+      </tr>
+
+      <!-- 精密光学无源器件 -->
+      <tr><td colspan="14" style="background:#fde68a;color:#92400e;font-weight:800;padding:4px 8px;border:1px solid #fcd34d">精密光学无源器件（A 股核心战场）</td></tr>
+      <tr>
+        <td style="padding:4px 7px;font-weight:600;border:1px solid #e2e8f0">FA / FAU 光纤阵列</td>
+        <td style="text-align:center;color:#16a34a;font-weight:600;border:1px solid #e2e8f0">三者共用</td>
+        <td style="text-align:center;border:1px solid #e2e8f0">2%</td><td style="text-align:center;border:1px solid #e2e8f0">8%</td><td style="text-align:center;color:#dc2626;font-weight:700;border:1px solid #e2e8f0">10%</td>
+        <td style="background:#bbf7d0;border:1px solid #e2e8f0"></td><td style="border:1px solid #e2e8f0"></td><td style="border:1px solid #e2e8f0"></td><td style="border:1px solid #e2e8f0"></td><td style="border:1px solid #e2e8f0"></td><td style="border:1px solid #e2e8f0"></td><td style="border:1px solid #e2e8f0"></td><td style="border:1px solid #e2e8f0"></td><td style="border:1px solid #e2e8f0"></td>
+      </tr>
+      <tr>
+        <td style="padding:4px 7px;font-weight:600;border:1px solid #e2e8f0">隔离器（含 YVO₄ 钒酸钇晶体）<br><span style="font-weight:400;color:#64748b;font-size:9px">腾景供 Coherent</span></td>
+        <td style="text-align:center;color:#16a34a;font-weight:600;border:1px solid #e2e8f0">三者共用</td>
+        <td style="text-align:center;border:1px solid #e2e8f0">2%</td><td style="text-align:center;border:1px solid #e2e8f0">2%</td><td style="text-align:center;border:1px solid #e2e8f0">5%</td>
+        <td style="border:1px solid #e2e8f0"></td><td style="background:#fed7aa;border:1px solid #e2e8f0"></td><td style="background:#fed7aa;border:1px solid #e2e8f0"></td><td style="border:1px solid #e2e8f0"></td><td style="border:1px solid #e2e8f0"></td><td style="border:1px solid #e2e8f0"></td><td style="border:1px solid #e2e8f0"></td><td style="background:#bbf7d0;border:1px solid #e2e8f0"></td><td style="border:1px solid #e2e8f0"></td>
+      </tr>
+      <tr>
+        <td style="padding:4px 7px;font-weight:600;border:1px solid #e2e8f0">MPO 连接器 / 跳线</td>
+        <td style="text-align:center;color:#16a34a;font-weight:600;border:1px solid #e2e8f0">三者共用</td>
+        <td style="text-align:center;border:1px solid #e2e8f0">1%</td><td style="text-align:center;border:1px solid #e2e8f0">1%</td><td style="text-align:center;border:1px solid #e2e8f0">3%</td>
+        <td style="border:1px solid #e2e8f0"></td><td style="border:1px solid #e2e8f0"></td><td style="border:1px solid #e2e8f0"></td><td style="background:#fed7aa;border:1px solid #e2e8f0"></td><td style="border:1px solid #e2e8f0"></td><td style="border:1px solid #e2e8f0"></td><td style="border:1px solid #e2e8f0"></td><td style="border:1px solid #e2e8f0"></td><td style="background:#bbf7d0;border:1px solid #e2e8f0"></td>
+      </tr>
+      <tr>
+        <td style="padding:4px 7px;font-weight:600;border:1px solid #e2e8f0">准直透镜阵列（2D collimator）<br><span style="font-weight:400;color:#64748b;font-size:9px">腾景已通过 Calient 供货谷歌/Meta</span></td>
+        <td style="text-align:center;color:#d97706;font-weight:600;border:1px solid #e2e8f0">OCS独有</td>
+        <td style="text-align:center;border:1px solid #e2e8f0">—</td><td style="text-align:center;border:1px solid #e2e8f0">—</td><td style="text-align:center;color:#dc2626;font-weight:700;border:1px solid #e2e8f0">15%</td>
+        <td style="border:1px solid #e2e8f0"></td><td style="background:#bbf7d0;border:1px solid #e2e8f0"></td><td style="border:1px solid #e2e8f0"></td><td style="border:1px solid #e2e8f0"></td><td style="border:1px solid #e2e8f0"></td><td style="background:#fed7aa;border:1px solid #e2e8f0"></td><td style="border:1px solid #e2e8f0"></td><td style="background:#bbf7d0;border:1px solid #e2e8f0"></td><td style="border:1px solid #e2e8f0"></td>
+      </tr>
+      <tr>
+        <td style="padding:4px 7px;font-weight:600;border:1px solid #e2e8f0">MEMS 微镜阵列晶圆</td>
+        <td style="text-align:center;color:#d97706;font-weight:600;border:1px solid #e2e8f0">OCS独有</td>
+        <td style="text-align:center;border:1px solid #e2e8f0">—</td><td style="text-align:center;border:1px solid #e2e8f0">—</td><td style="text-align:center;color:#dc2626;font-weight:700;border:1px solid #e2e8f0">40%</td>
+        <td colspan="9" style="background:#f1f5f9;color:#64748b;text-align:center;border:1px solid #e2e8f0">Lumentum 自研，国内有机会代工</td>
+      </tr>
+      <tr>
+        <td style="padding:4px 7px;font-weight:600;border:1px solid #e2e8f0">环形器（Circulator）</td>
+        <td style="text-align:center;color:#d97706;font-weight:600;border:1px solid #e2e8f0">OCS独有</td>
+        <td style="text-align:center;border:1px solid #e2e8f0">—</td><td style="text-align:center;border:1px solid #e2e8f0">—</td><td style="text-align:center;border:1px solid #e2e8f0">8%</td>
+        <td style="border:1px solid #e2e8f0"></td><td style="background:#bbf7d0;border:1px solid #e2e8f0"></td><td style="border:1px solid #e2e8f0"></td><td style="border:1px solid #e2e8f0"></td><td style="border:1px solid #e2e8f0"></td><td style="border:1px solid #e2e8f0"></td><td style="border:1px solid #e2e8f0"></td><td style="background:#fed7aa;border:1px solid #e2e8f0"></td><td style="border:1px solid #e2e8f0"></td>
+      </tr>
+
+      <!-- 封装·结构·连接 -->
+      <tr><td colspan="14" style="background:#dbe7f3;color:#1e3a5f;font-weight:800;padding:4px 8px;border:1px solid #c3d4e6">封装 · 结构 · 连接</td></tr>
+      <tr>
+        <td style="padding:4px 7px;font-weight:600;border:1px solid #e2e8f0">先进封装（CoWoS / SoIC）</td>
+        <td style="text-align:center;color:#1d4ed8;font-weight:600;border:1px solid #e2e8f0">CPO独有</td>
+        <td style="text-align:center;border:1px solid #e2e8f0">—</td><td style="text-align:center;color:#dc2626;font-weight:700;border:1px solid #e2e8f0">13%</td><td style="text-align:center;border:1px solid #e2e8f0">—</td>
+        <td colspan="9" style="background:#f1f5f9;color:#64748b;text-align:center;border:1px solid #e2e8f0">台积电 CoWoS/SoIC 主导（联动「先进封装」看板）</td>
+      </tr>
+      <tr>
+        <td style="padding:4px 7px;font-weight:600;border:1px solid #e2e8f0">气密封装（Hermetic）</td>
+        <td style="text-align:center;color:#d97706;font-weight:600;border:1px solid #e2e8f0">OCS独有</td>
+        <td style="text-align:center;border:1px solid #e2e8f0">—</td><td style="text-align:center;border:1px solid #e2e8f0">—</td><td style="text-align:center;border:1px solid #e2e8f0">5%</td>
+        <td style="border:1px solid #e2e8f0"></td><td style="border:1px solid #e2e8f0"></td><td style="border:1px solid #e2e8f0"></td><td style="border:1px solid #e2e8f0"></td><td style="border:1px solid #e2e8f0"></td><td style="border:1px solid #e2e8f0"></td><td style="border:1px solid #e2e8f0"></td><td style="border:1px solid #e2e8f0"></td><td style="border:1px solid #e2e8f0"></td>
+      </tr>
+      <tr>
+        <td style="padding:4px 7px;font-weight:600;border:1px solid #e2e8f0">Shuffle box（光纤管理盒）</td>
+        <td style="text-align:center;color:#1d4ed8;font-weight:600;border:1px solid #e2e8f0">CPO独有</td>
+        <td style="text-align:center;border:1px solid #e2e8f0">—</td><td style="text-align:center;border:1px solid #e2e8f0">4%</td><td style="text-align:center;border:1px solid #e2e8f0">—</td>
+        <td style="border:1px solid #e2e8f0"></td><td style="border:1px solid #e2e8f0"></td><td style="border:1px solid #e2e8f0"></td><td style="border:1px solid #e2e8f0"></td><td style="border:1px solid #e2e8f0"></td><td style="border:1px solid #e2e8f0"></td><td style="border:1px solid #e2e8f0"></td><td style="border:1px solid #e2e8f0"></td><td style="border:1px solid #e2e8f0"></td>
+      </tr>
+      <tr>
+        <td style="padding:4px 7px;font-weight:600;border:1px solid #e2e8f0">模块外壳 / QSFP 笼（Cage）</td>
+        <td style="text-align:center;color:#7c3aed;font-weight:600;border:1px solid #e2e8f0">可插拔独有</td>
+        <td style="text-align:center;border:1px solid #e2e8f0">—</td><td style="text-align:center;border:1px solid #e2e8f0">—</td><td style="text-align:center;border:1px solid #e2e8f0">—</td>
+        <td style="border:1px solid #e2e8f0"></td><td style="border:1px solid #e2e8f0"></td><td style="border:1px solid #e2e8f0"></td><td style="border:1px solid #e2e8f0"></td><td style="border:1px solid #e2e8f0"></td><td style="border:1px solid #e2e8f0"></td><td style="border:1px solid #e2e8f0"></td><td style="border:1px solid #e2e8f0"></td><td style="border:1px solid #e2e8f0"></td>
+      </tr>
+
+      <!-- 控制·电气 -->
+      <tr><td colspan="14" style="background:#dbe7f3;color:#1e3a5f;font-weight:800;padding:4px 8px;border:1px solid #c3d4e6">控制 · 电气</td></tr>
+      <tr>
+        <td style="padding:4px 7px;font-weight:600;border:1px solid #e2e8f0">MEMS 驱动高压电路（DAC/ADC）</td>
+        <td style="text-align:center;color:#d97706;font-weight:600;border:1px solid #e2e8f0">OCS独有</td>
+        <td style="text-align:center;border:1px solid #e2e8f0">—</td><td style="text-align:center;border:1px solid #e2e8f0">—</td><td style="text-align:center;border:1px solid #e2e8f0">5%</td>
+        <td style="border:1px solid #e2e8f0"></td><td style="border:1px solid #e2e8f0"></td><td style="border:1px solid #e2e8f0"></td><td style="border:1px solid #e2e8f0"></td><td style="border:1px solid #e2e8f0"></td><td style="border:1px solid #e2e8f0"></td><td style="border:1px solid #e2e8f0"></td><td style="border:1px solid #e2e8f0"></td><td style="border:1px solid #e2e8f0"></td>
+      </tr>
+      <tr>
+        <td style="padding:4px 7px;font-weight:600;border:1px solid #e2e8f0">控制 PCB + SDN 软件</td>
+        <td style="text-align:center;color:#16a34a;font-weight:600;border:1px solid #e2e8f0">三者共用</td>
+        <td style="text-align:center;border:1px solid #e2e8f0">—</td><td style="text-align:center;border:1px solid #e2e8f0">4%</td><td style="text-align:center;border:1px solid #e2e8f0">8%</td>
+        <td style="border:1px solid #e2e8f0"></td><td style="border:1px solid #e2e8f0"></td><td style="border:1px solid #e2e8f0"></td><td style="border:1px solid #e2e8f0"></td><td style="border:1px solid #e2e8f0"></td><td style="border:1px solid #e2e8f0"></td><td style="border:1px solid #e2e8f0"></td><td style="border:1px solid #e2e8f0"></td><td style="border:1px solid #e2e8f0"></td>
+      </tr>
+
+      <!-- 光纤·传输介质 -->
+      <tr><td colspan="14" style="background:#dbe7f3;color:#1e3a5f;font-weight:800;padding:4px 8px;border:1px solid #c3d4e6">光纤 · 传输介质</td></tr>
+      <tr>
+        <td style="padding:4px 7px;font-weight:600;border:1px solid #e2e8f0">单模光纤 / 光缆（SMF）</td>
+        <td style="text-align:center;color:#16a34a;font-weight:600;border:1px solid #e2e8f0">三者共用</td>
+        <td style="text-align:center;border:1px solid #e2e8f0">—</td><td style="text-align:center;border:1px solid #e2e8f0">—</td><td style="text-align:center;border:1px solid #e2e8f0">—</td>
+        <td colspan="9" style="background:#f1f5f9;color:#64748b;text-align:center;border:1px solid #e2e8f0">名单外：长飞 / 亨通光电</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+
+  <div style="margin-top:10px;background:#fde68a33;border:1px solid #fcd34d;border-radius:8px;padding:10px 14px;font-size:12px;line-height:1.75">
+    <strong style="color:#92400e">映射要点：</strong>A 股几乎进不了 DSP / PIC / Switch ASIC 这些高价值核心芯片（被海外垄断），<strong>真正的主场在「精密光学无源器件」</strong>——FAU、隔离器、MPO、准直透镜、环形器。<strong>OCS（光路交换）是被低估的第二条线</strong>：准直透镜阵列（OCS 价值量 15%）、环形器、气密封装给腾景/福晶/炬光带来新增量，且腾景已通过 Calient 供货谷歌/Meta。分公司看：<strong>源杰</strong>＝激光、<strong>光库</strong>＝调制器、<strong>天孚</strong>＝FAU/光引擎、<strong>致尚/仕佳</strong>＝MPO 连接器、<strong>福晶/腾景</strong>＝晶体/无源/OCS。
+  </div>
+
+  <!-- 海外龙头 CPO/NPO 最新表态 -->
+  <div style="font-size:12px;font-weight:700;margin-top:22px;margin-bottom:4px">🌏 海外龙头 CPO/NPO 最新表态（2026Q2 业绩会 / OFC2026）</div>
+  <div style="font-size:11px;color:var(--text2);margin-bottom:10px">来源：各公司 2026 年最新业绩会与 OFC2026 交流纪要（COHR Q3FY26·OFC｜LITE Q3FY26·OFC｜AVGO Q2FY26·深度｜MRVL Q1FY27·深度｜GLW Q4CY25）</div>
+  <table class="ctable" style="font-size:12px;margin-bottom:6px">
+    <thead>
+      <tr>
+        <th style="width:120px">公司 / 角色</th>
+        <th style="width:78px">立场</th>
+        <th>CPO/NPO 节奏与定调</th>
+        <th style="width:240px">英伟达合作 / 关键数据</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr style="background:#f0fdf4">
+        <td><strong>Coherent</strong><br><span style="color:var(--text2);font-size:11px">全栈光器件</span></td>
+        <td><span style="color:var(--up);font-weight:700">最积极</span></td>
+        <td>scale-out <strong>2026H2</strong> 起收入、scale-up <strong>2027H2</strong> 放量；CPO 2030 市场 <strong>$150 亿</strong>；OCS 市场上调 20→<strong>40 亿</strong>，新增长引擎合计 &gt;$200 亿</td>
+        <td>英伟达投 <strong>$20 亿（主要扩 InP）</strong>，覆盖 scale-out+up、至 2030；CW 量产 100mW / 开发 <strong>400mW(CPO)</strong>；全球首个 400G 差分 EML</td>
+      </tr>
+      <tr style="background:#f0fdf4">
+        <td><strong>Lumentum</strong><br><span style="color:var(--text2);font-size:11px">CW 激光 / ELS</span></td>
+        <td><span style="color:var(--up);font-weight:700">最积极</span></td>
+        <td>scale-out <strong>2026H2</strong>、scale-up <strong>2027H2</strong>；CPO 市场 &gt;$150 亿；超高功率激光 <strong>2026Q4 可观收入、2027H1 交付数亿美元</strong>；ELS 市场≈超高功率激光 <strong>2 倍</strong></td>
+        <td>2026/3 英伟达 <strong>$20 亿股权 + 至 2030 供应</strong>（含高功率 CW）；全栈：高功率 CW+ELS+光纤连接+隔离器+TEC；EML 缺口 &gt;30%</td>
+      </tr>
+      <tr style="background:#fffbeb">
+        <td><strong>Broadcom</strong><br><span style="color:var(--text2);font-size:11px">CPO 交换机先行者</span></td>
+        <td><span style="color:var(--warn);font-weight:700">平台卡位</span></td>
+        <td>财报<strong>不单列 CPO 节奏</strong>，归入"AI networking / 光互连价值量迁移"；产品上 Bailly 51.2T 已量产、Tomahawk6-Davisson CPO 推进</td>
+        <td>不押单一节奏；判断 <strong>800G→1.6T 驱动交换芯片/DSP/光模块/CPO/NPO/SerDes 价值量重排</strong>，把 ASIC 客户延伸到网络硅</td>
+      </tr>
+      <tr style="background:#fffbeb">
+        <td><strong>Marvell</strong><br><span style="color:var(--text2);font-size:11px">DSP / 定制硅 / 光</span></td>
+        <td><span style="color:var(--warn);font-weight:700">长期估值</span></td>
+        <td><strong>CPO 非短期收入主线，是长期估值上限</strong>；收购 <strong>Celestial AI（光子织物）</strong>被一级云厂选为下代 XPU scale-up 方案；FY2028 scale-up 光学收入翻倍+</td>
+        <td>与英伟达三支柱：硅光 + NVLink Fusion + AI-RAN；第三代 <strong>6.4T 光引擎</strong>深度合作；近端确定性在 800G/1.6T/TIA·driver/DCI/T100</td>
+      </tr>
+      <tr style="background:#eff6ff">
+        <td><strong>Corning</strong><br><span style="color:var(--text2);font-size:11px">光纤 / 连接 / 玻璃</span></td>
+        <td><span style="color:var(--accent);font-weight:700">最谨慎</span></td>
+        <td><strong>CPO 规模化收入未纳入计划、看 2028+</strong>，商业化时点不确定；长期看好（光子比电子<strong>省电 3 倍+</strong>、高比特率达 20 倍+）</td>
+        <td>近端靠高密光纤/连接/DCI 吃 AI；与 <strong>Meta 60 亿美元</strong>多年协议（光纤/线缆/连接）</td>
+      </tr>
+    </tbody>
+  </table>
+  <div style="margin-top:10px;background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;padding:10px 14px;font-size:12px;line-height:1.85">
+    <strong style="color:#1d4ed8">横向共识（5 家交叉验证）：</strong>
+    ① <strong>时间线高度一致</strong>——scale-out CPO 2026H2 起步、<strong>scale-up CPO 2027H2 才是大放量</strong>（COHR/LITE 完全对齐，印证"scale-up 才是杀手级应用"）；
+    ② <strong>英伟达是绝对核心</strong>——分别向 COHR、LITE <strong>各投 ~$20 亿</strong>锁 CW/InP 产能，均为数十亿美元级、至 2030；
+    ③ <strong>角色分层</strong>——器件厂（COHR/LITE）最积极、已有收入路径 → 系统/平台厂（AVGO/MRVL）当架构卡位与长期估值 → 材料厂（GLW）最谨慎（2028+）；
+    ④ <strong>InP 产能是共同瓶颈</strong>，各家都在扩 6 英寸 InP，英伟达的钱也主要砸在这。
+  </div>
+
+  <div style="font-size:9px;color:#94a3b8;margin-top:14px">注：功耗百分比为行业普遍口径的近似值，随速率/方案不同有差异；技术节奏以测算表 260602(1) 及公开纪要为准，更新规则同时间轴。CPO 章节技术与数据来源：SemiAnalysis《Co-Packaged Optics (CPO) – Scaling with Light for the Next Wave of Interconnect》（2026-01）；海外龙头表态来自各公司 2026 业绩会/OFC2026 纪要；A 股映射为本人分析，非原文观点。</div>
+</div>
+</div>
+
+<!-- ── 光芯片技术 ── -->
+<div class="st" onclick="toggleSec(this)">🧬 光芯片技术详解：EML / CW / InP（光引擎里的"心脏"）<span class="st-arrow">▾</span></div>
+<div class="sec-body" style="margin-bottom:16px">
+<div class="card">
+  <div style="font-size:12px;color:var(--text2);line-height:1.8;margin-bottom:16px;background:var(--bg);border-radius:6px;padding:12px 14px;border-left:3px solid #0d9488">
+    <strong style="color:var(--text)">承上启下：</strong>前面讲的是光引擎<strong>放在哪</strong>（可插拔/NPO/CPO 的封装结构）。这一节往里看一层——光引擎里真正做<strong>电↔光转换的"心脏"就是光芯片</strong>。下面按四个问题展开：① 光模块和光芯片什么关系 → ② EML 和 CW 到底差在哪 → ③ 速率由什么决定 → ④ InP 在其中扮演什么角色。
+  </div>
+
+  <!-- Q1 关系 -->
+  <div style="font-size:13px;font-weight:800;color:#0d9488;margin:6px 0 6px">① 光模块 ↔ 光芯片：整机 → 部件 → 零件</div>
+  <div style="font-size:12px;line-height:1.85;margin-bottom:10px">光芯片是光模块里<strong>最关键的核心元器件</strong>，承担光电转换：发射端激光器芯片把电变光、接收端探测器芯片把光变电。它是模块<strong>性能、速率、成本的决定性环节</strong>——激光器芯片占传统 800G 模块成本约 <strong>21%</strong>，其中 <strong>EML 芯片占模块 BOM 30% 以上</strong>（硅光模块里激光器占比约 9%）。</div>
+  <div style="background:#fff;border:1px solid #cbd5e1;border-radius:6px;padding:12px 10px;margin-bottom:8px">
+  <svg viewBox="0 0 760 232" style="width:100%;height:auto;font-family:-apple-system,'PingFang SC','Microsoft YaHei',sans-serif">
+    <defs>
+      <marker id="aO" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#d97706"/></marker>
+      <marker id="aB" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#2563eb"/></marker>
+    </defs>
+    <!-- 左侧分层标签 -->
+    <text x="20" y="126" font-size="11" font-weight="700" fill="#94a3b8" transform="rotate(-90 20 126)" text-anchor="middle">物理流</text>
+    <text x="20" y="178" font-size="11" font-weight="700" fill="#94a3b8" transform="rotate(-90 20 178)" text-anchor="middle">信息流</text>
+
+    <!-- 顶部：两颗核心光芯片 + 光信号 -->
+    <rect x="170" y="18" width="104" height="44" rx="7" fill="#0d9488"/>
+    <text x="222" y="38" font-size="12.5" font-weight="800" fill="#fff" text-anchor="middle">激光器芯片</text>
+    <text x="222" y="53" font-size="9.5" fill="#d1fae5" text-anchor="middle">电 → 光</text>
+    <rect x="518" y="18" width="104" height="44" rx="7" fill="#0d9488"/>
+    <text x="570" y="38" font-size="12.5" font-weight="800" fill="#fff" text-anchor="middle">探测器芯片</text>
+    <text x="570" y="53" font-size="9.5" fill="#d1fae5" text-anchor="middle">光 → 电</text>
+    <line x1="276" y1="40" x2="514" y2="40" stroke="#2563eb" stroke-width="2" marker-end="url(#aB)"/>
+    <text x="396" y="33" font-size="11" font-weight="700" fill="#2563eb" text-anchor="middle">光信号（光纤中传输）</text>
+    <!-- 芯片到链路的连接 -->
+    <line x1="222" y1="62" x2="222" y2="95" stroke="#0d9488" stroke-width="1.5" stroke-dasharray="3,3"/>
+    <line x1="570" y1="62" x2="570" y2="95" stroke="#0d9488" stroke-width="1.5" stroke-dasharray="3,3"/>
+
+    <!-- 物理链路：6 个环节 -->
+    <g font-size="12.5" font-weight="700" text-anchor="middle">
+      <rect x="56"  y="95" width="100" height="56" rx="7" fill="#fff7ed" stroke="#fdba74"/><text x="106" y="128" fill="#9a3412">信息源</text>
+      <rect x="172" y="95" width="100" height="56" rx="7" fill="#fff" stroke="#0d9488" stroke-width="1.6"/><text x="222" y="128" fill="#0f766e">光发射机</text>
+      <rect x="288" y="95" width="100" height="56" rx="7" fill="#eff6ff" stroke="#93c5fd"/><text x="338" y="128" fill="#1d4ed8">光纤光缆</text>
+      <rect x="404" y="95" width="100" height="56" rx="7" fill="#eff6ff" stroke="#93c5fd"/><text x="454" y="128" fill="#1d4ed8">光放大器</text>
+      <rect x="520" y="95" width="100" height="56" rx="7" fill="#fff" stroke="#0d9488" stroke-width="1.6"/><text x="570" y="128" fill="#0f766e">光接收机</text>
+      <rect x="636" y="95" width="100" height="56" rx="7" fill="#fff7ed" stroke="#fdba74"/><text x="686" y="128" fill="#9a3412">信息源</text>
+    </g>
+    <!-- 环节间箭头（橙=电信号 蓝=光信号）-->
+    <line x1="156" y1="123" x2="170" y2="123" stroke="#d97706" stroke-width="2.5" marker-end="url(#aO)"/>
+    <line x1="272" y1="123" x2="286" y2="123" stroke="#2563eb" stroke-width="2.5" marker-end="url(#aB)"/>
+    <line x1="388" y1="123" x2="402" y2="123" stroke="#2563eb" stroke-width="2.5" marker-end="url(#aB)"/>
+    <line x1="504" y1="123" x2="518" y2="123" stroke="#2563eb" stroke-width="2.5" marker-end="url(#aB)"/>
+    <line x1="620" y1="123" x2="634" y2="123" stroke="#d97706" stroke-width="2.5" marker-end="url(#aO)"/>
+
+    <!-- 信息流标签 -->
+    <g font-size="9.5" fill="#64748b" text-anchor="middle">
+      <text x="106" y="174">电信号输入</text>
+      <text x="222" y="170">光信号产生</text><text x="222" y="182">+ 调制</text>
+      <text x="338" y="174">光信号传输</text>
+      <text x="454" y="174">光信号处理</text>
+      <text x="570" y="174">光信号探测</text>
+      <text x="686" y="174">电信号输出</text>
+    </g>
+
+    <!-- 图例 -->
+    <g font-size="10" fill="#64748b">
+      <rect x="250" y="205" width="22" height="6" rx="2" fill="#d97706"/><text x="278" y="211">电信号</text>
+      <rect x="330" y="205" width="22" height="6" rx="2" fill="#2563eb"/><text x="358" y="211">光信号</text>
+      <rect x="410" y="203" width="13" height="10" rx="2" fill="#0d9488"/><text x="429" y="211">核心光芯片</text>
+    </g>
+  </svg>
+  </div>
+  <div style="font-size:11px;color:var(--text2);margin-bottom:10px">图：<strong>激光器芯片＝光发射机</strong>（电→光、产生并调制光信号），<strong>探测器芯片＝光接收机</strong>（光→电）。橙色段为电信号、蓝色段为光信号——两端的光芯片完成"电↔光"全链路转换。</div>
+  <div style="font-size:12px;line-height:1.75;background:#f0fdfa;border:1px solid #99f6e4;border-radius:6px;padding:9px 12px;margin-bottom:6px">两种集成方式：<strong>① 传统模块</strong>＝激光器芯片封进 TOSA、探测器芯片封进 ROSA，再与电芯片（DSP/Driver/TIA）组装；<strong>② 硅光模块</strong>＝取消分立 TOSA/ROSA，用<strong>外置 CW 激光器芯片 + 高集成硅光芯片（PIC）</strong>协同收发。（对应前面"光引擎"模块里 TOSA/ROSA → PIC/EIC 的演进）</div>
+
+  <!-- Q2 EML vs CW -->
+  <div style="font-size:13px;font-weight:800;color:#0d9488;margin:18px 0 6px">② EML 和 CW 到底差在哪？——"自带调制" vs "只给光"</div>
+  <div style="font-size:12px;line-height:1.85;margin-bottom:8px">关键区别一句话：<strong>EML 自己就能调制信号，CW 只提供一束恒定的光、把调制让给别人（硅光 PIC）做</strong>。注意 CW（Continuous Wave 连续波）<strong>不是和 DFB/EML 并列的结构，而是"工作模式"</strong>——硅光用的 CW 光源本质是<strong>一颗大功率 CW DFB 激光器（同属 InP）</strong>。</div>
+
+  <div style="background:#fff;border:1px solid #cbd5e1;border-radius:6px;padding:12px 10px;margin-bottom:10px">
+  <svg viewBox="0 0 760 280" style="width:100%;height:auto;font-family:-apple-system,'PingFang SC','Microsoft YaHei',sans-serif">
+    <defs>
+      <marker id="mO" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#d97706"/></marker>
+      <marker id="mB" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#2563eb"/></marker>
+    </defs>
+
+    <!-- ===== Panel A: EML ===== -->
+    <text x="16" y="24" font-size="12.5" font-weight="800" fill="#0f766e">EML：DFB + EAM 单片集成 —— 调制器就在激光器芯片内</text>
+    <!-- EML 芯片容器 -->
+    <rect x="150" y="46" width="300" height="64" rx="8" fill="#f0fdfa" stroke="#0d9488" stroke-width="2"/>
+    <text x="300" y="60" font-size="9" font-weight="700" fill="#0f766e" text-anchor="middle">EML 芯片（InP 单片集成）</text>
+    <rect x="162" y="66" width="130" height="36" rx="5" fill="#fff" stroke="#94a3b8"/>
+    <text x="227" y="81" font-size="10.5" font-weight="700" fill="#334155" text-anchor="middle">DFB 激光区</text>
+    <text x="227" y="94" font-size="8.5" fill="#64748b" text-anchor="middle">产生连续光</text>
+    <rect x="308" y="66" width="130" height="36" rx="5" fill="#fff7ed" stroke="#d97706"/>
+    <text x="373" y="81" font-size="10.5" font-weight="700" fill="#9a3412" text-anchor="middle">EAM 调制区</text>
+    <text x="373" y="94" font-size="8.5" fill="#9a3412" text-anchor="middle">电吸收调制</text>
+    <line x1="292" y1="84" x2="308" y2="84" stroke="#2563eb" stroke-width="2" marker-end="url(#mB)"/>
+    <!-- 电数据 进 EAM -->
+    <text x="373" y="36" font-size="9" font-weight="700" fill="#d97706" text-anchor="middle">电数据（开关）</text>
+    <line x1="373" y1="40" x2="373" y2="64" stroke="#d97706" stroke-width="2" marker-end="url(#mO)"/>
+    <!-- 输出 调制光 -->
+    <line x1="438" y1="84" x2="548" y2="84" stroke="#2563eb" stroke-width="2" marker-end="url(#mB)"/>
+    <path transform="translate(556,79)" d="M0,10 L0,0 L9,0 L9,10 L18,10 L18,0 L27,0 L27,10 L36,10" fill="none" stroke="#2563eb" stroke-width="1.5"/>
+    <text x="660" y="80" font-size="10" font-weight="700" fill="#2563eb" text-anchor="middle">调制光输出</text>
+    <text x="660" y="94" font-size="8.5" fill="#64748b" text-anchor="middle">（已载数据）</text>
+
+    <!-- 分隔线 -->
+    <line x1="16" y1="132" x2="744" y2="132" stroke="#e2e8f0" stroke-width="1"/>
+
+    <!-- ===== Panel B: CW + 硅光 ===== -->
+    <text x="16" y="158" font-size="12.5" font-weight="800" fill="#0f766e">CW + 硅光：激光器只发连续光，调制器在另一颗硅光芯片上</text>
+    <!-- CW 激光器 -->
+    <rect x="110" y="178" width="168" height="58" rx="8" fill="#fff" stroke="#0d9488" stroke-width="2"/>
+    <text x="194" y="202" font-size="11" font-weight="800" fill="#0f766e" text-anchor="middle">CW DFB 激光器</text>
+    <text x="194" y="218" font-size="8.5" fill="#64748b" text-anchor="middle">（InP）只发连续光 · 不调制</text>
+    <!-- 连续光 到 PIC -->
+    <line x1="278" y1="207" x2="366" y2="207" stroke="#2563eb" stroke-width="2" marker-end="url(#mB)"/>
+    <text x="322" y="199" font-size="8.5" fill="#2563eb" text-anchor="middle">连续光</text>
+    <path transform="translate(300,210)" d="M0,3 q4,-6 8,0 t8,0 t8,0 t8,0 t8,0" fill="none" stroke="#2563eb" stroke-width="1.3"/>
+    <!-- 硅光 PIC -->
+    <rect x="374" y="170" width="240" height="76" rx="8" fill="#eff6ff" stroke="#2563eb" stroke-width="1.6"/>
+    <text x="494" y="186" font-size="10" font-weight="800" fill="#1d4ed8" text-anchor="middle">硅光 PIC（硅光芯片）</text>
+    <rect x="414" y="194" width="160" height="36" rx="5" fill="#fff7ed" stroke="#d97706"/>
+    <text x="494" y="216" font-size="10.5" font-weight="700" fill="#9a3412" text-anchor="middle">MZM 调制器</text>
+    <!-- 电数据 进 MZM（从下） -->
+    <text x="494" y="270" font-size="9" font-weight="700" fill="#d97706" text-anchor="middle">电数据（调制）</text>
+    <line x1="494" y1="262" x2="494" y2="232" stroke="#d97706" stroke-width="2" marker-end="url(#mO)"/>
+    <!-- 输出 调制光 -->
+    <line x1="614" y1="207" x2="688" y2="207" stroke="#2563eb" stroke-width="2" marker-end="url(#mB)"/>
+    <path transform="translate(694,202)" d="M0,10 L0,0 L8,0 L8,10 L16,10 L16,0 L24,0 L24,10 L32,10" fill="none" stroke="#2563eb" stroke-width="1.5"/>
+    <text x="712" y="232" font-size="9" font-weight="700" fill="#2563eb" text-anchor="middle">调制光</text>
+  </svg>
+  </div>
+  <div style="font-size:11px;color:var(--text2);margin-bottom:10px">图：<strong style="color:#0f766e">EML</strong> 把 DFB 激光区与 EAM 调制区做在<strong>同一颗 InP 芯片内</strong>，电数据直接驱动 EAM 调制——<strong>自带调制、单片集成，故壁垒/成本最高</strong>；<strong style="color:#0f766e">CW</strong> 激光器只负责发<strong>恒定连续光</strong>，调制交给<strong>另一颗硅光芯片上的 MZM</strong> 完成——<strong>激光器结构简单、外延链短、良率更优</strong>，但需更高输出功率。</div>
+
+  <table class="ctable" style="font-size:12px;margin-bottom:8px">
+    <thead><tr><th style="width:95px">维度</th><th>EML（电吸收调制激光器）</th><th>CW（连续波光源）</th></tr></thead>
+    <tbody>
+      <tr><td style="font-weight:700">本质</td><td>DFB 激光器 + EAM 调制器<strong>单片集成</strong></td><td>大功率 <strong>CW DFB</strong> 激光器（仅出恒定光）</td></tr>
+      <tr><td style="font-weight:700">调制在哪做</td><td class="c-acc">芯片内（EAM 外调制）<strong>自带</strong></td><td>转移到<strong>硅光 PIC 上的 MZM 调制器</strong></td></tr>
+      <tr><td style="font-weight:700">用于</td><td>传统分立模块（封进 TOSA）</td><td>硅光模块 / CPO（外置光源）</td></tr>
+      <tr><td style="font-weight:700">结构 / 外延</td><td>复杂、外延链条长</td><td class="yp">更简单、链条短、<strong>良率更优</strong></td></tr>
+      <tr><td style="font-weight:700">芯片面积</td><td>基准（宽 200-250µm/长&lt;500µm）</td><td>约 EML 的 <strong>2 倍</strong>（需更高功率、腔更长）</td></tr>
+      <tr><td style="font-weight:700">功率需求</td><td>—</td><td>70mW(400/800G)→100mW(1.6T)→<strong>300-400mW(CPO)</strong></td></tr>
+      <tr style="background:#f0fdfa"><td style="font-weight:800">壁垒 / 国产</td><td>最高，国产追赶中（200G 尤难）</td><td><strong>较低，国产率先导入的契机</strong></td></tr>
+    </tbody>
+  </table>
+  <div style="text-align:center;background:#fff;border:1px solid #cbd5e1;border-radius:6px;padding:10px;margin-bottom:8px"><img src="assets/chip/02_silicon_cw.png" alt="硅光模块结构：DSP/Driver/TIA/SiPho + 外置 CW Laser" style="max-width:100%;height:auto;border-radius:4px"></div>
+  <div style="font-size:11px;color:var(--text2);margin-bottom:8px">图：硅光模块里电信号经 DSP→Driver/TIA→硅光芯片(SiPho)，外置 <strong>CW Laser</strong> 提供连续光载波，由硅光芯片上的 MZM 完成调制。<strong>为什么硅光必须外置 CW？</strong>硅是间接带隙半导体、发光效率极低，造不出高效激光器，只能用 III-V（InP）的 CW 激光器作外部光源。</div>
+
+  <div style="font-size:12px;line-height:1.85;background:#f7fffe;border:1px solid #99f6e4;border-radius:8px;padding:9px 12px;margin-bottom:10px"><strong style="color:#0d9488">📦 顺带定义"硅光模块"：</strong>把调制器（MZM）、波导等<strong>集成到一颗硅光芯片（PIC）+ 外置 CW 激光器</strong>收发，区别于传统模块的<strong>分立方案</strong>（EML 封 TOSA、探测器封 ROSA、逐颗组装）。<strong style="color:#0d9488">一句话：硅光把"调制"从 InP 的 EML 搬到硅芯片的 MZM，但"发光"仍靠外置 InP CW——替代的是 EML 调制器、不是 InP 激光光源（这也是 InP 地位稳固的根本原因）。</strong><br><span style="font-size:11px;color:var(--text2)">↗ 注意"硅光"是<strong>技术轴</strong>（引擎用什么做），和"<strong>位置轴</strong>"（可插拔/NPO/CPO）正交：把这颗硅光引擎从可插拔搬到 ASIC 旁/封装内就是 NPO/CPO——详见上方 CPO 章节「🔆 光引擎」模块。</span></div>
+  <div style="font-size:10px;color:var(--text2);background:#ecfdf5;border-left:3px solid #0d9488;border-radius:4px;padding:8px 11px;margin-bottom:6px"><strong style="color:#0d9488">投资含义：</strong>EML（尤其 200G）短缺背景下，<strong>"CW + 硅光"成 AI 数据中心替代首选</strong>；英伟达已分别向 Coherent、Lumentum 各投资约 20 亿美元锁定 CW 产能。<strong>CW 国产化差距比 EML 更小、是率先导入点</strong>：源杰（70/100mW 批量、300mW 突破并拟投 12.51 亿扩产）、长光华芯（70/100mW 量产、200mW 验证）、仕佳光子（75-1000mW 矩阵）、永鼎鼎芯（70mW 量产）；但 CPO 所需 300mW+ 高功率 CW 国内仍在验证/研发。</div>
+
+  <!-- Q4 速率 -->
+  <div style="font-size:13px;font-weight:800;color:#0d9488;margin:18px 0 6px">③ 一颗光芯片是 100G 还是 200G？由什么决定</div>
+  <div style="font-size:12px;text-align:center;background:#f0fdfa;border:1px solid #99f6e4;border-radius:6px;padding:9px;margin-bottom:8px;font-weight:700;color:#0f766e">模块总速率 ＝ 单波速率 × 通道数　｜　单波速率 ≈ 波特率（Baud）× 调制阶数（每符号 bit）</div>
+  <div style="font-size:12px;line-height:1.85;margin-bottom:8px">当前主流调制是 <strong>PAM4（4 电平、每符号 2 bit）</strong>，所以 50GBaud×2＝100G、100GBaud×2＝200G。<strong>100G→200G 单芯片升级，本质是把单通道波特率从约 50GBaud 提到约 100GBaud</strong>（PAM4 下 Nyquist 频率从 28GHz 翻到 56GHz）——对芯片调制带宽、外延工艺、色散容忍度、温控（EAM 对温度敏感、需 TEC）要求大幅提高，这就是 <strong>200G EML 壁垒更高</strong>的原因。</div>
+  <table class="ctable" style="font-size:12px;margin-bottom:6px">
+    <thead><tr><th style="width:80px">模块总速率</th><th>主流方案</th><th>单波速率</th><th>通道数</th></tr></thead>
+    <tbody>
+      <tr><td style="font-weight:700">400G</td><td>8×50G 或 4×100G</td><td>50G / 100G</td><td>8 / 4</td></tr>
+      <tr style="background:#eff6ff"><td style="font-weight:700">800G</td><td>8×100G（8 颗 100G EML）</td><td>100G</td><td>8</td></tr>
+      <tr style="background:#f5f3ff"><td style="font-weight:700">1.6T</td><td>8×200G（200G EML 或硅光 PIC）</td><td>200G</td><td>8</td></tr>
+      <tr><td style="font-weight:700">3.2T</td><td>8×400G（需 448G SerDes，或引入 TFLN）</td><td>400G</td><td>8</td></tr>
+    </tbody>
+  </table>
+  <div style="font-size:11px;color:var(--text2);margin-bottom:6px">· <strong>关键认知：</strong>单通道速率迭代<strong>显著慢于</strong>以制程为驱动的电芯片——这正是过去三年光模块走 4×100G→8×100G（而非 4×200G）的主因；单波 200G→400G 难度预计更大，可能引入<strong>薄膜铌酸锂(TFLN)</strong>调制器。</div>
+
+  <!-- Q5 InP -->
+  <div style="font-size:13px;font-weight:800;color:#0d9488;margin:18px 0 6px">④ InP 的角色：不可替代的核心衬底，也是当前最紧的瓶颈</div>
+  <div style="font-size:12px;line-height:1.85;margin-bottom:8px"><strong>InP（磷化铟）是光通信光芯片不可替代的核心衬底</strong>：CW、DFB、EML 边发射激光器 + PIN/APD 探测器都做在 InP 上（GaAs 只做短距 VCSEL）。关键是——<strong>即便硅光加速渗透，硅光自己不发光、仍要外置 InP 激光器</strong>，所以 InP 激光光源地位长期稳固。当前 InP 80% 以上需求来自 AI 数据中心。</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
+    <div style="font-size:12px;line-height:1.75;background:#fff;border:1px solid #e2e8f0;border-radius:6px;padding:9px 11px">
+      <div style="font-weight:700;color:#0d9488;margin-bottom:3px">市场地位</div>
+      2025 全球光芯片市场 ~$40 亿：<strong>InP 58% / 硅光 32% / GaAs 10%</strong>；2031 扩至 ~$150 亿，InP 占比降至 46%（仍约 69 亿）。硅光渗透但 InP 光源地位稳。
+    </div>
+    <div style="font-size:12px;line-height:1.75;background:#fff;border:1px solid #fcd34d;border-radius:6px;padding:9px 11px">
+      <div style="font-weight:700;color:#b45309;margin-bottom:3px">供需 / 价格</div>
+      衬底缺口 <strong>&gt;70%、持续到 2028</strong>；寡头垄断（住友 42%/北京通美 36%/JX 13%，CR3~91%）；2 英寸价从 2025 初 ~$800 涨到 <strong>$2300-2500</strong>（+250%），急单破 $3000。
+    </div>
+  </div>
+  <div style="font-size:12px;line-height:1.75;background:#fef2f2;border:1px solid #fecaca;border-radius:6px;padding:9px 11px;margin-bottom:10px"><strong style="color:#dc2626">为什么扩不出来（核心壁垒）：</strong>① 高纯铟受限（90% 来自锌冶炼副产、中国管制，2026 起铟出口锁定年产量 30% 内）；② 设备卡脖子（外延 MOCVD 由 AIXTRON 主导~80%、交期 7 月+、美国对华管制；晶体炉、EBL 交期超 12 月）；③ 扩产周期 18-36 月 + 8-12 月良率爬坡 + 下游认证数月至一年。</div>
+  <div style="text-align:center;background:#fff;border:1px solid #cbd5e1;border-radius:6px;padding:10px;margin-bottom:8px"><img src="assets/chip/04_inp_flow.png" alt="InP 衬底/光芯片生产流程" style="max-width:100%;height:auto;border-radius:4px"></div>
+  <div style="font-size:11px;color:var(--text2);margin-bottom:6px">图：光芯片完整工艺——InP <strong>多晶合成 → 单晶生长（VGF/VB/LEC，最核心、难在控磷不溢出）→ 晶片加工（切割/磨边/研磨/抛光/检测）→ 外延（MOCVD）→ 晶圆制造 → 封测</strong>。InP 单晶生长是最大壁垒环节。</div>
+
+  <!-- 投资映射 -->
+  <div style="margin-top:14px;background:linear-gradient(90deg,#f0fdfa,#eff6ff);border:1px solid #99f6e4;border-radius:10px;padding:13px 16px">
+    <div style="font-size:12px;font-weight:800;color:var(--text);margin-bottom:8px">💡 A 股投资映射（光芯片产业链）</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px 18px;font-size:12px;line-height:1.75">
+      <div>· <strong style="color:#0d9488">InP 衬底（最紧瓶颈）：</strong>云南锗业 ★（A 股唯一规模化 6 英寸量产，15 万片/年）｜三安光电（武汉月产 1 万片 6 英寸、入华为链）｜博杰股份（参股珠海鼎泰芯源）｜广东先导</div>
+      <div>· <strong style="color:#0d9488">光芯片 EML / CW（InP 下游）：</strong>源杰科技 ★（IDM，100G EML 量产、CW 多客户）｜长光华芯（EML/VCSEL/CW 三平台）｜仕佳光子（CW 矩阵）｜东山精密（索尔思 200G 量产）｜永鼎（鼎芯 CW）｜光迅科技</div>
+      <div>· <strong style="color:#0d9488">设备国产化：</strong>北方华创（晶体生长炉）｜中微公司（MOCVD）</div>
+      <div>· <strong style="color:#0d9488">TFLN（单波 400G 备选）：</strong>天通股份｜济南晶正｜光库科技（TFLN 调制器）</div>
+    </div>
+    <div style="font-size:10px;color:var(--text2);margin-top:9px;border-top:1px dashed #99f6e4;padding-top:7px"><strong>主线小结：</strong>速率往上走 → 单波 200G EML 难、CW+硅光替代加速、TFLN 补高端；但<strong>无论哪条路线都离不开 InP 衬底与 InP 激光光源</strong> → <strong>InP 衬底（云南锗业）+ 光芯片（源杰）</strong>是穿越路线分歧的确定性主线，且国产化率仍低（25G 以上约 5%）、替代空间大。</div>
+  </div>
+
+  <div style="font-size:9px;color:#94a3b8;margin-top:12px">数据来源：光芯片研究（整合国盛/华泰/招商/东吴/中邮/申万/长江等研报、AXT 公告、天风/西部纪要，均自 Alpha 派数据库）；图片来自该研究原文。本节为信息梳理，非投资建议。</div>
 </div>
 </div>
 
@@ -486,26 +1153,6 @@ code{font-size:10px;background:var(--tag-bg);color:var(--tag);padding:1px 5px;bo
   </div>
 </div>
 
-<!-- 价格详细表 -->
-<div class="card">
-  <div style="font-size:12px;font-weight:700;margin-bottom:10px">价格明细表（USD / 只，测算表口径）</div>
-  <table class="ctable" style="font-size:11px">
-    <thead><tr><th>规格</th><th>2023</th><th>2024E</th><th>2025E</th><th>降价幅度</th><th>备注</th></tr></thead>
-    <tbody>
-      <tr><td>400G DR</td><td>$280</td><td>$240</td><td>$210</td><td><span class="yn">-25%</span></td><td style="font-size:10px;color:var(--text2)">成熟规格，持续降价</td></tr>
-      <tr><td>400G FR</td><td>$370</td><td>$320</td><td>$290</td><td><span class="yn">-22%</span></td><td style="font-size:10px;color:var(--text2)">长距离规格</td></tr>
-      <tr style="background:#eff6ff"><td><strong>800G SR</strong></td><td>$450</td><td>$380</td><td>$340</td><td><span class="yn">-24%</span></td><td style="font-size:10px;color:var(--text2)">最大量规格</td></tr>
-      <tr style="background:#eff6ff"><td><strong>800G DR</strong></td><td>$780</td><td>$600</td><td>$510</td><td><span class="yn">-35%</span></td><td style="font-size:10px;color:var(--text2)">降幅最大</td></tr>
-      <tr style="background:#eff6ff"><td>800G FR</td><td>$850</td><td>$650</td><td>$600</td><td><span class="yn">-29%</span></td><td style="font-size:10px;color:var(--text2)">—</td></tr>
-      <tr style="background:#eff6ff"><td>800G LPO</td><td>—</td><td>—</td><td>$400</td><td>—</td><td style="font-size:10px;color:var(--text2)">2025年新增规格</td></tr>
-      <tr style="background:#eff6ff"><td>800G VFR8</td><td>$950</td><td>$750</td><td>$680</td><td><span class="yn">-28%</span></td><td style="font-size:10px;color:var(--text2)">高端规格</td></tr>
-      <tr style="background:#f5f3ff"><td><strong>1.6T DR</strong></td><td>—</td><td>$1,500</td><td>$1,200</td><td><span class="yn">-20%</span></td><td style="font-size:10px;color:var(--text2)">新品仍溢价</td></tr>
-      <tr style="background:#f5f3ff"><td>1.6T FR</td><td>—</td><td>$1,800</td><td>$1,400</td><td><span class="yn">-22%</span></td><td style="font-size:10px;color:var(--text2)">长距</td></tr>
-      <tr style="background:#f5f3ff"><td>1.6T LPO</td><td>—</td><td>—</td><td>$850</td><td>—</td><td style="font-size:10px;color:var(--text2)">降功耗方案</td></tr>
-      <tr style="background:#f5f3ff"><td>1.6T 硅光</td><td>—</td><td>—</td><td>$1,100</td><td>—</td><td style="font-size:10px;color:var(--text2)">绕过 EML 缺货</td></tr>
-    </tbody>
-  </table>
-</div>
 </div>
 
 <!-- ── 公司深度 Tab ── -->
@@ -521,27 +1168,58 @@ code{font-size:10px;background:var(--tag-bg);color:var(--tag);padding:1px 5px;bo
 
   <!-- 旭创 -->
   <div id="t-xc" class="tab-pane active">
-    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px">
-      <div style="background:var(--up-bg);border:1px solid #86efac;border-radius:8px;padding:10px 12px">
-        <div style="font-size:10px;color:var(--text2);margin-bottom:3px">2026E 总收入</div>
-        <div style="font-size:18px;font-weight:700;color:var(--up)">1,128 亿元</div>
-        <div style="font-size:10px;color:var(--up)">↑ +186% YoY</div>
-      </div>
-      <div style="background:var(--tag-bg);border:1px solid #bfdbfe;border-radius:8px;padding:10px 12px">
-        <div style="font-size:10px;color:var(--text2);margin-bottom:3px">1.6T 收入占比（2026E）</div>
-        <div style="font-size:18px;font-weight:700;color:var(--accent)">56.1%</div>
-        <div style="font-size:10px;color:var(--accent)">↑ 从 2024A 仅 1.2%</div>
-      </div>
-      <div style="background:var(--tag-bg);border:1px solid #bfdbfe;border-radius:8px;padding:10px 12px">
-        <div style="font-size:10px;color:var(--text2);margin-bottom:3px">800G 出货量（2026E）</div>
-        <div style="font-size:18px;font-weight:700;color:var(--accent)">1,600 万只</div>
-        <div style="font-size:10px;color:var(--accent)">↑ +101% vs 2024A</div>
-      </div>
-      <div style="background:#f5f3ff;border:1px solid #ddd6fe;border-radius:8px;padding:10px 12px">
-        <div style="font-size:10px;color:var(--text2);margin-bottom:3px">净利率（2026E）</div>
-        <div style="font-size:18px;font-weight:700;color:#7c3aed">33.0%</div>
-        <div style="font-size:10px;color:#7c3aed">净利润 372 亿元</div>
-      </div>
+    <div class="model-wrap">
+      <table class="model-table">
+        <thead>
+          <tr><th>各项收入</th><th>2022A</th><th>2023A</th><th>2024A</th><th>2025A</th><th>2026E</th><th>2027E</th></tr>
+        </thead>
+        <tbody>
+          <tr class="section-row"><td colspan="7">收入总览</td></tr>
+          <tr><td>总收入</td><td>96.42</td><td>107.24</td><td>238.62</td><td>382.40</td><td class="hist-cell" data-tip="总收入历史修改：&#10;260117：2026E 1085亿&#10;260323：2026E 1128亿&#10;260602：2026E 1091亿&#10;变化：3月上调后6月小幅回落，但仍高于1月">1090.73</td><td class="hist-cell" data-tip="总收入历史修改：&#10;260117：2027E 1689亿&#10;260323：2027E 1949亿&#10;260602：2027E 2740亿&#10;变化：因1.6T/NPO上修明显抬高">2739.61</td></tr>
+
+          <tr class="section-row"><td colspan="7">1.6T 产品</td></tr>
+          <tr><td>1.6T出货量（万只）</td><td class="blank">—</td><td class="blank">—</td><td>3</td><td>57</td><td class="hist-cell" data-tip="1.6T出货量历史修改：&#10;260117：2026E 1149万只&#10;260323：2026E 1221万只&#10;260602：2026E 1182万只&#10;变化：较3月略降，但仍高于1月">1182</td><td class="hist-cell" data-tip="1.6T出货量历史修改：&#10;260117：2027E 2975万只&#10;260323：2027E 3320万只&#10;260602：2027E 3353万只&#10;变化：连续上修">3353</td></tr>
+          <tr><td>单价（美金）</td><td class="blank">—</td><td class="blank">—</td><td>1300.0</td><td>1000.0</td><td class="assump" data-tip="1.6T单价历史修改：&#10;260117：2026E 720美元&#10;260323：2026E 720美元&#10;260602：2026E 720美元&#10;变化：三版未变">720.0</td><td class="assump" data-tip="1.6T单价历史修改：&#10;260117：2027E 576美元&#10;260323：2027E 612美元&#10;260602：2027E 612美元&#10;变化：较1月上修，降价斜率放缓">612.0</td></tr>
+          <tr><td>1.6T收入（亿元）</td><td class="blank">—</td><td class="blank">—</td><td>2.8</td><td>40.4</td><td class="hist-cell" data-tip="1.6T收入历史修改：&#10;260117：2026E 596亿&#10;260323：2026E 633亿&#10;260602：2026E 604亿&#10;变化：跟随出货小幅回落">604.1</td><td class="hist-cell" data-tip="1.6T收入历史修改：&#10;260117：2027E 1234亿&#10;260323：2027E 1463亿&#10;260602：2027E 1457亿&#10;变化：基本维持3月高位">1456.7</td></tr>
+          <tr><td>1.6T收入占比（%）</td><td class="blank">—</td><td class="blank">—</td><td>1%</td><td>11%</td><td>55%</td><td>53%</td></tr>
+
+          <tr class="section-row"><td colspan="7">800G 产品</td></tr>
+          <tr><td>800G出货量（万只）</td><td>8</td><td>71</td><td>373</td><td>796</td><td data-tip="800G出货量历史修改：&#10;260117：2026E 1578万只&#10;260323：2026E 1600万只&#10;260602：2026E 1596万只&#10;变化：2026E基本稳定">1596</td><td class="hist-cell" data-tip="800G出货量历史修改：&#10;260117：2027E 1884万只&#10;260323：2027E 1908万只&#10;260602：2027E 2316万只&#10;变化：6月明显上修">2316</td></tr>
+          <tr><td>单价（美金）</td><td>900</td><td>720.0</td><td>554.4</td><td>432.4</td><td data-tip="800G单价历史修改：&#10;260117：2026E 380美元&#10;260323：2026E 380美元&#10;260602：2026E 380美元&#10;变化：三版未变">380.0</td><td class="assump" data-tip="800G单价历史修改：&#10;260117：2027E 304美元&#10;260323：2027E 323美元&#10;260602：2027E 323美元&#10;变化：较1月上修，降价幅度从-20%改为-15%">323.0</td></tr>
+          <tr><td>800G收入（亿元）</td><td>5.1</td><td>36.3</td><td>146.9</td><td>244.3</td><td data-tip="800G收入历史修改：&#10;260117：2026E 432亿&#10;260323：2026E 438亿&#10;260602：2026E 430亿&#10;变化：2026E基本稳定">430.5</td><td class="hist-cell" data-tip="800G收入历史修改：&#10;260117：2027E 412亿&#10;260323：2027E 444亿&#10;260602：2027E 531亿&#10;变化：随出货和价格假设上修">531.1</td></tr>
+          <tr><td>800G收入占比（%）</td><td>5%</td><td>34%</td><td>62%</td><td>64%</td><td>39%</td><td>19%</td></tr>
+
+          <tr class="section-row"><td colspan="7">成熟速率与其他收入</td></tr>
+          <tr><td>400G收入（亿元）</td><td>41.3</td><td>35.2</td><td>58.0</td><td>71.9</td><td data-tip="400G收入历史修改：&#10;260117：2026E 36.4亿&#10;260323：2026E 36.1亿&#10;260602：2026E 35.6亿&#10;变化：低速率持续收缩，三版变化不大">35.6</td><td data-tip="400G收入历史修改：&#10;260117：2027E 23.0亿&#10;260323：2027E 23.0亿&#10;260602：2027E 22.7亿&#10;变化：小幅下修">22.7</td></tr>
+          <tr><td>400G收入占比（%）</td><td>43%</td><td>33%</td><td>24%</td><td>19%</td><td>3%</td><td>1%</td></tr>
+          <tr><td>200G收入（亿元）</td><td>24.0</td><td>10.4</td><td>6.4</td><td>5.8</td><td data-tip="200G收入历史修改：&#10;260117：2026E 3.1亿&#10;260323：2026E 3.1亿&#10;260602：2026E 3.0亿&#10;变化：已非核心收入项，继续收缩">3.0</td><td data-tip="200G收入历史修改：&#10;260117：2027E 2.2亿&#10;260323：2027E 2.2亿&#10;260602：2027E 2.2亿&#10;变化：基本稳定">2.2</td></tr>
+          <tr><td>100G收入（亿元）</td><td>10.9</td><td>9.1</td><td>9.5</td><td>8.7</td><td data-tip="100G收入历史修改：&#10;260117：2026E 6.1亿&#10;260323：2026E 6.1亿&#10;260602：2026E 6.0亿&#10;变化：老产品口径基本稳定">6.0</td><td data-tip="100G收入历史修改：&#10;260117：2027E 4.4亿&#10;260323：2027E 4.4亿&#10;260602：2027E 4.3亿&#10;变化：小幅下修">4.3</td></tr>
+          <tr><td>其他收入（亿元）</td><td>15.1</td><td>16.2</td><td>15.1</td><td>11.4</td><td data-tip="其他收入历史修改：&#10;260117/260323：2026E 11.9亿&#10;260602：2026E 11.4亿&#10;变化：小幅下修，影响较小">11.4</td><td data-tip="其他收入历史修改：&#10;260117/260323：2027E 13.1亿&#10;260602：2027E 12.6亿&#10;变化：小幅下修">12.6</td></tr>
+
+          <tr class="section-row"><td colspan="7">6.4T NPO 产品</td></tr>
+          <tr><td>6.4T NPO收入（亿元）</td><td class="blank">—</td><td class="blank">—</td><td class="blank">—</td><td class="blank">—</td><td class="blank">—</td><td class="assump" data-tip="6.4T NPO历史修改：&#10;260117：未单列&#10;260323：未单列&#10;260602：2027E新增收入710亿&#10;变化：6月模型新增NPO中期弹性，是2027E收入大幅上修核心之一">710</td></tr>
+          <tr><td>出货量（万只）</td><td class="blank">—</td><td class="blank">—</td><td class="blank">—</td><td class="blank">—</td><td class="blank">—</td><td class="assump">500</td></tr>
+          <tr><td>单价（美金）</td><td class="blank">—</td><td class="blank">—</td><td class="blank">—</td><td class="blank">—</td><td class="blank">—</td><td class="assump">2000</td></tr>
+
+          <tr class="section-row"><td colspan="7">客户占收比%</td></tr>
+          <tr><td>谷歌</td><td class="blank">—</td><td class="blank">—</td><td class="blank">—</td><td>71</td><td class="hist-cell" data-tip="谷歌收入历史修改：&#10;260117：2026E 106亿&#10;260323：2026E 106亿&#10;260602：2026E 359亿&#10;变化：6月显著上修">359</td><td class="hist-cell" data-tip="谷歌收入历史修改：&#10;260117：2027E 156亿&#10;260323：2027E 194亿&#10;260602：2027E 882亿&#10;变化：6月显著上修，是旭创模型核心变量">882</td></tr>
+          <tr><td>谷歌%</td><td class="blank">—</td><td class="blank">—</td><td class="blank">—</td><td>18%</td><td>33%</td><td>32%</td></tr>
+          <tr><td>英伟达</td><td class="blank">—</td><td class="blank">—</td><td class="blank">—</td><td>56</td><td class="hist-cell" data-tip="英伟达收入历史修改：&#10;260117/260323未在同一行口径完整单列&#10;260602：2026E 278亿&#10;变化：6月模型明确列示NV网络侧需求贡献">278</td><td class="hist-cell" data-tip="英伟达收入历史修改：&#10;260117/260323未在同一行口径完整单列&#10;260602：2027E 436亿&#10;变化：6月模型明确列示">436</td></tr>
+          <tr><td>英伟达%</td><td class="blank">—</td><td class="blank">—</td><td class="blank">—</td><td>15%</td><td>26%</td><td>16%</td></tr>
+          <tr><td>亚马逊</td><td class="blank">—</td><td class="blank">—</td><td class="blank">—</td><td>46</td><td data-tip="亚马逊收入历史修改：&#10;260117：2026E 106亿&#10;260323：2026E 106亿&#10;260602：2026E 106亿&#10;变化：2026E稳定">106</td><td class="hist-cell" data-tip="亚马逊收入历史修改：&#10;260117：2027E 156亿&#10;260323：2027E 194亿&#10;260602：2027E 455亿&#10;变化：2027E大幅上修">455</td></tr>
+          <tr><td>亚马逊%</td><td class="blank">—</td><td class="blank">—</td><td class="blank">—</td><td>12%</td><td>10%</td><td>17%</td></tr>
+
+          <tr class="section-row"><td colspan="7">净利润拆分</td></tr>
+          <tr><td>1.6T净利率</td><td class="blank">—</td><td class="blank">—</td><td>35.0%</td><td>36.0%</td><td data-tip="1.6T净利率历史修改：&#10;三版基本维持：2026E 36%&#10;变化：利润弹性主要来自出货和收入">36.0%</td><td data-tip="1.6T净利率历史修改：&#10;三版基本维持：2027E 36%&#10;变化：净利率假设稳定">36.0%</td></tr>
+          <tr><td>1.6T净利润（亿元）</td><td class="blank">—</td><td class="blank">—</td><td>1.0</td><td>14.5</td><td class="hist-cell" data-tip="1.6T净利润历史修改：&#10;260117：2026E 214亿&#10;260323：2026E 228亿&#10;260602：2026E 217亿&#10;变化：小幅下修">217.5</td><td class="hist-cell" data-tip="1.6T净利润历史修改：&#10;260117：2027E 444亿&#10;260323：2027E 527亿&#10;260602：2027E 524亿&#10;变化：保持高位">524.4</td></tr>
+          <tr><td>1.6T净利润占比（%）</td><td class="blank">—</td><td class="blank">—</td><td>2%</td><td>13%</td><td>61%</td><td>59%</td></tr>
+          <tr><td>800G净利润（亿元）</td><td>1.0</td><td>10.2</td><td>36.7</td><td>80.6</td><td data-tip="800G净利润历史修改：&#10;260117：2026E 138亿&#10;260323：2026E 140亿&#10;260602：2026E 138亿&#10;变化：2026E稳定">137.8</td><td class="hist-cell" data-tip="800G净利润历史修改：&#10;260117：2027E 128亿&#10;260323：2027E 138亿&#10;260602：2027E 165亿&#10;变化：随800G出货上修">164.6</td></tr>
+          <tr><td>其他业务净利润（亿元）</td><td>11.3</td><td>11.6</td><td>14.0</td><td>12.8</td><td data-tip="其他业务净利润历史修改：&#10;260117：2026E 11.5亿&#10;260323：2026E 11.4亿&#10;260602：2026E 7.3亿&#10;变化：6月下修，反映低速率产品利润贡献收缩">7.3</td><td data-tip="其他业务净利润历史修改：&#10;260117/260323：2027E 8.5亿&#10;260602：2027E 5.4亿&#10;变化：下修">5.4</td></tr>
+          <tr><td>NPO净利润（亿元）</td><td class="blank">—</td><td class="blank">—</td><td class="blank">—</td><td class="blank">—</td><td class="blank">—</td><td class="assump" data-tip="NPO净利润历史修改：&#10;260117：未单列&#10;260323：未单列&#10;260602：2027E新增227.2亿&#10;变化：新增6.4T NPO业务后，对2027E利润形成额外贡献">227.2</td></tr>
+          <tr><td>归母净利润（亿元）</td><td>12.36</td><td>21.8</td><td>51.7</td><td>108.0</td><td class="hist-cell" data-tip="归母净利润历史修改：&#10;260117：2026E 357亿&#10;260323：2026E 372亿&#10;260602：2026E 355亿&#10;变化：回到接近1月水平">355.4</td><td class="hist-cell" data-tip="归母净利润历史修改：&#10;260117：2027E 561亿&#10;260323：2027E 651亿&#10;260602：2027E 891亿&#10;变化：因NPO和高端产品上修显著提高">891.3</td></tr>
+          <tr><td>归母净利率</td><td>12.8%</td><td>20.3%</td><td>21.7%</td><td>28.2%</td><td>32.6%</td><td>32.5%</td></tr>
+        </tbody>
+      </table>
     </div>
     <div class="chart-row">
       <div class="chart-box">
@@ -554,33 +1232,56 @@ code{font-size:10px;background:var(--tag-bg);color:var(--tag);padding:1px 5px;bo
       </div>
     </div>
     <div class="seg-sum">
-      <strong>核心逻辑：</strong>旭创是全球光模块出货量最大的公司，北美 AI 大客户深度绑定。1.6T 产品 2024A 仅出货 3 万只，2025E 跃升至 56.8 万只，2026E 爆发至 1,220.7 万只（+21×）。1.6T 收入将从 2025E 的 40.9 亿增至 2026E 的 632.8 亿，成为最大收入来源。800G 在 2026E 仍放量，出货 1,600 万只，但 ASP 降至 $380/只，收入贡献占比从 64% 下降至 39%。
+      <strong>核心逻辑：</strong>旭创是全球光模块出货量最大的公司，北美 AI 大客户深度绑定。260602模型下，2026E 1.6T 出货 1,181.8 万只，收入 604.1 亿，收入占比 55.4%，仍是最大增量来源。800G 在 2026E 仍放量，出货 1,595.6 万只，收入 430.5 亿，收入贡献占比约 39.5%。相较260323，1.6T与利润略下修，但较260117仍处高位。
     </div>
   </div>
 
   <!-- 新易盛 -->
   <div id="t-xys" class="tab-pane">
-    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px">
-      <div style="background:var(--up-bg);border:1px solid #86efac;border-radius:8px;padding:10px 12px">
-        <div style="font-size:10px;color:var(--text2);margin-bottom:3px">2026E 总收入</div>
-        <div style="font-size:18px;font-weight:700;color:var(--up)">663 亿元</div>
-        <div style="font-size:10px;color:var(--up)">↑ +135% YoY</div>
-      </div>
-      <div style="background:var(--tag-bg);border:1px solid #bfdbfe;border-radius:8px;padding:10px 12px">
-        <div style="font-size:10px;color:var(--text2);margin-bottom:3px">800G 收入占比（2026E）</div>
-        <div style="font-size:18px;font-weight:700;color:var(--accent)">55.9%</div>
-        <div style="font-size:10px;color:var(--accent)">仍以 800G 为主力</div>
-      </div>
-      <div style="background:#f5f3ff;border:1px solid #ddd6fe;border-radius:8px;padding:10px 12px">
-        <div style="font-size:10px;color:var(--text2);margin-bottom:3px">1.6T 收入占比（2026E）</div>
-        <div style="font-size:18px;font-weight:700;color:#7c3aed">34.3%</div>
-        <div style="font-size:10px;color:#7c3aed">2027E 超越 800G 至 58%</div>
-      </div>
-      <div style="background:var(--warn-bg);border:1px solid #fcd34d;border-radius:8px;padding:10px 12px">
-        <div style="font-size:10px;color:var(--text2);margin-bottom:3px">净利率（2026E）</div>
-        <div style="font-size:18px;font-weight:700;color:var(--warn)">37.1%</div>
-        <div style="font-size:10px;color:var(--warn)">净利润 246 亿元</div>
-      </div>
+    <div class="model-wrap">
+      <table class="model-table">
+        <thead>
+          <tr><th>各项收入</th><th>2022A</th><th>2023A</th><th>2024A</th><th>2025E</th><th>2026E</th><th>2027E</th></tr>
+        </thead>
+        <tbody>
+          <tr class="section-row"><td colspan="7">收入总览</td></tr>
+          <tr><td>总收入</td><td>33.11</td><td>30.98</td><td>86.47</td><td>278.73</td><td class="hist-cell" data-tip="总收入历史修改：&#10;260117：2026E 672亿&#10;260323：2026E 663亿&#10;260602：2026E 648亿&#10;变化：连续小幅下修">647.63</td><td class="hist-cell" data-tip="总收入历史修改：&#10;260602：2027E 1533亿&#10;变化：2027E主要由1.6T与NPO贡献">1533.32</td></tr>
+
+          <tr class="section-row"><td colspan="7">1.6T 产品</td></tr>
+          <tr><td>1.6T出货量（万只）</td><td class="blank">—</td><td class="blank">—</td><td>0.5</td><td>11</td><td class="hist-cell" data-tip="1.6T出货历史修改：&#10;260117：2026E 378万只&#10;260323：2026E 421万只&#10;260602：2026E 419万只&#10;变化：较1月显著上修，3月后基本维持">419</td><td class="hist-cell" data-tip="1.6T出货历史修改：&#10;260602：2027E 1398万只&#10;变化：成为2027E最大增量">1398</td></tr>
+          <tr><td>单价（美金）</td><td class="blank">—</td><td class="blank">—</td><td>1300.0</td><td>1001.0</td><td class="assump">750.8</td><td class="assump">638.1</td></tr>
+          <tr><td>1.6T收入（亿元）</td><td class="blank">—</td><td class="blank">—</td><td>0.5</td><td>8.0</td><td class="hist-cell" data-tip="1.6T收入历史修改：&#10;260602：2026E 223亿&#10;变化：结构上调，收入占比提升至34.5%">223.2</td><td class="hist-cell">633.2</td></tr>
+          <tr><td>1.6T收入占比（%）</td><td class="blank">—</td><td class="blank">—</td><td>1%</td><td>3%</td><td>34%</td><td>41%</td></tr>
+
+          <tr class="section-row"><td colspan="7">800G 产品</td></tr>
+          <tr><td>800G出货量（万只）</td><td>0</td><td>0</td><td>120</td><td>537</td><td data-tip="800G出货历史修改：&#10;260117：2026E 1375万只&#10;260323：2026E 1279万只&#10;260602：2026E 1260万只&#10;变化：持续下修，模型从800G切向1.6T">1260</td><td class="hist-cell">1610</td></tr>
+          <tr><td>单价（美金）</td><td>900</td><td>650.0</td><td>520.0</td><td>457.6</td><td>402.7</td><td class="assump">362.4</td></tr>
+          <tr><td>800G收入（亿元）</td><td>0</td><td>0</td><td>44.4</td><td>174.4</td><td data-tip="800G收入历史修改：&#10;260602：2026E 360亿&#10;变化：仍为2026E主收入，但占比下降">360.1</td><td class="hist-cell">414.3</td></tr>
+          <tr><td>800G收入占比（%）</td><td>0%</td><td>0%</td><td>51%</td><td>63%</td><td>56%</td><td>27%</td></tr>
+
+          <tr class="section-row"><td colspan="7">成熟速率与其他收入</td></tr>
+          <tr><td>400G收入（亿元）</td><td>12.4</td><td>14.9</td><td>35.9</td><td>74.8</td><td>39.6</td><td>36.2</td></tr>
+          <tr><td>200G收入（亿元）</td><td>0</td><td>1.1</td><td>2.5</td><td>2.2</td><td>1.2</td><td>0.9</td></tr>
+          <tr><td>100G收入（亿元）</td><td>6.4</td><td>4.8</td><td>4.6</td><td>4.3</td><td>2.5</td><td>1.8</td></tr>
+          <tr><td>其他收入（亿元）</td><td>14.3</td><td>10.2</td><td>-1.5</td><td>15.0</td><td>21.0</td><td>21.0</td></tr>
+
+          <tr class="section-row"><td colspan="7">6.4T NPO 产品</td></tr>
+          <tr><td>6.4T NPO收入（亿元）</td><td class="blank">—</td><td class="blank">—</td><td class="blank">—</td><td class="blank">—</td><td class="blank">—</td><td class="assump" data-tip="6.4T NPO历史修改：&#10;260602：2027E新增收入426亿&#10;变化：2027E新增中期弹性">426</td></tr>
+          <tr><td>出货量（万只）</td><td class="blank">—</td><td class="blank">—</td><td class="blank">—</td><td class="blank">—</td><td class="blank">—</td><td class="assump">300</td></tr>
+
+          <tr class="section-row"><td colspan="7">客户占收比%</td></tr>
+          <tr><td>谷歌</td><td class="blank">—</td><td class="blank">—</td><td class="blank">—</td><td>0</td><td>23</td><td>79</td></tr>
+          <tr><td>英伟达</td><td class="blank">—</td><td class="blank">—</td><td class="blank">—</td><td>20</td><td class="hist-cell">168</td><td class="hist-cell">299</td></tr>
+          <tr><td>亚马逊</td><td class="blank">—</td><td class="blank">—</td><td class="blank">—</td><td>75</td><td>167</td><td>233</td></tr>
+
+          <tr class="section-row"><td colspan="7">净利润拆分</td></tr>
+          <tr><td>1.6T净利润（亿元）</td><td class="blank">—</td><td class="blank">—</td><td>0.1</td><td>2.6</td><td class="hist-cell">75.9</td><td class="hist-cell">253.3</td></tr>
+          <tr><td>800G净利润（亿元）</td><td>0</td><td>0</td><td>20.0</td><td>71.5</td><td>147.7</td><td>178.1</td></tr>
+          <tr><td>NPO净利润（亿元）</td><td class="blank">—</td><td class="blank">—</td><td class="blank">—</td><td class="blank">—</td><td class="blank">—</td><td class="assump">149.1</td></tr>
+          <tr><td>归母净利润（亿元）</td><td>9.0</td><td>6.9</td><td>28.4</td><td>97.0</td><td class="hist-cell" data-tip="归母净利润历史修改：&#10;260117：2026E 251亿&#10;260323：2026E 246亿&#10;260602：2026E 241亿&#10;变化：随收入连续小幅下修">241.3</td><td class="hist-cell">592.7</td></tr>
+          <tr><td>归母净利率</td><td>27.3%</td><td>22.3%</td><td>32.8%</td><td>34.8%</td><td>37.3%</td><td>38.7%</td></tr>
+        </tbody>
+      </table>
     </div>
     <div class="chart-row">
       <div class="chart-box">
@@ -593,73 +1294,88 @@ code{font-size:10px;background:var(--tag-bg);color:var(--tag);padding:1px 5px;bo
       </div>
     </div>
     <div class="seg-sum">
-      <strong>核心逻辑：</strong>新易盛是旭创之外最纯粹的 AI 光模块标的。2024A 收入 86.5 亿，2025E 达 282.4 亿（+227%），2026E 进一步至 663 亿（+135%）。800G 仍是 2026E 最大收入来源（371 亿，56%），但 1.6T 快速追赶（228 亿，34%）。净利率高达 37%，在 A 股光模块中最高。关键验证：1.6T 产能爬坡节奏（2026H1 是否超预期）。
+      <strong>核心逻辑：</strong>新易盛是旭创之外最纯粹的 AI 光模块标的。260602模型下，2026E 收入 647.6 亿、归母净利 241.3 亿，较260323小幅下修。结构上，1.6T 出货从260117的378万只上修至418.7万只，收入占比升至34.5%；800G 出货下修至1259.6万只，收入占比约55.6%。关键验证仍是1.6T产能爬坡节奏。
     </div>
   </div>
 
   <!-- 天孚 -->
   <div id="t-tianfu" class="tab-pane">
-    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px">
-      <div style="background:var(--up-bg);border:1px solid #86efac;border-radius:8px;padding:10px 12px">
-        <div style="font-size:10px;color:var(--text2);margin-bottom:3px">光引擎收入（2026E）</div>
-        <div style="font-size:18px;font-weight:700;color:var(--up)">100.9 亿元</div>
-        <div style="font-size:10px;color:var(--up)">↑ +232% YoY（2025E 30.4亿）</div>
-      </div>
-      <div style="background:#f5f3ff;border:1px solid #ddd6fe;border-radius:8px;padding:10px 12px">
-        <div style="font-size:10px;color:var(--text2);margin-bottom:3px">1.6T 光引擎出货（2026E）</div>
-        <div style="font-size:18px;font-weight:700;color:#7c3aed">250 万只</div>
-        <div style="font-size:10px;color:#7c3aed">↑ +581% vs 2025E 36.75万只</div>
-      </div>
-      <div style="background:var(--tag-bg);border:1px solid #bfdbfe;border-radius:8px;padding:10px 12px">
-        <div style="font-size:10px;color:var(--text2);margin-bottom:3px">主要客户</div>
-        <div style="font-size:15px;font-weight:700;color:var(--accent)">Mellanox</div>
-        <div style="font-size:10px;color:var(--accent)">NV 生态核心代工商</div>
-      </div>
-      <div style="background:var(--up-bg);border:1px solid #86efac;border-radius:8px;padding:10px 12px">
-        <div style="font-size:10px;color:var(--text2);margin-bottom:3px">光引擎毛利率（2026E）</div>
-        <div style="font-size:18px;font-weight:700;color:var(--up)">50%</div>
-        <div style="font-size:10px;color:var(--up)">高毛利率持续稳定</div>
-      </div>
-    </div>
-    <div class="chart-box" style="margin-bottom:14px">
-      <h4>天孚光引擎收入拆分（亿元）</h4>
-      <div class="chart-wrap" style="height:200px"><canvas id="c-tianfu-rev"></canvas></div>
+    <div class="model-wrap">
+      <table class="model-table">
+        <thead>
+          <tr><th>各项收入</th><th>2023</th><th>2024</th><th>2025E</th><th>2026E</th><th>2027E</th><th>2028E</th></tr>
+        </thead>
+        <tbody>
+          <tr class="section-row"><td colspan="7">收入总览</td></tr>
+          <tr><td>总收入（亿元）</td><td>19.38</td><td>32.51</td><td>51.15</td><td class="hist-cell" data-tip="总收入历史修改：&#10;260117：2026E 125亿&#10;260323：2026E 140亿&#10;260602：2026E 112亿&#10;变化：6月对光引擎/CPO导入节奏更保守">112.19</td><td class="hist-cell">306.43</td><td class="blank">—</td></tr>
+
+          <tr class="section-row"><td colspan="7">光引擎代工</td></tr>
+          <tr><td>光引擎收入（亿元）</td><td>6.87</td><td>16.09</td><td>30.00</td><td class="hist-cell" data-tip="光引擎收入历史修改：&#10;260602：2026E 75.4亿&#10;变化：仍是最大增量，但6月整体更保守">75.39</td><td>202.54</td><td class="blank">—</td></tr>
+          <tr><td>400G光引擎收入（亿元）</td><td>2.2</td><td>1.8</td><td>1.4</td><td>1.1</td><td>1.0</td><td class="blank">—</td></tr>
+          <tr><td>800G光引擎收入（亿元）</td><td>4.6</td><td>14.3</td><td>13.0</td><td>13.0</td><td>23.3</td><td class="blank">—</td></tr>
+          <tr><td>1.6T光引擎出货（万只）</td><td class="blank">—</td><td class="blank">—</td><td>36.75</td><td class="hist-cell" data-tip="1.6T光引擎出货历史修改：&#10;260117：2026E 250万只&#10;260323：2026E 250万只&#10;260602：2026E 240万只&#10;变化：小幅下修10万只">240</td><td>625</td><td class="blank">—</td></tr>
+          <tr><td>1.6T光引擎收入（亿元）</td><td class="blank">—</td><td class="blank">—</td><td>15.7</td><td class="hist-cell">61.3</td><td>178.2</td><td class="blank">—</td></tr>
+          <tr><td>光引擎净利润（亿元）</td><td>1.5</td><td>5.3</td><td>10.5</td><td>27.1</td><td>74.9</td><td class="blank">—</td></tr>
+
+          <tr class="section-row"><td colspan="7">无源器件与其他业务</td></tr>
+          <tr><td>光无源器件收入（亿元）</td><td>11.83</td><td>15.76</td><td>20.49</td><td>27.66</td><td>38.72</td><td class="blank">—</td></tr>
+          <tr><td>光无源器件净利润（亿元）</td><td>5.62</td><td>7.88</td><td>10.24</td><td>13.83</td><td>19.36</td><td class="blank">—</td></tr>
+          <tr><td>其他净利润（亿元）</td><td>0.2</td><td>0.2</td><td>0.2</td><td>0.2</td><td>0.2</td><td class="blank">—</td></tr>
+
+          <tr class="section-row"><td colspan="7">CPO 相关业务</td></tr>
+          <tr><td>天孚CPO相关收入（亿元）</td><td class="blank">—</td><td class="blank">—</td><td class="blank">—</td><td class="assump" data-tip="CPO收入历史修改：&#10;260323：2026E 16.4亿&#10;260602：2026E 8.5亿&#10;变化：收入下修，导入节奏更保守">8.5</td><td>64.5</td><td>131.7</td></tr>
+          <tr><td>天孚CPO相关利润（亿元）</td><td class="blank">—</td><td class="blank">—</td><td class="blank">—</td><td class="assump">2.7</td><td>20.0</td><td>39.9</td></tr>
+
+          <tr class="section-row"><td colspan="7">利润总览</td></tr>
+          <tr><td>毛利润（亿元）</td><td>10.5</td><td>18.6</td><td>28.3</td><td>60.1</td><td>158.1</td><td class="blank">—</td></tr>
+          <tr><td>归母净利润（亿元）</td><td>7.3</td><td>13.4</td><td>21.0</td><td class="hist-cell" data-tip="归母净利润历史修改：&#10;260117：2026E 48.0亿&#10;260323：2026E 50.1亿&#10;260602：2026E 43.9亿&#10;变化：6月下修">43.9</td><td>114.5</td><td class="blank">—</td></tr>
+          <tr><td>归母净利率</td><td class="blank">—</td><td>41.3%</td><td>41.0%</td><td>39.1%</td><td>37.4%</td><td class="blank">—</td></tr>
+        </tbody>
+      </table>
     </div>
     <div class="seg-sum">
-      <strong>核心逻辑：</strong>天孚是 Mellanox（NVIDIA 网络部门）最重要的光引擎代工商。1.6T 光引擎是最大增量，2025E 交付 36.75 万只（ASP $600），2026E 增至 250 万只（ASP $480），收入从 15.9 亿跃升至 86.4 亿（+444%）。2027E 进一步至 750 万只，收入 207.4 亿。CPO 方向中期看好：CPO 技术架构下光引擎地位更加核心，天孚是国内最有望进入 CPO 供应链的标的。50% 稳定毛利率是竞争壁垒体现。
+      <strong>核心逻辑：</strong>天孚是 Mellanox（NVIDIA 网络部门）最重要的光引擎代工商。260602模型下，2026E 总收入 112.2 亿、归母净利 43.9 亿，较260323明显下修。1.6T 光引擎仍是最大增量，2025E 交付 36.75 万只，2026E 增至 240 万只；CPO相关收入从260323的16.4亿下修至8.5亿，但利润贡献仍约2.7亿。结论：方向仍好，但6月模型对导入节奏更保守。
     </div>
   </div>
 
   <!-- 源杰 -->
   <div id="t-yuanjie" class="tab-pane">
-    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px">
-      <div style="background:var(--up-bg);border:1px solid #86efac;border-radius:8px;padding:10px 12px">
-        <div style="font-size:10px;color:var(--text2);margin-bottom:3px">CW 光源收入（2026E）</div>
-        <div style="font-size:18px;font-weight:700;color:var(--up)">17.9 亿元</div>
-        <div style="font-size:10px;color:var(--up)">↑ +335% vs 2025E 4.1亿</div>
-      </div>
-      <div style="background:var(--tag-bg);border:1px solid #bfdbfe;border-radius:8px;padding:10px 12px">
-        <div style="font-size:10px;color:var(--text2);margin-bottom:3px">核心驱动：硅光渗透率</div>
-        <div style="font-size:18px;font-weight:700;color:var(--accent)">800G 45%</div>
-        <div style="font-size:10px;color:var(--accent)">2025E；2026E 升至 60%</div>
-      </div>
-      <div style="background:#f5f3ff;border:1px solid #ddd6fe;border-radius:8px;padding:10px 12px">
-        <div style="font-size:10px;color:var(--text2);margin-bottom:3px">旭创供应份额（2026E）</div>
-        <div style="font-size:18px;font-weight:700;color:#7c3aed">60%</div>
-        <div style="font-size:10px;color:#7c3aed">旭创 800G CW需求主供</div>
-      </div>
-      <div style="background:var(--warn-bg);border:1px solid #fcd34d;border-radius:8px;padding:10px 12px">
-        <div style="font-size:10px;color:var(--text2);margin-bottom:3px">CW 光源净利率（2026E）</div>
-        <div style="font-size:18px;font-weight:700;color:var(--warn)">40%</div>
-        <div style="font-size:10px;color:var(--warn)">净利润约 7.2 亿元</div>
-      </div>
-    </div>
-    <div class="chart-box" style="margin-bottom:14px">
-      <h4>源杰 CW 激光器收入预测（亿元）</h4>
-      <div class="chart-wrap" style="height:180px"><canvas id="c-yuanjie-rev"></canvas></div>
+    <div class="model-wrap">
+      <table class="model-table">
+        <thead>
+          <tr><th>各项收入</th><th>2023</th><th>2024</th><th>2025</th><th>2026E</th><th>2027E</th><th>2028E</th></tr>
+        </thead>
+        <tbody>
+          <tr class="section-row"><td colspan="7">CW 光源总览</td></tr>
+          <tr><td>源杰-CW光源出货量（万只）</td><td class="blank">—</td><td>86</td><td>1325</td><td class="hist-cell" data-tip="CW出货历史修改：&#10;260117：2026E 4138万只&#10;260323：2026E 5136万只&#10;260602：2026E 6118万只&#10;变化：三版连续上调">6118</td><td class="hist-cell">13373</td><td>24071</td></tr>
+          <tr><td>源杰-CW光源收入（百万元）</td><td class="blank">—</td><td>30</td><td>374</td><td class="hist-cell" data-tip="CW收入历史修改：&#10;260117：2026E 11.8亿&#10;260323：2026E 17.9亿&#10;260602：2026E 20.5亿&#10;变化：三版连续上调，是公司弹性核心">2048</td><td class="hist-cell">4266</td><td>7924</td></tr>
+          <tr><td>CW光源净利润（百万元）</td><td class="blank">—</td><td>9</td><td>169</td><td class="hist-cell">1065</td><td>2346</td><td>4199</td></tr>
+
+          <tr class="section-row"><td colspan="7">旭创客户贡献</td></tr>
+          <tr><td>源杰给旭创供应CW光源（万只）</td><td class="blank">—</td><td>86</td><td>1082</td><td class="hist-cell">4346</td><td>9359</td><td class="blank">—</td></tr>
+          <tr><td>源杰-旭创贡献收入（百万元）</td><td class="blank">—</td><td>30</td><td>303</td><td class="hist-cell">1365</td><td>2798</td><td class="blank">—</td></tr>
+          <tr><td>旭创800G硅光占比%</td><td class="blank">—</td><td>30%</td><td>55%</td><td class="assump">70%</td><td>75%</td><td class="blank">—</td></tr>
+          <tr><td>旭创1.6T硅光占比%</td><td class="blank">—</td><td>100%</td><td>100%</td><td class="assump">85%</td><td>85%</td><td class="blank">—</td></tr>
+          <tr><td>源杰供应份额（1.6T）</td><td class="blank">—</td><td>0%</td><td>30%</td><td class="assump">50%</td><td>55%</td><td class="blank">—</td></tr>
+
+          <tr class="section-row"><td colspan="7">其他客户贡献</td></tr>
+          <tr><td>其他客户CW需求量（万只）</td><td class="blank">—</td><td>62</td><td>1216</td><td>5908</td><td>11467</td><td class="blank">—</td></tr>
+          <tr><td>源杰给其他客户供应CW光源（万只）</td><td class="blank">—</td><td>0</td><td>243</td><td class="hist-cell">1772</td><td>4013</td><td class="blank">—</td></tr>
+          <tr><td>源杰-其他客户贡献收入（百万元）</td><td class="blank">—</td><td>0</td><td>72</td><td class="hist-cell">682</td><td>1468</td><td class="blank">—</td></tr>
+
+          <tr class="section-row"><td colspan="7">收入利润总览</td></tr>
+          <tr><td>总收入（百万元）</td><td class="blank">—</td><td>252</td><td>601</td><td class="hist-cell" data-tip="总收入历史修改：&#10;260117：2026E 14.6亿&#10;260323：2026E 20.7亿&#10;260602：2026E 22.7亿&#10;变化：连续上调">2274</td><td>4503</td><td class="blank">—</td></tr>
+          <tr><td>总利润（百万元）</td><td class="blank">—</td><td>-6</td><td>191</td><td class="hist-cell" data-tip="总利润历史修改：&#10;260117：2026E 5.2亿&#10;260323：2026E 7.9亿&#10;260602：2026E 10.9亿&#10;变化：利润弹性更明显">1090</td><td>2377</td><td>4230</td></tr>
+          <tr><td>净利率</td><td class="blank">—</td><td class="blank">—</td><td>31.8%</td><td>47.9%</td><td>52.8%</td><td class="blank">—</td></tr>
+
+          <tr class="section-row"><td colspan="7">行业需求与市占率</td></tr>
+          <tr><td>全球CW光源需求量（万只）</td><td class="blank">—</td><td>1583</td><td>6046</td><td class="hist-cell" data-tip="全球CW需求历史修改：&#10;260117：2026E 2.07亿只&#10;260323：2026E 2.11亿只&#10;260602：2026E 2.18亿只&#10;变化：需求仅小幅上修">21781</td><td>43620</td><td class="blank">—</td></tr>
+          <tr><td>源杰市占率</td><td class="blank">—</td><td>5.4%</td><td>21.9%</td><td class="hist-cell" data-tip="源杰市占率历史修改：&#10;260117：2026E 20.0%&#10;260323：2026E 24.3%&#10;260602：2026E 28.1%&#10;变化：核心是份额假设上修">28.1%</td><td>30.7%</td><td class="blank">—</td></tr>
+        </tbody>
+      </table>
     </div>
     <div class="seg-sum">
-      <strong>核心逻辑：</strong>源杰是硅光渗透率提升的最直接受益者。硅光方案替代 EML，每只光模块需要 1-2 只 CW 激光器作为光源，绕过 200G EML 缺货瓶颈。2024A 收入仅 0.30 亿，2025E 跃升至 4.1 亿，2026E 达 17.9 亿。主要客户为旭创（2026E 旭创 800G 硅光渗透率 70%）。核心风险：EML 缺货问题若提前解决，硅光渗透率提升可能放缓。
+      <strong>核心逻辑：</strong>源杰是硅光渗透率提升的最直接受益者，也是三版模型中上调最连续的公司。260602模型下，2026E CW光源出货 6118 万只、CW收入 20.5 亿、总利润 10.9 亿；源杰全球CW市占率从260117的20.0%上修到28.1%。核心变量是旭创/其他客户供应份额上调，以及200G EML短缺推动硅光与CW方案渗透。核心风险：EML缺货缓解或硅光渗透率不及预期。
     </div>
   </div>
 
@@ -674,25 +1390,22 @@ code{font-size:10px;background:var(--tag-bg);color:var(--tag);padding:1px 5px;bo
 </div>
 <div class="b-grid">
   <div class="card">
-    <div style="font-size:12px;font-weight:700;margin-bottom:10px">景气追踪指标（季度/月度更新）</div>
-    <table class="ctable" style="font-size:11px">
-      <thead><tr><th>指标</th><th>最新值</th><th>趋势</th><th>更新时间</th></tr></thead>
+    <div style="font-size:12px;font-weight:700;margin-bottom:10px">外部验证指标（季度/月度更新）</div>
+    <table class="ctable" style="font-size:12px">
+      <thead><tr><th>指标</th><th>当前状态</th><th>验证方向</th><th>更新时间</th></tr></thead>
       <tbody>
-        <tr><td><strong>旭创 800G 出货</strong></td><td>2026E：1,596万只</td><td><span class="yp">↑ +101%</span></td><td style="color:var(--text2)">260602测算</td></tr>
-        <tr><td><strong>旭创 1.6T 出货</strong></td><td>2026E：1,182万只</td><td><span class="yp">↑ +19.8x</span></td><td style="color:var(--text2)">260602测算</td></tr>
-        <tr><td><strong>新易盛 800G 出货</strong></td><td>2026E：1,260万只</td><td><span class="yp">↑ +135%</span></td><td style="color:var(--text2)">260602测算</td></tr>
-        <tr><td><strong>新易盛 1.6T 出货</strong></td><td>2026E：419万只</td><td><span class="yp">↑ +36.3x</span></td><td style="color:var(--text2)">260602测算</td></tr>
-        <tr><td><strong>天孚 1.6T 光引擎</strong></td><td>2026E：240万只</td><td><span class="yp">↑ +553%</span></td><td style="color:var(--text2)">260602测算</td></tr>
-        <tr><td><strong>源杰 CW 光源出货</strong></td><td>2026E：6,118万只</td><td><span class="yp">↑ +362%</span></td><td style="color:var(--text2)">260602测算</td></tr>
-        <tr><td><strong>800G 模块交期</strong></td><td><strong>16-20 周</strong></td><td><span class="yp">↑ 偏紧</span></td><td style="color:var(--text2)">2026-05</td></tr>
-        <tr><td>1.6T 交期</td><td>20-24 周</td><td><span class="yp">↑ 紧张</span></td><td style="color:var(--text2)">2026-05</td></tr>
-        <tr><td>美股季报 CapEx 指引</td><td style="color:var(--text2)">2026Q2 待观察</td><td>→</td><td style="color:var(--text2)">—</td></tr>
+        <tr><td><strong>800G 模块交期</strong></td><td><strong>16-20 周</strong></td><td><span class="yp">验证需求仍偏紧</span></td><td style="color:var(--text2)">2026-05</td></tr>
+        <tr><td><strong>1.6T 模块交期</strong></td><td>20-24 周</td><td><span class="yp">验证 1.6T 爬坡强度</span></td><td style="color:var(--text2)">2026-05</td></tr>
+        <tr><td><strong>200G EML 交期/报价</strong></td><td>待持续跟踪</td><td><span class="yn">验证核心瓶颈是否缓解</span></td><td style="color:var(--text2)">月度</td></tr>
+        <tr><td><strong>CW DFB 产能释放</strong></td><td>源杰/海外供应扩产</td><td>验证硅光渗透率与供应份额</td><td style="color:var(--text2)">季度</td></tr>
+        <tr><td><strong>美股季报 CapEx 指引</strong></td><td style="color:var(--text2)">2026Q2 待观察</td><td>验证云厂商 AI 资本开支</td><td style="color:var(--text2)">季度</td></tr>
+        <tr><td><strong>台股月营收</strong></td><td>每月10日前后</td><td>验证光模块链条订单景气</td><td style="color:var(--text2)">月度</td></tr>
       </tbody>
     </table>
   </div>
   <div class="card">
     <div style="font-size:12px;font-weight:700;margin-bottom:10px">海外供应链验证（测算表口径）</div>
-    <table class="ctable" style="font-size:11px">
+    <table class="ctable" style="font-size:12px">
       <thead><tr><th>公司</th><th>角色</th><th>2026E关键指标</th><th>验证含义</th></tr></thead>
       <tbody>
         <tr><td><strong>Lumentum (LITE)</strong></td><td>EML/CW/光模块</td><td>Datacom收入 $29.8亿；净利率22.4%</td><td><span class="yp">EML供给释放</span></td></tr>
@@ -770,8 +1483,6 @@ function switchTab(btn, id) {
   // lazy-init charts in newly shown tab
   if (id === 't-xc' && !window._xcInit) { initXcCharts(); window._xcInit=true; }
   if (id === 't-xys' && !window._xysInit) { initXysCharts(); window._xysInit=true; }
-  if (id === 't-tianfu' && !window._tianfuInit) { initTianfuChart(); window._tianfuInit=true; }
-  if (id === 't-yuanjie' && !window._yuanjieInit) { initYuanjieChart(); window._yuanjieInit=true; }
 }
 
 const LABELS_6Y = ['2022A','2023A','2024A','2025E','2026E','2027E'];
@@ -863,10 +1574,10 @@ function initXcCharts() {
     type:'bar',
     data:{ labels:LABELS_6Y,
       datasets:[
-        { label:'1.6T', data:[0,0,2.8,40.9,632.8,1462.9], backgroundColor:C_16T, stack:'s', borderRadius:2 },
-        { label:'800G', data:[5.2,36.8,149.0,254.1,437.9,443.7], backgroundColor:C_800G, stack:'s', borderRadius:2 },
-        { label:'400G', data:[41.9,35.7,58.8,72.9,36.1,23.0], backgroundColor:C_400G, stack:'s', borderRadius:2 },
-        { label:'200G+100G', data:[35.3,19.8,16.1,14.7,9.2,6.6], backgroundColor:C_OTHER, stack:'s', borderRadius:2 }
+        { label:'1.6T', data:[0,0,2.8,40.4,604.1,1456.7], backgroundColor:C_16T, stack:'s', borderRadius:2 },
+        { label:'800G', data:[5.1,36.3,146.9,244.3,430.5,531.1], backgroundColor:C_800G, stack:'s', borderRadius:2 },
+        { label:'400G', data:[41.3,35.2,58.0,71.9,35.6,22.7], backgroundColor:C_400G, stack:'s', borderRadius:2 },
+        { label:'200G+100G', data:[34.9,19.5,15.9,14.5,9.0,6.5], backgroundColor:C_OTHER, stack:'s', borderRadius:2 }
       ] },
     options:{ responsive:true,maintainAspectRatio:false,
       plugins:{legend:{position:'top',labels:{font:{size:10}}},tooltip:{mode:'index'}},
@@ -876,8 +1587,8 @@ function initXcCharts() {
     type:'bar',
     data:{ labels:LABELS_6Y,
       datasets:[
-        { label:'1.6T 出货', data:[0,0,3,56.8,1220.7,3320], backgroundColor:C_16T, stack:'s', borderRadius:2 },
-        { label:'800G 出货', data:[8,71,373.3,795.6,1600.4,1908], backgroundColor:C_800G, stack:'s', borderRadius:2 },
+        { label:'1.6T 出货', data:[0,0,3,56.8,1181.8,3352.5], backgroundColor:C_16T, stack:'s', borderRadius:2 },
+        { label:'800G 出货', data:[8,71,373.3,795.6,1595.6,2316], backgroundColor:C_800G, stack:'s', borderRadius:2 },
         { label:'400G 出货', data:[150,156,301.9,440.3,256.7,192.1], backgroundColor:C_400G, stack:'s', borderRadius:2 }
       ] },
     options:{ responsive:true,maintainAspectRatio:false,
@@ -890,10 +1601,10 @@ function initXysCharts() {
     type:'bar',
     data:{ labels:LABELS_6Y,
       datasets:[
-        { label:'1.6T', data:[0,0,0.5,8.1,227.5,686.9], backgroundColor:C_16T, stack:'s', borderRadius:2 },
-        { label:'800G', data:[0,0,45.0,176.9,370.8,431.9], backgroundColor:C_800G, stack:'s', borderRadius:2 },
-        { label:'400G', data:[12.6,15.1,36.5,75.9,40.2,36.7], backgroundColor:C_400G, stack:'s', borderRadius:2 },
-        { label:'200G+100G', data:[6.5,5.9,7.2,6.6,3.8,2.7], backgroundColor:C_OTHER, stack:'s', borderRadius:2 }
+        { label:'1.6T', data:[0,0,0.5,8.0,223.2,633.2], backgroundColor:C_16T, stack:'s', borderRadius:2 },
+        { label:'800G', data:[0,0,44.4,174.4,360.1,414.3], backgroundColor:C_800G, stack:'s', borderRadius:2 },
+        { label:'400G', data:[12.4,14.9,35.9,74.8,39.6,36.2], backgroundColor:C_400G, stack:'s', borderRadius:2 },
+        { label:'200G+100G', data:[6.4,5.9,7.1,6.5,3.7,2.7], backgroundColor:C_OTHER, stack:'s', borderRadius:2 }
       ] },
     options:{ responsive:true,maintainAspectRatio:false,
       plugins:{legend:{position:'top',labels:{font:{size:10}}},tooltip:{mode:'index'}},
@@ -903,8 +1614,8 @@ function initXysCharts() {
     type:'bar',
     data:{ labels:LABELS_6Y,
       datasets:[
-        { label:'1.6T 出货', data:[0,0,0.5,11.2,420.9,1495], backgroundColor:C_16T, stack:'s', borderRadius:2 },
-        { label:'800G 出货', data:[0,0,120.3,536.9,1279.0,1655], backgroundColor:C_800G, stack:'s', borderRadius:2 },
+        { label:'1.6T 出货', data:[0,0,0.5,11.2,418.7,1397.5], backgroundColor:C_16T, stack:'s', borderRadius:2 },
+        { label:'800G 出货', data:[0,0,120.3,536.9,1259.6,1610], backgroundColor:C_800G, stack:'s', borderRadius:2 },
         { label:'400G 出货', data:[45,63.7,191.9,470,282.6,293.5], backgroundColor:C_400G, stack:'s', borderRadius:2 }
       ] },
     options:{ responsive:true,maintainAspectRatio:false,
@@ -912,32 +1623,6 @@ function initXysCharts() {
       scales:{x:{stacked:true,grid:{color:'#f1f5f9'},ticks:{font:{size:9}}},y:{stacked:true,grid:{color:'#f1f5f9'},ticks:{font:{size:9}},title:{display:true,text:'万只',font:{size:9},color:'#94a3b8'}}} }
   });
 }
-function initTianfuChart() {
-  new Chart(document.getElementById('c-tianfu-rev'), {
-    type:'bar',
-    data:{ labels:['2023A','2024A','2025E','2026E','2027E'],
-      datasets:[
-        { label:'1.6T 光引擎', data:[0,0,15.9,86.4,207.4], backgroundColor:C_16T, stack:'s', borderRadius:2 },
-        { label:'800G 光引擎', data:[4.7,14.5,13.1,13.4,8.1], backgroundColor:C_800G, stack:'s', borderRadius:2 },
-        { label:'400G 光引擎', data:[2.3,1.8,1.4,1.1,1.0], backgroundColor:C_400G, stack:'s', borderRadius:2 }
-      ] },
-    options:{ responsive:true,maintainAspectRatio:false,
-      plugins:{legend:{position:'top',labels:{font:{size:10}}},tooltip:{mode:'index'}},
-      scales:{x:{stacked:true,grid:{color:'#f1f5f9'},ticks:{font:{size:9}}},y:{stacked:true,grid:{color:'#f1f5f9'},ticks:{font:{size:9}},title:{display:true,text:'亿元',font:{size:9},color:'#94a3b8'}}} }
-  });
-}
-function initYuanjieChart() {
-  new Chart(document.getElementById('c-yuanjie-rev'), {
-    type:'bar',
-    data:{ labels:['2024A','2025E','2026E','2027E'],
-      datasets:[{ label:'CW 激光器收入（亿元）', data:[0.30,4.12,17.93,32.47],
-        backgroundColor:['#fef3c7','#fcd34d','#f59e0b','#d97706'], borderRadius:4 }] },
-    options:{ responsive:true,maintainAspectRatio:false,
-      plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>` ${c.dataset.label}: ${c.parsed.y} 亿元`}}},
-      scales:{x:{grid:{color:'#f1f5f9'},ticks:{font:{size:9}}},y:{grid:{color:'#f1f5f9'},ticks:{font:{size:9}},title:{display:true,text:'亿元',font:{size:9},color:'#94a3b8'}}} }
-  });
-}
-
 // 默认初始化旭创Tab的图表（第一个tab）
 window._xcInit = true;
 initXcCharts();
