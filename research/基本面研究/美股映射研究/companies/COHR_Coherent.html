@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>COHR Coherent · 美股映射（AI 光学基础设施）</title>
+<style>
+:root{
+  --bg:#f7f8fa;--card:#fff;--border:#e6e8eb;
+  --text:#1a1d21;--text2:#586271;--text3:#8a94a3;
+  /* COHR 品牌色：融合青（InP × 光纤 × 全栈整合） */
+  --accent:#0d9488;--accent2:#99f6e4;--accent-bg:#f0fdfa;--accent-ink:#0f766e;
+  --up:#15803d;--up-bg:#eaf6ee;--up-ink:#136130;
+  --dn:#c01d24;--dn-bg:#fbeaeb;--dn-ink:#9a161c;
+  --warn:#b45309;--warn-bg:#fdf4e7;
+  --neu:#475569;--neu-bg:#eef1f5;--neu-bd:#c3cdd9;--neu-ink:#334155;
+  --neu2:#64748b;--neu2-bg:#f4f6f9;--neu2-bd:#d7dee6;
+  --sh:0 1px 3px rgba(0,0,0,.07);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;background:var(--bg);color:var(--text);font-size:14px;line-height:1.6}
+a{color:var(--accent);text-decoration:none}
+a:hover{text-decoration:underline}
+/* ─── Header ─── */
+.hdr{background:var(--card);border-bottom:1px solid var(--border);padding:14px 32px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:var(--sh)}
+.hdr-l{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.hdr-title{font-size:19px;font-weight:800}
+.hdr-sub{font-size:11px;color:var(--text2);margin-top:1px}
+.badge{display:inline-flex;align-items:center;padding:3px 10px;border-radius:12px;font-size:11px;font-weight:700;white-space:nowrap}
+.b-ac{background:var(--accent-bg);color:var(--accent);border:1px solid var(--accent2)}
+.b-neu{background:var(--neu-bg);color:var(--neu-ink);border:1px solid var(--neu-bd)}
+.hdr-back{display:inline-flex;align-items:center;gap:5px;padding:5px 12px;border:1px solid var(--accent2);border-radius:8px;background:var(--accent-bg);color:var(--accent);font-size:12px;font-weight:700;text-decoration:none;transition:all .15s}
+.hdr-back:hover{background:var(--accent);color:#fff}
+.hdr-meta{font-size:10.5px;color:var(--text2);text-align:right;line-height:1.7}
+/* ─── Layout ─── */
+.wrap{max-width:1080px;margin:0 auto;padding:20px 32px 60px}
+/* ─── Sections ─── */
+.sec{margin-bottom:16px;background:var(--card);border:1px solid var(--border);border-radius:10px;box-shadow:var(--sh);overflow:hidden}
+.sec-hd{padding:11px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;cursor:pointer;background:#fafbfc;user-select:none}
+.sec-hd:hover{background:#f1f3f5}
+.sec-ttl{font-size:13px;font-weight:700;display:flex;align-items:center;gap:8px}
+.sec-num{display:inline-flex;align-items:center;justify-content:center;min-width:20px;height:20px;padding:0 6px;border-radius:10px;background:var(--accent);color:#fff;font-size:11px;font-weight:800;flex-shrink:0}
+.sec-arrow{font-size:12px;color:var(--text2);transition:transform .2s}
+.sec-hd.collapsed .sec-arrow{transform:rotate(-90deg)}
+.sec-body{padding:18px}
+.sec-body.collapsed{display:none}
+/* ─── Breakdown top ─── */
+.breakdown-top{display:grid;grid-template-columns:1fr auto 1fr auto 1fr;align-items:center;gap:0;margin-bottom:20px}
+.bk-box{text-align:center;padding:14px 16px;border-radius:10px;border:2px solid}
+.bk-box.total{border-color:var(--accent);background:var(--accent-bg)}
+.bk-box.comp{border-color:var(--accent2);background:var(--accent-bg)}
+.bk-box.sys{border-color:var(--neu-bd);background:var(--neu-bg)}
+.bk-val{font-size:22px;font-weight:900;letter-spacing:-.5px}
+.bk-val.total{color:var(--accent)}
+.bk-val.comp{color:var(--accent)}
+.bk-val.sys{color:var(--neu-ink)}
+.bk-lbl{font-size:11px;color:var(--text2);margin-top:3px}
+.bk-pct{font-size:10px;font-weight:700;margin-top:4px;padding:1px 6px;border-radius:4px;display:inline-block}
+.bk-pct.ac{background:var(--accent);color:#fff}
+.bk-pct.neu{background:var(--neu);color:#fff}
+.bk-arrow{font-size:20px;color:var(--text2);padding:0 8px;text-align:center}
+.bk-split{display:flex;flex-direction:column;gap:8px}
+.bk-mini{border:1.5px solid var(--neu-bd);background:#fff;border-radius:8px;padding:8px 10px;text-align:center}
+.bk-mini .v{font-size:13px;font-weight:900;color:var(--neu-ink)}
+.bk-mini .v.ac{color:var(--accent)}
+.bk-mini .l{font-size:10px;color:var(--text2)}
+/* ─── Tables ─── */
+.ctable{width:100%;border-collapse:collapse;font-size:12.5px}
+.ctable th{background:#f1f3f5;padding:7px 10px;text-align:left;font-weight:700;border-bottom:2px solid var(--border);font-size:11.5px;color:var(--text2);white-space:nowrap}
+.ctable td{padding:7px 10px;border-bottom:1px solid #f1f3f5;vertical-align:middle}
+.ctable tr:last-child td{border-bottom:none}
+.ctable .num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.ctable .latest{background:var(--accent-bg)}
+.ctable .latest td{font-weight:600}
+/* ─── Tags ─── */
+.tag{display:inline-block;padding:1px 6px;border-radius:4px;font-size:10px;font-weight:700;border:1px solid;white-space:nowrap}
+.tag-ac{background:var(--accent-bg);color:var(--accent);border-color:var(--accent2)}
+.tag-est{background:#f1f5f9;color:var(--text2);border-color:#cbd5e1}
+.tag-up{background:var(--up-bg);color:var(--up);border-color:#86efac}
+.tag-dn{background:var(--dn-bg);color:var(--dn);border-color:#fca5a5}
+.tag-warn{background:var(--warn-bg);color:var(--warn);border-color:#fcd34d}
+/* ─── Note / foot ─── */
+.note{font-size:11px;color:var(--text2);margin-top:10px;line-height:1.6}
+.foot{text-align:center;font-size:11px;color:var(--text2);padding:14px;margin-top:10px}
+/* ─── KPI strip ─── */
+.kpi-ttl{font-size:11px;font-weight:700;color:var(--text2);letter-spacing:.3px;margin:2px 0 8px}
+.kpi-strip{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;margin-bottom:18px}
+@media(max-width:980px){.kpi-strip{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:560px){.kpi-strip{grid-template-columns:repeat(2,1fr)}}
+.kpi{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:11px 13px;box-shadow:var(--sh);display:flex;flex-direction:column}
+.kpi.accent{border:1.5px solid var(--accent2);background:var(--accent-bg)}
+.kpi .k-lbl{font-size:11px;color:var(--text2);font-weight:600}
+.kpi .k-val{font-size:19px;font-weight:900;letter-spacing:-.5px;margin-top:3px;line-height:1.1}
+.kpi.accent .k-val{color:var(--accent)}
+.kpi .k-unit{font-size:11px;font-weight:700;color:var(--text2);margin-left:2px}
+.kpi .k-sub{font-size:10px;color:var(--text2);margin-top:4px}
+.kpi .k-sub b{color:var(--up)}
+/* ─── Why box ─── */
+.why-wrap{border:1.5px dashed var(--accent2);background:var(--accent-bg);border-radius:10px;padding:15px 16px;margin-bottom:20px}
+.why-hd{font-size:12.5px;font-weight:800;color:var(--accent);margin-bottom:10px}
+/* ─── Engines (3 or 4 in grid) ─── */
+.eng3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:14px}
+.eng4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:14px}
+@media(max-width:900px){.eng4{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:760px){.eng3,.eng4{grid-template-columns:1fr}}
+.eng{border:1px solid var(--border);border-top:3px solid;border-radius:10px;overflow:hidden;background:var(--card)}
+.eng-hd{padding:10px 14px;font-size:13px;font-weight:800;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.eng-hd .pct{margin-left:auto;font-size:10px;font-weight:800;color:#fff;border-radius:5px;padding:2px 8px}
+.eng-bd{padding:0 14px 14px;font-size:11.5px;color:var(--text2);line-height:1.85}
+.eng-bd b{color:var(--text)}
+/* ─── New growth strip ─── */
+.ngrow{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px}
+@media(max-width:760px){.ngrow{grid-template-columns:1fr}}
+.ng-box{border:1.5px solid var(--accent2);border-radius:9px;padding:12px 14px;background:var(--accent-bg)}
+.ng-tt{font-size:12.5px;font-weight:800;color:var(--accent);margin-bottom:6px;display:flex;align-items:center;gap:6px}
+.ng-bd{font-size:11px;color:var(--text2);line-height:1.7}
+.ng-bd b{color:var(--text)}
+/* ─── Supply chain spine ─── */
+.spine{border:1px solid var(--border);border-radius:9px;overflow:hidden}
+.lane{display:flex;gap:12px;align-items:stretch;padding:13px 14px;border-bottom:1px solid #f1f3f5}
+.lane:last-child{border-bottom:none}
+.lane-req{width:185px;flex-shrink:0;border-left:4px solid;padding-left:11px}
+.lr-t{font-size:12.5px;font-weight:800}
+.lr-d{font-size:10px;color:var(--text2);line-height:1.5;margin-top:3px}
+.lr-d em{font-style:normal;font-weight:700}
+.lane-arrow{display:flex;align-items:center;color:#cbd5e1;font-weight:900;font-size:17px;flex-shrink:0}
+.lane-fill{flex:1;display:flex;flex-wrap:wrap;gap:7px;align-items:center}
+.fchip{font-size:11px;font-weight:700;border-radius:6px;padding:5px 11px;border:1.5px solid;background:var(--card)}
+.lane-w{width:160px;flex-shrink:0;display:flex;flex-direction:column;gap:4px;align-items:flex-end;justify-content:center}
+@media(max-width:840px){.lane{flex-direction:column;gap:9px}.lane-req,.lane-w{width:auto}.lane-arrow{display:none}.lane-w{flex-direction:row;justify-content:flex-start}}
+/* ─── Concl / analysis box ─── */
+.concl{margin-top:16px;border:1.5px solid var(--accent2);border-radius:9px;background:var(--accent-bg);padding:14px 16px;font-size:12px;line-height:1.95;color:var(--text)}
+.concl b{color:var(--accent-ink)}
+/* ─── Insight point list ─── */
+.plist{display:flex;flex-direction:column;gap:9px}
+.plist>div{line-height:1.85;font-size:11.5px;color:var(--text2)}
+.plist>div b{color:var(--text)}
+.pn{display:inline-flex;align-items:center;justify-content:center;width:17px;height:17px;border-radius:50%;font-size:9.5px;font-weight:800;color:#fff;margin-right:6px;vertical-align:1px;flex-shrink:0}
+/* ─── Cognition grid ─── */
+.sec.mid{border:1.5px solid var(--accent2);background:linear-gradient(180deg,var(--accent-bg) 0%,#fff 60%)}
+.sec.mid .sec-hd{background:var(--accent-bg)}
+.mid-thesis{font-size:13px;font-weight:800;color:#134e4a;background:var(--accent-bg);border:1px solid var(--accent2);border-radius:8px;padding:13px 16px;margin-bottom:16px;line-height:1.9}
+.mid-thesis .em{color:var(--dn)}
+.cog-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+@media(max-width:840px){.cog-grid{grid-template-columns:1fr}}
+.cog-card{border:1px solid var(--border);border-radius:10px;padding:14px 14px 12px;background:var(--card);box-shadow:var(--sh);position:relative;display:flex;flex-direction:column}
+.cog-card .cog-no{position:absolute;top:-10px;left:14px;width:24px;height:24px;border-radius:50%;background:var(--accent);color:#fff;font-size:12px;font-weight:900;display:flex;align-items:center;justify-content:center;box-shadow:var(--sh)}
+.cog-card .cog-tt{font-size:13px;font-weight:800;margin:8px 0 8px;line-height:1.45;color:var(--text)}
+.cog-card .cog-tt b{color:var(--accent)}
+.cog-card .cog-body{font-size:11.5px;color:var(--text2);line-height:1.8;flex:1}
+.cog-card .cog-body b{color:var(--text)}
+.cog-card .cog-tag{margin-top:10px;font-size:10.5px;font-weight:700;color:var(--accent-ink);background:#fff;border:1px solid var(--accent2);border-radius:6px;padding:5px 9px;line-height:1.5}
+.cog-card .cog-tag .k{color:var(--text2);font-weight:400}
+/* ─── Caption ─── */
+.gs-cap{font-size:11.5px;font-weight:700;color:var(--accent);margin:14px 0 8px}
+.gs-cap span{color:var(--text2);font-weight:400;font-size:10.5px}
+.gs-note{font-size:10.5px;color:var(--text2);margin:8px 0 4px;line-height:1.55}
+</style>
+</head>
+<body>
+
+<header class="hdr">
+  <div class="hdr-l">
+    <a class="hdr-back" href="../美股映射研究_看板.html">← 返回看板</a>
+    <div>
+      <div class="hdr-title">🌊 COHR · Coherent Corp.</div>
+      <div class="hdr-sub">NASDAQ · InP/GaAs/SiC 三平台 / 光模块 / 液晶OCS / CPO全栈 / THERMADITE · <b>AI 光学全栈解决方案商</b></div>
+    </div>
+    <span class="badge b-ac">W3 光器件</span>
+    <span class="badge b-neu">光模块 · OCS · CPO · VCSEL</span>
+  </div>
+  <div class="hdr-meta">
+    更新：2026-06-17<br>最新季度：Q3 FY2026（2026-05-08）
+  </div>
+</header>
+
+<div class="wrap">
+
+<!-- 定位说明 -->
+<div class="why-wrap">
+  <div class="why-hd">🧭 Coherent 是什么角色？——AI 光学产业链唯一"全栈平台型供应商"</div>
+  <div style="font-size:11.5px;color:var(--text2);line-height:1.7">
+    如果说 LITE 是"光燃料供应商"（专注 InP 激光芯片），COHR 则是<b style="color:var(--text)">光学基础设施的全栈平台公司</b>——从磷化铟（InP）晶圆，到光模块整机，到 OCS 光交换机，到 CPO 外部光源模块，再到下一代热管理材料，全链条布局。COHR 由 II-VI（激光器+SiC）与 Coherent（相干光通信）合并而成，拥有<b style="color:var(--accent)">三大材料平台</b>：InP（EML/CW/PD 激光器）、GaAs（VCSEL，4亿颗/年，Apple 供应商）、SiC 金刚石复合材料（THERMADITE 热管理）。<br>
+    本页的核心问题是：<b style="color:var(--accent)">COHR 如何用"垂直整合"战略把 InP 原材料稀缺性变成更高维度的定价权</b>——同时在光模块（和 LITE 竞争供货中际/新易盛）和 CPO 全栈（和 LITE 竞争 NVIDIA）两个层次获取价值，规模是 LITE 的 2.25 倍。
+  </div>
+</div>
+
+<!-- KPI -->
+<div class="kpi-ttl">关键指标 · Q3 FY2026 实际数据 + Q4 指引（FY = 7 月–6 月）</div>
+<div class="kpi-strip">
+  <div class="kpi accent">
+    <div class="k-lbl">Q3 FY2026 营收</div>
+    <div class="k-val">18<span class="k-unit">亿$</span></div>
+    <div class="k-sub">同比 <b>+21%</b>（备考 <b>+27%</b>）· 历史新高</div>
+  </div>
+  <div class="kpi accent">
+    <div class="k-lbl">Q4 FY2026 指引</div>
+    <div class="k-val">~19.8<span class="k-unit">亿$</span></div>
+    <div class="k-sub">区间 $19.1–20.5亿 · GM 39–41% · EPS $1.52–1.72</div>
+  </div>
+  <div class="kpi">
+    <div class="k-lbl">Q3 非GAAP 毛利率</div>
+    <div class="k-val">39.6<span class="k-unit">%</span></div>
+    <div class="k-sub">8Q中7Q环比提升 · 累计 <b>+530bps</b></div>
+  </div>
+  <div class="kpi">
+    <div class="k-lbl">毛利率长期目标</div>
+    <div class="k-val">&gt;42<span class="k-unit">%</span></div>
+    <div class="k-sub">6英寸InP占比提升 + 1.6T/OCS/CPO上量</div>
+  </div>
+  <div class="kpi">
+    <div class="k-lbl">InP 产能翻倍</div>
+    <div class="k-val">4<span class="k-unit">倍</span></div>
+    <div class="k-sub">两年翻四番：2026底翻倍（<b>提前1季</b>）→ 2027底再翻倍</div>
+  </div>
+  <div class="kpi">
+    <div class="k-lbl">NVIDIA 战略投资</div>
+    <div class="k-val">$20<span class="k-unit">亿</span></div>
+    <div class="k-sub">+ 多年供应协议至 2030 · CPO 全栈绑定</div>
+  </div>
+</div>
+
+<!-- ① 业务拆解 -->
+<section class="sec">
+  <div class="sec-hd" onclick="toggleSec(this)">
+    <div class="sec-ttl"><span class="sec-num">1</span>业务拆解</div>
+    <span class="sec-arrow">▼</span>
+  </div>
+  <div class="sec-body">
+
+    <div style="font-size:11px;font-weight:700;color:var(--text2);margin-bottom:12px;letter-spacing:.3px">Q3 FY2026 营收结构（数据中心+通信板块占75%，是核心增长引擎；工业板块25%，半导体设备订单恢复）</div>
+    <div class="breakdown-top">
+      <div class="bk-box total">
+        <div class="bk-val total">18<span style="font-size:13px">亿$</span></div>
+        <div class="bk-lbl">Q3 FY2026 总营收</div>
+        <div style="margin-top:6px;font-size:11px;color:var(--text2)">同比 <strong style="color:var(--up)">+21%</strong>（备考 <strong style="color:var(--up)">+27%</strong>）· 历史新高</div>
+      </div>
+      <div class="bk-arrow">→</div>
+      <div class="bk-split">
+        <div class="bk-box comp">
+          <div class="bk-val comp">~13.5<span style="font-size:13px">亿$</span></div>
+          <div class="bk-lbl">数据中心 + 通信</div>
+          <div style="margin-top:4px"><span class="bk-pct ac">占比 ~75% · 数通同比+37% · 通信同比+60%</span></div>
+        </div>
+        <div class="bk-box sys">
+          <div class="bk-val sys">~4.5<span style="font-size:13px">亿$</span></div>
+          <div class="bk-lbl">工业板块</div>
+          <div style="margin-top:4px"><span class="bk-pct neu">占比 ~25% · 小幅下滑 · 半导体设备订单+</span></div>
+        </div>
+      </div>
+      <div class="bk-arrow">→</div>
+      <div class="bk-split">
+        <div class="bk-mini"><div class="v ac">光模块（800G/1.6T）</div><div class="l">EML + 硅光两路线并行 · 1.6T毛利率更高 · 连续2Q双位数环比增长</div></div>
+        <div class="bk-mini"><div class="v ac">Scale-Across DCI 相干</div><div class="l">最快增长品类 · 泵浦+窄线宽+多轨 · Q3同比+60%</div></div>
+        <div class="bk-mini"><div class="v ac">OCS 液晶光交换</div><div class="l">TAM上调至$40亿 · 10+客户 · 两工厂同步上量</div></div>
+        <div style="height:2px;background:var(--border);border-radius:2px;margin:2px 0"></div>
+        <div class="bk-mini"><div class="v">CPO 全栈 / ELS</div><div class="l">2026H2 scale-out上量 · 2027H2 scale-up · $150亿TAM</div></div>
+        <div class="bk-mini"><div class="v">VCSEL / GaAs</div><div class="l">200Gbps全球首款 · 4亿颗/年 · Apple多年供货协议</div></div>
+        <div class="bk-mini"><div class="v">工业 + 半导体设备</div><div class="l">半导体设备订单显著增长 · THERMADITE 2027H2起量</div></div>
+      </div>
+    </div>
+
+    <div class="gs-cap">📊 季度营收演变 · FY2025 Q3 → FY2026 Q3<span>｜单位：百万美元；GM = 非GAAP 毛利率；* = 估算值；FY 截至每年 6 月底</span></div>
+    <table class="ctable">
+      <thead>
+        <tr><th>季度</th><th>日历区间</th><th class="num">营收（M$）</th><th class="num">同比</th><th class="num">非GAAP GM</th><th>核心叙事 / 关键数据</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Q3 FY2025<span class="tag tag-est" style="margin-left:4px">E</span></td><td style="font-size:11px;color:var(--text2)">2025-01~03</td>
+          <td class="num">~1,390</td><td class="num" style="color:var(--up)">~+10%</td><td class="num">~36.5%</td>
+          <td>光模块需求加速；InP产能扩张计划明确；GMY环比改善</td>
+        </tr>
+        <tr>
+          <td>Q4 FY2025<span class="tag tag-est" style="margin-left:4px">E</span></td><td style="font-size:11px;color:var(--text2)">2025-04~06</td>
+          <td class="num">~1,490</td><td class="num" style="color:var(--up)">~+15%</td><td class="num">~37.5%</td>
+          <td>OCS产品初步交付；LTA协议加速签署；数据中心业务确认主驱动</td>
+        </tr>
+        <tr>
+          <td>Q1 FY2026<span class="tag tag-est" style="margin-left:4px">E</span></td><td style="font-size:11px;color:var(--text2)">2025-07~09</td>
+          <td class="num">~1,535</td><td class="num" style="color:var(--up)">~+10%E</td><td class="num">~38.5%</td>
+          <td>6英寸InP产线Sherman工厂建设推进；InP翻倍产能目标公布</td>
+        </tr>
+        <tr>
+          <td>Q2 FY2026<span class="tag tag-est" style="margin-left:4px">E</span></td><td style="font-size:11px;color:var(--text2)">2025-10~12</td>
+          <td class="num">~1,682</td><td class="num" style="color:var(--up)">~+13%E</td><td class="num">~39.1%</td>
+          <td>6英寸InP首次出货（搭载6英寸器件的光模块）；NVIDIA战略合作签订</td>
+        </tr>
+        <tr class="latest">
+          <td><b>Q3 FY2026</b></td><td style="font-size:11px;color:var(--text2)">2026-01~03</td>
+          <td class="num"><b>1,800</b></td><td class="num" style="color:var(--up)"><b>+21%</b></td><td class="num"><b>39.6%</b></td>
+          <td><span style="color:var(--dn);font-weight:700">InP产能翻倍提前1季达成（Q2）；Book-to-Bill >4x；在手订单排至2028年；OCS生产瓶颈解除</span></td>
+        </tr>
+        <tr>
+          <td><span class="tag tag-est">Q4 FY2026E</span></td><td style="font-size:11px;color:var(--text2)">2026-04~06</td>
+          <td class="num">~1,980</td><td class="num" style="color:var(--up)">~+33%E</td><td class="num">~40%</td>
+          <td>指引 $1,910–2,050M；GM 39–41%；EPS $1.52–1.72；OCS环比强劲；1.6T继续放量</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="note">📌 FY2024 触底约 $1,053M/季 → FY2026 Q3 $1,800M，单季营收增长 +71%；FY2027 管理层承诺增速将超过 FY2026 增速。上表部分历史数据为估算值（标注E），以Q3 FY2026实际披露数据为基准。</div>
+
+    <div style="margin-top:18px">
+    <div class="gs-cap" style="margin-top:0">🏭 InP 产能布局 · 全球 4 座晶圆厂，6英寸世界首创<span>｜磷化铟（InP）建厂周期 3–5 年，6英寸产出是 3英寸的 4倍+，成本不到一半</span></div>
+    <table class="ctable">
+      <thead><tr><th>工厂</th><th>地点</th><th>主要产品</th><th>6英寸</th><th>当前状态</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><b>Fremont 厂</b></td><td>美国 加州</td><td>EML 激光器 · CW · PD</td>
+          <td><span class="tag tag-est">3英寸</span></td>
+          <td><span class="tag tag-dn">持续扩产 · 全力分配</span></td>
+        </tr>
+        <tr class="latest">
+          <td><b>Sherman 厂</b></td><td>美国 德州</td><td>EML · CW · PD（全产品线）</td>
+          <td><span class="tag tag-up">6英寸 · 全球首创</span></td>
+          <td><span style="color:var(--up);font-weight:700">已量产 · 三类器件良率均超3英寸 · 2026年底占50%产能</span></td>
+        </tr>
+        <tr>
+          <td><b>Järfälla 厂</b></td><td>瑞典</td><td>EML · CW · 相干光通信组件</td>
+          <td><span class="tag tag-ac">6英寸爬坡</span></td>
+          <td><span class="tag tag-ac">已启动 · 2026年底产能翻倍贡献方</span></td>
+        </tr>
+        <tr>
+          <td><b>Zurich 厂</b></td><td>瑞士</td><td>精密光学 · 特种激光器</td>
+          <td><span class="tag tag-warn">规划中</span></td>
+          <td><span class="tag tag-warn">2027年初投产 · 高端应用</span></td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="note">📌 6英寸 InP 是 COHR 核心竞争差异：单晶圆产出器件是 3英寸的 4倍+，成本不到一半；Sherman 6英寸 EML / CW / PD 三类器件良率均优于3英寸。InP 衬底供应：与 5+ 家供应商签署 3–5 年长期协议，规避中国原材料供应风险（InP 原料约70%来自中国锌冶炼副产品）。</div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ② COHR 在 AI 光学产业链的位置 -->
+<section class="sec">
+  <div class="sec-hd" onclick="toggleSec(this)">
+    <div class="sec-ttl"><span class="sec-num">2</span>COHR 在 AI 光学产业链的位置</div>
+    <span class="sec-arrow">▼</span>
+  </div>
+  <div class="sec-body">
+
+    <div class="why-wrap" style="margin-bottom:16px">
+      <div class="why-hd">🎯 一句话定位：COHR 是光学产业链的"垂直整合者"——从 InP 晶圆到光模块整机，从 OCS 交换到 CPO 全栈外部光源模块</div>
+      <div style="font-size:11.5px;color:var(--text2);line-height:1.75">
+        COHR 不仅像 LITE 一样卖激光芯片（InP EML / CW），还自己做光模块（和中际旭创 / 新易盛竞争）；不仅有 OCS 光交换机（液晶路线，和 LITE MEMS 竞争），还有 CPO 全栈解决方案（ELS 外部光源模块 + 光纤连接单元，ASP 是单买激光芯片的 2–2.5 倍）。
+        <b style="color:var(--accent)">COHR 的护城河 = InP 6英寸（世界唯一）× 三材料平台（InP/GaAs/SiC）× 垂直整合（芯片→模块→系统）× 全栈 CPO 方案的 ASP 溢价。</b>
+      </div>
+    </div>
+
+    <!-- 三驾马车 -->
+    <div class="gs-cap" style="margin-top:0">⚡ 三大核心增长引擎 · 当前量产 / 高速爬坡产品线</div>
+    <div class="eng3">
+      <div class="eng" style="border-top-color:var(--accent)">
+        <div class="eng-hd" style="color:var(--accent)">
+          🔵 光模块（EML + 硅光并行）
+          <span class="pct" style="background:var(--accent)">当前主营</span>
+        </div>
+        <div class="eng-bd">
+          <b>技术路线</b>：EML（直调）和硅光（SiP）两种技术路线并行量产，毛利率基本相当，均需 InP CW 激光器<br>
+          <b>速率节奏</b>：800G 2026年及2027年持续增长；<b>1.6T 上量速度快于一年前预期</b>，Q4环比增长重要动力<br>
+          <b>VCSEL 整合</b>：200G VCSEL（全球首款）已开发完毕，后续用于光模块和 CPO 场景<br>
+          <b>6英寸红利</b>：Q3 首次出货含 6英寸 InP 器件的光模块，2026年底 6英寸占 50%——成本红利逐步释放<br>
+          <b>下游客户</b>：超大规模云厂商（Google / AWS / Meta / Azure）+ AI 计算集群直采<br>
+          <b style="color:var(--dn)">A股映射</b>：<span style="color:var(--dn)">COHR 光模块出货 ≈ 光器件需求趋势 → 中际旭创 / 新易盛 / 天孚 / 华工科技（同赛道 + 下游相同）</span>
+        </div>
+      </div>
+      <div class="eng" style="border-top-color:var(--warn)">
+        <div class="eng-hd" style="color:var(--warn)">
+          🟠 OCS 液晶光交换（颠覆者）
+          <span class="pct" style="background:var(--warn)">解除瓶颈·加速</span>
+        </div>
+        <div class="eng-bd">
+          <b>技术路线</b>：液晶（vs LITE MEMS），驱动电压仅 10V（MEMS 需100–200V），可靠性高、能效优<br>
+          <b>TAM 上调</b>：OFC 2026 上调至 <b>>$40亿</b>（AI 基础设施建设推动应用场景扩展）<br>
+          <b>产品矩阵</b>：64×64、320×320已量产，512×512 在研；已向 <b>10+ 客户</b>出货并进入量产部署<br>
+          <b>生产节奏</b>：近期解决生产瓶颈，<b>两个工厂同步快速上量</b>，Q4起多个季度强劲环比增长<br>
+          <b>应用场景</b>：Spine 替换 · Scale-Across · 网络重构 · DCI · GPU 集群资源调度<br>
+          <b style="color:var(--dn)">A股映射</b>：<span style="color:var(--dn)">OCS 放量 = 光交换替代电交换趋势 → MEMS / 光器件上游受益；同 LITE OCS 映射逻辑</span>
+        </div>
+      </div>
+      <div class="eng" style="border-top-color:var(--up)">
+        <div class="eng-hd" style="color:var(--up)">
+          🟢 CPO 全栈（外部光源模块）
+          <span class="pct" style="background:var(--up)">NVIDIA 锁定</span>
+        </div>
+        <div class="eng-bd">
+          <b>全栈能力</b>：高功率 CW 激光器（100mW量产/400mW开发中）+ ELS 外部激光源模块 + 光纤连接单元（自研微透镜阵列 + 保偏光纤）+ 隔离器 + TEC<br>
+          <b>战略绑定</b>：NVIDIA $20亿股权投资 + 多年供应协议至 2030 年（数十亿美元级别）<br>
+          <b>时间节点</b>：Scale-out CPO <b>2026H2 开始贡献收入</b>；Scale-up CPO 2027H2 开始放量<br>
+          <b>TAM</b>：CPO/NPO 2030 年预计 <b>>$150亿</b>（保守估计）<br>
+          <b>ASP 溢价</b>：ELS 模块 ASP 是单买激光芯片的 2–2.5 倍；全栈方案 ASP 溢价更高<br>
+          <b>多客户</b>：NVIDIA 为领先客户，同时与多个其他客户并行推进 CPO 合作
+        </div>
+      </div>
+    </div>
+
+    <!-- 新三线 -->
+    <div class="gs-cap">🚀 三条新兴增长引擎 · 2027 年陆续贡献收入，打开更大空间</div>
+    <div class="ngrow">
+      <div class="ng-box">
+        <div class="ng-tt">📡 Scale-Across 多轨技术 <span class="tag tag-est">2027H1起量</span></div>
+        <div class="ng-bd">
+          在相同空间 / 功耗下处理 <b>4倍流量</b>（亚线性功耗增长），已签 LTA 协议，2027H1 开始贡献收入。<br>
+          <b>TAM ≥$20亿</b>；底层技术独特，多个核心组件为 COHR 独有；毛利率高于普通 InP 光器件。
+        </div>
+      </div>
+      <div class="ng-box">
+        <div class="ng-tt">🔥 THERMADITE 热管理 <span class="tag tag-est">2027H2起量</span></div>
+        <div class="ng-bd">
+          金刚石 × 碳化硅陶瓷复合材料，导热性能 <b>是铜的 2–5 倍</b>，降低 XPU 结温 5–10℃，回收 GPU 废热发电。<br>
+          <b>SAM 保守 $20亿</b>（2030 目标），有望成 $10亿+ 产品线；2027H2 开始产生收入。
+        </div>
+      </div>
+      <div class="ng-box">
+        <div class="ng-tt">🍎 VCSEL / GaAs 平台 <span class="tag tag-up">量产中</span></div>
+        <div class="ng-bd">
+          <b>全球首款 200Gbps VCSEL</b>，年出货量 <b>4亿颗</b>；与 Apple 签署多年供货协议（Face ID / 深感摄像头等）。<br>
+          400G VCSEL 开发中；后续作为 CPO/NPO 光源集成，是 GaAs 平台向 AI 场景延伸的桥梁。
+        </div>
+      </div>
+    </div>
+
+    <!-- 产业链层级图 -->
+    <div class="gs-cap">🗺 产业链层级 · COHR 的垂直整合路径</div>
+    <div class="spine">
+      <div class="lane">
+        <div class="lane-req" style="border-left-color:var(--accent)">
+          <div class="lr-t" style="color:var(--accent)">① InP 晶圆 → 器件</div>
+          <div class="lr-d">6英寸 EML / CW / PD<br><em style="color:var(--accent)">最上游 · 世界首创6英寸</em></div>
+        </div>
+        <div class="lane-arrow">→</div>
+        <div class="lane-fill">
+          <span class="fchip" style="border-color:var(--accent2);color:var(--accent)">COHR 自用（光模块 / OCS / ELS）</span>
+          <span class="fchip" style="border-color:var(--accent2);color:var(--accent)">外部客户（光模块厂商）</span>
+          <span class="fchip" style="border-color:var(--accent2);color:var(--accent)">LITE（竞争关系）</span>
+        </div>
+        <div class="lane-w">
+          <span style="font-size:9.5px;font-weight:700;color:var(--text2)">→ 上游芯片</span>
+          <span style="font-size:9.5px;color:var(--text2)">COHR 自用 + 对外供货</span>
+        </div>
+      </div>
+      <div class="lane">
+        <div class="lane-req" style="border-left-color:var(--warn)">
+          <div class="lr-t" style="color:var(--warn)">② 光模块（中间层）</div>
+          <div class="lr-d">800G / 1.6T 可插拔<br><em style="color:var(--warn)">垂直整合 · 自用InP</em></div>
+        </div>
+        <div class="lane-arrow">→</div>
+        <div class="lane-fill">
+          <span class="fchip" style="border-color:var(--neu-bd);color:var(--neu-ink)">AVGO Tomahawk 交换芯片</span>
+          <span class="fchip" style="border-color:var(--neu-bd);color:var(--neu-ink)">MRVL Spectrum 交换 + DSP</span>
+          <span class="fchip" style="border-color:var(--neu-bd);color:var(--neu-ink)">NVDA NVLink / InfiniBand</span>
+        </div>
+        <div class="lane-w">
+          <span style="font-size:9.5px;font-weight:700;color:var(--text2)">→ 交换 / 计算芯片</span>
+          <span style="font-size:9.5px;color:var(--text2)">插入交换机实现互联</span>
+        </div>
+      </div>
+      <div class="lane">
+        <div class="lane-req" style="border-left-color:var(--up)">
+          <div class="lr-t" style="color:var(--up)">③ OCS + ELS 全栈</div>
+          <div class="lr-d">液晶OCS / CPO外部光源<br><em style="color:var(--up)">直连最终客户 · 高ASP</em></div>
+        </div>
+        <div class="lane-arrow">→</div>
+        <div class="lane-fill">
+          <span class="fchip" style="border-color:#86efac;color:var(--up)">Google（OCS · Spine 重构）</span>
+          <span class="fchip" style="border-color:#86efac;color:var(--up)">NVIDIA（ELS · Blackwell CPO）</span>
+          <span class="fchip" style="border-color:#86efac;color:var(--up)">10+ OCS客户（超大规模）</span>
+          <span class="fchip" style="border-color:#86efac;color:var(--up)">DCI / Scale-Across 全栈系统</span>
+        </div>
+        <div class="lane-w">
+          <span style="font-size:9.5px;font-weight:700;color:var(--up)">→ 直达最终算力客户</span>
+          <span style="font-size:9.5px;color:var(--text2)">系统级方案 · ASP最高</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="concl">
+      🎯 <b>为什么 COHR 是 W3 最大规模的光器件标的？</b>——规模 × 垂直整合 × 三平台布局创造多重护城河。<br>
+      <b>InP 6英寸方向</b>：世界唯一量产 6英寸 InP 的工厂（Sherman, TX），单片产出 4× 3英寸、成本 &lt;50%——随着 6英寸占比从当前 &lt;50% 提升至 2027年 ~100%，毛利率改善空间确定性强。<br>
+      <b>OCS 液晶方向</b>：液晶路线驱动电压仅 10V（vs LITE MEMS 100–200V），能效优势 + 10+ 客户先发——OCS TAM 从 $20亿上调至 $40亿意味着空间比市场预期大 1 倍。<br>
+      <b>CPO 全栈方向</b>：NVIDIA 不仅投资 $20亿，更签至 2030 年的多年供应协议——COHR 提供从 CW 激光器到 ELS 模块再到光纤连接单元的全栈方案，ASP 比单卖激光芯片高 2–2.5 倍。
+    </div>
+
+  </div>
+</section>
+
+<!-- ③ 近期业绩会交流重点 -->
+<section class="sec">
+  <div class="sec-hd" onclick="toggleSec(this)">
+    <div class="sec-ttl"><span class="sec-num">3</span>近 6 场业绩会 · 叙事演变与关键信号</div>
+    <span class="sec-arrow">▼</span>
+  </div>
+  <div class="sec-body">
+
+    <table class="ctable">
+      <thead>
+        <tr><th style="width:105px">季度</th><th class="num" style="width:75px">营收</th><th class="num" style="width:55px">GM</th><th>核心叙事变化</th><th>本期关键数据 / 信号</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Q3 FY2025<br><span style="font-size:10px;color:var(--text2)">2025 春 (E)</span></td>
+          <td class="num">~$1,390M</td><td class="num">~36.5%</td>
+          <td>数据中心业务确认核心驱动，光模块需求加速</td>
+          <td>数通 + 通信合计 >70% 营收；LTA 协议开始主导订单结构；InP 扩产计划发布</td>
+        </tr>
+        <tr>
+          <td>Q4 FY2025<br><span style="font-size:10px;color:var(--text2)">2025 夏 (E)</span></td>
+          <td class="num">~$1,490M</td><td class="num">~37.5%</td>
+          <td>OCS 产品初步出货，GMY 持续改善</td>
+          <td>OCS 开始向核心客户交付；LTA 结构（三要素）成形；800G 出货量创纪录</td>
+        </tr>
+        <tr>
+          <td>Q1 FY2026<br><span style="font-size:10px;color:var(--text2)">2025-11 (E)</span></td>
+          <td class="num">~$1,535M</td><td class="num">~38.5%</td>
+          <td>6英寸 InP 产线建设提速，CPO 协议接近签署</td>
+          <td>Sherman 6英寸工厂爬坡；市场规模 OCS $40亿更新；DCI 通信业务加速</td>
+        </tr>
+        <tr>
+          <td>OFC 2026<br><span style="font-size:10px;color:var(--text2)">2026-03-18</span></td>
+          <td class="num">—</td><td class="num">—</td>
+          <td><b>OCS TAM 上调至 $40亿 · CPO 全栈路线图首次完整披露</b></td>
+          <td>VCSEL 200Gbps 首款展示；硅光 400G 首次亮相（支持 3.2T）；CPO $150亿TAM；THERMADITE $20亿SAM 首次明确</td>
+        </tr>
+        <tr>
+          <td>Q2 FY2026<br><span style="font-size:10px;color:var(--text2)">2026 春 (E)</span></td>
+          <td class="num">~$1,682M</td><td class="num">~39.1%</td>
+          <td><b>NVIDIA $20亿战略投资签署 · 6英寸首批光模块出货</b></td>
+          <td>6英寸InP首次出货在光模块中；NVIDIA多年供应协议至2030签署；多轨技术验证推进</td>
+        </tr>
+        <tr class="latest">
+          <td><b>Q3 FY2026</b><br><span style="font-size:10px;color:var(--text2)">2026-05-08</span></td>
+          <td class="num"><b>$1,800M</b></td><td class="num"><b>39.6%</b></td>
+          <td><b style="color:var(--dn)">InP产能翻倍提前1季达成 · Book-to-Bill >4x · OCS两厂同步上量</b></td>
+          <td><span style="color:var(--dn);font-weight:700">EPS $1.41（+55% YoY）；现金从$15亿→$30亿；杠杆0.5倍；1.6T上量超预期；2027增速>2026</span></td>
+        </tr>
+        <tr>
+          <td><span class="tag tag-est">Q4 FY2026E</span><br><span style="font-size:10px;color:var(--text2)">2026-08</span></td>
+          <td class="num">$1,910–2,050M</td><td class="num">39–41%</td>
+          <td>Scale-out CPO 开始贡献收入；OCS 多季度强劲增长</td>
+          <td>EPS 指引 $1.52–1.72；Q4 是收入增长拐点；LTA 保障 2028 可见度；新LTA Q4预计更多</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="note">📌 E = 估算值。COHR 历史可信度改善：从 FY2024 底部周期爬坡起，连续多季度超指引或达成上沿，管理层可信度持续恢复。</div>
+
+    <div style="margin-top:16px;padding:12px 16px;background:var(--warn-bg);border:1.5px solid #fcd34d;border-radius:9px;font-size:11.5px;color:var(--text2);line-height:1.7">
+      <b style="color:var(--warn)">💡 Q3 FY2026 关键增量信息（叙事升级）</b>
+      <div style="margin-top:8px" class="plist">
+        <div><span class="pn" style="background:var(--dn)">!</span><b>InP 产能翻倍提前 1 个季度完成（Q2 即达成，原计划 Q3）</b>——比市场预期早，2026年底 6英寸占 50%，2027年再翻倍（两年翻四番）</div>
+        <div><span class="pn" style="background:var(--dn)">!</span><b>Book-to-Bill >4x（创历史纪录）</b>——需求远超供应，LTA 覆盖至 2028 年，部分至 2030 年；Q3 新签多份 LTA，Q4 预计更多</div>
+        <div><span class="pn" style="background:var(--accent)">★</span><b>OCS 生产瓶颈正式解除</b>——内部自研组件供应问题已解决，两个工厂同步快速上量，Q4 起多个季度强劲环比增长；市场空间上调至 >$40亿</div>
+        <div><span class="pn" style="background:var(--accent)">★</span><b>2027 财年增速将超过 2026 财年增速</b>——管理层明确承诺；新增长曲线（OCS / CPO / 多轨 / THERMADITE）逐步兑现</div>
+        <div><span class="pn" style="background:var(--up)">↑</span><b>杠杆率降至 0.5 倍（远低于 1 倍目标）</b>——NVIDIA $20亿投资后现金达 $30亿，财务健康大幅改善，CapEx 能力显著增强</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ④ 认知沉淀 -->
+<section class="sec mid">
+  <div class="sec-hd" onclick="toggleSec(this)">
+    <div class="sec-ttl"><span class="sec-num">4</span>认知沉淀 · 为什么 COHR 是 W3 光器件的核心平台标的</div>
+    <span class="sec-arrow">▼</span>
+  </div>
+  <div class="sec-body">
+
+    <div class="mid-thesis">
+      核心论点：COHR 不是单一产品公司，而是<b>光学基础设施的全栈平台</b>——从世界首创的 6英寸 InP 晶圆，到 800G/1.6T 光模块，到液晶 OCS，到 CPO 全栈外部光源模块，再到 THERMADITE 热管理和 VCSEL。规模比 LITE 大 2.25 倍，增长更多元。<span class="em">Book-to-Bill >4x + InP 产能翻倍提前达成，是当前最强的供给端信号：需求的增速正在超过 COHR 能生产的速度。</span>
+    </div>
+
+    <div class="cog-grid">
+
+      <div class="cog-card">
+        <div class="cog-no">1</div>
+        <div class="cog-tt">6英寸 InP：<b>世界唯一量产——成本护城河</b></div>
+        <div class="cog-body">
+          COHR Sherman 厂是全球唯一量产 6英寸 InP 的工厂，EML / CW / PD 三类器件良率均优于 3英寸，单晶圆产出器件 4×、成本 &lt;50%。关键节奏：Q3 首次出货含 6英寸器件的光模块，InP 器件→光模块有 2–3 个月收入确认滞后，<b>良率红利从 Q4 起持续兑现，是毛利率改善的结构性驱动</b>。2026年底 6英寸占 50%，2027年底趋近 100%——这条线上的 GM 改善路径比任何指引都更确定。
+        </div>
+        <div class="cog-tag"><span class="k">观察指标：</span> 每季 6英寸占比 + GM 环比变化幅度（长期目标 >42%）</div>
+      </div>
+
+      <div class="cog-card">
+        <div class="cog-no">2</div>
+        <div class="cog-tt">OCS 液晶 vs LITE MEMS：<b>两种路线，谁胜出？</b></div>
+        <div class="cog-body">
+          COHR 用液晶技术（10V 驱动），LITE 用 MEMS 技术（100–200V）——两者都在量产，但应用重叠较大。COHR OCS 优势：<b>驱动电压低（能效优）、可靠性高（无机械运动部件）、客户已超 10 家</b>（vs LITE 3 家）。LITE OCS 优势：先发 + Google 大客户背书 + $4亿积压。<b>关键观察</b>：两者在市场扩大（TAM $40B）的背景下可以共存；不一定是零和博弈。COHR 的 10+ 客户数量意味着客户多元化更好。
+        </div>
+        <div class="cog-tag"><span class="k">竞争信号：</span> 季度 OCS 收入绝对值 + COHR vs LITE 新增客户速度 + 512×512 量产时间</div>
+      </div>
+
+      <div class="cog-card">
+        <div class="cog-no">3</div>
+        <div class="cog-tt">CPO 全栈 ELS：<b>同 NVIDIA 锁定，但 COHR 的 ASP 更高</b></div>
+        <div class="cog-body">
+          COHR 和 LITE 都是 NVIDIA 的 CPO 战略合作伙伴，各自获 $20亿投资 + 多年协议至 2030。差异在于：<b>COHR 提供更完整的"全栈方案"</b>——高功率 CW 激光器（400mW）+ ELS 外部光源模块 + 微透镜阵列 + 保偏光纤 + 隔离器 + TEC，而 LITE 目前以激光器芯片为主。全栈 ASP 是激光芯片的 2–2.5 倍。<b>大部分 NVIDIA CPO 客户同时采购 COHR 多品类产品</b>，黏性更高。
+        </div>
+        <div class="cog-tag"><span class="k">里程碑：</span> 2026H2 scale-out CPO 首批收入 → 2027H2 scale-up 放量验证</div>
+      </div>
+
+      <div class="cog-card">
+        <div class="cog-no">4</div>
+        <div class="cog-tt">VCSEL + THERMADITE：<b>被低估的"第三平台"价值</b></div>
+        <div class="cog-body">
+          市场关注 COHR 主要集中在 InP 激光器 + OCS，但<b>两条隐性增长线同样重要</b>：① VCSEL（GaAs 平台）——Apple 多年协议 + 200G VCSEL 全球首款 + 年出货 4亿颗，是稳定现金流来源；后续 VCSEL 进入 CPO 场景将大幅提升 GaAs 平台价值。② THERMADITE（SiC 平台）——导热 2–5× 铜，SAM $20亿，2027H2 起贡献收入；GPU 热密度问题随每代迭代加剧，THERMADITE 的时机正好与 Rubin/Blackwell 时代对齐。
+        </div>
+        <div class="cog-tag"><span class="k">关注节点：</span> THERMADITE 2027H2 首批收入 + VCSEL 进入 CPO 采购清单时间</div>
+      </div>
+
+      <div class="cog-card">
+        <div class="cog-no">5</div>
+        <div class="cog-tt">毛利率路径：<b>结构性改善，但斜率更温和</b></div>
+        <div class="cog-body">
+          COHR GM 从 FY2024 低点约 34% 提升至 Q3 FY2026 的 39.6%，累计 +530bps，8Q 中 7Q 环比提升——趋势清晰。但与 LITE（32%→48%，+1600bps）相比，COHR 改善幅度更温和。原因：COHR 仍有较大份额光模块业务（毛利率相对低），而 LITE 更纯粹做激光芯片（稀缺性溢价更高）。<b>未来改善驱动：6英寸 InP 成本红利（最确定）+ 1.6T / OCS / CPO 高毛利产品结构改善 + 定价优化</b>。长期目标 >42%，仍有 240bps+ 空间。
+        </div>
+        <div class="cog-tag"><span class="k">跟踪重点：</span> 6英寸占比每季披露 + OCS 毛利率 vs 光模块毛利率对比</div>
+      </div>
+
+      <div class="cog-card">
+        <div class="cog-no">6</div>
+        <div class="cog-tt">COHR vs LITE：<b>同为 W3，逻辑互补而非互斥</b></div>
+        <div class="cog-body">
+          LITE 逻辑：InP 晶圆厂稀缺性 → EML 定价权（供需缺口 >30%）+ OCS MEMS 先发。<br>
+          COHR 逻辑：三平台垂直整合 → 6英寸成本护城河 + OCS 液晶 10+ 客户 + CPO 全栈高 ASP。<br>
+          <b>关键不同</b>：COHR 规模更大（$1.8B vs $0.8B/Q）、产品更多元、GM 提升更温和但更稳定；LITE 更专注、定价权更纯粹、GM 提升幅度更大。两者均受益于 InP 供给紧缺，但在 CPO 上竞争（同为 NVIDIA 供应商）。从组合角度：持有 COHR 获取规模 + 平台 + 多元化；持有 LITE 押注 EML 定价权 + 爆发弹性。
+        </div>
+        <div class="cog-tag"><span class="k">核心差异：</span> LITE EML 缺口 >30% 涨价弹性 vs COHR 6英寸量产成本护城河 + 全栈 ASP 溢价</div>
+      </div>
+
+    </div>
+
+  </div>
+</section>
+
+<div class="foot">COHR · Coherent Corp. · 数据来源：Q3 FY2026 业绩电话会（2026-05-08）· OFC 2026 光子学与数据中心交流（2026-03-18）· 公司档案 · 估算数据已标注 E · 更新 2026-06-17</div>
+</div>
+
+<script>
+function toggleSec(hd){
+  hd.classList.toggle('collapsed');
+  hd.nextElementSibling.classList.toggle('collapsed');
+}
+</script>
+</body>
+</html>
