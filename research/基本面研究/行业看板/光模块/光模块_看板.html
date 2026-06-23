@@ -153,8 +153,9 @@ code{font-size:10px;background:var(--tag-bg);color:var(--tag);padding:1px 5px;bo
 
 <div class="wrap">
 
+
 <!-- ── 当前判断速览 ── -->
-<div style="background:#1e293b;border-radius:10px;padding:14px 18px;margin-bottom:16px;display:flex;align-items:flex-start;gap:24px;flex-wrap:wrap">
+<div id="sec-quick" style="background:#1e293b;border-radius:10px;padding:14px 18px;margin-bottom:16px;display:flex;align-items:flex-start;gap:24px;flex-wrap:wrap">
   <div style="flex:1;min-width:280px">
     <div style="font-size:10px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:.5px;margin-bottom:5px">⚡ 当前判断速览（参考260602(1)测算表，2026-06-16更新）</div>
     <div style="font-size:13px;color:#f1f5f9;line-height:1.7">
@@ -162,6 +163,13 @@ code{font-size:10px;background:var(--tag-bg);color:var(--tag);padding:1px 5px;bo
       800G 仍是当期主收入（旭创 2026E 贡献 38.8%，新易盛 55.9%），但 1.6T 将在 2026H2 起快速超越 800G 占比。<br>
       <span style="color:#fbbf24;font-size:12px">⚠️ 供给端：200G EML 持续紧缺，实际出货约为有效需求 85-90%；硅光渗透率提升将拉动 CW 激光器（源杰）需求超预期。</span><br>
       <span style="color:#7dd3fc;font-size:12px">🔵 技术路线：年初 SemiAnalysis 看好 CPO，但近期认为规模化将推迟至 2028 年；<strong style="color:#7dd3fc">2027 年是 NPO 放量的关键窗口</strong>（天孚受益）。</span><br>
+      <span style="color:#a78bfa;font-size:12px">🌏 海外映射：
+        <a href="../../美股映射研究/companies/LITE_Lumentum.html" target="_blank" style="color:#c4b5fd;text-decoration:none;border-bottom:1px solid #7c3aed">Lumentum</a>（EML/CW 最激进）·
+        <a href="../../美股映射研究/companies/COHR_Coherent.html" target="_blank" style="color:#c4b5fd;text-decoration:none;border-bottom:1px solid #7c3aed">Coherent</a>（EML/CW/硅光全覆盖）·
+        <a href="../../美股映射研究/companies/AVGO_博通.html" target="_blank" style="color:#c4b5fd;text-decoration:none;border-bottom:1px solid #7c3aed">Broadcom</a>（需求端/ASIC/SerDes）·
+        <a href="../../美股映射研究/companies/MRVL_迈威尔.html" target="_blank" style="color:#c4b5fd;text-decoration:none;border-bottom:1px solid #7c3aed">Marvell</a>（硅光 PIC 主攻）·
+        <span style="color:#94a3b8">AXT</span>（InP 衬底，无公司页）
+      </span><br>
       <span style="color:#4ade80;font-size:12px">核心策略：买 1.6T 产能落地最快的双龙头，规避纯 400G 公司；CPO 2026-2027 为中期布局窗口。</span>
     </div>
   </div>
@@ -174,10 +182,6 @@ code{font-size:10px;background:var(--tag-bg);color:var(--tag);padding:1px 5px;bo
       <div style="font-size:9px;font-weight:700;color:#4ade80;margin-bottom:3px">🟢 核心仓</div>
       <div style="font-size:11px;color:#f1f5f9;font-weight:600">天孚通信<br><span style="color:#94a3b8">300394</span></div>
     </div>
-    <div style="background:#0c4a6e;border:1px solid #075985;border-radius:7px;padding:8px 12px;text-align:center">
-      <div style="font-size:9px;font-weight:700;color:#38bdf8;margin-bottom:3px">🔵 进攻仓</div>
-      <div style="font-size:11px;color:#f1f5f9;font-weight:600">天孚通信<br><span style="color:#94a3b8">300394</span></div>
-    </div>
     <div style="background:#431407;border:1px solid #7c2d12;border-radius:7px;padding:8px 12px;text-align:center">
       <div style="font-size:9px;font-weight:700;color:#fb923c;margin-bottom:3px">🟡 观察仓</div>
       <div style="font-size:11px;color:#f1f5f9;font-weight:600">源杰科技<br><span style="color:#94a3b8">688498</span></div>
@@ -186,7 +190,7 @@ code{font-size:10px;background:var(--tag-bg);color:var(--tag);padding:1px 5px;bo
 </div>
 
 <!-- ── 标的汇总 ── -->
-<div class="st" onclick="toggleSec(this)">📋 标的汇总（全产业链 · 20支）<span class="st-arrow">▾</span></div>
+<div id="sec-list" class="st" onclick="toggleSec(this)">📋 标的汇总（全产业链 · 20支）<span class="st-arrow">▾</span></div>
 <div class="sec-body" style="margin-bottom:16px">
 <div class="card">
   <table class="ctable">
@@ -262,7 +266,7 @@ code{font-size:10px;background:var(--tag-bg);color:var(--tag);padding:1px 5px;bo
 </div>
 
 <!-- ── 静态供需分析 ── -->
-<div class="st" onclick="toggleSec(this)">🔢 静态供需分析<span class="st-arrow">▾</span></div>
+<div id="sec-supply" class="st" onclick="toggleSec(this)">🔢 静态供需分析<span class="st-arrow">▾</span></div>
 <div class="sec-body" style="margin-bottom:16px">
 
 <div class="kpi-g">
@@ -391,7 +395,7 @@ code{font-size:10px;background:var(--tag-bg);color:var(--tag);padding:1px 5px;bo
 </div>
 
 <!-- ── 个人总结：供需投资启示 ── -->
-<div class="st" onclick="toggleSec(this)">💡 个人总结：供需投资启示<span class="st-arrow">▾</span></div>
+<div id="sec-sup-sum" class="st" onclick="toggleSec(this)">💡 个人总结：供需投资启示<span class="st-arrow">▾</span></div>
 <div class="sec-body" style="margin-bottom:16px">
 <div class="card">
   <div style="font-size:13px;font-weight:700;color:var(--acc);margin-bottom:12px">核心结论：供需结构决定赢家</div>
@@ -450,7 +454,7 @@ code{font-size:10px;background:var(--tag-bg);color:var(--tag);padding:1px 5px;bo
 </div>
 
 <!-- ── 速率演进时间轴 ── -->
-<div class="st" onclick="toggleSec(this)">📐 速率演进与产品升级时间轴<span class="st-arrow">▾</span></div>
+<div id="sec-rate" class="st" onclick="toggleSec(this)">📐 速率演进与产品升级时间轴<span class="st-arrow">▾</span></div>
 <div class="sec-body" style="margin-bottom:16px">
 <div class="card">
   <div style="font-size:11px;color:var(--text2);margin-bottom:14px">产品代际演进 · 技术方案变化 · A股受益标的　｜　更新规则：每次收到新纪要在里程碑栏追加 <code>[YYMMDD] 来源→事件</code></div>
@@ -556,7 +560,7 @@ code{font-size:10px;background:var(--tag-bg);color:var(--tag);padding:1px 5px;bo
 </div>
 
 <!-- ── 技术路线科普：LPO / NPO / CPO ── -->
-<div class="st" onclick="toggleSec(this)">🔬 技术路线科普：LPO / NPO / CPO<span class="st-arrow">▾</span></div>
+<div id="sec-cpo" class="st" onclick="toggleSec(this)">🔬 技术路线科普：LPO / NPO / CPO<span class="st-arrow">▾</span></div>
 <div class="sec-body" style="margin-bottom:16px">
 <div class="card">
   <div style="font-size:12px;color:var(--text2);line-height:1.8;margin-bottom:16px;background:var(--bg);border-radius:6px;padding:12px 14px;border-left:3px solid var(--accent)">
@@ -986,7 +990,7 @@ code{font-size:10px;background:var(--tag-bg);color:var(--tag);padding:1px 5px;bo
 </div>
 
 <!-- ── 光芯片技术 ── -->
-<div class="st" onclick="toggleSec(this)">🧬 光芯片技术详解：EML / CW / InP（光引擎里的"心脏"）<span class="st-arrow">▾</span></div>
+<div id="sec-chip" class="st" onclick="toggleSec(this)">🧬 光芯片技术详解：EML / CW / InP（光引擎里的"心脏"）<span class="st-arrow">▾</span></div>
 <div class="sec-body" style="margin-bottom:16px">
 <div class="card">
   <div style="font-size:12px;color:var(--text2);line-height:1.8;margin-bottom:16px;background:var(--bg);border-radius:6px;padding:12px 14px;border-left:3px solid #0d9488">
@@ -1129,11 +1133,101 @@ code{font-size:10px;background:var(--tag-bg);color:var(--tag);padding:1px 5px;bo
       <tr style="background:#f0fdfa"><td style="font-weight:800">壁垒 / 国产</td><td>最高，国产追赶中（200G 尤难）</td><td><strong>较低，国产率先导入的契机</strong></td></tr>
     </tbody>
   </table>
-  <div style="text-align:center;background:#fff;border:1px solid #cbd5e1;border-radius:6px;padding:10px;margin-bottom:8px"><img src="assets/chip/02_silicon_cw.png" alt="硅光模块结构：DSP/Driver/TIA/SiPho + 外置 CW Laser" style="max-width:100%;height:auto;border-radius:4px"></div>
-  <div style="font-size:11px;color:var(--text2);margin-bottom:8px">图：硅光模块里电信号经 DSP→Driver/TIA→硅光芯片(SiPho)，外置 <strong>CW Laser</strong> 提供连续光载波，由硅光芯片上的 MZM 完成调制。<strong>为什么硅光必须外置 CW？</strong>硅是间接带隙半导体、发光效率极低，造不出高效激光器，只能用 III-V（InP）的 CW 激光器作外部光源。</div>
+  <!-- ▶ 硅光小节 -->
+  <div style="border:1px solid #d1fae5;border-radius:10px;padding:14px 16px;margin:14px 0;background:#f0fdf4">
+    <div style="font-size:13px;font-weight:800;color:#065f46;margin-bottom:12px">🔬 硅光：模块 · 芯片 · 工艺</div>
 
-  <div style="font-size:12px;line-height:1.85;background:#f7fffe;border:1px solid #99f6e4;border-radius:8px;padding:9px 12px;margin-bottom:10px"><strong style="color:#0d9488">📦 顺带定义"硅光模块"：</strong>把调制器（MZM）、波导等<strong>集成到一颗硅光芯片（PIC）+ 外置 CW 激光器</strong>收发，区别于传统模块的<strong>分立方案</strong>（EML 封 TOSA、探测器封 ROSA、逐颗组装）。<strong style="color:#0d9488">一句话：硅光把"调制"从 InP 的 EML 搬到硅芯片的 MZM，但"发光"仍靠外置 InP CW——替代的是 EML 调制器、不是 InP 激光光源（这也是 InP 地位稳固的根本原因）。</strong><br><span style="font-size:11px;color:var(--text2)">↗ 注意"硅光"是<strong>技术轴</strong>（引擎用什么做），和"<strong>位置轴</strong>"（可插拔/NPO/CPO）正交：把这颗硅光引擎从可插拔搬到 ASIC 旁/封装内就是 NPO/CPO——详见上方 CPO 章节「🔆 光引擎」模块。</span></div>
-  <div style="font-size:10px;color:var(--text2);background:#ecfdf5;border-left:3px solid #0d9488;border-radius:4px;padding:8px 11px;margin-bottom:6px"><strong style="color:#0d9488">投资含义：</strong>EML（尤其 200G）短缺背景下，<strong>"CW + 硅光"成 AI 数据中心替代首选</strong>；英伟达已分别向 Coherent、Lumentum 各投资约 20 亿美元锁定 CW 产能。<strong>CW 国产化差距比 EML 更小、是率先导入点</strong>：源杰（70/100mW 批量、300mW 突破并拟投 12.51 亿扩产）、长光华芯（70/100mW 量产、200mW 验证）、仕佳光子（75-1000mW 矩阵）、永鼎鼎芯（70mW 量产）；但 CPO 所需 300mW+ 高功率 CW 国内仍在验证/研发。</div>
+    <!-- 硅光模块 & 硅光芯片 -->
+    <div style="font-size:12px;font-weight:700;color:#0d9488;margin-bottom:6px">① 硅光模块与硅光芯片（PIC）</div>
+    <div style="text-align:center;background:#fff;border:1px solid #cbd5e1;border-radius:6px;padding:10px;margin-bottom:8px"><img src="assets/chip/02_silicon_cw.png" alt="硅光模块结构：DSP/Driver/TIA/SiPho + 外置 CW Laser" style="max-width:100%;height:auto;border-radius:4px"></div>
+    <div style="font-size:11px;color:var(--text2);margin-bottom:8px">图：硅光模块里电信号经 DSP→Driver/TIA→硅光芯片(SiPho)，外置 <strong>CW Laser</strong> 提供连续光载波，由硅光芯片上的 MZM 完成调制。<strong>为什么硅光必须外置 CW？</strong>硅是间接带隙半导体、发光效率极低，造不出高效激光器，只能用 III-V（InP）的 CW 激光器作外部光源。</div>
+    <div style="font-size:12px;line-height:1.85;background:#fff;border:1px solid #99f6e4;border-radius:8px;padding:9px 12px;margin-bottom:8px"><strong style="color:#0d9488">📦 硅光模块定义：</strong>把调制器（MZM）、波导等<strong>集成到一颗硅光芯片（PIC）+ 外置 CW 激光器</strong>收发，区别于传统分立方案（EML 封 TOSA 逐颗组装）。<strong style="color:#0d9488">一句话：硅光把"调制"从 InP EML 搬到硅芯片 MZM，但"发光"仍靠外置 InP CW——替代的是 EML 调制器、不是 InP 激光光源。</strong><br><span style="font-size:11px;color:var(--text2)">↗ "硅光"是<strong>技术轴</strong>，和"位置轴"（可插拔/NPO/CPO）正交：把这颗硅光引擎搬到 ASIC 旁边就是 NPO/CPO。</span></div>
+    <div style="font-size:11px;color:#065f46;background:#ecfdf5;border-left:3px solid #0d9488;border-radius:4px;padding:8px 11px;margin-bottom:14px"><strong>投资含义：</strong>EML 200G 短缺背景下，CW + 硅光成 AI 数据中心替代首选。英伟达各向 COHR/LITE 投 ~$20 亿锁 CW 产能。CW 国产化差距小于 EML：源杰（100mW 批量/300mW 突破）、长光华芯、仕佳光子、永鼎鼎芯；CPO 所需 300mW+ 国内仍在验证。</div>
+
+    <!-- 硅光工艺 -->
+    <div style="font-size:12px;font-weight:700;color:#0d9488;margin-bottom:8px">② 硅光工艺（晶圆厂做的那一层）</div>
+    <div style="font-size:12px;color:#1e293b;line-height:1.8;margin-bottom:10px">
+      晶圆厂调研里听到的「硅光工艺」，是 PIC 芯片的<strong>制造端</strong>——在标准 CMOS 产线上额外增加光学层：硅波导、锗（Ge）光探测器、硅基 MZM/EAM/MRM 调制器。工艺节点通常 <strong>45–130nm</strong>，不追求先进制程，核心难点在于<strong>光-电层共集成的工艺兼容性和波导损耗控制</strong>。
+    </div>
+
+    <!-- SOI -->
+    <div style="background:#fff;border:1px solid #6ee7b7;border-radius:8px;padding:10px 13px;margin-bottom:10px">
+      <div style="font-size:12px;font-weight:700;color:#065f46;margin-bottom:6px">SOI 是硅光工艺的必用晶圆</div>
+      <div style="display:grid;grid-template-columns:auto 1fr;gap:6px 14px;align-items:start;font-size:12px">
+        <!-- 结构示意 -->
+        <div style="grid-row:span 2">
+          <svg viewBox="0 0 160 90" xmlns="http://www.w3.org/2000/svg" style="width:160px;display:block;font-family:system-ui,sans-serif">
+            <!-- 顶层 Si (~220nm) -->
+            <rect x="10" y="8" width="140" height="20" rx="3" fill="#dbeafe" stroke="#3b82f6" stroke-width="1"/>
+            <text x="80" y="22" text-anchor="middle" font-size="10" fill="#1e40af" font-weight="600">顶层 Si（~220nm，做波导）</text>
+            <!-- 埋氧层 BOX -->
+            <rect x="10" y="31" width="140" height="18" rx="2" fill="#fef9c3" stroke="#eab308" stroke-width="1"/>
+            <text x="80" y="43" text-anchor="middle" font-size="10" fill="#78350f">埋氧层 SiO₂（BOX，~2µm）</text>
+            <!-- 硅衬底 -->
+            <rect x="10" y="52" width="140" height="22" rx="2" fill="#e2e8f0" stroke="#94a3b8" stroke-width="1"/>
+            <text x="80" y="67" text-anchor="middle" font-size="10" fill="#475569">硅衬底（Bulk Si，~700µm）</text>
+            <!-- 折射率标注 -->
+            <text x="155" y="20" text-anchor="end" font-size="9" fill="#3b82f6">n≈3.5</text>
+            <text x="155" y="42" text-anchor="end" font-size="9" fill="#ca8a04">n≈1.45</text>
+            <text x="80" y="85" text-anchor="middle" font-size="9" fill="#64748b">SOI 晶圆截面</text>
+          </svg>
+        </div>
+        <!-- 说明文字 -->
+        <div style="color:#1e293b;line-height:1.75">
+          <strong>SOI（绝缘体上硅）</strong>是硅光工艺的标准衬底——顶层薄硅（n≈3.5）和埋氧层（n≈1.45）折射率差极大，光在硅波导中被强力约束、不漏光，是做低损耗波导的物理前提。普通 CMOS 用体硅（bulk Si），<strong>做硅光必须用 SOI</strong>。
+        </div>
+        <div style="color:#1e293b;line-height:1.75;font-size:11.5px">
+          <strong>供应链：</strong>光子级 SOI 晶圆要求薄膜均匀性 &lt;±1nm，全球主供 <strong>Soitec</strong>（法国，~80% 市占）、Shin-Etsu；国内 <strong>上海新傲科技</strong>（中环系）、有研硅有初步能力，但光子级认证尚未完全替代进口——是硅光国产化的另一上游卡点。
+        </div>
+      </div>
+    </div>
+    <table style="width:100%;border-collapse:collapse;font-size:12px;margin-bottom:10px">
+      <thead>
+        <tr style="background:#d1fae5;color:#065f46">
+          <th style="text-align:left;padding:6px 9px;border:1px solid #a7f3d0;font-weight:600">代工厂</th>
+          <th style="text-align:left;padding:6px 9px;border:1px solid #a7f3d0;font-weight:600">地位</th>
+          <th style="text-align:left;padding:6px 9px;border:1px solid #a7f3d0;font-weight:600">主要客户</th>
+          <th style="text-align:left;padding:6px 9px;border:1px solid #a7f3d0;font-weight:600">A股关联</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td style="padding:6px 9px;border:1px solid #a7f3d0;font-weight:700;color:#059669">TSMC</td>
+          <td style="padding:6px 9px;border:1px solid #a7f3d0;color:#1e293b">最主流，产能最大</td>
+          <td style="padding:6px 9px;border:1px solid #a7f3d0;color:#1e293b">MRVL（100万+ PIC）、Intel、Cisco</td>
+          <td style="padding:6px 9px;border:1px solid #a7f3d0;color:#64748b">无直接标的</td>
+        </tr>
+        <tr style="background:#f0fdf4">
+          <td style="padding:6px 9px;border:1px solid #a7f3d0;font-weight:700;color:#059669">GlobalFoundries</td>
+          <td style="padding:6px 9px;border:1px solid #a7f3d0;color:#1e293b">GF Fotonix 平台，次主流</td>
+          <td style="padding:6px 9px;border:1px solid #a7f3d0;color:#1e293b">IBM、部分光互连</td>
+          <td style="padding:6px 9px;border:1px solid #a7f3d0;color:#64748b">无</td>
+        </tr>
+        <tr>
+          <td style="padding:6px 9px;border:1px solid #a7f3d0;font-weight:700;color:#059669">Tower / Intel Foundry</td>
+          <td style="padding:6px 9px;border:1px solid #a7f3d0;color:#1e293b">特色工艺，体量较小</td>
+          <td style="padding:6px 9px;border:1px solid #a7f3d0;color:#1e293b">部分通信芯片</td>
+          <td style="padding:6px 9px;border:1px solid #a7f3d0;color:#64748b">无</td>
+        </tr>
+        <tr style="background:#fef9c3">
+          <td style="padding:6px 9px;border:1px solid #a7f3d0;font-weight:700;color:#92400e">中芯国际</td>
+          <td style="padding:6px 9px;border:1px solid #a7f3d0;color:#1e293b">有初步能力，落后 TSMC 约 2–3 代</td>
+          <td style="padding:6px 9px;border:1px solid #a7f3d0;color:#1e293b">国内光芯片初步试产</td>
+          <td style="padding:6px 9px;border:1px solid #a7f3d0;color:#92400e;font-weight:600">国产化补链信号</td>
+        </tr>
+      </tbody>
+    </table>
+    <div style="background:#fff;border:1px solid #99f6e4;border-radius:6px;padding:9px 12px;font-size:12px;color:#1e293b;line-height:1.75">
+      <strong style="color:#0d9488">从晶圆厂调研到投资信号：</strong>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px 16px;margin-top:6px;font-size:11.5px">
+        <div>🔵 <strong>某厂硅光产线满载/扩产</strong> → 下游硅光模块景气，利好旭创</div>
+        <div>🔵 <strong>硅光工艺良率提升</strong> → 模块成本下降、渗透率加速，CW（源杰）需求同步放量</div>
+        <div>🔵 <strong>客户 tape-out 量增加</strong> → 6–12 个月后对应硅光模块出货节点</div>
+        <div>🟡 <strong>中芯国际硅光工艺进展</strong> → 国内供应链补链信号，短期仍落后</div>
+      </div>
+      <div style="font-size:11px;color:#64748b;margin-top:6px">⚠️ A 股目前无纯硅光代工标的；硅光工艺的受益在<strong>下游</strong>——旭创（模块集成）和源杰（CW 配套），而非晶圆厂本身。</div>
+    </div>
+  </div>
 
   <!-- Q4 速率 -->
   <div style="font-size:13px;font-weight:800;color:#0d9488;margin:18px 0 6px">③ 一颗光芯片是 100G 还是 200G？由什么决定</div>
@@ -1164,8 +1258,174 @@ code{font-size:10px;background:var(--tag-bg);color:var(--tag);padding:1px 5px;bo
     </div>
   </div>
   <div style="font-size:12px;line-height:1.75;background:#fef2f2;border:1px solid #fecaca;border-radius:6px;padding:9px 11px;margin-bottom:10px"><strong style="color:#dc2626">为什么扩不出来（核心壁垒）：</strong>① 高纯铟受限（90% 来自锌冶炼副产、中国管制，2026 起铟出口锁定年产量 30% 内）；② 设备卡脖子（外延 MOCVD 由 AIXTRON 主导~80%、交期 7 月+、美国对华管制；晶体炉、EBL 交期超 12 月）；③ 扩产周期 18-36 月 + 8-12 月良率爬坡 + 下游认证数月至一年。</div>
-  <div style="text-align:center;background:#fff;border:1px solid #cbd5e1;border-radius:6px;padding:10px;margin-bottom:8px"><img src="assets/chip/04_inp_flow.png" alt="InP 衬底/光芯片生产流程" style="max-width:100%;height:auto;border-radius:4px"></div>
-  <div style="font-size:11px;color:var(--text2);margin-bottom:6px">图：光芯片完整工艺——InP <strong>多晶合成 → 单晶生长（VGF/VB/LEC，最核心、难在控磷不溢出）→ 晶片加工（切割/磨边/研磨/抛光/检测）→ 外延（MOCVD）→ 晶圆制造 → 封测</strong>。InP 单晶生长是最大壁垒环节。</div>
+  <div style="margin-bottom:8px">
+  <svg viewBox="0 0 760 160" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:760px;display:block;margin:0 auto;font-family:system-ui,sans-serif">
+    <!-- BG -->
+    <rect width="760" height="160" rx="8" fill="#f8fafc"/>
+
+    <!-- === Box 1: InP衬底 === -->
+    <rect x="20" y="30" width="190" height="100" rx="8" fill="#f0fdf4" stroke="#22c55e" stroke-width="1.5"/>
+    <text x="115" y="54" text-anchor="middle" font-size="13" font-weight="700" fill="#15803d">InP 衬底</text>
+    <text x="115" y="74" text-anchor="middle" font-size="11" fill="#166534">（全球寡头垄断）</text>
+    <!-- Shares -->
+    <rect x="34" y="84" width="162" height="36" rx="5" fill="#dcfce7"/>
+    <text x="115" y="99" text-anchor="middle" font-size="10.5" fill="#1e293b">住友 <tspan font-weight="700">45%</tspan>　AXT <tspan font-weight="700">35%</tspan></text>
+    <text x="115" y="113" text-anchor="middle" font-size="10.5" fill="#1e293b">JX <tspan font-weight="700">10%</tspan>　其他 <tspan font-weight="700">10%</tspan></text>
+
+    <!-- Arrow 1 -->
+    <line x1="212" y1="80" x2="265" y2="80" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#arr)"/>
+    <text x="238" y="71" text-anchor="middle" font-size="10" fill="#64748b">外延/</text>
+    <text x="238" y="83" text-anchor="middle" font-size="10" fill="#64748b">MOCVD</text>
+
+    <!-- === Box 2: 激光器芯片 === -->
+    <rect x="267" y="30" width="190" height="100" rx="8" fill="#eff6ff" stroke="#3b82f6" stroke-width="1.5"/>
+    <text x="362" y="54" text-anchor="middle" font-size="13" font-weight="700" fill="#1d4ed8">激光器芯片</text>
+    <text x="362" y="72" text-anchor="middle" font-size="11" fill="#1e40af">EML / CW / DFB</text>
+    <rect x="281" y="82" width="162" height="38" rx="5" fill="#dbeafe"/>
+    <text x="362" y="97" text-anchor="middle" font-size="10.5" fill="#1e293b">Lumentum · Coherent</text>
+    <text x="362" y="112" text-anchor="middle" font-size="10.5" fill="#1e293b">源杰 · 长光华芯 · 仕佳</text>
+
+    <!-- Arrow 2 -->
+    <line x1="459" y1="80" x2="512" y2="80" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#arr)"/>
+    <text x="486" y="71" text-anchor="middle" font-size="10" fill="#64748b">封装/</text>
+    <text x="486" y="83" text-anchor="middle" font-size="10" fill="#64748b">集成</text>
+
+    <!-- === Box 3: 光模块 === -->
+    <rect x="514" y="30" width="226" height="100" rx="8" fill="#fefce8" stroke="#eab308" stroke-width="1.5"/>
+    <text x="627" y="54" text-anchor="middle" font-size="13" font-weight="700" fill="#854d0e">光模块</text>
+    <text x="627" y="71" text-anchor="middle" font-size="11" fill="#713f12">可插拔 / NPO / CPO</text>
+    <rect x="528" y="80" width="198" height="40" rx="5" fill="#fef9c3"/>
+    <text x="627" y="96" text-anchor="middle" font-size="10.5" fill="#1e293b">旭创 · 新易盛 · 华工科技</text>
+    <text x="627" y="111" text-anchor="middle" font-size="10.5" fill="#1e293b">Coherent · II-VI · Innolight</text>
+
+    <!-- Arrowhead marker -->
+    <defs>
+      <marker id="arr" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+        <path d="M0,0 L0,6 L8,3 z" fill="#94a3b8"/>
+      </marker>
+    </defs>
+
+    <!-- Bottom label -->
+    <text x="380" y="152" text-anchor="middle" font-size="10" fill="#94a3b8">InP 衬底 CR3 ≈ 90%，扩产周期 18–36 月；激光器芯片良率 EML 30% / CW 60–70%</text>
+  </svg>
+  </div>
+  <div style="font-size:11px;color:var(--text2);margin-bottom:6px">图：InP 产业链核心传导路径。InP 衬底→外延成激光器芯片（EML/CW）→封装进光模块。衬底端高度集中（CR3≈90%），是全链条最紧瓶颈；激光器芯片良率差异（EML 30% vs CW 60–70%）进一步放大缺口。</div>
+
+  <!-- 换算链 -->
+  <div style="margin:12px 0 10px">
+    <div style="font-size:12px;font-weight:700;color:#1e293b;margin-bottom:8px">表：从 InP 衬底到光芯片到光模块的换算链（以 100G EML 为例）</div>
+    <table style="width:100%;border-collapse:collapse;font-size:12px">
+      <thead>
+        <tr style="background:#f1f5f9;color:#475569">
+          <th style="text-align:left;padding:6px 10px;border:1px solid #e2e8f0;font-weight:600">环节</th>
+          <th style="text-align:left;padding:6px 10px;border:1px solid #e2e8f0;font-weight:600">参数 / 口径</th>
+          <th style="text-align:left;padding:6px 10px;border:1px solid #e2e8f0;font-weight:600;white-space:nowrap">来源 / 说明</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td style="padding:6px 10px;border:1px solid #e2e8f0;color:#1e293b">单片尺寸（100G EML）</td>
+          <td style="padding:6px 10px;border:1px solid #e2e8f0;color:#1e293b">0.25 × 0.5 mm = <strong>0.125 mm²</strong></td>
+          <td style="padding:6px 10px;border:1px solid #e2e8f0;color:#64748b">—</td>
+        </tr>
+        <tr style="background:#f8fafc">
+          <td style="padding:6px 10px;border:1px solid #e2e8f0;color:#1e293b">2 英寸当量理论切割数</td>
+          <td style="padding:6px 10px;border:1px solid #e2e8f0;color:#1e293b"><strong>7,000–8,000 颗</strong></td>
+          <td style="padding:6px 10px;border:1px solid #e2e8f0;color:#64748b">—</td>
+        </tr>
+        <tr>
+          <td style="padding:6px 10px;border:1px solid #e2e8f0;color:#1e293b">EML 器件良率</td>
+          <td style="padding:6px 10px;border:1px solid #e2e8f0;color:#dc2626"><strong>30% 或更低</strong></td>
+          <td style="padding:6px 10px;border:1px solid #e2e8f0;color:#64748b">外延缺陷 + 光谱筛选严苛</td>
+        </tr>
+        <tr style="background:#fef2f2">
+          <td style="padding:6px 10px;border:1px solid #e2e8f0;color:#1e293b"><strong>→ 单片有效 100G EML 产出</strong></td>
+          <td style="padding:6px 10px;border:1px solid #e2e8f0;color:#dc2626"><strong>约 2,100–2,400 颗</strong></td>
+          <td style="padding:6px 10px;border:1px solid #e2e8f0;color:#64748b">7,000–8,000 × 30%</td>
+        </tr>
+        <tr>
+          <td style="padding:6px 10px;border:1px solid #e2e8f0;color:#1e293b">CW Laser（&lt;100mW）对比</td>
+          <td style="padding:6px 10px;border:1px solid #e2e8f0;color:#0d9488">切割数约为 EML 一半，但良率 <strong>60–70%</strong></td>
+          <td style="padding:6px 10px;border:1px solid #e2e8f0;color:#64748b">CW 规格更宽松，良率显著更高</td>
+        </tr>
+        <tr style="background:#f8fafc">
+          <td style="padding:6px 10px;border:1px solid #e2e8f0;color:#1e293b">6″ 对 3″ 产出杠杆</td>
+          <td style="padding:6px 10px;border:1px solid #e2e8f0;color:#1e293b"><strong>×4 倍</strong>（6″ 较 4″ 再 +30%）</td>
+          <td style="padding:6px 10px;border:1px solid #e2e8f0;color:#64748b">面积平方关系，是扩产主要路径</td>
+        </tr>
+        <tr>
+          <td style="padding:6px 10px;border:1px solid #e2e8f0;color:#1e293b">800G 模块单模块用芯片</td>
+          <td style="padding:6px 10px;border:1px solid #e2e8f0;color:#1e293b"><strong>4–8 颗</strong>（1.6T 为 8–16 颗）</td>
+          <td style="padding:6px 10px;border:1px solid #e2e8f0;color:#64748b">速率越高、单模块耗芯片越多</td>
+        </tr>
+      </tbody>
+    </table>
+    <div style="margin-top:9px;background:#fff7ed;border:1px solid #fed7aa;border-radius:6px;padding:9px 12px;font-size:12px;color:#1e293b;line-height:1.75">
+      <strong style="color:#c2410c">算例解读：</strong>以一片 2 英寸当量衬底可切 7,500 颗 100G EML、EML 良率按 30% 计，有效产出约 <strong>2,250 颗</strong>；按 800G 模块用 8 颗 100G EML 估，<strong>单片衬底理论只能支撑约 280 只 800G 模块</strong>。反推全球：2025 年全球数据中心 InP 芯片需求约 3 亿颗，折标准 4 英寸衬底有效产能仅约 <strong>75 万片</strong>、需求达 <strong>260–300 万片</strong>，<strong style="color:#dc2626">缺口超 70%</strong>。光芯片产能 2025 年约 1 亿颗、预计 2027 年扩至 3 亿颗。
+    </div>
+
+    <!-- 住友产能反推测算 -->
+    <div style="margin-top:10px;background:#f0f9ff;border:1px solid #7dd3fc;border-radius:8px;padding:12px 14px">
+      <div style="font-size:12px;font-weight:700;color:#0369a1;margin-bottom:10px">🔢 从住友产能反推全球 InP 供给规模</div>
+      <!-- 推算步骤 -->
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:10px">
+        <div style="background:#fff;border:1px solid #bae6fd;border-radius:6px;padding:8px 10px;text-align:center">
+          <div style="font-size:10px;color:#64748b;margin-bottom:3px">① 住友产能</div>
+          <div style="font-size:15px;font-weight:800;color:#0369a1">18 万片</div>
+          <div style="font-size:10px;color:#94a3b8">/年（2″当量）</div>
+        </div>
+        <div style="background:#fff;border:1px solid #bae6fd;border-radius:6px;padding:8px 10px;text-align:center">
+          <div style="font-size:10px;color:#64748b;margin-bottom:3px">② ÷ 45% 市占</div>
+          <div style="font-size:15px;font-weight:800;color:#0369a1">≈ 40 万片</div>
+          <div style="font-size:10px;color:#94a3b8">全球总产能/年</div>
+        </div>
+        <div style="background:#fff;border:1px solid #bae6fd;border-radius:6px;padding:8px 10px;text-align:center">
+          <div style="font-size:10px;color:#64748b;margin-bottom:3px">③ × 2,250 颗/片</div>
+          <div style="font-size:15px;font-weight:800;color:#0c4a6e">≈ 9 亿颗</div>
+          <div style="font-size:10px;color:#94a3b8">EML 理论上限/年</div>
+        </div>
+        <div style="background:#fff;border:1px solid #bae6fd;border-radius:6px;padding:8px 10px;text-align:center">
+          <div style="font-size:10px;color:#64748b;margin-bottom:3px">④ ÷ 8 颗/模块</div>
+          <div style="font-size:15px;font-weight:800;color:#0c4a6e">≈ 1.1 亿只</div>
+          <div style="font-size:10px;color:#94a3b8">800G 模块上限/年</div>
+        </div>
+      </div>
+      <!-- 对比矩阵 -->
+      <table style="width:100%;border-collapse:collapse;font-size:11.5px">
+        <thead>
+          <tr style="background:#e0f2fe;color:#0369a1">
+            <th style="text-align:left;padding:5px 8px;border:1px solid #bae6fd;font-weight:600">层级</th>
+            <th style="text-align:center;padding:5px 8px;border:1px solid #bae6fd;font-weight:600">全球供给（测算）</th>
+            <th style="text-align:center;padding:5px 8px;border:1px solid #bae6fd;font-weight:600">全球需求（估算）</th>
+            <th style="text-align:center;padding:5px 8px;border:1px solid #bae6fd;font-weight:600">缺口</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="padding:5px 8px;border:1px solid #bae6fd;color:#1e293b">InP 衬底</td>
+            <td style="padding:5px 8px;border:1px solid #bae6fd;text-align:center;color:#1e293b"><strong>40 万片/年</strong>（2″当量）</td>
+            <td style="padding:5px 8px;border:1px solid #bae6fd;text-align:center;color:#1e293b">260–300 万片/年</td>
+            <td style="padding:5px 8px;border:1px solid #bae6fd;text-align:center;color:#dc2626;font-weight:700">&gt; 80%</td>
+          </tr>
+          <tr style="background:#f0f9ff">
+            <td style="padding:5px 8px;border:1px solid #bae6fd;color:#1e293b">光芯片（EML）</td>
+            <td style="padding:5px 8px;border:1px solid #bae6fd;text-align:center;color:#1e293b"><strong>≈ 9 亿颗/年</strong>（理论上限）</td>
+            <td style="padding:5px 8px;border:1px solid #bae6fd;text-align:center;color:#1e293b">约 3 亿颗（DC需求）</td>
+            <td style="padding:5px 8px;border:1px solid #bae6fd;text-align:center;color:#0d9488;font-weight:700">供给似乎充裕？</td>
+          </tr>
+          <tr>
+            <td style="padding:5px 8px;border:1px solid #bae6fd;color:#1e293b">光模块（800G）</td>
+            <td style="padding:5px 8px;border:1px solid #bae6fd;text-align:center;color:#1e293b"><strong>≈ 1.1 亿只/年</strong>（EML全用）</td>
+            <td style="padding:5px 8px;border:1px solid #bae6fd;text-align:center;color:#1e293b">约 5,000 万只（2025E）</td>
+            <td style="padding:5px 8px;border:1px solid #bae6fd;text-align:center;color:#0d9488;font-weight:700">理论可覆盖</td>
+          </tr>
+        </tbody>
+      </table>
+      <div style="margin-top:8px;background:#fef2f2;border:1px solid #fecaca;border-radius:5px;padding:7px 10px;font-size:11.5px;color:#1e293b;line-height:1.7">
+        <strong style="color:#dc2626">⚠️ 矛盾解读：</strong>衬底层缺口&gt;80%，但光芯片层看似充裕——核心原因是 <strong>InP 衬底并非只供 EML</strong>：CW 激光器（硅光路线强拉动）、PIN 探测器、DFB 等均消耗 InP，且速率升级（800G→1.6T）使单模块芯片用量从 8 颗增至 16 颗，衬底消耗量双倍。衬底缺口是全品类叠加的综合紧张，而非单一对应光模块出货。
+      </div>
+    </div>
+  </div>
 
   <!-- 投资映射 -->
   <div style="margin-top:14px;background:linear-gradient(90deg,#f0fdfa,#eff6ff);border:1px solid #99f6e4;border-radius:10px;padding:13px 16px">
@@ -1279,7 +1539,7 @@ code{font-size:10px;background:var(--tag-bg);color:var(--tag);padding:1px 5px;bo
 
 
 <!-- ── 个人总结：技术投资启示 ── -->
-<div class="st" onclick="toggleSec(this)">💡 个人总结：技术投资启示<span class="st-arrow">▾</span></div>
+<div id="sec-tech-sum" class="st" onclick="toggleSec(this)">💡 个人总结：技术投资启示<span class="st-arrow">▾</span></div>
 <div class="sec-body" style="margin-bottom:16px">
 <div class="card">
   <div style="font-size:13px;font-weight:700;color:var(--acc);margin-bottom:14px">核心结论：形态在变，逻辑不变</div>
@@ -1328,7 +1588,7 @@ code{font-size:10px;background:var(--tag-bg);color:var(--tag);padding:1px 5px;bo
 </div>
 
 <!-- ── 公司深度 Tab ── -->
-<div class="st" onclick="toggleSec(this)">🏭 公司深度分析<span class="st-arrow">▾</span></div>
+<div id="sec-company" class="st" onclick="toggleSec(this)">🏭 公司深度分析<span class="st-arrow">▾</span></div>
 <div class="sec-body" style="margin-bottom:16px">
 <div class="card">
   <div class="tab-nav">
@@ -1555,7 +1815,7 @@ code{font-size:10px;background:var(--tag-bg);color:var(--tag);padding:1px 5px;bo
 </div>
 
 <!-- ── 高频指标 ── -->
-<div class="st" onclick="toggleSec(this)">📡 高频景气指标<span class="st-arrow">▾</span></div>
+<div id="sec-hf" class="st" onclick="toggleSec(this)">📡 高频景气指标<span class="st-arrow">▾</span></div>
 <div class="sec-body" style="margin-bottom:16px">
 <div style="font-size:11px;color:var(--text2);background:var(--tag-bg);padding:8px 14px;border-radius:6px;border-left:3px solid var(--accent);margin-bottom:14px">
   更新节奏：美股大客户季报（每季度）｜ 台股月营收 <strong>每月10日</strong>前后 ｜ 一季报/调研出货量 <strong>季度追踪</strong>
@@ -1594,7 +1854,7 @@ code{font-size:10px;background:var(--tag-bg);color:var(--tag);padding:1px 5px;bo
 <!-- ── 催化剂 + 当前判断 ── -->
 <div class="b-grid">
   <div>
-    <div class="st" style="cursor:default">📅 催化剂跟踪</div>
+    <div id="sec-catalyst" class="st" style="cursor:default">📅 催化剂跟踪</div>
     <div class="card">
       <div class="tl-item"><div class="tl-dot tl-d-p"></div><div class="tl-date">2026-Q2</div><div class="tl-content"><div class="tl-evt">北美四大 Hyperscaler Q1 财报 CapEx 指引</div><div class="tl-meta">Meta/MSFT/GOOGL/AMZN；AI基建支出全年指引验证</div></div><span class="tl-st st-p">🕐 待观察</span></div>
       <div class="tl-item"><div class="tl-dot tl-d-p"></div><div class="tl-date">2026-Q2</div><div class="tl-content"><div class="tl-evt">旭创/新易盛 2026Q1 出货量披露</div><div class="tl-meta">验证 1.6T 爬坡节奏是否符合预期</div></div><span class="tl-st st-p">🕐 待观察</span></div>
