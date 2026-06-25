@@ -183,6 +183,45 @@ code{font-size:10px;background:var(--tag-bg);color:var(--tag);padding:1px 5px;bo
   <div class="kpi"><div class="lbl">三寡头 DRAM 合计份额</div><div class="val c-acc">93.7%</div><div class="note">2025Q2 营收口径<span class="src">行业研究</span></div></div>
 </div>
 
+<!-- 标的汇总与A股映射（置顶副本，原件见"落地"部分） -->
+<div id="sec-list-top" class="st" onclick="toggleSec(this)">📋 标的汇总与 A 股映射<span class="st-arrow">▾</span></div>
+<div class="sec-body" style="margin-bottom:16px">
+  <div class="card">
+    <div class="note-box">海外原厂数据来自全球存储模型；A 股映射按<strong>两条独立逻辑链</strong>组织——① HBM 链：HBM 放量所需的核心设备/材料弹性；② 存储大周期链：commodity DRAM/NAND 涨价潮下利基存储与模组厂的传导弹性。两条链驱动因素不同（HBM 链跟良率/产能爬坡，大周期链跟合约价）。<strong>逻辑链一</strong>明细来源：<span class="src">优先级设备材料判断第一层T_20260625212250.xlsx</span>（按"题材纯度"★评级映射关注度：★★★★及以上=🟢核心，★★★=🟡观察，★★及以下=⚪边缘）；<strong>逻辑链二</strong>具体代码/关注度待用户确认补充（<span class="todo">TODO: A 股名单</span>）。</div>
+    <table class="ctable">
+      <thead><tr><th style="width:90px">代码</th><th style="width:130px">名称</th><th>产业链位置</th><th>对标 / 备注</th><th style="width:80px">关注度</th></tr></thead>
+      <tbody>
+        <tr class="grp"><td colspan="5">三大原厂（海外，两条逻辑链的源头）</td></tr>
+        <tr><td>000660.KS</td><td><a href="sk-hynix.html" target="_blank">SK 海力士</a></td><td>DRAM/HBM 龙头，HBM3E 供应英伟达</td><td>DRAM 份额 38.2%（第一） · <a href="sk-hynix.html" target="_blank">公司页</a></td><td><span class="dot d-na">海外</span></td></tr>
+        <tr><td>005930.KS</td><td>三星电子</td><td>DRAM/HBM/NAND 全覆盖，产能最大</td><td>份额 33.5%，HBM4 认证领先</td><td><span class="dot d-na">海外</span></td></tr>
+        <tr><td>MU</td><td>美光 Micron</td><td>DRAM/HBM/NAND，美系唯一</td><td>份额 22.0%，FY26Q2 毛利率 74.4%</td><td><span class="dot d-na">海外</span></td></tr>
+        <tr class="grp"><td colspan="5">🔗 逻辑链一·HBM 相关 · 第一层：HBM 制造核心设备</td></tr>
+        <tr><td>688012.SH</td><td>中微公司</td><td>TSV 刻蚀：CCP/ICP 等离子体刻蚀、TSV 深硅通孔刻蚀</td><td>国内主流存储/HBM 厂商；先进封装全面布局，已发布 TSV 深硅通孔设备</td><td><span class="dot d-core">★★★★☆</span></td></tr>
+        <tr><td>688072.SH</td><td>拓荆科技</td><td>混合键合/薄膜沉积：PECVD、ALD、SACVD、混合键合设备</td><td>国内主流存储/HBM 厂商；混合键合设备可用于 HBM 工艺 TSV 绝缘层沉积及 3D 堆叠</td><td><span class="dot d-core">★★★★☆</span></td></tr>
+        <tr><td>688120.SH</td><td>华海清科</td><td>CMP：化学机械抛光设备</td><td>国内主流存储/HBM 厂商；CMP 是 TSV 铜填充后晶圆平坦化的关键设备</td><td><span class="dot d-core">★★★★</span></td></tr>
+        <tr><td>688037.SH</td><td>芯源微</td><td>临时键合/解键合：涂胶显影、临时键合/解键合设备</td><td>国内主流晶圆厂；临时键合/解键合是 HBM 超薄晶圆处理关键设备</td><td><span class="dot d-watch">★★★☆</span></td></tr>
+        <tr class="grp"><td colspan="5">🔗 逻辑链一·HBM 相关 · 第二层：HBM 工艺特征材料</td></tr>
+        <tr><td>688300.SH</td><td>联瑞新材</td><td>Low-α 球形硅/铝粉：Low-α 球形氧化铝、低介电损耗球形硅微粉</td><td>全球知名先进封装材料企业/国内 HBM 产业链客户；已批量供应，散热/填充关键材料</td><td><span class="dot d-core">★★★★☆</span></td></tr>
+        <tr><td>300054.SZ</td><td>鼎龙股份</td><td>CMP 抛光液/垫：CMP 抛光垫、抛光液</td><td>国内主流晶圆厂；CMP 抛光垫龙头，用于 TSV 铜填充后平坦化关键耗材</td><td><span class="dot d-watch">★★★☆</span></td></tr>
+        <tr><td>688019.SH</td><td>安集科技</td><td>CMP 抛光液/垫：化学机械抛光液</td><td>国内主流晶圆厂；CMP 抛光液龙头，保障堆叠良率关键材料</td><td><span class="dot d-watch">★★★☆</span></td></tr>
+        <tr class="grp"><td colspan="5">🔗 逻辑链一·HBM 相关 · 第三层：HBM 良率关键环节</td></tr>
+        <tr><td>002409.SZ</td><td>雅克科技</td><td>前驱体：High-k 前驱体、金属及金属氮化物前驱体</td><td>海力士/三星/美光/长鑫存储；深度绑定海力士/三星共研 HBM4 前驱体，对海力士供应已提价约 20%</td><td><span class="dot d-core">★★★★★</span></td></tr>
+        <tr><td>688200.SH</td><td>华峰测控</td><td>KGSD 测试设备：模拟及混合信号测试系统、SoC 测试系统</td><td>用于 HBM KGSD 测试环节；受益测试时间延长和测试量增加</td><td><span class="dot d-watch">★★★☆</span></td></tr>
+        <tr><td>688627.SH</td><td>精智达</td><td>KGSD 测试设备：老化修复及测试系统、晶圆测试设备</td><td>长鑫存储独家供应商；受益 HBM 测试需求增长，弹性较大</td><td><span class="dot d-watch">★★★☆</span></td></tr>
+        <tr class="grp"><td colspan="5">🔗 逻辑链一·HBM 相关 · 第四层：HBM 相关通用材料/设备</td></tr>
+        <tr><td>688268.SH</td><td>华特气体</td><td>六氟化钨/刻蚀气：六氟化钨、光刻气、高纯氨等电子特气</td><td>SK 海力士/三星；锗烷产品已通过海力士、三星认证，可用于 HBM 产业</td><td><span class="dot d-watch">★★★</span></td></tr>
+        <tr><td>600378.SH</td><td>昊华科技</td><td>六氟化钨/刻蚀气：六氟化钨等含氟电子气</td><td>六氟化钨是 3D NAND/HBM 钨填充工艺关键前驱体；日本龙头减产预警利好国内</td><td><span class="dot d-na">★★☆</span></td></tr>
+        <tr class="grp"><td colspan="5">🔗 逻辑链二·存储大周期相关：模组 / 利基存储受益于涨价潮<span class="todo">TODO 待补</span></td></tr>
+        <tr><td>603986</td><td>兆易创新</td><td>利基 DRAM / NOR Flash / MCU</td><td>DDR4/利基涨价弹性</td><td><span class="dot d-na">待定</span></td></tr>
+        <tr><td>301308</td><td>江波龙</td><td>存储模组 / eMMC / SSD</td><td>原厂涨价传导</td><td><span class="dot d-na">待定</span></td></tr>
+        <tr><td>001309</td><td>德明利</td><td>存储模组 / SSD 主控</td><td>涨价弹性</td><td><span class="dot d-na">待定</span></td></tr>
+        <tr><td>688525</td><td>佰维存储</td><td>存储模组 / 封测</td><td>涨价弹性</td><td><span class="dot d-na">待定</span></td></tr>
+      </tbody>
+    </table>
+    <div class="seg-sum">两条逻辑链的核心区别：<strong>逻辑链一（HBM）</strong>赚的是"HBM 渗透率提升+先进封装良率爬坡"的钱，跟随海力士/三星/美光的 HBM bit 出货与资本开支节奏，弹性大但收入体量小（HBM 仅占三大厂总营收 10%-20%，见"当前判断速览"）；<strong>逻辑链二（存储大周期）</strong>赚的是"commodity DRAM/NAND 合约价上涨"的钱，跟随 DDR5/DDR4/NAND 价格曲线，体量更大、覆盖三大厂绝大部分收入，1Q26 后是业绩兑现的主战场。A 股标的为产业链常见方向占位，具体代码/关注度（🟢核心/🟡观察）与最终名单需结合海外映射、业绩相关性与估值水位由用户确认。</div>
+  </div>
+</div>
+
 <!-- ════════ 第一部分 · 三大原厂（业务拆 HBM / DRAM / NAND） ════════ -->
 <div class="part part-co"><span class="pn">第一部分</span> 三大原厂 · 业务拆分 <span class="pd">海力士 · 三星 · 美光，各拆 HBM / DRAM / NAND</span></div>
 
@@ -642,38 +681,22 @@ code{font-size:10px;background:var(--tag-bg);color:var(--tag);padding:1px 5px;bo
       <thead><tr><th style="width:90px">代码</th><th style="width:130px">名称</th><th>产业链位置</th><th>对标 / 备注</th><th style="width:80px">关注度</th></tr></thead>
       <tbody>
         <tr class="grp"><td colspan="5">三大原厂（海外，两条逻辑链的源头）</td></tr>
-        <tr><td>000660.KS</td><td><a href="SK海力士_公司看板.html" target="_blank">SK 海力士</a></td><td>DRAM/HBM 龙头，HBM3E 供应英伟达</td><td>DRAM 份额 38.2%（第一） · <a href="SK海力士_公司看板.html" target="_blank">公司页</a></td><td><span class="dot d-na">海外</span></td></tr>
+        <tr><td>000660.KS</td><td><a href="sk-hynix.html" target="_blank">SK 海力士</a></td><td>DRAM/HBM 龙头，HBM3E 供应英伟达</td><td>DRAM 份额 38.2%（第一） · <a href="sk-hynix.html" target="_blank">公司页</a></td><td><span class="dot d-na">海外</span></td></tr>
         <tr><td>005930.KS</td><td>三星电子</td><td>DRAM/HBM/NAND 全覆盖，产能最大</td><td>份额 33.5%，HBM4 认证领先</td><td><span class="dot d-na">海外</span></td></tr>
         <tr><td>MU</td><td>美光 Micron</td><td>DRAM/HBM/NAND，美系唯一</td><td>份额 22.0%，FY26Q2 毛利率 74.4%</td><td><span class="dot d-na">海外</span></td></tr>
         <tr class="grp"><td colspan="5">🔗 逻辑链一·HBM 相关 · 第一层：HBM 制造核心设备</td></tr>
         <tr><td>688012.SH</td><td>中微公司</td><td>TSV 刻蚀：CCP/ICP 等离子体刻蚀、TSV 深硅通孔刻蚀</td><td>国内主流存储/HBM 厂商；先进封装全面布局，已发布 TSV 深硅通孔设备</td><td><span class="dot d-core">★★★★☆</span></td></tr>
-        <tr><td>002371.SZ</td><td>北方华创</td><td>TSV 刻蚀：ICP 刻蚀、PVD/CVD、清洗机、热处理</td><td>国内主流存储/HBM 厂商；深硅刻蚀/薄膜沉积/电镀多款设备已批量交付主流 HBM 客户</td><td><span class="dot d-core">★★★★☆</span></td></tr>
         <tr><td>688072.SH</td><td>拓荆科技</td><td>混合键合/薄膜沉积：PECVD、ALD、SACVD、混合键合设备</td><td>国内主流存储/HBM 厂商；混合键合设备可用于 HBM 工艺 TSV 绝缘层沉积及 3D 堆叠</td><td><span class="dot d-core">★★★★☆</span></td></tr>
-        <tr><td>688082.SH</td><td>盛美上海</td><td>TSV 电镀/清洗：Ultra ECP 3d 电镀设备、先进封装湿法设备</td><td>国内主流存储/HBM 厂商；Ultra ECP 3d 用于 TSV 铜填充，湿法/电镀铜设备覆盖 HBM 工艺流程</td><td><span class="dot d-core">★★★★</span></td></tr>
         <tr><td>688120.SH</td><td>华海清科</td><td>CMP：化学机械抛光设备</td><td>国内主流存储/HBM 厂商；CMP 是 TSV 铜填充后晶圆平坦化的关键设备</td><td><span class="dot d-core">★★★★</span></td></tr>
-        <tr><td>603203.SH</td><td>快克智能</td><td>TCB 键合：TCB 热压键合设备</td><td>存储客户；TCB 设备已为客户 C2S/C2P 工艺进行初步验证</td><td><span class="dot d-watch">★★★☆</span></td></tr>
-        <tr><td>688383.SH</td><td>新益昌</td><td>Die Bond/Flip Chip 固晶机</td><td>华为/长电科技/通富微电等；HAD8212 advanced 固晶机适用 HBM/CoWoS，精度对标 Besi</td><td><span class="dot d-watch">★★★</span></td></tr>
-        <tr><td>002787.SZ</td><td>华源控股</td><td>TCB 热压键合设备（代理韩美半导体）</td><td>芯联集成/瞻芯电子等；2026/4 收购环鼎科技 51% 切入 HBM 设备供应链</td><td><span class="dot d-na">★★☆</span></td></tr>
         <tr><td>688037.SH</td><td>芯源微</td><td>临时键合/解键合：涂胶显影、临时键合/解键合设备</td><td>国内主流晶圆厂；临时键合/解键合是 HBM 超薄晶圆处理关键设备</td><td><span class="dot d-watch">★★★☆</span></td></tr>
-        <tr><td>300398.SZ</td><td>飞凯材料</td><td>临时键合胶、光敏胶、清洗液</td><td>客户端验证中；已形成整套临时键合方案，支持多种拆解工艺面向 HBM</td><td><span class="dot d-watch">★★★</span></td></tr>
-        <tr><td>688700.SH</td><td>东威科技</td><td>TSV 电镀：垂直连续电镀设备</td><td>PCB 电镀龙头；玻璃基板 TGV 镀铜设备，技术可延伸至 HBM TSV 电镀</td><td><span class="dot d-watch">★★★</span></td></tr>
         <tr class="grp"><td colspan="5">🔗 逻辑链一·HBM 相关 · 第二层：HBM 工艺特征材料</td></tr>
         <tr><td>688300.SH</td><td>联瑞新材</td><td>Low-α 球形硅/铝粉：Low-α 球形氧化铝、低介电损耗球形硅微粉</td><td>全球知名先进封装材料企业/国内 HBM 产业链客户；已批量供应，散热/填充关键材料</td><td><span class="dot d-core">★★★★☆</span></td></tr>
-        <tr><td>688535.SH</td><td>华海诚科</td><td>环氧塑封料(EMC/GMC)：颗粒状环氧塑封料</td><td>客户验证中；GMC 可用于 HBM 封装，国产核心标的</td><td><span class="dot d-core">★★★★</span></td></tr>
-        <tr><td>300236.SZ</td><td>上海新阳</td><td>电镀液/添加剂：TSV 铜互连电镀液及添加剂</td><td>国内先进封装领军企业；TSV 铜互连电镀添加剂已量产，最高深宽比可达 20:1</td><td><span class="dot d-core">★★★★</span></td></tr>
-        <tr><td>688720.SH</td><td>艾森股份</td><td>电镀液/添加剂：TSV 电镀液添加剂、低温 PSPI 光刻胶</td><td>头部客户；低温 PSPI 已在头部客户小批量量产</td><td><span class="dot d-watch">★★★☆</span></td></tr>
-        <tr><td>688603.SH</td><td>天承科技</td><td>电镀液/添加剂：半导体电镀液添加剂</td><td>客户端验证中；Damascene/TSV 工艺电镀液添加剂，国内少数可替代国际厂商</td><td><span class="dot d-watch">★★★</span></td></tr>
         <tr><td>300054.SZ</td><td>鼎龙股份</td><td>CMP 抛光液/垫：CMP 抛光垫、抛光液</td><td>国内主流晶圆厂；CMP 抛光垫龙头，用于 TSV 铜填充后平坦化关键耗材</td><td><span class="dot d-watch">★★★☆</span></td></tr>
         <tr><td>688019.SH</td><td>安集科技</td><td>CMP 抛光液/垫：化学机械抛光液</td><td>国内主流晶圆厂；CMP 抛光液龙头，保障堆叠良率关键材料</td><td><span class="dot d-watch">★★★☆</span></td></tr>
-        <tr><td>688733.SH</td><td>壹石通</td><td>Low-α 球形硅/铝粉：Low-α 射线球形氧化铝</td><td>日韩及国内 HBM 产业链重点客户；散热和填充关键材料，送样验证中</td><td><span class="dot d-watch">★★★</span></td></tr>
-        <tr><td>300429.SZ</td><td>强力新材</td><td>PSPI 光刻胶：光敏聚酰亚胺</td><td>客户验证中；HBM 封装关键图形化绝缘材料，国产替代空间大</td><td><span class="dot d-watch">★★★</span></td></tr>
         <tr class="grp"><td colspan="5">🔗 逻辑链一·HBM 相关 · 第三层：HBM 良率关键环节</td></tr>
         <tr><td>002409.SZ</td><td>雅克科技</td><td>前驱体：High-k 前驱体、金属及金属氮化物前驱体</td><td>海力士/三星/美光/长鑫存储；深度绑定海力士/三星共研 HBM4 前驱体，对海力士供应已提价约 20%</td><td><span class="dot d-core">★★★★★</span></td></tr>
-        <tr><td>300604.SZ</td><td>长川科技</td><td>KGSD 测试设备：测试机、分选机、探针台</td><td>盛合晶微/国产算力龙头；受益 HBM CP 测试需求 5-6 倍增长，26H1 归母净利 9-10 亿元大增</td><td><span class="dot d-core">★★★★☆</span></td></tr>
         <tr><td>688200.SH</td><td>华峰测控</td><td>KGSD 测试设备：模拟及混合信号测试系统、SoC 测试系统</td><td>用于 HBM KGSD 测试环节；受益测试时间延长和测试量增加</td><td><span class="dot d-watch">★★★☆</span></td></tr>
         <tr><td>688627.SH</td><td>精智达</td><td>KGSD 测试设备：老化修复及测试系统、晶圆测试设备</td><td>长鑫存储独家供应商；受益 HBM 测试需求增长，弹性较大</td><td><span class="dot d-watch">★★★☆</span></td></tr>
-        <tr><td>300666.SZ</td><td>江丰电子</td><td>阻挡层/种子层材料：高纯溅射靶材（钛/钽/铜等）</td><td>全球主要芯片制造商；超高纯金属溅射靶材应用于先进存储芯片制造</td><td><span class="dot d-watch">★★★☆</span></td></tr>
-        <tr><td>300706.SZ</td><td>阿石创</td><td>阻挡层/种子层材料：钼靶材</td><td>半导体先进制程用钼/钼合金靶材；HBM 驱动钼靶需求增长</td><td><span class="dot d-na">★★☆</span></td></tr>
         <tr class="grp"><td colspan="5">🔗 逻辑链一·HBM 相关 · 第四层：HBM 相关通用材料/设备</td></tr>
         <tr><td>688268.SH</td><td>华特气体</td><td>六氟化钨/刻蚀气：六氟化钨、光刻气、高纯氨等电子特气</td><td>SK 海力士/三星；锗烷产品已通过海力士、三星认证，可用于 HBM 产业</td><td><span class="dot d-watch">★★★</span></td></tr>
         <tr><td>600378.SH</td><td>昊华科技</td><td>六氟化钨/刻蚀气：六氟化钨等含氟电子气</td><td>六氟化钨是 3D NAND/HBM 钨填充工艺关键前驱体；日本龙头减产预警利好国内</td><td><span class="dot d-na">★★☆</span></td></tr>
