@@ -594,7 +594,7 @@ code{font-size:10px;background:var(--tag-bg);color:var(--tag);padding:1px 5px;bo
 <div id="sec-dram-price" class="st" onclick="toggleSec(this)">💲 DRAM 量价与涨价逻辑<span class="st-arrow">▾</span></div>
 <div class="sec-body" style="margin-bottom:16px">
   <div class="card">
-    <div class="chart-box" style="margin-bottom:14px"><h4>三大厂传统 DRAM ASP 对比（$/Gb，按季）</h4><div class="chart-wrap"><canvas id="c-conv-asp-co"></canvas></div></div>
+    <div class="chart-box" style="margin-bottom:14px"><h4>三大厂传统 DRAM ASP 对比（$/Gb，按季）<span style="font-size:9px;color:var(--text2);font-weight:400">· 虚线为 1Q26 Cost/Gb 基准（TrendForce），假设短期成本相对 ASP 走平</span></h4><div class="chart-wrap"><canvas id="c-conv-asp-co"></canvas></div></div>
     <div class="model-wrap">
       <table class="model-table">
         <thead><tr><th>产品（合约价）</th><th>2024 均价</th><th>2025 均价</th><th>2025/12 价</th><th>vs 2024 均</th><th>vs 2025 均</th><th>来源</th></tr></thead>
@@ -862,7 +862,11 @@ new Chart(document.getElementById('c-conv-asp-co'),{type:'line',
     datasets:[
     {label:'海力士',data:[0.187,0.198,0.221,0.259,0.310,0.344,0.358,0.351,0.325,0.339,0.375,0.531,1.073,1.565,1.846,2.003,2.093,2.135,2.155,2.064],borderColor:'#2563eb',tension:.3,borderWidth:2},
     {label:'三星',data:[0.210,0.192,0.200,0.226,0.270,0.315,0.319,0.337,0.325,0.331,0.380,0.557,1.139,1.686,1.954,2.099,2.173,2.219,2.241,2.133],borderColor:'#16a34a',tension:.3,borderWidth:2},
-    {label:'美光（1Q23-1Q24 为总 DRAM ASP，因 HBM=0 时等同传统 DRAM；2Q26E 起无季度数据，留空）',data:[0.289,0.259,0.236,0.242,0.284,0.335,0.370,0.382,0.377,0.345,0.388,0.471,0.850,null,null,null,null,null,null,null],borderColor:'#d97706',tension:.3,borderWidth:2}]},
+    {label:'美光（1Q23-1Q24 为总 DRAM ASP，因 HBM=0 时等同传统 DRAM；2Q26E 起无季度数据，留空）',data:[0.289,0.259,0.236,0.242,0.284,0.335,0.370,0.382,0.377,0.345,0.388,0.471,0.850,null,null,null,null,null,null,null],borderColor:'#d97706',tension:.3,borderWidth:2},
+    {label:'海力士 Cost/Gb（1Q26，TrendForce）',data:Array(20).fill(0.21),borderColor:'#2563eb',borderDash:[6,4],borderWidth:1.5,pointRadius:0,tension:0},
+    {label:'三星 Cost/Gb（1Q26，TrendForce）',data:Array(20).fill(0.21),borderColor:'#16a34a',borderDash:[6,4],borderWidth:1.5,pointRadius:0,tension:0},
+    {label:'美光 Cost/Gb（1Q26，TrendForce）',data:Array(20).fill(0.20),borderColor:'#d97706',borderDash:[6,4],borderWidth:1.5,pointRadius:0,tension:0},
+    {label:'CXMT Cost/Gb（1Q26，TrendForce）',data:Array(20).fill(0.27),borderColor:'#dc2626',borderDash:[6,4],borderWidth:1.5,pointRadius:0,tension:0}]},
   options:OPTS('$/Gb')});
 
 // 三家 HBM ASP 对比（按季）
