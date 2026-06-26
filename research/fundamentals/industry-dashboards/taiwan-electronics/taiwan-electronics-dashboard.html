@@ -1,0 +1,1522 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>台股电子产业链月度看板</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+:root {
+  --bg:#f8f9fa; --card:#fff; --border:#e9ecef;
+  --text:#212529; --text2:#6c757d;
+  --accent:#2563eb; --up:#16a34a; --dn:#dc2626; --warn:#d97706;
+  --up-bg:#f0fdf4; --dn-bg:#fef2f2; --warn-bg:#fffbeb;
+  --tag-bg:#eff6ff; --tag:#1d4ed8;
+  --sh: 0 1px 3px rgba(0,0,0,.08),0 1px 2px rgba(0,0,0,.04);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;background:var(--bg);color:var(--text);font-size:14px;line-height:1.6}
+.hdr{background:var(--card);border-bottom:1px solid var(--border);padding:16px 28px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:var(--sh)}
+.hdr-l{display:flex;align-items:center;gap:12px}
+.hdr-title{font-size:20px;font-weight:700}
+.badge-tag{display:inline-flex;align-items:center;padding:3px 10px;border-radius:12px;font-size:11px;background:var(--tag-bg);color:var(--tag);border:1px solid #bfdbfe}
+.hdr-meta{font-size:11px;color:var(--text2);text-align:right}
+
+.wrap{max-width:1400px;margin:0 auto;padding:20px 28px}
+.st{font-size:13px;font-weight:700;margin-bottom:11px;padding-bottom:6px;border-bottom:2px solid var(--accent);display:flex;align-items:center;gap:6px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:16px 18px;box-shadow:var(--sh)}
+
+.kpi-g{display:grid;grid-template-columns:repeat(4,1fr);gap:11px;margin-bottom:22px}
+.kpi .lbl{font-size:10px;color:var(--text2);text-transform:uppercase;letter-spacing:.4px;margin-bottom:4px}
+.kpi .val{font-size:20px;font-weight:700;margin-bottom:3px}
+.kpi .note{font-size:10px;color:var(--text2)}
+.c-up{color:var(--up)} .c-dn{color:var(--dn)} .c-warn{color:var(--warn)}
+
+.seg-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:24px}
+.seg-card{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:10px 12px;cursor:pointer;transition:border-color .15s}
+.seg-card:hover{border-color:var(--accent)}
+.seg-name{font-size:12px;font-weight:700;margin-bottom:4px}
+.seg-row{display:flex;justify-content:space-between;font-size:11px;color:var(--text2);margin-top:2px}
+.lbl2{color:var(--text2)}
+
+.tab-nav{display:flex;gap:0;flex-wrap:wrap;border-bottom:2px solid var(--border);margin-bottom:14px}
+.tab-btn{padding:8px 14px;font-size:12px;font-weight:600;color:var(--text2);background:none;border:none;cursor:pointer;white-space:nowrap;border-bottom:2px solid transparent;margin-bottom:-2px;transition:color .15s,border-color .15s}
+.tab-btn:hover{color:var(--accent)}
+.tab-btn.active{color:var(--accent);border-bottom-color:var(--accent)}
+.tab-pane{display:none}
+.tab-pane.active{display:block}
+
+.ctable{width:100%;border-collapse:collapse;margin-bottom:20px;font-size:12px}
+.ctable th{text-align:left;padding:6px 8px;font-size:10px;font-weight:600;color:var(--text2);background:var(--bg);border-bottom:1px solid var(--border);white-space:nowrap;cursor:pointer}
+.ctable th:hover{color:var(--accent)}
+.ctable td{padding:7px 8px;border-bottom:1px solid var(--border);vertical-align:middle;white-space:nowrap}
+.ctable td.desc-cell{white-space:normal;color:var(--text2);font-size:11px;min-width:220px}
+.ctable tr:last-child td{border-bottom:none}
+.ctable tr:hover td{background:#fafbfc}
+code{font-size:10px;background:var(--tag-bg);color:var(--tag);padding:1px 5px;border-radius:3px}
+
+.amap-cell{white-space:normal}
+.amap{display:inline-block;font-size:10.5px;line-height:1.5;padding:2px 6px;border-radius:5px;cursor:help}
+.amap code{background:transparent;padding:0;font-size:9.5px}
+.amap-strong{background:var(--up-bg);color:var(--up);border:1px solid #86efac}
+.amap-strong code{color:var(--up)}
+.amap-mid{background:var(--tag-bg);color:var(--tag);border:1px solid #bfdbfe}
+.amap-mid code{color:var(--tag)}
+.amap-weak{background:var(--warn-bg);color:var(--warn);border:1px solid #fcd34d}
+.amap-weak code{color:var(--warn)}
+
+.chart-box{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:14px 16px;margin-bottom:16px}
+.chart-box h4{font-size:11px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:.4px;margin-bottom:10px}
+.chart-wrap{position:relative}
+
+.footnote{font-size:11px;color:var(--text2);margin-top:8px}
+
+@media(max-width:1100px){.kpi-g{grid-template-columns:repeat(2,1fr)}.seg-grid{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:700px){.seg-grid{grid-template-columns:repeat(2,1fr)}}
+</style>
+</head>
+<body>
+
+<div class="hdr">
+  <div class="hdr-l">
+    <div class="hdr-title">台股电子产业链月度看板</div>
+    <span class="badge-tag">AI服务器/PCB/封测/IC设计</span>
+  </div>
+  <div class="hdr-meta">数据截至 2026-06-25 ｜ 单位：亿新台币（市值/月营收）｜ 月营收按公司自行公告口径，部分公司未来月份未披露<br>来源：台股电子名单.xlsx（用户提供）</div>
+</div>
+
+<div class="wrap">
+
+  <div class="st">概览 KPI</div>
+  
+<div class="kpi-g">
+  <div class="kpi card"><div class="lbl">覆盖公司</div><div class="val">36</div><div class="note">13个产业链环节</div></div>
+  <div class="kpi card"><div class="lbl">合计市值</div><div class="val">1,001,341</div><div class="note">亿新台币</div></div>
+  <div class="kpi card"><div class="lbl">2025年至今涨幅中位数</div><div class="val c-up">+182.0%</div><div class="note">均值受极端值干扰大，改用中位数；最高：南亚科 Nanya Tech +1530.8%</div></div>
+  <div class="kpi card"><div class="lbl">最新营收同比改善/恶化</div><div class="val"><span class="c-up">30</span> / <span class="c-dn">4</span></div><div class="note">最新可比披露月份：2026-05</div></div>
+</div>
+
+
+  <div class="st">产业链环节速览（点击进入对应分页）</div>
+  <div class="seg-grid">
+    <div class="seg-card" data-target="sec-0">
+      <div class="seg-name">服务器ODM/EMS</div>
+      <div class="seg-row"><span>5家 · 65,785亿</span></div>
+      <div class="seg-row"><span class="lbl2">YTD</span><span class="c-up">+52.0%</span></div>
+      <div class="seg-row"><span class="lbl2">营收YoY</span><span class="c-up">+45.3%</span></div>
+    </div>
+    <div class="seg-card" data-target="sec-1">
+      <div class="seg-name">PCB/载板</div>
+      <div class="seg-row"><span>6家 · 43,007亿</span></div>
+      <div class="seg-row"><span class="lbl2">YTD</span><span class="c-up">+404.8%</span></div>
+      <div class="seg-row"><span class="lbl2">营收YoY</span><span class="c-up">+45.4%</span></div>
+    </div>
+    <div class="seg-card" data-target="sec-2">
+      <div class="seg-name">CCL/材料</div>
+      <div class="seg-row"><span>3家 · 26,478亿</span></div>
+      <div class="seg-row"><span class="lbl2">YTD</span><span class="c-up">+707.4%</span></div>
+      <div class="seg-row"><span class="lbl2">营收YoY</span><span class="c-up">+90.8%</span></div>
+    </div>
+    <div class="seg-card" data-target="sec-3">
+      <div class="seg-name">PCB钻针</div>
+      <div class="seg-row"><span>1家 · 817亿</span></div>
+      <div class="seg-row"><span class="lbl2">YTD</span><span class="">0.0%</span></div>
+      <div class="seg-row"><span class="lbl2">营收YoY</span><span class="c-up">+86.3%</span></div>
+    </div>
+    <div class="seg-card" data-target="sec-4">
+      <div class="seg-name">电源/散热</div>
+      <div class="seg-row"><span>5家 · 72,233亿</span></div>
+      <div class="seg-row"><span class="lbl2">YTD</span><span class="c-up">+196.7%</span></div>
+      <div class="seg-row"><span class="lbl2">营收YoY</span><span class="c-up">+53.1%</span></div>
+    </div>
+    <div class="seg-card" data-target="sec-5">
+      <div class="seg-name">晶圆代工</div>
+      <div class="seg-row"><span>3家 · 644,850亿</span></div>
+      <div class="seg-row"><span class="lbl2">YTD</span><span class="c-up">+199.7%</span></div>
+      <div class="seg-row"><span class="lbl2">营收YoY</span><span class="c-up">+24.0%</span></div>
+    </div>
+    <div class="seg-card" data-target="sec-6">
+      <div class="seg-name">封测</div>
+      <div class="seg-row"><span>3家 · 35,951亿</span></div>
+      <div class="seg-row"><span class="lbl2">YTD</span><span class="c-up">+410.9%</span></div>
+      <div class="seg-row"><span class="lbl2">营收YoY</span><span class="c-up">+61.7%</span></div>
+    </div>
+    <div class="seg-card" data-target="sec-7">
+      <div class="seg-name">IC设计</div>
+      <div class="seg-row"><span>5家 · 86,760亿</span></div>
+      <div class="seg-row"><span class="lbl2">YTD</span><span class="c-up">+184.1%</span></div>
+      <div class="seg-row"><span class="lbl2">营收YoY</span><span class="c-up">+46.6%</span></div>
+    </div>
+    <div class="seg-card" data-target="sec-8">
+      <div class="seg-name">存储</div>
+      <div class="seg-row"><span>1家 · 16,458亿</span></div>
+      <div class="seg-row"><span class="lbl2">YTD</span><span class="c-up">+1530.8%</span></div>
+      <div class="seg-row"><span class="lbl2">营收YoY</span><span class="c-up">+730.1%</span></div>
+    </div>
+    <div class="seg-card" data-target="sec-9">
+      <div class="seg-name">硅片</div>
+      <div class="seg-row"><span>1家 · 4,972亿</span></div>
+      <div class="seg-row"><span class="lbl2">YTD</span><span class="c-up">+183.2%</span></div>
+      <div class="seg-row"><span class="lbl2">营收YoY</span><span class="c-dn">-3.3%</span></div>
+    </div>
+    <div class="seg-card" data-target="sec-10">
+      <div class="seg-name">连接器</div>
+      <div class="seg-row"><span>1家 · 2,504亿</span></div>
+      <div class="seg-row"><span class="lbl2">YTD</span><span class="c-up">+17.1%</span></div>
+      <div class="seg-row"><span class="lbl2">营收YoY</span><span class="c-up">+9.0%</span></div>
+    </div>
+    <div class="seg-card" data-target="sec-11">
+      <div class="seg-name">光通信/CPO</div>
+      <div class="seg-row"><span>1家 · 715亿</span></div>
+      <div class="seg-row"><span class="lbl2">YTD</span><span class="c-up">+159.0%</span></div>
+      <div class="seg-row"><span class="lbl2">营收YoY</span><span class="c-dn">-24.8%</span></div>
+    </div>
+    <div class="seg-card" data-target="sec-12">
+      <div class="seg-name">半导体设备/检测</div>
+      <div class="seg-row"><span>1家 · 812亿</span></div>
+      <div class="seg-row"><span class="lbl2">YTD</span><span class="c-dn">-21.2%</span></div>
+      <div class="seg-row"><span class="lbl2">营收YoY</span><span class="c-dn">-40.6%</span></div>
+    </div>
+  </div>
+
+  <div class="st">公司明细 / 月度营收跟踪</div>
+  <div class="tab-nav"><button class="tab-btn active" data-tab="all">全部</button><button class="tab-btn" data-tab="sec-0">服务器ODM/EMS</button><button class="tab-btn" data-tab="sec-1">PCB/载板</button><button class="tab-btn" data-tab="sec-2">CCL/材料</button><button class="tab-btn" data-tab="sec-3">PCB钻针</button><button class="tab-btn" data-tab="sec-4">电源/散热</button><button class="tab-btn" data-tab="sec-5">晶圆代工</button><button class="tab-btn" data-tab="sec-6">封测</button><button class="tab-btn" data-tab="sec-7">IC设计</button><button class="tab-btn" data-tab="sec-8">存储</button><button class="tab-btn" data-tab="sec-9">硅片</button><button class="tab-btn" data-tab="sec-10">连接器</button><button class="tab-btn" data-tab="sec-11">光通信/CPO</button><button class="tab-btn" data-tab="sec-12">半导体设备/检测</button></div>
+
+  <div class="tab-pane active" id="all">
+    <table class="ctable" id="all-table">
+      <thead><tr>
+        <th data-k="sector">产业链环节</th><th data-k="name">公司</th><th data-k="code">代码</th><th>A股映射</th>
+        <th data-k="mktcap">市值(亿)</th><th data-k="ytd">YTD</th><th data-k="d20">近20日</th>
+        <th data-k="latest_month">最新月</th><th data-k="latest_rev">月营收(亿)</th>
+        <th data-k="mom">单月MoM</th><th data-k="yoy">单月YoY</th><th data-k="cum_yoy">累计YoY</th><th>业务看点</th>
+      </tr></thead>
+      <tbody id="all-tbody"><tr>
+      <td>晶圆代工</td>
+      <td><strong>台积电 TSMC</strong></td>
+      <td><code>2330.TW</code></td>
+      <td class="amap-cell"><span class="amap amap-weak" title="[弱] 晶圆代工逻辑对标，制程/体量差距悬殊，非真正可比">中芯国际<br><code>688981.SH</code></span></td>
+      <td>619,787</td>
+      <td class="c-up">+127.3%</td>
+      <td class="c-up">+4.2%</td>
+      <td>2026-05</td>
+      <td>4,169.8</td>
+      <td class="c-up">+1.5%</td>
+      <td class="c-up">+30.1%</td>
+      <td class="c-up">+30.0%</td>
+      <td class="desc-cell">全球最大晶圆代工厂，AI芯片制造核心（3nm/2nm先进制程），CoWoS先进封装主导者，2026 Capex 520-560亿美元</td>
+    </tr>
+<tr>
+      <td>IC设计</td>
+      <td><strong>联发科 MediaTek</strong></td>
+      <td><code>2454.TW</code></td>
+      <td class="amap-cell"><span class="amap amap-weak" title="手机SoC设计龙头，A股暂无同体量对标">暂无对标</span></td>
+      <td>69,128</td>
+      <td class="c-up">+223.2%</td>
+      <td class="c-dn">-7.1%</td>
+      <td>2026-05</td>
+      <td>474.3</td>
+      <td class="c-up">+1.5%</td>
+      <td class="c-up">+5.0%</td>
+      <td class="c-dn">-1.6%</td>
+      <td class="desc-cell">全球前五大IC设计，AI手机/边缘AI芯片，ASIC设计服务</td>
+    </tr>
+<tr>
+      <td>电源/散热</td>
+      <td><strong>台达电 Delta</strong></td>
+      <td><code>2308.TW</code></td>
+      <td class="amap-cell"><span class="amap amap-weak" title="[弱] 电源管理，台达电业务更多元(工业自动化+车用)，A股无精确对标">麦格米特<br><code>002851.SZ</code></span></td>
+      <td>51,431</td>
+      <td class="c-up">+370.6%</td>
+      <td class="c-dn">-21.0%</td>
+      <td>2026-05</td>
+      <td>589.6</td>
+      <td class="c-up">+0.5%</td>
+      <td class="c-up">+43.7%</td>
+      <td class="c-up">+38.0%</td>
+      <td class="desc-cell">AI电源+液冷解决方案龙头，800V高压直流，4月营收587亿新台币(+44%YoY)，液冷营收占比快速提升</td>
+    </tr>
+<tr>
+      <td>服务器ODM/EMS</td>
+      <td><strong>鸿海(富士康) Foxconn</strong></td>
+      <td><code>2317.TW</code></td>
+      <td class="amap-cell"><span class="amap amap-strong" title="[强] 鸿海集团子公司，AI服务器ODM代工业务直接对应">工业富联<br><code>601138.SH</code></span></td>
+      <td>35,697</td>
+      <td class="c-up">+45.0%</td>
+      <td class="c-dn">-2.5%</td>
+      <td>2026-05</td>
+      <td>8,594.1</td>
+      <td class="c-up">+3.3%</td>
+      <td class="c-up">+39.6%</td>
+      <td class="c-up">+31.8%</td>
+      <td class="desc-cell">全球最大EMS，AI服务器整机/机柜，NV液冷MGX合作</td>
+    </tr>
+<tr>
+      <td>封测</td>
+      <td><strong>日月光投控 ASE</strong></td>
+      <td><code>3711.TW</code></td>
+      <td class="amap-cell"><span class="amap amap-strong" title="[强] 全球封测龙头对A股封测龙头，业务模式相近">长电科技<br><code>600584.SH</code></span></td>
+      <td>28,549</td>
+      <td class="c-up">+310.6%</td>
+      <td class="c-dn">-0.2%</td>
+      <td>2026-05</td>
+      <td>630.3</td>
+      <td class="c-up">+1.3%</td>
+      <td class="c-up">+28.6%</td>
+      <td class="c-up">+19.9%</td>
+      <td class="desc-cell">全球最大封测厂，CoWoS先进封装扩产，2026年先进封装营收指引35亿美元</td>
+    </tr>
+<tr>
+      <td>晶圆代工</td>
+      <td><strong>联电 UMC</strong></td>
+      <td><code>2303.TW</code></td>
+      <td class="amap-cell"><span class="amap amap-mid" title="[中] 成熟制程晶圆代工，业务结构相近">华虹半导体<br><code>688347.SH</code></span></td>
+      <td>20,928</td>
+      <td class="c-up">+341.5%</td>
+      <td class="c-up">+24.4%</td>
+      <td>2026-05</td>
+      <td>229.4</td>
+      <td class="c-up">+1.2%</td>
+      <td class="c-up">+17.8%</td>
+      <td class="c-up">+9.1%</td>
+      <td class="desc-cell">成熟制程代工（28nm及以上），电源管理/车用芯片，8英寸稼动率回升</td>
+    </tr>
+<tr>
+      <td>CCL/材料</td>
+      <td><strong>台光电 TUC</strong></td>
+      <td><code>2383.TW</code></td>
+      <td class="amap-cell"><span class="amap amap-strong" title="[强] 全球CCL双寡头之一，业务模式与客户结构高度相似">生益科技<br><code>600183.SH</code></span></td>
+      <td>20,209</td>
+      <td class="c-up">+824.6%</td>
+      <td class="c-up">+6.3%</td>
+      <td>2026-05</td>
+      <td>156.2</td>
+      <td class="c-up">+12.2%</td>
+      <td class="c-up">+114.6%</td>
+      <td class="c-up">+73.2%</td>
+      <td class="desc-cell">高频高速覆铜板龙头，AI服务器CCL主供</td>
+    </tr>
+<tr>
+      <td>存储</td>
+      <td><strong>南亚科 Nanya Tech</strong></td>
+      <td><code>2408.TW</code></td>
+      <td class="amap-cell"><span class="amap amap-mid" title="[中] 存储芯片，南亚科为DRAM IDM、兆易创新以设计为主，业务模式有差异">兆易创新<br><code>603986.SH</code></span></td>
+      <td>16,458</td>
+      <td class="c-up">+1530.8%</td>
+      <td class="c-up">+52.9%</td>
+      <td>2026-05</td>
+      <td>276.7</td>
+      <td class="c-up">+8.5%</td>
+      <td class="c-up">+730.1%</td>
+      <td class="c-up">+649.6%</td>
+      <td class="desc-cell">DRAM厂，DDR4/DDR5涨价受益，AI驱动存储需求</td>
+    </tr>
+<tr>
+      <td>PCB/载板</td>
+      <td><strong>欣兴电子 Unimicron</strong></td>
+      <td><code>3037.TW</code></td>
+      <td class="amap-cell"><span class="amap amap-mid" title="[中] ABF载板，逻辑对标深南电路/兴森科技国产替代进度">深南电路<br><code>002916.SZ</code></span></td>
+      <td>16,220</td>
+      <td class="c-up">+640.0%</td>
+      <td class="c-dn">-5.6%</td>
+      <td>2026-05</td>
+      <td>140.6</td>
+      <td class="c-up">+0.9%</td>
+      <td class="c-up">+32.4%</td>
+      <td class="c-up">+26.8%</td>
+      <td class="desc-cell">ABF载板龙头，AI载板+AI HDI产品，Intel/AMD主供</td>
+    </tr>
+<tr>
+      <td>服务器ODM/EMS</td>
+      <td><strong>广达 Quanta</strong></td>
+      <td><code>2382.TW</code></td>
+      <td class="amap-cell"><span class="amap amap-mid" title="[中] 同为AI服务器ODM代工模式，非股权关联">工业富联<br><code>601138.SH</code></span></td>
+      <td>14,156</td>
+      <td class="c-up">+33.8%</td>
+      <td class="c-up">+17.5%</td>
+      <td>2026-05</td>
+      <td>3,114.8</td>
+      <td class="c-dn">-8.4%</td>
+      <td class="c-up">+94.4%</td>
+      <td class="c-up">+82.6%</td>
+      <td class="desc-cell">AI服务器ODM龙头(GB200主供)，订单可见度至2027年</td>
+    </tr>
+<tr>
+      <td>电源/散热</td>
+      <td><strong>奇鋐 AVC</strong></td>
+      <td><code>3017.TW</code></td>
+      <td class="amap-cell"><span class="amap amap-mid" title="[中] 服务器散热模组，业务环节相近">飞荣达<br><code>300602.SZ</code></span></td>
+      <td>9,833</td>
+      <td class="c-up">+305.6%</td>
+      <td class="c-dn">-7.2%</td>
+      <td>2026-05</td>
+      <td>158.7</td>
+      <td class="c-up">+1.5%</td>
+      <td class="c-up">+60.6%</td>
+      <td class="c-up">+90.3%</td>
+      <td class="desc-cell">AI散热模组龙头，4大CSP水冷市占40-50%，4月营收同比+71.6%</td>
+    </tr>
+<tr>
+      <td>服务器ODM/EMS</td>
+      <td><strong>纬颖 Wiwynn</strong></td>
+      <td><code>6669.TW</code></td>
+      <td class="amap-cell"><span class="amap amap-mid" title="[中] 云端服务器代工，业务模式与工业富联最相近">工业富联<br><code>601138.SH</code></span></td>
+      <td>8,450</td>
+      <td class="c-up">+83.8%</td>
+      <td class="c-dn">-7.8%</td>
+      <td>2026-05</td>
+      <td>840.5</td>
+      <td class="c-up">+1.6%</td>
+      <td class="c-up">+18.2%</td>
+      <td class="c-up">+45.1%</td>
+      <td class="desc-cell">云端服务器/ASIC服务器(AWS主要客户)</td>
+    </tr>
+<tr>
+      <td>PCB/载板</td>
+      <td><strong>南亚电路板 Nan Ya PCB</strong></td>
+      <td><code>8046.TW</code></td>
+      <td class="amap-cell"><span class="amap amap-mid" title="[中] AI服务器PCB为主业，业务结构相近">沪电股份<br><code>002463.SZ</code></span></td>
+      <td>6,752</td>
+      <td class="">0.0%</td>
+      <td class="">0.0%</td>
+      <td>2026-05</td>
+      <td>44.4</td>
+      <td class="c-dn">-0.2%</td>
+      <td class="c-up">+35.8%</td>
+      <td class="c-up">+34.5%</td>
+      <td class="desc-cell">ABF载板大厂，受益Intel/AMD服务器CPU</td>
+    </tr>
+<tr>
+      <td>IC设计</td>
+      <td><strong>信骅 Aspeed</strong></td>
+      <td><code>5274.TWO</code></td>
+      <td class="amap-cell"><span class="amap amap-weak" title="服务器BMC芯片，A股暂无直接对标">暂无对标</span></td>
+      <td>6,587</td>
+      <td class="c-up">+430.1%</td>
+      <td class="c-dn">-4.4%</td>
+      <td>2026-05</td>
+      <td>12.8</td>
+      <td class="c-up">+0.2%</td>
+      <td class="c-up">+68.7%</td>
+      <td class="c-up">+61.7%</td>
+      <td class="desc-cell">服务器管理芯片(BMC)全球龙头，受益AI服务器拉货</td>
+    </tr>
+<tr>
+      <td>IC设计</td>
+      <td><strong>创意电子 GUC</strong></td>
+      <td><code>3443.TW</code></td>
+      <td class="amap-cell"><span class="amap amap-strong" title="[强] ASIC设计服务(NRE+量产)，商业模式高度相似">芯原股份<br><code>688521.SH</code></span></td>
+      <td>6,500</td>
+      <td class="c-up">+263.6%</td>
+      <td class="c-dn">-4.5%</td>
+      <td>2026-05</td>
+      <td>46.7</td>
+      <td class="c-up">+8.8%</td>
+      <td class="c-up">+132.1%</td>
+      <td class="c-up">+90.6%</td>
+      <td class="desc-cell">台积电旗下ASIC设计服务，AI定制芯片设计</td>
+    </tr>
+<tr>
+      <td>PCB/载板</td>
+      <td><strong>臻鼎-KY</strong></td>
+      <td><code>4958.TW</code></td>
+      <td class="amap-cell"><span class="amap amap-strong" title="[强] 鹏鼎控股为臻鼎-KY在A股上市的核心子公司，股权直接关联">鹏鼎控股<br><code>002938.SZ</code></span></td>
+      <td>6,498</td>
+      <td class="c-up">+428.8%</td>
+      <td class="c-up">+13.9%</td>
+      <td>2026-05</td>
+      <td>162.0</td>
+      <td class="c-up">+6.6%</td>
+      <td class="c-up">+37.4%</td>
+      <td class="c-up">+10.2%</td>
+      <td class="desc-cell">全球大型 PCB 厂，Apple、消费电子、服务器相关</td>
+    </tr>
+<tr>
+      <td>PCB/载板</td>
+      <td><strong>金像电 GCE</strong></td>
+      <td><code>2368.TW</code></td>
+      <td class="amap-cell"><span class="amap amap-mid" title="[中] AI服务器PCB，业务结构相近">沪电股份<br><code>002463.SZ</code></span></td>
+      <td>6,461</td>
+      <td class="c-up">+428.9%</td>
+      <td class="c-dn">-9.2%</td>
+      <td>2026-05</td>
+      <td>87.7</td>
+      <td class="c-up">+20.4%</td>
+      <td class="c-up">+87.3%</td>
+      <td class="c-up">+66.7%</td>
+      <td class="desc-cell">AI高阶PCB龙头</td>
+    </tr>
+<tr>
+      <td>服务器ODM/EMS</td>
+      <td><strong>纬创 Wistron</strong></td>
+      <td><code>3231.TW</code></td>
+      <td class="amap-cell"><span class="amap amap-mid" title="[中] 同为AI服务器ODM代工模式，非股权关联">工业富联<br><code>601138.SH</code></span></td>
+      <td>5,089</td>
+      <td class="c-up">+59.1%</td>
+      <td class="c-up">+10.3%</td>
+      <td>2026-05</td>
+      <td>2,901.8</td>
+      <td class="c-up">+2.4%</td>
+      <td class="c-up">+39.2%</td>
+      <td class="c-up">+106.2%</td>
+      <td class="desc-cell">AI服务器爆发式增长，2026年AI营收三位数增长</td>
+    </tr>
+<tr>
+      <td>电源/散热</td>
+      <td><strong>光宝 Lite-On</strong></td>
+      <td><code>2301.TW</code></td>
+      <td class="amap-cell"><span class="amap amap-weak" title="多元化光电/电源集团，A股无直接对标">暂无对标</span></td>
+      <td>5,054</td>
+      <td class="c-up">+128.7%</td>
+      <td class="c-dn">-12.6%</td>
+      <td>2026-05</td>
+      <td>173.5</td>
+      <td class="c-up">+3.9%</td>
+      <td class="c-up">+29.6%</td>
+      <td class="c-up">+22.5%</td>
+      <td class="desc-cell">云端相关营收Q1同比+70%，AI电源供应器</td>
+    </tr>
+<tr>
+      <td>CCL/材料</td>
+      <td><strong>台燿 Ventec</strong></td>
+      <td><code>6274.TWO</code></td>
+      <td class="amap-cell"><span class="amap amap-strong" title="[强] 高频高速CCL，产品结构与生益科技最相近">生益科技<br><code>600183.SH</code></span></td>
+      <td>5,034</td>
+      <td class="c-up">+957.3%</td>
+      <td class="c-up">+4.3%</td>
+      <td>2026-05</td>
+      <td>47.9</td>
+      <td class="c-up">+4.0%</td>
+      <td class="c-up">+128.5%</td>
+      <td class="c-up">+80.3%</td>
+      <td class="desc-cell">覆铜板/高速材料，营收同比+27%</td>
+    </tr>
+<tr>
+      <td>电源/散热</td>
+      <td><strong>健策 Jentech</strong></td>
+      <td><code>3653.TW</code></td>
+      <td class="amap-cell"><span class="amap amap-mid" title="[中] 均热板/散热材料，环节相近">中石科技<br><code>300684.SZ</code></span></td>
+      <td>4,974</td>
+      <td class="c-up">+124.5%</td>
+      <td class="c-dn">-7.6%</td>
+      <td>2026-05</td>
+      <td>23.1</td>
+      <td class="c-up">+0.1%</td>
+      <td class="c-up">+37.7%</td>
+      <td class="c-up">+20.3%</td>
+      <td class="desc-cell">散热均温板/液冷板，受益AI散热景气提升</td>
+    </tr>
+<tr>
+      <td>硅片</td>
+      <td><strong>环球晶</strong></td>
+      <td><code>6488.TWO</code></td>
+      <td class="amap-cell"><span class="amap amap-mid" title="[中] 半导体硅片，环球晶体量更大，逻辑对标">沪硅产业<br><code>688126.SH</code></span></td>
+      <td>4,972</td>
+      <td class="c-up">+183.2%</td>
+      <td class="c-up">+11.8%</td>
+      <td>2026-05</td>
+      <td>48.4</td>
+      <td class="c-up">+2.0%</td>
+      <td class="c-dn">-3.3%</td>
+      <td class="c-dn">-8.9%</td>
+      <td class="desc-cell"></td>
+    </tr>
+<tr>
+      <td>PCB/载板</td>
+      <td><strong>景硕 Kinsus</strong></td>
+      <td><code>3189.TW</code></td>
+      <td class="amap-cell"><span class="amap amap-mid" title="[中] ABF载板，逻辑对标深南电路/兴森科技">深南电路<br><code>002916.SZ</code></span></td>
+      <td>4,279</td>
+      <td class="c-up">+750.2%</td>
+      <td class="c-up">+15.7%</td>
+      <td>2026-05</td>
+      <td>42.0</td>
+      <td class="c-up">+3.1%</td>
+      <td class="c-up">+33.0%</td>
+      <td class="c-up">+29.3%</td>
+      <td class="desc-cell">ABF载板(高毛利)，先进产线聚焦AI应用，载板价格双位数涨幅</td>
+    </tr>
+<tr>
+      <td>晶圆代工</td>
+      <td><strong>世界先进</strong></td>
+      <td><code>5347.TWO</code></td>
+      <td class="amap-cell"><span class="amap amap-mid" title="[中] 特殊制程(功率器件/电源管理代工)，环节相近">华润微<br><code>688396.SH</code></span></td>
+      <td>4,135</td>
+      <td class="c-up">+130.2%</td>
+      <td class="c-up">+32.5%</td>
+      <td>—</td>
+      <td>—</td>
+      <td class="">—</td>
+      <td class="">—</td>
+      <td class="">—</td>
+      <td class="desc-cell">成熟制程</td>
+    </tr>
+<tr>
+      <td>封测</td>
+      <td><strong>京元电子 KYEC</strong></td>
+      <td><code>2449.TW</code></td>
+      <td class="amap-cell"><span class="amap amap-mid" title="[中] 纯测试业务，逻辑对标华天科技/晶方科技">华天科技<br><code>002185.SZ</code></span></td>
+      <td>4,090</td>
+      <td class="c-up">+211.8%</td>
+      <td class="c-up">+6.0%</td>
+      <td>2026-05</td>
+      <td>37.8</td>
+      <td class="c-up">+0.9%</td>
+      <td class="c-up">+36.6%</td>
+      <td class="c-up">+37.7%</td>
+      <td class="desc-cell">AI芯片测试龙头，AI相关营收占比从27%提升至40%，2026年Capex 500亿新台币</td>
+    </tr>
+<tr>
+      <td>IC设计</td>
+      <td><strong>世芯-KY</strong></td>
+      <td><code>3661.TW</code></td>
+      <td class="amap-cell"><span class="amap amap-strong" title="[强] ASIC定制芯片设计，云端customer custom silicon模式对标">芯原股份<br><code>688521.SH</code></span></td>
+      <td>3,473</td>
+      <td class="c-up">+30.2%</td>
+      <td class="c-dn">-6.0%</td>
+      <td>—</td>
+      <td>—</td>
+      <td class="">—</td>
+      <td class="">—</td>
+      <td class="">—</td>
+      <td class="desc-cell">ASIC</td>
+    </tr>
+<tr>
+      <td>封测</td>
+      <td><strong>颖崴 Winnoz</strong></td>
+      <td><code>6515.TW</code></td>
+      <td class="amap-cell"><span class="amap amap-mid" title="[中] IC测试，规模较小标的对标">伟测科技<br><code>688372.SH</code></span></td>
+      <td>3,312</td>
+      <td class="c-up">+710.3%</td>
+      <td class="c-dn">-7.1%</td>
+      <td>2026-05</td>
+      <td>10.7</td>
+      <td class="c-up">+8.5%</td>
+      <td class="c-up">+119.8%</td>
+      <td class="c-up">+46.5%</td>
+      <td class="desc-cell">探针卡/测试介面，AI芯片及ASIC测试布局</td>
+    </tr>
+<tr>
+      <td>PCB/载板</td>
+      <td><strong>健鼎 Tripod</strong></td>
+      <td><code>3044.TW</code></td>
+      <td class="amap-cell"><span class="amap amap-mid" title="[中] 多层板/HDI，客户结构相近">胜宏科技<br><code>300476.SZ</code></span></td>
+      <td>2,796</td>
+      <td class="c-up">+180.8%</td>
+      <td class="c-up">+1.5%</td>
+      <td>2026-05</td>
+      <td>86.5</td>
+      <td class="c-up">+5.5%</td>
+      <td class="c-up">+46.6%</td>
+      <td class="c-up">+28.7%</td>
+      <td class="desc-cell">通用服务器PCB大厂</td>
+    </tr>
+<tr>
+      <td>连接器</td>
+      <td><strong>嘉泽端子 Lotes</strong></td>
+      <td><code>3533.TW</code></td>
+      <td class="amap-cell"><span class="amap amap-weak" title="[弱] 连接器，立讯精密业务范围远大于嘉泽，仅连接器环节可比">立讯精密<br><code>002475.SZ</code></span></td>
+      <td>2,504</td>
+      <td class="c-up">+17.1%</td>
+      <td class="c-dn">-15.2%</td>
+      <td>2026-05</td>
+      <td>30.4</td>
+      <td class="c-dn">-10.3%</td>
+      <td class="c-up">+9.0%</td>
+      <td class="c-up">+17.2%</td>
+      <td class="desc-cell">Intel服务器CPU Socket独家供应商，高壁垒</td>
+    </tr>
+<tr>
+      <td>服务器ODM/EMS</td>
+      <td><strong>英业达 Inventec</strong></td>
+      <td><code>2356.TW</code></td>
+      <td class="amap-cell"><span class="amap amap-mid" title="[中] 同为AI服务器ODM代工模式，非股权关联">工业富联<br><code>601138.SH</code></span></td>
+      <td>2,393</td>
+      <td class="c-up">+38.5%</td>
+      <td class="c-up">+7.6%</td>
+      <td>2026-05</td>
+      <td>828.1</td>
+      <td class="c-dn">-2.3%</td>
+      <td class="c-up">+35.3%</td>
+      <td class="c-up">+31.2%</td>
+      <td class="desc-cell">AI服务器ODM(AWS/Google ASIC客户)</td>
+    </tr>
+<tr>
+      <td>CCL/材料</td>
+      <td><strong>联茂 ITEQ</strong></td>
+      <td><code>6213.TW</code></td>
+      <td class="amap-cell"><span class="amap amap-mid" title="[中] CCL，规模较小，逻辑对标生益科技/华正新材">生益科技<br><code>600183.SH</code></span></td>
+      <td>1,234</td>
+      <td class="c-up">+340.4%</td>
+      <td class="c-up">+22.8%</td>
+      <td>2026-05</td>
+      <td>38.0</td>
+      <td class="c-up">+8.2%</td>
+      <td class="c-up">+29.3%</td>
+      <td class="c-up">+20.9%</td>
+      <td class="desc-cell">AI数据中心M9等级超低损耗基板材料，已通过美系AI大厂认证</td>
+    </tr>
+<tr>
+      <td>IC设计</td>
+      <td><strong>祥硕 ASMedia</strong></td>
+      <td><code>5269.TW</code></td>
+      <td class="amap-cell"><span class="amap amap-weak" title="USB/PCIe芯片，A股暂无直接对标">暂无对标</span></td>
+      <td>1,072</td>
+      <td class="c-dn">-26.5%</td>
+      <td class="c-dn">-4.0%</td>
+      <td>2026-05</td>
+      <td>9.0</td>
+      <td class="c-dn">-6.5%</td>
+      <td class="c-dn">-19.4%</td>
+      <td class="c-up">+11.9%</td>
+      <td class="desc-cell">高速传输IC(PCIe/USB)，AI服务器互联</td>
+    </tr>
+<tr>
+      <td>电源/散热</td>
+      <td><strong>双鸿 Auras</strong></td>
+      <td><code>3324.TWO</code></td>
+      <td class="amap-cell"><span class="amap amap-strong" title="[强] AI服务器液冷散热龙头，业务模式最相近">英维克<br><code>002837.SZ</code></span></td>
+      <td>940</td>
+      <td class="c-up">+54.2%</td>
+      <td class="c-dn">-1.3%</td>
+      <td>2026-05</td>
+      <td>31.4</td>
+      <td class="c-up">+10.4%</td>
+      <td class="c-up">+93.8%</td>
+      <td class="c-up">+80.5%</td>
+      <td class="desc-cell">液冷散热(GB200水冷板市占15%)，预估液冷收入占比近50%</td>
+    </tr>
+<tr>
+      <td>PCB钻针</td>
+      <td><strong>尖点</strong></td>
+      <td><code>8021.TW</code></td>
+      <td class="amap-cell"><span class="amap amap-mid" title="[中] PCB钻针环节直接可比">鼎泰高科<br><code>301377.SZ</code></span></td>
+      <td>817</td>
+      <td class="">0.0%</td>
+      <td class="">0.0%</td>
+      <td>2026-05</td>
+      <td>6.2</td>
+      <td class="c-up">+18.2%</td>
+      <td class="c-up">+86.3%</td>
+      <td class="c-up">+61.1%</td>
+      <td class="desc-cell">PCB钻针</td>
+    </tr>
+<tr>
+      <td>半导体设备/检测</td>
+      <td><strong>鸿准 Foxconn Industrial</strong></td>
+      <td><code>2354.TW</code></td>
+      <td class="amap-cell"><span class="amap amap-weak" title="[弱] 富士康集团精密结构件子公司，与工业富联同属富士康体系">工业富联<br><code>601138.SH</code></span></td>
+      <td>812</td>
+      <td class="c-dn">-21.2%</td>
+      <td class="c-dn">-3.9%</td>
+      <td>2026-05</td>
+      <td>87.6</td>
+      <td class="c-up">+34.2%</td>
+      <td class="c-dn">-40.6%</td>
+      <td class="c-dn">-29.6%</td>
+      <td class="desc-cell">AI/HPC芯片测试设备市占超90%，产能2026年扩张超40%</td>
+    </tr>
+<tr>
+      <td>光通信/CPO</td>
+      <td><strong>上诠(FOCI)</strong></td>
+      <td><code>3363.TWO</code></td>
+      <td class="amap-cell"><span class="amap amap-weak" title="[弱] 光通信元件，上诠规模远小于中际旭创，仅产业链环节对标">中际旭创<br><code>300308.SZ</code></span></td>
+      <td>715</td>
+      <td class="c-up">+159.0%</td>
+      <td class="c-dn">-25.7%</td>
+      <td>2026-05</td>
+      <td>1.4</td>
+      <td class="c-up">+12.4%</td>
+      <td class="c-dn">-24.8%</td>
+      <td class="c-dn">-19.0%</td>
+      <td class="desc-cell">FAU核心供应商(NVIDIA/TSMC CPO COUPE架构)，1.6T CPO 2026H2放量</td>
+    </tr></tbody>
+    </table>
+    <div class="footnote">
+      点击表头可排序；YTD=2025年初至今涨跌幅，近20日=近20个交易日涨跌幅；单月MoM/YoY基于最新已披露月营收计算，累计YoY=当年累计营收(至最新披露月)同比去年同期累计，更能平滑单月波动。<br>
+      A股映射为<strong>产业链逻辑对标</strong>，非精确可比公司：<span class="amap amap-strong">强</span>=股权或业务模式直接对应，<span class="amap amap-mid">中</span>=同环节但规模/模式有差异，<span class="amap amap-weak">弱</span>=仅产业链位置相近、体量或商业模式差距大。鼠标悬停查看对标逻辑说明，具体投资决策请结合自身研判复核。
+    </div>
+  </div>
+
+  
+    <div class="tab-pane" id="sec-0">
+      <div class="chart-box">
+        <h4>服务器ODM/EMS · 各公司月营收趋势（亿新台币）</h4>
+        <div class="chart-wrap" style="height:260px"><canvas id="chart-0"></canvas></div>
+      </div>
+      <table class="ctable">
+        <thead><tr>
+          <th>公司</th><th>代码</th><th>A股映射</th><th>市值(亿)</th><th>YTD</th><th>近20日</th>
+          <th>最新月</th><th>月营收(亿)</th><th>单月MoM</th><th>单月YoY</th><th>累计YoY</th><th>业务看点</th>
+        </tr></thead>
+        <tbody><tr>
+      
+      <td><strong>鸿海(富士康) Foxconn</strong></td>
+      <td><code>2317.TW</code></td>
+      <td class="amap-cell"><span class="amap amap-strong" title="[强] 鸿海集团子公司，AI服务器ODM代工业务直接对应">工业富联<br><code>601138.SH</code></span></td>
+      <td>35,697</td>
+      <td class="c-up">+45.0%</td>
+      <td class="c-dn">-2.5%</td>
+      <td>2026-05</td>
+      <td>8,594.1</td>
+      <td class="c-up">+3.3%</td>
+      <td class="c-up">+39.6%</td>
+      <td class="c-up">+31.8%</td>
+      <td class="desc-cell">全球最大EMS，AI服务器整机/机柜，NV液冷MGX合作</td>
+    </tr>
+<tr>
+      
+      <td><strong>广达 Quanta</strong></td>
+      <td><code>2382.TW</code></td>
+      <td class="amap-cell"><span class="amap amap-mid" title="[中] 同为AI服务器ODM代工模式，非股权关联">工业富联<br><code>601138.SH</code></span></td>
+      <td>14,156</td>
+      <td class="c-up">+33.8%</td>
+      <td class="c-up">+17.5%</td>
+      <td>2026-05</td>
+      <td>3,114.8</td>
+      <td class="c-dn">-8.4%</td>
+      <td class="c-up">+94.4%</td>
+      <td class="c-up">+82.6%</td>
+      <td class="desc-cell">AI服务器ODM龙头(GB200主供)，订单可见度至2027年</td>
+    </tr>
+<tr>
+      
+      <td><strong>纬颖 Wiwynn</strong></td>
+      <td><code>6669.TW</code></td>
+      <td class="amap-cell"><span class="amap amap-mid" title="[中] 云端服务器代工，业务模式与工业富联最相近">工业富联<br><code>601138.SH</code></span></td>
+      <td>8,450</td>
+      <td class="c-up">+83.8%</td>
+      <td class="c-dn">-7.8%</td>
+      <td>2026-05</td>
+      <td>840.5</td>
+      <td class="c-up">+1.6%</td>
+      <td class="c-up">+18.2%</td>
+      <td class="c-up">+45.1%</td>
+      <td class="desc-cell">云端服务器/ASIC服务器(AWS主要客户)</td>
+    </tr>
+<tr>
+      
+      <td><strong>纬创 Wistron</strong></td>
+      <td><code>3231.TW</code></td>
+      <td class="amap-cell"><span class="amap amap-mid" title="[中] 同为AI服务器ODM代工模式，非股权关联">工业富联<br><code>601138.SH</code></span></td>
+      <td>5,089</td>
+      <td class="c-up">+59.1%</td>
+      <td class="c-up">+10.3%</td>
+      <td>2026-05</td>
+      <td>2,901.8</td>
+      <td class="c-up">+2.4%</td>
+      <td class="c-up">+39.2%</td>
+      <td class="c-up">+106.2%</td>
+      <td class="desc-cell">AI服务器爆发式增长，2026年AI营收三位数增长</td>
+    </tr>
+<tr>
+      
+      <td><strong>英业达 Inventec</strong></td>
+      <td><code>2356.TW</code></td>
+      <td class="amap-cell"><span class="amap amap-mid" title="[中] 同为AI服务器ODM代工模式，非股权关联">工业富联<br><code>601138.SH</code></span></td>
+      <td>2,393</td>
+      <td class="c-up">+38.5%</td>
+      <td class="c-up">+7.6%</td>
+      <td>2026-05</td>
+      <td>828.1</td>
+      <td class="c-dn">-2.3%</td>
+      <td class="c-up">+35.3%</td>
+      <td class="c-up">+31.2%</td>
+      <td class="desc-cell">AI服务器ODM(AWS/Google ASIC客户)</td>
+    </tr></tbody>
+      </table>
+    </div>
+    <div class="tab-pane" id="sec-1">
+      <div class="chart-box">
+        <h4>PCB/载板 · 各公司月营收趋势（亿新台币）</h4>
+        <div class="chart-wrap" style="height:260px"><canvas id="chart-1"></canvas></div>
+      </div>
+      <table class="ctable">
+        <thead><tr>
+          <th>公司</th><th>代码</th><th>A股映射</th><th>市值(亿)</th><th>YTD</th><th>近20日</th>
+          <th>最新月</th><th>月营收(亿)</th><th>单月MoM</th><th>单月YoY</th><th>累计YoY</th><th>业务看点</th>
+        </tr></thead>
+        <tbody><tr>
+      
+      <td><strong>欣兴电子 Unimicron</strong></td>
+      <td><code>3037.TW</code></td>
+      <td class="amap-cell"><span class="amap amap-mid" title="[中] ABF载板，逻辑对标深南电路/兴森科技国产替代进度">深南电路<br><code>002916.SZ</code></span></td>
+      <td>16,220</td>
+      <td class="c-up">+640.0%</td>
+      <td class="c-dn">-5.6%</td>
+      <td>2026-05</td>
+      <td>140.6</td>
+      <td class="c-up">+0.9%</td>
+      <td class="c-up">+32.4%</td>
+      <td class="c-up">+26.8%</td>
+      <td class="desc-cell">ABF载板龙头，AI载板+AI HDI产品，Intel/AMD主供</td>
+    </tr>
+<tr>
+      
+      <td><strong>南亚电路板 Nan Ya PCB</strong></td>
+      <td><code>8046.TW</code></td>
+      <td class="amap-cell"><span class="amap amap-mid" title="[中] AI服务器PCB为主业，业务结构相近">沪电股份<br><code>002463.SZ</code></span></td>
+      <td>6,752</td>
+      <td class="">0.0%</td>
+      <td class="">0.0%</td>
+      <td>2026-05</td>
+      <td>44.4</td>
+      <td class="c-dn">-0.2%</td>
+      <td class="c-up">+35.8%</td>
+      <td class="c-up">+34.5%</td>
+      <td class="desc-cell">ABF载板大厂，受益Intel/AMD服务器CPU</td>
+    </tr>
+<tr>
+      
+      <td><strong>臻鼎-KY</strong></td>
+      <td><code>4958.TW</code></td>
+      <td class="amap-cell"><span class="amap amap-strong" title="[强] 鹏鼎控股为臻鼎-KY在A股上市的核心子公司，股权直接关联">鹏鼎控股<br><code>002938.SZ</code></span></td>
+      <td>6,498</td>
+      <td class="c-up">+428.8%</td>
+      <td class="c-up">+13.9%</td>
+      <td>2026-05</td>
+      <td>162.0</td>
+      <td class="c-up">+6.6%</td>
+      <td class="c-up">+37.4%</td>
+      <td class="c-up">+10.2%</td>
+      <td class="desc-cell">全球大型 PCB 厂，Apple、消费电子、服务器相关</td>
+    </tr>
+<tr>
+      
+      <td><strong>金像电 GCE</strong></td>
+      <td><code>2368.TW</code></td>
+      <td class="amap-cell"><span class="amap amap-mid" title="[中] AI服务器PCB，业务结构相近">沪电股份<br><code>002463.SZ</code></span></td>
+      <td>6,461</td>
+      <td class="c-up">+428.9%</td>
+      <td class="c-dn">-9.2%</td>
+      <td>2026-05</td>
+      <td>87.7</td>
+      <td class="c-up">+20.4%</td>
+      <td class="c-up">+87.3%</td>
+      <td class="c-up">+66.7%</td>
+      <td class="desc-cell">AI高阶PCB龙头</td>
+    </tr>
+<tr>
+      
+      <td><strong>景硕 Kinsus</strong></td>
+      <td><code>3189.TW</code></td>
+      <td class="amap-cell"><span class="amap amap-mid" title="[中] ABF载板，逻辑对标深南电路/兴森科技">深南电路<br><code>002916.SZ</code></span></td>
+      <td>4,279</td>
+      <td class="c-up">+750.2%</td>
+      <td class="c-up">+15.7%</td>
+      <td>2026-05</td>
+      <td>42.0</td>
+      <td class="c-up">+3.1%</td>
+      <td class="c-up">+33.0%</td>
+      <td class="c-up">+29.3%</td>
+      <td class="desc-cell">ABF载板(高毛利)，先进产线聚焦AI应用，载板价格双位数涨幅</td>
+    </tr>
+<tr>
+      
+      <td><strong>健鼎 Tripod</strong></td>
+      <td><code>3044.TW</code></td>
+      <td class="amap-cell"><span class="amap amap-mid" title="[中] 多层板/HDI，客户结构相近">胜宏科技<br><code>300476.SZ</code></span></td>
+      <td>2,796</td>
+      <td class="c-up">+180.8%</td>
+      <td class="c-up">+1.5%</td>
+      <td>2026-05</td>
+      <td>86.5</td>
+      <td class="c-up">+5.5%</td>
+      <td class="c-up">+46.6%</td>
+      <td class="c-up">+28.7%</td>
+      <td class="desc-cell">通用服务器PCB大厂</td>
+    </tr></tbody>
+      </table>
+    </div>
+    <div class="tab-pane" id="sec-2">
+      <div class="chart-box">
+        <h4>CCL/材料 · 各公司月营收趋势（亿新台币）</h4>
+        <div class="chart-wrap" style="height:260px"><canvas id="chart-2"></canvas></div>
+      </div>
+      <table class="ctable">
+        <thead><tr>
+          <th>公司</th><th>代码</th><th>A股映射</th><th>市值(亿)</th><th>YTD</th><th>近20日</th>
+          <th>最新月</th><th>月营收(亿)</th><th>单月MoM</th><th>单月YoY</th><th>累计YoY</th><th>业务看点</th>
+        </tr></thead>
+        <tbody><tr>
+      
+      <td><strong>台光电 TUC</strong></td>
+      <td><code>2383.TW</code></td>
+      <td class="amap-cell"><span class="amap amap-strong" title="[强] 全球CCL双寡头之一，业务模式与客户结构高度相似">生益科技<br><code>600183.SH</code></span></td>
+      <td>20,209</td>
+      <td class="c-up">+824.6%</td>
+      <td class="c-up">+6.3%</td>
+      <td>2026-05</td>
+      <td>156.2</td>
+      <td class="c-up">+12.2%</td>
+      <td class="c-up">+114.6%</td>
+      <td class="c-up">+73.2%</td>
+      <td class="desc-cell">高频高速覆铜板龙头，AI服务器CCL主供</td>
+    </tr>
+<tr>
+      
+      <td><strong>台燿 Ventec</strong></td>
+      <td><code>6274.TWO</code></td>
+      <td class="amap-cell"><span class="amap amap-strong" title="[强] 高频高速CCL，产品结构与生益科技最相近">生益科技<br><code>600183.SH</code></span></td>
+      <td>5,034</td>
+      <td class="c-up">+957.3%</td>
+      <td class="c-up">+4.3%</td>
+      <td>2026-05</td>
+      <td>47.9</td>
+      <td class="c-up">+4.0%</td>
+      <td class="c-up">+128.5%</td>
+      <td class="c-up">+80.3%</td>
+      <td class="desc-cell">覆铜板/高速材料，营收同比+27%</td>
+    </tr>
+<tr>
+      
+      <td><strong>联茂 ITEQ</strong></td>
+      <td><code>6213.TW</code></td>
+      <td class="amap-cell"><span class="amap amap-mid" title="[中] CCL，规模较小，逻辑对标生益科技/华正新材">生益科技<br><code>600183.SH</code></span></td>
+      <td>1,234</td>
+      <td class="c-up">+340.4%</td>
+      <td class="c-up">+22.8%</td>
+      <td>2026-05</td>
+      <td>38.0</td>
+      <td class="c-up">+8.2%</td>
+      <td class="c-up">+29.3%</td>
+      <td class="c-up">+20.9%</td>
+      <td class="desc-cell">AI数据中心M9等级超低损耗基板材料，已通过美系AI大厂认证</td>
+    </tr></tbody>
+      </table>
+    </div>
+    <div class="tab-pane" id="sec-3">
+      <div class="chart-box">
+        <h4>PCB钻针 · 各公司月营收趋势（亿新台币）</h4>
+        <div class="chart-wrap" style="height:260px"><canvas id="chart-3"></canvas></div>
+      </div>
+      <table class="ctable">
+        <thead><tr>
+          <th>公司</th><th>代码</th><th>A股映射</th><th>市值(亿)</th><th>YTD</th><th>近20日</th>
+          <th>最新月</th><th>月营收(亿)</th><th>单月MoM</th><th>单月YoY</th><th>累计YoY</th><th>业务看点</th>
+        </tr></thead>
+        <tbody><tr>
+      
+      <td><strong>尖点</strong></td>
+      <td><code>8021.TW</code></td>
+      <td class="amap-cell"><span class="amap amap-mid" title="[中] PCB钻针环节直接可比">鼎泰高科<br><code>301377.SZ</code></span></td>
+      <td>817</td>
+      <td class="">0.0%</td>
+      <td class="">0.0%</td>
+      <td>2026-05</td>
+      <td>6.2</td>
+      <td class="c-up">+18.2%</td>
+      <td class="c-up">+86.3%</td>
+      <td class="c-up">+61.1%</td>
+      <td class="desc-cell">PCB钻针</td>
+    </tr></tbody>
+      </table>
+    </div>
+    <div class="tab-pane" id="sec-4">
+      <div class="chart-box">
+        <h4>电源/散热 · 各公司月营收趋势（亿新台币）</h4>
+        <div class="chart-wrap" style="height:260px"><canvas id="chart-4"></canvas></div>
+      </div>
+      <table class="ctable">
+        <thead><tr>
+          <th>公司</th><th>代码</th><th>A股映射</th><th>市值(亿)</th><th>YTD</th><th>近20日</th>
+          <th>最新月</th><th>月营收(亿)</th><th>单月MoM</th><th>单月YoY</th><th>累计YoY</th><th>业务看点</th>
+        </tr></thead>
+        <tbody><tr>
+      
+      <td><strong>台达电 Delta</strong></td>
+      <td><code>2308.TW</code></td>
+      <td class="amap-cell"><span class="amap amap-weak" title="[弱] 电源管理，台达电业务更多元(工业自动化+车用)，A股无精确对标">麦格米特<br><code>002851.SZ</code></span></td>
+      <td>51,431</td>
+      <td class="c-up">+370.6%</td>
+      <td class="c-dn">-21.0%</td>
+      <td>2026-05</td>
+      <td>589.6</td>
+      <td class="c-up">+0.5%</td>
+      <td class="c-up">+43.7%</td>
+      <td class="c-up">+38.0%</td>
+      <td class="desc-cell">AI电源+液冷解决方案龙头，800V高压直流，4月营收587亿新台币(+44%YoY)，液冷营收占比快速提升</td>
+    </tr>
+<tr>
+      
+      <td><strong>奇鋐 AVC</strong></td>
+      <td><code>3017.TW</code></td>
+      <td class="amap-cell"><span class="amap amap-mid" title="[中] 服务器散热模组，业务环节相近">飞荣达<br><code>300602.SZ</code></span></td>
+      <td>9,833</td>
+      <td class="c-up">+305.6%</td>
+      <td class="c-dn">-7.2%</td>
+      <td>2026-05</td>
+      <td>158.7</td>
+      <td class="c-up">+1.5%</td>
+      <td class="c-up">+60.6%</td>
+      <td class="c-up">+90.3%</td>
+      <td class="desc-cell">AI散热模组龙头，4大CSP水冷市占40-50%，4月营收同比+71.6%</td>
+    </tr>
+<tr>
+      
+      <td><strong>光宝 Lite-On</strong></td>
+      <td><code>2301.TW</code></td>
+      <td class="amap-cell"><span class="amap amap-weak" title="多元化光电/电源集团，A股无直接对标">暂无对标</span></td>
+      <td>5,054</td>
+      <td class="c-up">+128.7%</td>
+      <td class="c-dn">-12.6%</td>
+      <td>2026-05</td>
+      <td>173.5</td>
+      <td class="c-up">+3.9%</td>
+      <td class="c-up">+29.6%</td>
+      <td class="c-up">+22.5%</td>
+      <td class="desc-cell">云端相关营收Q1同比+70%，AI电源供应器</td>
+    </tr>
+<tr>
+      
+      <td><strong>健策 Jentech</strong></td>
+      <td><code>3653.TW</code></td>
+      <td class="amap-cell"><span class="amap amap-mid" title="[中] 均热板/散热材料，环节相近">中石科技<br><code>300684.SZ</code></span></td>
+      <td>4,974</td>
+      <td class="c-up">+124.5%</td>
+      <td class="c-dn">-7.6%</td>
+      <td>2026-05</td>
+      <td>23.1</td>
+      <td class="c-up">+0.1%</td>
+      <td class="c-up">+37.7%</td>
+      <td class="c-up">+20.3%</td>
+      <td class="desc-cell">散热均温板/液冷板，受益AI散热景气提升</td>
+    </tr>
+<tr>
+      
+      <td><strong>双鸿 Auras</strong></td>
+      <td><code>3324.TWO</code></td>
+      <td class="amap-cell"><span class="amap amap-strong" title="[强] AI服务器液冷散热龙头，业务模式最相近">英维克<br><code>002837.SZ</code></span></td>
+      <td>940</td>
+      <td class="c-up">+54.2%</td>
+      <td class="c-dn">-1.3%</td>
+      <td>2026-05</td>
+      <td>31.4</td>
+      <td class="c-up">+10.4%</td>
+      <td class="c-up">+93.8%</td>
+      <td class="c-up">+80.5%</td>
+      <td class="desc-cell">液冷散热(GB200水冷板市占15%)，预估液冷收入占比近50%</td>
+    </tr></tbody>
+      </table>
+    </div>
+    <div class="tab-pane" id="sec-5">
+      <div class="chart-box">
+        <h4>晶圆代工 · 各公司月营收趋势（亿新台币）</h4>
+        <div class="chart-wrap" style="height:260px"><canvas id="chart-5"></canvas></div>
+      </div>
+      <table class="ctable">
+        <thead><tr>
+          <th>公司</th><th>代码</th><th>A股映射</th><th>市值(亿)</th><th>YTD</th><th>近20日</th>
+          <th>最新月</th><th>月营收(亿)</th><th>单月MoM</th><th>单月YoY</th><th>累计YoY</th><th>业务看点</th>
+        </tr></thead>
+        <tbody><tr>
+      
+      <td><strong>台积电 TSMC</strong></td>
+      <td><code>2330.TW</code></td>
+      <td class="amap-cell"><span class="amap amap-weak" title="[弱] 晶圆代工逻辑对标，制程/体量差距悬殊，非真正可比">中芯国际<br><code>688981.SH</code></span></td>
+      <td>619,787</td>
+      <td class="c-up">+127.3%</td>
+      <td class="c-up">+4.2%</td>
+      <td>2026-05</td>
+      <td>4,169.8</td>
+      <td class="c-up">+1.5%</td>
+      <td class="c-up">+30.1%</td>
+      <td class="c-up">+30.0%</td>
+      <td class="desc-cell">全球最大晶圆代工厂，AI芯片制造核心（3nm/2nm先进制程），CoWoS先进封装主导者，2026 Capex 520-560亿美元</td>
+    </tr>
+<tr>
+      
+      <td><strong>联电 UMC</strong></td>
+      <td><code>2303.TW</code></td>
+      <td class="amap-cell"><span class="amap amap-mid" title="[中] 成熟制程晶圆代工，业务结构相近">华虹半导体<br><code>688347.SH</code></span></td>
+      <td>20,928</td>
+      <td class="c-up">+341.5%</td>
+      <td class="c-up">+24.4%</td>
+      <td>2026-05</td>
+      <td>229.4</td>
+      <td class="c-up">+1.2%</td>
+      <td class="c-up">+17.8%</td>
+      <td class="c-up">+9.1%</td>
+      <td class="desc-cell">成熟制程代工（28nm及以上），电源管理/车用芯片，8英寸稼动率回升</td>
+    </tr>
+<tr>
+      
+      <td><strong>世界先进</strong></td>
+      <td><code>5347.TWO</code></td>
+      <td class="amap-cell"><span class="amap amap-mid" title="[中] 特殊制程(功率器件/电源管理代工)，环节相近">华润微<br><code>688396.SH</code></span></td>
+      <td>4,135</td>
+      <td class="c-up">+130.2%</td>
+      <td class="c-up">+32.5%</td>
+      <td>—</td>
+      <td>—</td>
+      <td class="">—</td>
+      <td class="">—</td>
+      <td class="">—</td>
+      <td class="desc-cell">成熟制程</td>
+    </tr></tbody>
+      </table>
+    </div>
+    <div class="tab-pane" id="sec-6">
+      <div class="chart-box">
+        <h4>封测 · 各公司月营收趋势（亿新台币）</h4>
+        <div class="chart-wrap" style="height:260px"><canvas id="chart-6"></canvas></div>
+      </div>
+      <table class="ctable">
+        <thead><tr>
+          <th>公司</th><th>代码</th><th>A股映射</th><th>市值(亿)</th><th>YTD</th><th>近20日</th>
+          <th>最新月</th><th>月营收(亿)</th><th>单月MoM</th><th>单月YoY</th><th>累计YoY</th><th>业务看点</th>
+        </tr></thead>
+        <tbody><tr>
+      
+      <td><strong>日月光投控 ASE</strong></td>
+      <td><code>3711.TW</code></td>
+      <td class="amap-cell"><span class="amap amap-strong" title="[强] 全球封测龙头对A股封测龙头，业务模式相近">长电科技<br><code>600584.SH</code></span></td>
+      <td>28,549</td>
+      <td class="c-up">+310.6%</td>
+      <td class="c-dn">-0.2%</td>
+      <td>2026-05</td>
+      <td>630.3</td>
+      <td class="c-up">+1.3%</td>
+      <td class="c-up">+28.6%</td>
+      <td class="c-up">+19.9%</td>
+      <td class="desc-cell">全球最大封测厂，CoWoS先进封装扩产，2026年先进封装营收指引35亿美元</td>
+    </tr>
+<tr>
+      
+      <td><strong>京元电子 KYEC</strong></td>
+      <td><code>2449.TW</code></td>
+      <td class="amap-cell"><span class="amap amap-mid" title="[中] 纯测试业务，逻辑对标华天科技/晶方科技">华天科技<br><code>002185.SZ</code></span></td>
+      <td>4,090</td>
+      <td class="c-up">+211.8%</td>
+      <td class="c-up">+6.0%</td>
+      <td>2026-05</td>
+      <td>37.8</td>
+      <td class="c-up">+0.9%</td>
+      <td class="c-up">+36.6%</td>
+      <td class="c-up">+37.7%</td>
+      <td class="desc-cell">AI芯片测试龙头，AI相关营收占比从27%提升至40%，2026年Capex 500亿新台币</td>
+    </tr>
+<tr>
+      
+      <td><strong>颖崴 Winnoz</strong></td>
+      <td><code>6515.TW</code></td>
+      <td class="amap-cell"><span class="amap amap-mid" title="[中] IC测试，规模较小标的对标">伟测科技<br><code>688372.SH</code></span></td>
+      <td>3,312</td>
+      <td class="c-up">+710.3%</td>
+      <td class="c-dn">-7.1%</td>
+      <td>2026-05</td>
+      <td>10.7</td>
+      <td class="c-up">+8.5%</td>
+      <td class="c-up">+119.8%</td>
+      <td class="c-up">+46.5%</td>
+      <td class="desc-cell">探针卡/测试介面，AI芯片及ASIC测试布局</td>
+    </tr></tbody>
+      </table>
+    </div>
+    <div class="tab-pane" id="sec-7">
+      <div class="chart-box">
+        <h4>IC设计 · 各公司月营收趋势（亿新台币）</h4>
+        <div class="chart-wrap" style="height:260px"><canvas id="chart-7"></canvas></div>
+      </div>
+      <table class="ctable">
+        <thead><tr>
+          <th>公司</th><th>代码</th><th>A股映射</th><th>市值(亿)</th><th>YTD</th><th>近20日</th>
+          <th>最新月</th><th>月营收(亿)</th><th>单月MoM</th><th>单月YoY</th><th>累计YoY</th><th>业务看点</th>
+        </tr></thead>
+        <tbody><tr>
+      
+      <td><strong>联发科 MediaTek</strong></td>
+      <td><code>2454.TW</code></td>
+      <td class="amap-cell"><span class="amap amap-weak" title="手机SoC设计龙头，A股暂无同体量对标">暂无对标</span></td>
+      <td>69,128</td>
+      <td class="c-up">+223.2%</td>
+      <td class="c-dn">-7.1%</td>
+      <td>2026-05</td>
+      <td>474.3</td>
+      <td class="c-up">+1.5%</td>
+      <td class="c-up">+5.0%</td>
+      <td class="c-dn">-1.6%</td>
+      <td class="desc-cell">全球前五大IC设计，AI手机/边缘AI芯片，ASIC设计服务</td>
+    </tr>
+<tr>
+      
+      <td><strong>信骅 Aspeed</strong></td>
+      <td><code>5274.TWO</code></td>
+      <td class="amap-cell"><span class="amap amap-weak" title="服务器BMC芯片，A股暂无直接对标">暂无对标</span></td>
+      <td>6,587</td>
+      <td class="c-up">+430.1%</td>
+      <td class="c-dn">-4.4%</td>
+      <td>2026-05</td>
+      <td>12.8</td>
+      <td class="c-up">+0.2%</td>
+      <td class="c-up">+68.7%</td>
+      <td class="c-up">+61.7%</td>
+      <td class="desc-cell">服务器管理芯片(BMC)全球龙头，受益AI服务器拉货</td>
+    </tr>
+<tr>
+      
+      <td><strong>创意电子 GUC</strong></td>
+      <td><code>3443.TW</code></td>
+      <td class="amap-cell"><span class="amap amap-strong" title="[强] ASIC设计服务(NRE+量产)，商业模式高度相似">芯原股份<br><code>688521.SH</code></span></td>
+      <td>6,500</td>
+      <td class="c-up">+263.6%</td>
+      <td class="c-dn">-4.5%</td>
+      <td>2026-05</td>
+      <td>46.7</td>
+      <td class="c-up">+8.8%</td>
+      <td class="c-up">+132.1%</td>
+      <td class="c-up">+90.6%</td>
+      <td class="desc-cell">台积电旗下ASIC设计服务，AI定制芯片设计</td>
+    </tr>
+<tr>
+      
+      <td><strong>世芯-KY</strong></td>
+      <td><code>3661.TW</code></td>
+      <td class="amap-cell"><span class="amap amap-strong" title="[强] ASIC定制芯片设计，云端customer custom silicon模式对标">芯原股份<br><code>688521.SH</code></span></td>
+      <td>3,473</td>
+      <td class="c-up">+30.2%</td>
+      <td class="c-dn">-6.0%</td>
+      <td>—</td>
+      <td>—</td>
+      <td class="">—</td>
+      <td class="">—</td>
+      <td class="">—</td>
+      <td class="desc-cell">ASIC</td>
+    </tr>
+<tr>
+      
+      <td><strong>祥硕 ASMedia</strong></td>
+      <td><code>5269.TW</code></td>
+      <td class="amap-cell"><span class="amap amap-weak" title="USB/PCIe芯片，A股暂无直接对标">暂无对标</span></td>
+      <td>1,072</td>
+      <td class="c-dn">-26.5%</td>
+      <td class="c-dn">-4.0%</td>
+      <td>2026-05</td>
+      <td>9.0</td>
+      <td class="c-dn">-6.5%</td>
+      <td class="c-dn">-19.4%</td>
+      <td class="c-up">+11.9%</td>
+      <td class="desc-cell">高速传输IC(PCIe/USB)，AI服务器互联</td>
+    </tr></tbody>
+      </table>
+    </div>
+    <div class="tab-pane" id="sec-8">
+      <div class="chart-box">
+        <h4>存储 · 各公司月营收趋势（亿新台币）</h4>
+        <div class="chart-wrap" style="height:260px"><canvas id="chart-8"></canvas></div>
+      </div>
+      <table class="ctable">
+        <thead><tr>
+          <th>公司</th><th>代码</th><th>A股映射</th><th>市值(亿)</th><th>YTD</th><th>近20日</th>
+          <th>最新月</th><th>月营收(亿)</th><th>单月MoM</th><th>单月YoY</th><th>累计YoY</th><th>业务看点</th>
+        </tr></thead>
+        <tbody><tr>
+      
+      <td><strong>南亚科 Nanya Tech</strong></td>
+      <td><code>2408.TW</code></td>
+      <td class="amap-cell"><span class="amap amap-mid" title="[中] 存储芯片，南亚科为DRAM IDM、兆易创新以设计为主，业务模式有差异">兆易创新<br><code>603986.SH</code></span></td>
+      <td>16,458</td>
+      <td class="c-up">+1530.8%</td>
+      <td class="c-up">+52.9%</td>
+      <td>2026-05</td>
+      <td>276.7</td>
+      <td class="c-up">+8.5%</td>
+      <td class="c-up">+730.1%</td>
+      <td class="c-up">+649.6%</td>
+      <td class="desc-cell">DRAM厂，DDR4/DDR5涨价受益，AI驱动存储需求</td>
+    </tr></tbody>
+      </table>
+    </div>
+    <div class="tab-pane" id="sec-9">
+      <div class="chart-box">
+        <h4>硅片 · 各公司月营收趋势（亿新台币）</h4>
+        <div class="chart-wrap" style="height:260px"><canvas id="chart-9"></canvas></div>
+      </div>
+      <table class="ctable">
+        <thead><tr>
+          <th>公司</th><th>代码</th><th>A股映射</th><th>市值(亿)</th><th>YTD</th><th>近20日</th>
+          <th>最新月</th><th>月营收(亿)</th><th>单月MoM</th><th>单月YoY</th><th>累计YoY</th><th>业务看点</th>
+        </tr></thead>
+        <tbody><tr>
+      
+      <td><strong>环球晶</strong></td>
+      <td><code>6488.TWO</code></td>
+      <td class="amap-cell"><span class="amap amap-mid" title="[中] 半导体硅片，环球晶体量更大，逻辑对标">沪硅产业<br><code>688126.SH</code></span></td>
+      <td>4,972</td>
+      <td class="c-up">+183.2%</td>
+      <td class="c-up">+11.8%</td>
+      <td>2026-05</td>
+      <td>48.4</td>
+      <td class="c-up">+2.0%</td>
+      <td class="c-dn">-3.3%</td>
+      <td class="c-dn">-8.9%</td>
+      <td class="desc-cell"></td>
+    </tr></tbody>
+      </table>
+    </div>
+    <div class="tab-pane" id="sec-10">
+      <div class="chart-box">
+        <h4>连接器 · 各公司月营收趋势（亿新台币）</h4>
+        <div class="chart-wrap" style="height:260px"><canvas id="chart-10"></canvas></div>
+      </div>
+      <table class="ctable">
+        <thead><tr>
+          <th>公司</th><th>代码</th><th>A股映射</th><th>市值(亿)</th><th>YTD</th><th>近20日</th>
+          <th>最新月</th><th>月营收(亿)</th><th>单月MoM</th><th>单月YoY</th><th>累计YoY</th><th>业务看点</th>
+        </tr></thead>
+        <tbody><tr>
+      
+      <td><strong>嘉泽端子 Lotes</strong></td>
+      <td><code>3533.TW</code></td>
+      <td class="amap-cell"><span class="amap amap-weak" title="[弱] 连接器，立讯精密业务范围远大于嘉泽，仅连接器环节可比">立讯精密<br><code>002475.SZ</code></span></td>
+      <td>2,504</td>
+      <td class="c-up">+17.1%</td>
+      <td class="c-dn">-15.2%</td>
+      <td>2026-05</td>
+      <td>30.4</td>
+      <td class="c-dn">-10.3%</td>
+      <td class="c-up">+9.0%</td>
+      <td class="c-up">+17.2%</td>
+      <td class="desc-cell">Intel服务器CPU Socket独家供应商，高壁垒</td>
+    </tr></tbody>
+      </table>
+    </div>
+    <div class="tab-pane" id="sec-11">
+      <div class="chart-box">
+        <h4>光通信/CPO · 各公司月营收趋势（亿新台币）</h4>
+        <div class="chart-wrap" style="height:260px"><canvas id="chart-11"></canvas></div>
+      </div>
+      <table class="ctable">
+        <thead><tr>
+          <th>公司</th><th>代码</th><th>A股映射</th><th>市值(亿)</th><th>YTD</th><th>近20日</th>
+          <th>最新月</th><th>月营收(亿)</th><th>单月MoM</th><th>单月YoY</th><th>累计YoY</th><th>业务看点</th>
+        </tr></thead>
+        <tbody><tr>
+      
+      <td><strong>上诠(FOCI)</strong></td>
+      <td><code>3363.TWO</code></td>
+      <td class="amap-cell"><span class="amap amap-weak" title="[弱] 光通信元件，上诠规模远小于中际旭创，仅产业链环节对标">中际旭创<br><code>300308.SZ</code></span></td>
+      <td>715</td>
+      <td class="c-up">+159.0%</td>
+      <td class="c-dn">-25.7%</td>
+      <td>2026-05</td>
+      <td>1.4</td>
+      <td class="c-up">+12.4%</td>
+      <td class="c-dn">-24.8%</td>
+      <td class="c-dn">-19.0%</td>
+      <td class="desc-cell">FAU核心供应商(NVIDIA/TSMC CPO COUPE架构)，1.6T CPO 2026H2放量</td>
+    </tr></tbody>
+      </table>
+    </div>
+    <div class="tab-pane" id="sec-12">
+      <div class="chart-box">
+        <h4>半导体设备/检测 · 各公司月营收趋势（亿新台币）</h4>
+        <div class="chart-wrap" style="height:260px"><canvas id="chart-12"></canvas></div>
+      </div>
+      <table class="ctable">
+        <thead><tr>
+          <th>公司</th><th>代码</th><th>A股映射</th><th>市值(亿)</th><th>YTD</th><th>近20日</th>
+          <th>最新月</th><th>月营收(亿)</th><th>单月MoM</th><th>单月YoY</th><th>累计YoY</th><th>业务看点</th>
+        </tr></thead>
+        <tbody><tr>
+      
+      <td><strong>鸿准 Foxconn Industrial</strong></td>
+      <td><code>2354.TW</code></td>
+      <td class="amap-cell"><span class="amap amap-weak" title="[弱] 富士康集团精密结构件子公司，与工业富联同属富士康体系">工业富联<br><code>601138.SH</code></span></td>
+      <td>812</td>
+      <td class="c-dn">-21.2%</td>
+      <td class="c-dn">-3.9%</td>
+      <td>2026-05</td>
+      <td>87.6</td>
+      <td class="c-up">+34.2%</td>
+      <td class="c-dn">-40.6%</td>
+      <td class="c-dn">-29.6%</td>
+      <td class="desc-cell">AI/HPC芯片测试设备市占超90%，产能2026年扩张超40%</td>
+    </tr></tbody>
+      </table>
+    </div>
+
+</div>
+
+<script>
+const CHART_DATA = {"0": {"labels": ["2023-01", "2023-02", "2023-03", "2023-04", "2023-05", "2023-06", "2023-07", "2023-08", "2023-09", "2023-10", "2023-11", "2023-12", "2024-01", "2024-02", "2024-03", "2024-04", "2024-05", "2024-06", "2024-07", "2024-08", "2024-09", "2024-10", "2024-11", "2024-12", "2025-01", "2025-02", "2025-03", "2025-04", "2025-05", "2025-06", "2025-07", "2025-08", "2025-09", "2025-10", "2025-11", "2025-12", "2026-01", "2026-02", "2026-03", "2026-04", "2026-05", "2026-06", "2026-07", "2026-08", "2026-09", "2026-10", "2026-11", "2026-12"], "series": [{"name": "鸿海(富士康) Foxconn", "data": [6603.63151, 4020.35366, 4002.93029, 4292.19228, 4507.25682, 4227.74983, 4692.34396, 4128.38898, 6607.40414, 7412.00306, 6500.21114, 4601.24625, 5221.41475, 3524.80676, 4475.40564, 5108.96397, 5501.57241, 4907.25274, 5723.51867, 5483.11941, 7330.23957, 8048.47646, 6725.85341, 6548.25418, 5386.65759, 5513.82882, 5521.24573, 6413.65597, 6157.44933, 5402.36697, 6138.64601, 6065.12275, 8370.67572, 8957.08525, 8442.75843, 8628.61362, 7300.3942, 5958.13348, 8037.37716, 8320.97956, 8594.09333, 0, 0, null, null, null, null, null]}, {"name": "广达 Quanta", "data": [900.70736, 833.51194, 927.5902, 778.4057, 770.11355, 901.77487, 868.91131, 1013.5512, 982.58338, 913.9261, 1036.00595, 929.02893, 729.36574, 842.93471, 1017.09333, 973.37441, 1012.98511, 1113.1818, 1242.6262, 1451.76833, 1551.09787, 1358.93235, 1413.53606, 1384.15569, 1425.60447, 1505.64741, 1925.46802, 1540.10874, 1602.42327, 1898.68451, 1583.42022, 1528.07846, 1841.08513, 1731.95793, 1929.46811, 2724.9482, 2308.34858, 2155.83149, 3628.03048, 3399.21315, 3114.81017, 0, 0, null, null, null, null, null]}, {"name": "纬创 Wistron", "data": [549.67408, 620.6682, 949.65979, 621.25793, 633.28331, 810.986, 677.19669, 728.91238, 778.82364, 784.02929, 764.35409, 746.98087, 672.99575, 810.97431, 898.31083, 726.42799, 795.01289, 887.87165, 861.90479, 898.20629, 969.0357, 962.84824, 952.42553, 1056.54212, 907.86162, 1027.14136, 1529.84771, 1337.03546, 2084.05603, 2091.82302, 1917.25748, 1726.42595, 2034.3694, 1850.61565, 2806.24451, 2552.54817, 2283.66631, 2848.9308, 3330.43315, 2834.37176, 2901.83471, 0, 0, null, null, null, null, null]}, {"name": "纬颖 Wiwynn", "data": [164.17154, 229.94647, 348.14036, 181.82319, 155.18732, 226.07147, 176.59345, 194.50877, 157.07027, 189.4227, 193.85281, 202.22154, 187.87728, 243.26337, 265.14171, 219.63172, 247.59583, 307.58125, 311.21386, 321.9245, 345.0453, 353.81437, 374.65174, 427.67009, 375.06396, 465.16815, 866.32073, 638.02622, 711.32658, 858.0822, 845.28726, 959.78718, 863.16601, 912.64205, 968.85487, 1042.90789, 832.2529, 946.33137, 986.49307, 827.30996, 840.50473, 0, 0, null, null, null, null, null]}, {"name": "英业达 Inventec", "data": [372.4477, 358.376, 471.00534, 368.696, 460.61395, 477.20352, 418.32938, 464.78885, 475.28852, 404.01753, 441.40199, 435.28473, 441.28871, 366.50855, 497.26239, 510.48144, 521.80289, 509.30365, 555.3342, 520.28078, 562.53892, 646.85079, 608.57602, 722.63615, 458.41662, 516.70733, 595.21941, 621.00043, 612.03003, 632.74343, 544.20542, 613.04263, 605.60719, 547.65655, 521.56348, 643.50236, 618.12811, 509.3422, 875.63474, 847.86839, 828.07865, 0, 0, null, null, null, null, null]}]}, "1": {"labels": ["2023-01", "2023-02", "2023-03", "2023-04", "2023-05", "2023-06", "2023-07", "2023-08", "2023-09", "2023-10", "2023-11", "2023-12", "2024-01", "2024-02", "2024-03", "2024-04", "2024-05", "2024-06", "2024-07", "2024-08", "2024-09", "2024-10", "2024-11", "2024-12", "2025-01", "2025-02", "2025-03", "2025-04", "2025-05", "2025-06", "2025-07", "2025-08", "2025-09", "2025-10", "2025-11", "2025-12", "2026-01", "2026-02", "2026-03", "2026-04", "2026-05", "2026-06", "2026-07", "2026-08", "2026-09", "2026-10", "2026-11", "2026-12"], "series": [{"name": "欣兴电子 Unimicron", "data": [98.30489, 80.71853, 86.63864, 83.68776, 85.98334, 82.67797, 85.68959, 92.17841, 87.58856, 87.89447, 87.1532, 81.84615, 92.22048, 82.79814, 89.00957, 93.61971, 96.43831, 88.71595, 100.51113, 108.23395, 108.37646, 104.79818, 95.83655, 93.17439, 94.93871, 99.85276, 106.10385, 109.15988, 106.21322, 109.28735, 113.11474, 113.56606, 113.26339, 113.27098, 115.41416, 118.22372, 127.66959, 116.00477, 130.79019, 139.32815, 140.59973, 0, 0, null, null, null, null, null]}, {"name": "南亚电路板 Nan Ya PCB", "data": [41.05697, 41.09485, 43.65475, 37.09379, 33.38634, 30.8563, 33.33511, 33.74154, 35.19719, 36.00237, 30.34064, 26.76593, 25.61593, 18.72631, 26.66348, 26.76047, 26.99432, 27.45127, 31.25412, 30.97645, 29.68814, 26.16078, 25.77203, 26.77001, 25.66125, 28.05847, 30.8606, 31.91344, 32.69216, 31.22359, 36.20679, 38.07312, 35.39459, 37.06423, 35.34352, 39.23814, 37.20425, 31.66126, 42.9069, 44.50857, 44.40287, 0, 0, null, null, null, null, null]}, {"name": "景硕 Kinsus", "data": [21.22589, 21.09799, 26.0194, 21.63452, 22.80752, 20.18021, 19.35157, 21.32605, 19.78409, 25.08336, 25.30422, 24.50705, 23.13032, 22.38258, 24.43094, 23.88468, 25.11206, 24.00808, 26.92121, 28.58462, 26.46537, 25.76678, 25.20732, 29.45583, 25.5653, 29.13173, 31.50041, 32.12841, 31.57305, 31.9358, 33.48367, 34.21382, 35.86439, 36.01222, 35.21383, 36.88833, 39.61154, 32.04487, 39.39324, 40.72319, 41.99867, 0, 0, null, null, null, null, null]}, {"name": "金像电 GCE", "data": [20.14987, 18.86089, 24.11281, 23.80168, 23.04981, 22.93656, 26.18597, 27.49636, 28.54546, 29.52286, 30.22816, 25.79324, 34.04058, 26.2167, 29.9575, 29.47257, 33.7029, 31.711, 35.35734, 35.71863, 33.33418, 30.64037, 31.79688, 35.84929, 35.69192, 38.60588, 45.26585, 46.0188, 46.84086, 46.31945, 56.45777, 58.86997, 59.94877, 56.26636, 54.53347, 52.46301, 60.15659, 59.41712, 73.84878, 72.89761, 87.73229, 0, 0, null, null, null, null, null]}, {"name": "健鼎 Tripod", "data": [46.61722, 46.43872, 49.23235, 44.40416, 46.40668, 43.62136, 51.70416, 55.09416, 55.58813, 50.44757, 51.75324, 47.31328, 61.67335, 40.19438, 50.98551, 54.4769, 50.98198, 52.53183, 58.74641, 59.39823, 58.59996, 56.04038, 57.82644, 56.58069, 59.15996, 53.28626, 58.83129, 63.62585, 59.04523, 56.36344, 62.74073, 61.78608, 69.36796, 62.4499, 63.80549, 63.53077, 77.48933, 58.97587, 73.17712, 82.01133, 86.54212, 0, 0, null, null, null, null, null]}, {"name": "臻鼎-KY", "data": [124.84281, 99.4389, 91.16982, 71.39512, 82.70851, 81.26728, 103.08174, 137.8519, 178.26102, 208.73714, 188.39767, 148.42173, 127.74631, 86.42371, 110.93313, 110.57398, 106.39324, 107.14552, 134.58297, 178.1395, 193.36751, 209.5292, 194.34045, 157.46293, 134.69283, 122.04459, 144.08131, 135.89057, 117.91323, 128.23095, 133.52388, 146.51388, 193.62393, 194.28012, 181.20795, 193.21296, 135.6444, 117.20507, 154.43239, 151.96261, 162.01199, 0, 0, null, null, null, null, null]}]}, "2": {"labels": ["2023-01", "2023-02", "2023-03", "2023-04", "2023-05", "2023-06", "2023-07", "2023-08", "2023-09", "2023-10", "2023-11", "2023-12", "2024-01", "2024-02", "2024-03", "2024-04", "2024-05", "2024-06", "2024-07", "2024-08", "2024-09", "2024-10", "2024-11", "2024-12", "2025-01", "2025-02", "2025-03", "2025-04", "2025-05", "2025-06", "2025-07", "2025-08", "2025-09", "2025-10", "2025-11", "2025-12", "2026-01", "2026-02", "2026-03", "2026-04", "2026-05", "2026-06", "2026-07", "2026-08", "2026-09", "2026-10", "2026-11", "2026-12"], "series": [{"name": "台光电 TUC", "data": [21.97369, 23.65259, 27.96687, 28.03603, 31.50805, 32.25606, 36.45947, 38.91346, 43.37243, 43.48694, 42.24837, 43.07784, 44.84687, 37.64058, 46.5373, 50.60127, 51.41963, 52.46479, 57.81766, 57.41209, 59.40565, 58.178, 63.3627, 64.10246, 69.86221, 70.29925, 76.68109, 71.91345, 72.77046, 80.35115, 83.72495, 87.64793, 80.08332, 80.74815, 81.29128, 87.04662, 108.62602, 101.93772, 120.10861, 139.23687, 156.18565, 0, 0, null, null, null, null, null]}, {"name": "联茂 ITEQ", "data": [19.56474, 20.63298, 22.38666, 19.29402, 17.16842, 17.85508, 20.62398, 22.78819, 23.1151, 23.32841, 22.54096, 21.53553, 23.02918, 17.22055, 21.29712, 22.93291, 26.54422, 26.48205, 27.26264, 24.87284, 27.49315, 25.2787, 27.005, 24.35841, 22.24926, 23.94235, 29.60905, 30.87946, 29.40967, 28.48231, 24.12223, 25.48408, 27.63756, 27.49436, 29.96744, 31.70506, 31.63692, 26.09875, 33.69504, 35.1347, 38.02864, 0, 0, null, null, null, null, null]}, {"name": "台燿 Ventec", "data": [10.83168, 12.55319, 13.14268, 12.02371, 13.47897, 12.06388, 12.96055, 13.82764, 14.99206, 14.0599, 15.74501, 14.34115, 14.96705, 11.85857, 17.50773, 18.22102, 19.40296, 19.42367, 21.40634, 22.11638, 22.69814, 20.30244, 22.60922, 20.18859, 20.21128, 21.53377, 21.94287, 23.28755, 20.98333, 23.56699, 26.67033, 25.44064, 28.51779, 28.53997, 30.24742, 32.50133, 35.33279, 27.40833, 37.81706, 46.10166, 47.94425, 0, 0, null, null, null, null, null]}]}, "3": {"labels": ["2023-01", "2023-02", "2023-03", "2023-04", "2023-05", "2023-06", "2023-07", "2023-08", "2023-09", "2023-10", "2023-11", "2023-12", "2024-01", "2024-02", "2024-03", "2024-04", "2024-05", "2024-06", "2024-07", "2024-08", "2024-09", "2024-10", "2024-11", "2024-12", "2025-01", "2025-02", "2025-03", "2025-04", "2025-05", "2025-06", "2025-07", "2025-08", "2025-09", "2025-10", "2025-11", "2025-12", "2026-01", "2026-02", "2026-03", "2026-04", "2026-05", "2026-06", "2026-07", "2026-08", "2026-09", "2026-10", "2026-11", "2026-12"], "series": [{"name": "尖点", "data": [2.21625, 1.9431, 2.00702, 1.90478, 1.96524, 2.25582, 2.27029, 2.39329, 2.70458, 2.6276, 2.6183, 2.57859, 2.39125, 2.28065, 2.69196, 2.8001, 2.91576, 3.18483, 3.19609, 3.2021, 3.22013, 3.15381, 3.14406, 3.23025, 2.84728, 2.90102, 3.12539, 3.21721, 3.3305, 3.58011, 3.60631, 3.89729, 4.18316, 4.37571, 4.37627, 4.66079, 4.53191, 4.13306, 4.73067, 5.24976, 6.20455, null, null, null, null, null, null, null]}]}, "4": {"labels": ["2023-01", "2023-02", "2023-03", "2023-04", "2023-05", "2023-06", "2023-07", "2023-08", "2023-09", "2023-10", "2023-11", "2023-12", "2024-01", "2024-02", "2024-03", "2024-04", "2024-05", "2024-06", "2024-07", "2024-08", "2024-09", "2024-10", "2024-11", "2024-12", "2025-01", "2025-02", "2025-03", "2025-04", "2025-05", "2025-06", "2025-07", "2025-08", "2025-09", "2025-10", "2025-11", "2025-12", "2026-01", "2026-02", "2026-03", "2026-04", "2026-05", "2026-06", "2026-07", "2026-08", "2026-09", "2026-10", "2026-11", "2026-12"], "series": [{"name": "台达电 Delta", "data": [295.62916, 291.16665, 341.79663, 315.42219, 341.84549, 348.24624, 359.73872, 364.35815, 353.85748, 346.75178, 336.48554, 316.96698, 325.14624, 272.05316, 315.7805, 335.37561, 350.77719, 348.28692, 373.39042, 377.70041, 370.94029, 388.16849, 366.47082, 387.38552, 373.85532, 380.89875, 434.43999, 407.82164, 410.44766, 422.08156, 453.97038, 478.59758, 570.60781, 573.8355, 505.43404, 536.86145, 496.75223, 498.97441, 597.79988, 586.91652, 589.61817, 0, 0, null, null, null, null, null]}, {"name": "光宝 Lite-On", "data": [106.78871, 108.11251, 126.84153, 120.28907, 123.52866, 129.11091, 125.67821, 132.89503, 141.00034, 122.38842, 123.47799, 123.24469, 99.08418, 80.81408, 107.85248, 105.95027, 109.52517, 117.35967, 128.65638, 120.53795, 118.5006, 123.96253, 125.12519, 133.87348, 121.47361, 109.16888, 133.52871, 134.08177, 133.94635, 136.19675, 138.11634, 156.48789, 154.30791, 152.04242, 142.4628, 149.07047, 141.12349, 128.12239, 164.83767, 166.94759, 173.53659, 0, 0, null, null, null, null, null]}, {"name": "奇鋐 AVC", "data": [28.1077, 42.57923, 47.65845, 48.14286, 49.89301, 50.67302, 51.53183, 52.51705, 53.63932, 55.13752, 55.88259, 56.18098, 56.75421, 45.53084, 50.80183, 51.88203, 52.83456, 60.12196, 61.31081, 65.82321, 63.51281, 70.80952, 71.92067, 66.31051, 68.01065, 80.22033, 85.09853, 91.08166, 98.801, 106.06243, 118.11435, 126.22156, 145.03309, 164.51489, 173.8224, 139.41273, 170.03457, 140.1732, 180.17169, 156.31449, 158.71396, 0, 0, null, null, null, null, null]}, {"name": "双鸿 Auras", "data": [9.23665, 9.89233, 13.65315, 8.61712, 8.86746, 8.49877, 10.72051, 11.86156, 12.34989, 11.98024, 11.34393, 10.12516, 12.77332, 7.34828, 11.37224, 12.1579, 13.75562, 16.91726, 13.68352, 14.24957, 14.24051, 13.95643, 13.70207, 13.59779, 13.72849, 13.04802, 17.3646, 20.17328, 16.20073, 16.76452, 17.37663, 18.78969, 23.40447, 23.29545, 24.43608, 28.21521, 30.41929, 21.78371, 33.29237, 28.42339, 31.38892, 0, 0, null, null, null, null, null]}, {"name": "健策 Jentech", "data": [9.19884, 9.11928, 9.93186, 9.00708, 9.28433, 10.09363, 10.78992, 11.68677, 10.28774, 10.38116, 10.09205, 10.75398, 9.81763, 7.88324, 10.94238, 10.99662, 11.49716, 11.51778, 11.85729, 12.0284, 12.04437, 13.10211, 14.58497, 16.50992, 14.47188, 14.84756, 18.20358, 18.20971, 16.79474, 16.80959, 16.82644, 16.89803, 16.97056, 17.00899, 17.01437, 18.70032, 18.73115, 12.68426, 21.63675, 23.11149, 23.13449, 0, 0, null, null, null, null, null]}]}, "5": {"labels": ["2023-01", "2023-02", "2023-03", "2023-04", "2023-05", "2023-06", "2023-07", "2023-08", "2023-09", "2023-10", "2023-11", "2023-12", "2024-01", "2024-02", "2024-03", "2024-04", "2024-05", "2024-06", "2024-07", "2024-08", "2024-09", "2024-10", "2024-11", "2024-12", "2025-01", "2025-02", "2025-03", "2025-04", "2025-05", "2025-06", "2025-07", "2025-08", "2025-09", "2025-10", "2025-11", "2025-12", "2026-01", "2026-02", "2026-03", "2026-04", "2026-05", "2026-06", "2026-07", "2026-08", "2026-09", "2026-10", "2026-11", "2026-12"], "series": [{"name": "台积电 TSMC", "data": [2000.50544, 1631.74097, 1454.08332, 1478.99735, 1765.37345, 1564.04174, 1776.1622, 1886.86256, 1804.30282, 2432.02811, 2060.26179, 1762.99866, 2157.85127, 1816.4827, 1952.10804, 2360.21112, 2296.20372, 2078.68693, 2569.53058, 2508.66368, 2518.72717, 3142.39713, 2760.58358, 2781.63107, 2932.88038, 2600.08796, 2859.5683, 3495.6694, 3205.15951, 2637.08978, 3231.65707, 3357.71691, 3309.8092, 3674.73051, 3436.13802, 3350.03568, 4012.55128, 3176.56613, 4151.91699, 4107.25118, 4169.75163, 0, 0, null, null, null, null, null]}, {"name": "联电 UMC", "data": [195.89515, 169.31079, 176.88853, 184.61436, 187.78488, 190.56484, 190.63918, 189.52011, 190.52938, 191.91382, 187.8767, 169.79226, 190.13697, 174.51268, 181.67134, 197.41391, 195.09486, 175.48413, 208.96877, 206.45494, 189.42714, 213.7111, 200.49182, 189.65818, 198.06795, 181.93515, 198.58647, 204.5453, 194.80057, 188.2307, 200.40049, 191.59816, 199.27175, 212.94974, 212.33847, 192.80724, 208.6215, 193.45126, 208.30626, 226.63945, 229.43755, 0, 0, null, null, null, null, null]}, {"name": "世界先进", "data": [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null]}]}, "6": {"labels": ["2023-01", "2023-02", "2023-03", "2023-04", "2023-05", "2023-06", "2023-07", "2023-08", "2023-09", "2023-10", "2023-11", "2023-12", "2024-01", "2024-02", "2024-03", "2024-04", "2024-05", "2024-06", "2024-07", "2024-08", "2024-09", "2024-10", "2024-11", "2024-12", "2025-01", "2025-02", "2025-03", "2025-04", "2025-05", "2025-06", "2025-07", "2025-08", "2025-09", "2025-10", "2025-11", "2025-12", "2026-01", "2026-02", "2026-03", "2026-04", "2026-05", "2026-06", "2026-07", "2026-08", "2026-09", "2026-10", "2026-11", "2026-12"], "series": [{"name": "日月光投控 ASE", "data": [451.31358, 399.84571, 457.75144, 433.14938, 462.38791, 467.21623, 483.53336, 522.78801, 535.34708, 561.66613, 545.09085, 499.05503, 473.90354, 397.51076, 456.61425, 458.19887, 474.92772, 469.25404, 515.95954, 529.29761, 555.79391, 564.25583, 529.33333, 529.04645, 494.44261, 449.60788, 537.48213, 522.10767, 490.26935, 495.12621, 515.42033, 564.65628, 605.61227, 602.31106, 588.19584, 588.64547, 599.88631, 520.96847, 615.76674, 622.47107, 630.33313, 0, 0, null, null, null, null, null]}, {"name": "京元电子 KYEC", "data": [25.64123, 24.97803, 27.02526, 26.12206, 27.55415, 27.99687, 28.55724, 28.79079, 28.58905, 28.78307, 28.44155, 27.77377, 28.07177, 25.11124, 28.96417, 20.78786, 22.17435, 22.46985, 23.44622, 23.51067, 23.43053, 24.10546, 24.40215, 24.46149, 23.84946, 22.86169, 26.44375, 27.81758, 27.64705, 28.15411, 29.18332, 31.00894, 32.71304, 34.18823, 32.92565, 32.54264, 33.69542, 32.24527, 35.97874, 37.43018, 37.76927, 0, 0, null, null, null, null, null]}, {"name": "颖崴 Winnoz", "data": [4.26031, 3.20221, 2.61952, 2.46049, 3.90532, 3.80027, 2.64586, 3.42597, 3.77045, 2.56178, 2.44877, 1.71954, 3.67704, 3.12333, 3.93041, 4.6982, 3.55932, 4.29914, 5.93965, 6.2501, 7.1134, 6.48059, 4.35611, 4.55367, 6.68037, 9.07369, 7.21901, 6.57442, 4.88403, 3.76444, 6.26187, 5.11648, 6.66094, 6.80416, 6.25256, 9.27982, 8.85983, 8.72646, 12.21786, 9.89534, 10.73481, 0, 0, null, null, null, null, null]}]}, "7": {"labels": ["2023-01", "2023-02", "2023-03", "2023-04", "2023-05", "2023-06", "2023-07", "2023-08", "2023-09", "2023-10", "2023-11", "2023-12", "2024-01", "2024-02", "2024-03", "2024-04", "2024-05", "2024-06", "2024-07", "2024-08", "2024-09", "2024-10", "2024-11", "2024-12", "2025-01", "2025-02", "2025-03", "2025-04", "2025-05", "2025-06", "2025-07", "2025-08", "2025-09", "2025-10", "2025-11", "2025-12", "2026-01", "2026-02", "2026-03", "2026-04", "2026-05", "2026-06", "2026-07", "2026-08", "2026-09", "2026-10", "2026-11", "2026-12"], "series": [{"name": "联发科 MediaTek", "data": [223.83397, 303.09642, 429.58473, 283.49722, 315.66805, 382.18758, 317.63135, 422.5636, 360.78033, 428.10847, 430.71172, 436.79986, 444.9629, 384.8187, 504.79987, 420.27887, 421.51178, 430.92056, 456.09723, 415.27835, 446.75936, 511.17348, 452.42346, 416.8343, 511.44288, 461.71723, 559.96226, 487.54424, 451.80526, 564.33621, 432.20164, 445.46643, 543.30057, 520.26251, 468.9568, 512.66079, 469.77055, 389.54271, 632.19184, 467.36664, 474.34191, 0, 0, null, null, null, null, null]}, {"name": "创意电子 GUC", "data": [20.87023, 22.48822, 21.92994, 20.14413, 21.49206, 24.2342, 22.12814, 22.72257, 23.24969, 21.27874, 19.78714, 22.08208, 17.37854, 17.60131, 21.92386, 16.93477, 23.53184, 26.7312, 29.03133, 19.4475, 17.63514, 14.82729, 18.37436, 27.02478, 20.38665, 20.92746, 28.92233, 16.718, 20.13507, 24.1927, 22.32812, 27.67549, 36.12747, 37.15719, 39.36093, 47.47837, 42.35842, 33.515, 38.6047, 42.94033, 46.74012, 0, 0, null, null, null, null, null]}, {"name": "世芯-KY", "data": [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null]}, {"name": "信骅 Aspeed", "data": [2.2045, 2.23106, 2.2584, 2.28014, 2.25675, 2.2635, 2.31717, 2.43429, 3.21568, 3.23669, 3.41994, 3.18583, 3.62308, 2.92096, 3.59069, 4.15897, 4.35334, 5.04814, 6.01189, 6.77094, 7.08152, 6.85782, 6.81054, 7.36877, 7.00869, 6.09219, 7.5503, 7.04344, 7.5986, 7.82343, 7.71292, 7.44425, 8.14367, 7.30624, 8.40288, 8.72214, 9.00364, 10.10964, 12.35429, 12.7904, 12.82174, 0, 0, null, null, null, null, null]}, {"name": "祥硕 ASMedia", "data": [3.49217, 3.85524, 6.64077, 5.66255, 4.40431, 5.50899, 5.57232, 5.47261, 6.29479, 5.97873, 4.50664, 6.62355, 6.87626, 4.83652, 7.76915, 7.16853, 8.03335, 5.86165, 7.95345, 8.03864, 5.27603, 6.22811, 6.40613, 6.36289, 8.506, 7.58911, 8.99626, 11.62765, 11.12494, 11.17633, 12.63048, 13.07339, 14.21833, 11.90495, 11.86446, 11.43373, 13.46617, 8.92868, 12.58478, 9.58731, 8.96666, 0, 0, null, null, null, null, null]}]}, "8": {"labels": ["2023-01", "2023-02", "2023-03", "2023-04", "2023-05", "2023-06", "2023-07", "2023-08", "2023-09", "2023-10", "2023-11", "2023-12", "2024-01", "2024-02", "2024-03", "2024-04", "2024-05", "2024-06", "2024-07", "2024-08", "2024-09", "2024-10", "2024-11", "2024-12", "2025-01", "2025-02", "2025-03", "2025-04", "2025-05", "2025-06", "2025-07", "2025-08", "2025-09", "2025-10", "2025-11", "2025-12", "2026-01", "2026-02", "2026-03", "2026-04", "2026-05", "2026-06", "2026-07", "2026-08", "2026-09", "2026-10", "2026-11", "2026-12"], "series": [{"name": "南亚科 Nanya Tech", "data": [22.51364, 20.26426, 21.47093, 22.6002, 23.09037, 24.58014, 24.37193, 25.74894, 27.24287, 26.6803, 28.74, 31.61948, 30.60645, 30.50934, 33.91358, 32.06471, 33.51375, 33.63197, 27.45416, 28.0225, 25.84927, 21.8224, 21.87326, 22.05531, 21.62373, 22.72734, 27.52833, 31.1882, 33.33121, 40.74153, 53.52227, 67.62501, 66.6414, 79.07729, 101.68737, 120.17152, 153.09988, 156.07184, 181.6976, 254.91201, 276.69563, 0, 0, null, null, null, null, null]}]}, "9": {"labels": ["2023-01", "2023-02", "2023-03", "2023-04", "2023-05", "2023-06", "2023-07", "2023-08", "2023-09", "2023-10", "2023-11", "2023-12", "2024-01", "2024-02", "2024-03", "2024-04", "2024-05", "2024-06", "2024-07", "2024-08", "2024-09", "2024-10", "2024-11", "2024-12", "2025-01", "2025-02", "2025-03", "2025-04", "2025-05", "2025-06", "2025-07", "2025-08", "2025-09", "2025-10", "2025-11", "2025-12", "2026-01", "2026-02", "2026-03", "2026-04", "2026-05", "2026-06", "2026-07", "2026-08", "2026-09", "2026-10", "2026-11", "2026-12"], "series": [{"name": "环球晶", "data": [59.29796, 59.81182, 67.05176, 56.33539, 59.57256, 63.05467, 54.84901, 54.62083, 64.28925, 50.86533, 52.42965, 64.3377, 43.96378, 50.28827, 56.61858, 47.84755, 52.01311, 53.39563, 53.59023, 53.59419, 51.51536, 57.33967, 51.18181, 54.91186, 48.29183, 53.24413, 54.40926, 52.83369, 50.07206, 57.17334, 41.62281, 44.2762, 59.03533, 42.84634, 47.11626, 55.05813, 41.39278, 43.99603, 54.45917, 47.47927, 48.42007, 0, 0, null, null, null, null, null]}]}, "10": {"labels": ["2023-01", "2023-02", "2023-03", "2023-04", "2023-05", "2023-06", "2023-07", "2023-08", "2023-09", "2023-10", "2023-11", "2023-12", "2024-01", "2024-02", "2024-03", "2024-04", "2024-05", "2024-06", "2024-07", "2024-08", "2024-09", "2024-10", "2024-11", "2024-12", "2025-01", "2025-02", "2025-03", "2025-04", "2025-05", "2025-06", "2025-07", "2025-08", "2025-09", "2025-10", "2025-11", "2025-12", "2026-01", "2026-02", "2026-03", "2026-04", "2026-05", "2026-06", "2026-07", "2026-08", "2026-09", "2026-10", "2026-11", "2026-12"], "series": [{"name": "嘉泽端子 Lotes", "data": [16.34265, 18.41225, 22.58285, 18.85577, 18.84022, 19.55542, 20.57238, 22.06795, 22.09208, 20.37293, 23.29479, 21.73162, 25.63729, 14.19384, 23.51395, 25.42942, 25.55891, 23.28256, 25.54915, 27.23904, 27.77008, 27.60646, 28.09322, 27.45233, 26.7763, 22.08096, 28.71847, 29.44026, 27.90516, 26.38865, 28.40496, 26.74635, 28.90566, 28.42092, 29.3135, 35.41863, 35.20081, 23.20003, 35.43998, 33.91879, 30.41077, 0, 0, null, null, null, null, null]}]}, "11": {"labels": ["2023-01", "2023-02", "2023-03", "2023-04", "2023-05", "2023-06", "2023-07", "2023-08", "2023-09", "2023-10", "2023-11", "2023-12", "2024-01", "2024-02", "2024-03", "2024-04", "2024-05", "2024-06", "2024-07", "2024-08", "2024-09", "2024-10", "2024-11", "2024-12", "2025-01", "2025-02", "2025-03", "2025-04", "2025-05", "2025-06", "2025-07", "2025-08", "2025-09", "2025-10", "2025-11", "2025-12", "2026-01", "2026-02", "2026-03", "2026-04", "2026-05", "2026-06", "2026-07", "2026-08", "2026-09", "2026-10", "2026-11", "2026-12"], "series": [{"name": "上诠(FOCI)", "data": [1.13639, 0.80112, 1.28413, 0.66872, 1.00763, 1.16443, 1.14031, 1.15997, 0.982, 1.11518, 1.07961, 1.17796, 0.88668, 0.71672, 1.08199, 1.1302, 1.15703, 1.24041, 1.33715, 1.26641, 1.22342, 1.02062, 1.50187, 1.07627, 1.53267, 1.00272, 1.57864, 2.04069, 1.91237, 1.8677, 1.52411, 1.80642, 1.74688, 1.34292, 1.2544, 1.31042, 1.36682, 1.28013, 1.17274, 1.27943, 1.438, 0, 0, null, null, null, null, null]}]}, "12": {"labels": ["2023-01", "2023-02", "2023-03", "2023-04", "2023-05", "2023-06", "2023-07", "2023-08", "2023-09", "2023-10", "2023-11", "2023-12", "2024-01", "2024-02", "2024-03", "2024-04", "2024-05", "2024-06", "2024-07", "2024-08", "2024-09", "2024-10", "2024-11", "2024-12", "2025-01", "2025-02", "2025-03", "2025-04", "2025-05", "2025-06", "2025-07", "2025-08", "2025-09", "2025-10", "2025-11", "2025-12", "2026-01", "2026-02", "2026-03", "2026-04", "2026-05", "2026-06", "2026-07", "2026-08", "2026-09", "2026-10", "2026-11", "2026-12"], "series": [{"name": "鸿准 Foxconn Industrial", "data": [92.19549, 63.5481, 81.72904, 50.20071, 52.39651, 60.63433, 75.6, 78.93114, 68.79714, 53.96777, 35.43677, 31.42766, 34.47605, 22.2772, 31.64751, 33.02837, 42.19732, 59.79163, 78.25674, 67.83743, 56.05568, 65.71484, 114.52318, 151.47429, 85.03063, 94.18841, 120.51114, 128.89456, 147.54321, 136.04963, 155.84906, 138.03533, 129.632, 149.18102, 138.30042, 138.50757, 133.91202, 72.02241, 46.89247, 65.27105, 87.57709, 0, 0, null, null, null, null, null]}]}};
+const renderedCharts = {};
+const palette = ["#2563eb","#16a34a","#d97706","#dc2626","#7c3aed","#0891b2","#db2777","#65a30d","#ea580c","#0284c7"];
+
+function renderSectorChart(idx) {
+  if (renderedCharts[idx]) return;
+  const d = CHART_DATA[idx];
+  const ctx = document.getElementById("chart-" + idx);
+  if (!ctx) return;
+  const datasets = d.series.map((s, i) => ({
+    label: s.name,
+    data: s.data.map(v => (v === null || v === 0) ? null : v),
+    borderColor: palette[i % palette.length],
+    backgroundColor: "transparent",
+    borderWidth: 1.6,
+    pointRadius: 0,
+    spanGaps: true,
+    tension: 0.15
+  }));
+  renderedCharts[idx] = new Chart(ctx, {
+    type: "line",
+    data: { labels: d.labels, datasets: datasets },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      interaction: { mode: "index", intersect: false },
+      plugins: { legend: { position: "bottom", labels: { boxWidth: 10, font: { size: 10 } } } },
+      scales: {
+        x: { ticks: { font: { size: 9 }, maxTicksLimit: 16 } },
+        y: { ticks: { font: { size: 9 } } }
+      }
+    }
+  });
+}
+
+document.querySelectorAll(".tab-btn").forEach(btn => {
+  btn.addEventListener("click", () => {
+    document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+    document.querySelectorAll(".tab-pane").forEach(p => p.classList.remove("active"));
+    btn.classList.add("active");
+    const tgt = document.getElementById(btn.dataset.tab);
+    tgt.classList.add("active");
+    if (btn.dataset.tab.startsWith("sec-")) {
+      renderSectorChart(btn.dataset.tab.replace("sec-", ""));
+    }
+  });
+});
+
+document.querySelectorAll(".seg-card").forEach(card => {
+  card.addEventListener("click", () => {
+    document.querySelector('.tab-btn[data-tab="' + card.dataset.target + '"]').click();
+  });
+});
+
+// 全部表格排序
+let sortState = { key: null, asc: true };
+document.querySelectorAll("#all-table thead th[data-k]").forEach(th => {
+  th.addEventListener("click", () => {
+    const key = th.dataset.k;
+    sortState.asc = (sortState.key === key) ? !sortState.asc : true;
+    sortState.key = key;
+    const rows = Array.from(document.querySelectorAll("#all-tbody tr"));
+    const colIdx = Array.from(th.parentNode.children).indexOf(th);
+    rows.sort((a, b) => {
+      let av = a.children[colIdx].innerText.replace("%","").replace(/,/g,"");
+      let bv = b.children[colIdx].innerText.replace("%","").replace(/,/g,"");
+      const an = parseFloat(av), bn = parseFloat(bv);
+      let cmp;
+      if (!isNaN(an) && !isNaN(bn) && av.match(/^[+\-0-9.]+$/) ) {
+        cmp = an - bn;
+      } else {
+        cmp = av.localeCompare(bv, "zh");
+      }
+      return sortState.asc ? cmp : -cmp;
+    });
+    const tbody = document.getElementById("all-tbody");
+    rows.forEach(r => tbody.appendChild(r));
+  });
+});
+</script>
+
+</body>
+</html>
