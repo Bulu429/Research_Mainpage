@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SK 海力士公司看板</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+:root{
+  --bg:#f8f9fa; --card:#fff; --border:#e9ecef;
+  --text:#212529; --text2:#6c757d;
+  --accent:#2563eb; --up:#16a34a; --dn:#dc2626; --warn:#d97706;
+  --up-bg:#f0fdf4; --dn-bg:#fef2f2; --warn-bg:#fffbeb; --tag-bg:#eff6ff;
+  --sh:0 1px 3px rgba(0,0,0,.08),0 1px 2px rgba(0,0,0,.04);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;background:var(--bg);color:var(--text);font-size:14px;line-height:1.6}
+.hdr{background:var(--card);border-bottom:1px solid var(--border);padding:14px 28px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:var(--sh)}
+.hdr-l{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.hdr-title{font-size:19px;font-weight:800}
+.hdr-sub{font-size:11px;color:var(--text2)}
+.badge{display:inline-flex;align-items:center;padding:3px 10px;border-radius:12px;font-size:11px;font-weight:700;border:1px solid #bfdbfe;background:var(--tag-bg);color:#1d4ed8}
+.badge.up{background:var(--up-bg);color:var(--up);border-color:#86efac}
+.hdr-meta{font-size:11px;color:var(--text2);text-align:right}
+.back-link{display:inline-flex;align-items:center;gap:4px;font-size:11px;color:var(--text2);text-decoration:none;padding:3px 9px;border:1px solid var(--border);border-radius:5px;background:var(--bg)}
+.back-link:hover{color:var(--accent);border-color:#bfdbfe}
+.wrap{max-width:1360px;margin:0 auto;padding:20px 28px}
+.hero{background:#111827;border-radius:10px;padding:16px 18px;margin-bottom:16px;display:grid;grid-template-columns:1.5fr .9fr;gap:18px;color:#f8fafc}
+.hero h1{font-size:22px;margin-bottom:6px}
+.hero p{font-size:13px;color:#dbeafe;line-height:1.8}
+.hero strong{color:#fb923c}
+.signal{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+.sig{background:#172554;border:1px solid #1d4ed8;border-radius:7px;padding:10px 12px}
+.sig .l{font-size:10px;color:#93c5fd;font-weight:800;margin-bottom:3px}
+.sig .v{font-size:16px;font-weight:900}
+.kpi-g{display:grid;grid-template-columns:repeat(5,1fr);gap:11px;margin-bottom:16px}
+.kpi{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:13px 15px;box-shadow:var(--sh)}
+.kpi .lbl{font-size:10px;color:var(--text2);text-transform:uppercase;letter-spacing:.3px;margin-bottom:4px}
+.kpi .val{font-size:19px;font-weight:800;margin-bottom:2px}
+.kpi .note{font-size:10px;color:var(--text2)}
+.c-up{color:var(--up)} .c-dn{color:var(--dn)} .c-warn{color:var(--warn)} .c-acc{color:var(--accent)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:16px 18px;box-shadow:var(--sh)}
+.st{font-size:13px;font-weight:800;margin-bottom:11px;padding-bottom:6px;border-bottom:2px solid var(--accent);display:flex;align-items:center;gap:6px;justify-content:space-between}
+.note{font-size:12px;color:var(--text2);background:var(--bg);border-left:3px solid var(--accent);border-radius:6px;padding:10px 12px;line-height:1.75}
+.warn{background:var(--warn-bg);border-left-color:var(--warn)}
+.upbox{background:var(--up-bg);border-left-color:var(--up)}
+.model-wrap{overflow-x:auto;border:1px solid #dbe3ee;border-radius:8px;background:#fff;box-shadow:0 1px 2px rgba(15,23,42,.04)}
+.model-table{width:100%;border-collapse:separate;border-spacing:0;font-size:12px;line-height:1.35;min-width:760px}
+.model-table th{background:#eef4ff;color:#1e3a8a;font-weight:800;text-align:right;padding:8px 10px;border-right:1px solid #dbe3ee;border-bottom:1px solid #bfdbfe;white-space:nowrap}
+.model-table th:first-child{text-align:left;color:#0f172a;background:#f8fafc;min-width:210px}
+.model-table td{padding:6px 10px;border-right:1px solid #edf2f7;border-bottom:1px solid #edf2f7;text-align:right;white-space:nowrap;background:#fff}
+.model-table td:first-child{text-align:left;font-weight:700;color:#111827;background:#fbfdff}
+.model-table tbody tr:nth-child(even):not(.section-row) td{background:#fcfdff}
+.model-table .section-row td{background:#e8f0fb!important;color:#0f172a;font-weight:900;border-top:2px solid #94a3b8;border-bottom:1px solid #cbd5e1;text-align:left;letter-spacing:.2px}
+.chart-box{height:260px}
+.chart-box h4{font-size:10px;color:var(--text2);text-transform:uppercase;letter-spacing:.4px;margin-bottom:10px}
+.chart-wrap{position:relative;height:220px}
+.tag{display:inline-block;font-size:10px;font-weight:800;padding:1px 6px;border-radius:3px;background:var(--tag-bg);color:#1d4ed8;border:1px solid #bfdbfe;margin-right:4px}
+.tag.up{background:var(--up-bg);color:var(--up);border-color:#86efac}
+.tag.warn{background:var(--warn-bg);color:var(--warn);border-color:#fcd34d}
+.todo{display:inline-block;font-size:10px;color:var(--warn);background:var(--warn-bg);border:1px dashed #fcd34d;border-radius:3px;padding:0 5px}
+.risk-i{display:flex;gap:6px;margin-bottom:7px;font-size:12px}
+.rn{background:var(--dn-bg);color:var(--dn);font-size:10px;font-weight:800;padding:1px 5px;border-radius:3px;flex-shrink:0;margin-top:2px}
+.footer{font-size:11px;color:var(--text2);text-align:center;padding:18px 0 4px}
+@media(max-width:1000px){.hero,.grid2,.grid3{grid-template-columns:1fr}.kpi-g{grid-template-columns:repeat(2,1fr)}}
+</style>
+</head>
+<body>
+<header class="hdr">
+  <div class="hdr-l">
+    <a class="back-link" href="index.html">← 存储 / HBM</a>
+    <span class="hdr-title">SK 海力士（000660.KS）</span>
+    <span class="hdr-sub">DRAM / HBM 龙头 · 模型公司页</span>
+    <span class="badge up">景气上行</span>
+    <span class="badge">HBM 龙头</span>
+    <span class="badge">DRAM 第一</span>
+  </div>
+  <div class="hdr-meta">公司看板 · 数据源：SK Hynix model.xlsx<br>更新：2026-06-24</div>
+</header>
+
+<div class="wrap">
+  <section class="hero">
+    <div>
+      <h1>结论：海力士是本轮存储周期里最纯的 HBM/DRAM 弹性资产</h1>
+      <p>
+        模型把海力士的核心弹性压在两条线上：一是 <strong>HBM 带动 DRAM ASP 和毛利率重估</strong>，二是 HBM/eSSD 挤压传统供给后，普通 DRAM 与 NAND 同步修复。
+        2025 年已经从周期低谷进入高盈利区间，2026E 在模型口径下进入利润跃迁阶段：收入、OP margin、EPS 同时抬升。
+      </p>
+      <p style="font-size:12px;color:#bfdbfe;margin-top:6px">提示：2026E-2028E 为 Excel 模型预测口径，数值弹性较大，适合作为情景假设和敏感性观察，不直接等同投资结论。</p>
+    </div>
+    <div class="signal">
+      <div class="sig"><div class="l">目标价 / 上行空间</div><div class="v">₩3,500,000 / +50%</div></div>
+      <div class="sig"><div class="l">2025 收入</div><div class="v">₩97.1tn</div></div>
+      <div class="sig"><div class="l">2025 OP margin</div><div class="v">48.6%</div></div>
+      <div class="sig"><div class="l">DRAM 份额</div><div class="v">38.2%（第一）</div></div>
+    </div>
+  </section>
+
+  <div class="kpi-g">
+    <div class="kpi"><div class="lbl">2025 收入</div><div class="val c-up">₩97.1tn</div><div class="note">+46.8% YoY</div></div>
+    <div class="kpi"><div class="lbl">2025 营业利润</div><div class="val c-up">₩47.2tn</div><div class="note">+101.2% YoY</div></div>
+    <div class="kpi"><div class="lbl">2025 净利率</div><div class="val c-up">44.2%</div><div class="note">2023 为 -27.8%</div></div>
+    <div class="kpi"><div class="lbl">2025 EPS</div><div class="val c-acc">₩62,158</div><div class="note">2024 ₩28,719</div></div>
+    <div class="kpi"><div class="lbl">2025 Capex</div><div class="val c-warn">₩28.0tn</div><div class="note">DRAM 占 89.2%</div></div>
+  </div>
+
+  <div class="grid2">
+    <div class="card">
+      <div class="st">投资主线</div>
+      <div class="note upbox">
+        <strong>1. HBM 领先带来结构性溢价。</strong> 海力士在 HBM3E 供应英伟达上领先，模型中 DRAM 收入占比在 2025-2028E 维持 75%+。<br>
+        <strong>2. DRAM ASP 是利润弹性的核心旋钮。</strong> 模型假设 DRAM ASP 从 2025 年 $0.57 / 1Gb equiv. 升至 2026E $1.62，带动 DRAM OP margin 从 60.0% 到 79.3%。<br>
+        <strong>3. Capex 明显向 DRAM 倾斜。</strong> 2025-2028E DRAM 占总 capex 约 89%-90%，说明资源继续向 HBM/高端 DRAM 倾斜。
+      </div>
+    </div>
+    <div class="card">
+      <div class="st">风险与验证点</div>
+      <div class="risk-i"><span class="rn">R1</span><div>模型 2026E 弹性极大，需要跟踪季度业绩是否兑现，尤其是 DRAM ASP、HBM 出货和客户认证节奏。</div></div>
+      <div class="risk-i"><span class="rn">R2</span><div>HBM4 良率、封装产能、CoWoS 交付不及预期，会拖累高毛利收入释放。</div></div>
+      <div class="risk-i"><span class="rn">R3</span><div>传统 DRAM/NAND 若供给集中释放，价格可能从高位回落，压缩普通存储盈利。</div></div>
+      <div class="risk-i"><span class="rn">R4</span><div>韩元汇率和模型缓存口径会影响 KRW / USD 可比性，使用时优先看趋势和结构。</div></div>
+    </div>
+  </div>
+
+  <div class="grid2">
+    <div class="card chart-box">
+      <h4>收入结构（KRW tn）</h4>
+      <div class="chart-wrap"><canvas id="revChart"></canvas></div>
+    </div>
+    <div class="card chart-box">
+      <h4>营业利润与利润率</h4>
+      <div class="chart-wrap"><canvas id="opChart"></canvas></div>
+    </div>
+  </div>
+
+  <div class="grid2">
+    <div class="card chart-box">
+      <h4>DRAM ASP / Bit 出货</h4>
+      <div class="chart-wrap"><canvas id="dramChart"></canvas></div>
+    </div>
+    <div class="card chart-box">
+      <h4>Capex 结构（KRW tn）</h4>
+      <div class="chart-wrap"><canvas id="capexChart"></canvas></div>
+    </div>
+  </div>
+
+  <div class="grid2">
+    <div class="card chart-box">
+      <h4>Capacity：12吋等效月产能结构（kwpm）</h4>
+      <div class="chart-wrap"><canvas id="capacityChart"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="st">Capacity sheet 摘要</div>
+      <div class="note upbox" style="margin-bottom:10px">
+        产能口径来自 Excel 的 <strong>Capacity</strong> sheet：月均 wafer starts，统一折算为 12 吋等效。2025-2028E 总产能从 807 kwpm 增至 1,019 kwpm，其中 DRAM 从 519 kwpm 增至 725 kwpm，产能倾斜继续服务 HBM/高端 DRAM。
+      </div>
+      <div class="model-wrap">
+        <table class="model-table" style="min-width:560px">
+          <thead><tr><th>指标</th><th>2023</th><th>2024</th><th>2025</th><th>2026E</th><th>2027E</th><th>2028E</th></tr></thead>
+          <tbody>
+            <tr><td>总产能（12吋等效 kwpm）</td><td>591</td><td>657</td><td>807</td><td>890</td><td>959</td><td>1,019</td></tr>
+            <tr><td>DRAM</td><td>326</td><td>400</td><td>519</td><td>618</td><td>674</td><td>725</td></tr>
+            <tr><td>NAND</td><td>213</td><td>205</td><td>236</td><td>243</td><td>255</td><td>264</td></tr>
+            <tr><td>Others</td><td>52</td><td>52</td><td>52</td><td>30</td><td>30</td><td>30</td></tr>
+            <tr class="section-row"><td colspan="7">结构占比</td></tr>
+            <tr><td>DRAM 占比</td><td>55.2%</td><td>60.9%</td><td>64.3%</td><td>69.4%</td><td>70.3%</td><td>71.2%</td></tr>
+            <tr><td>NAND 占比</td><td>36.0%</td><td>31.2%</td><td>29.3%</td><td>27.2%</td><td>26.6%</td><td>25.9%</td></tr>
+            <tr><td>总产能 YoY</td><td>-17.5%</td><td>+11.2%</td><td>+22.8%</td><td>+10.3%</td><td>+7.7%</td><td>+6.3%</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid2">
+    <div class="card chart-box">
+      <h4>2028E Fab 产能分布（kwpm）</h4>
+      <div class="chart-wrap"><canvas id="fabCapacityChart"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="st">Fab 分布结论</div>
+      <div class="note" style="margin-bottom:10px">
+        2028E 的 DRAM 主力来自 <strong>M16 / M14 / C2 / C2 expansion</strong> 四条成熟 12 吋线，合计约 570 kwpm；新增弹性来自 <strong>M15X</strong>（2026E 开始贡献 42.5 kwpm，2027E 到 90 kwpm）和 <strong>Yongin</strong>（2027E 小量、2028E 到 55 kwpm）。NAND 主要由 Solidigm、大连、M15、M12/M14/M11 等贡献，2028E 合计约 264 kwpm。
+      </div>
+      <div class="note warn">表内单位为 monthly average wafer starts，000' units；除 8 吋老线外，均按 12 吋等效口径展示。</div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-bottom:16px">
+    <div class="st">Capacity 明细：按工厂 / 产品线拆分</div>
+    <div class="model-wrap">
+      <table class="model-table" style="min-width:940px">
+        <thead><tr><th>Fab / 产品线</th><th>地点</th><th>Wafer</th><th>2025</th><th>2026E</th><th>2027E</th><th>2028E</th><th>变化观察</th></tr></thead>
+        <tbody>
+          <tr class="section-row"><td colspan="8">DRAM 产能</td></tr>
+          <tr><td>M14 · DRAM</td><td>Icheon, Korea</td><td>12"</td><td>177.5</td><td>162.5</td><td>160.0</td><td>160.0</td><td>成熟主力线，2026E 后小幅回落并稳定</td></tr>
+          <tr><td>M16 · DRAM</td><td>Icheon, Korea</td><td>12"</td><td>166.3</td><td>207.5</td><td>210.0</td><td>210.0</td><td>最大 DRAM 贡献线，2026E 明显扩张</td></tr>
+          <tr><td>C2 · DRAM</td><td>Wuxi, China</td><td>12"</td><td>85.0</td><td>100.0</td><td>100.0</td><td>100.0</td><td>无锡稳定产能</td></tr>
+          <tr><td>C2 expansion · DRAM</td><td>Wuxi, China</td><td>12"</td><td>90.0</td><td>95.0</td><td>100.0</td><td>100.0</td><td>扩建线继续爬坡至 100 kwpm</td></tr>
+          <tr><td>M15X · DRAM</td><td>Chengju, Korea</td><td>12"</td><td>0.0</td><td>42.5</td><td>90.0</td><td>90.0</td><td>新增 DRAM 弹性，2027E 达稳态</td></tr>
+          <tr><td>Yongin fab · DRAM</td><td>Yongin, Korea</td><td>12"</td><td>0.0</td><td>0.0</td><td>3.8</td><td>55.0</td><td>远期新增产能，2028E 开始显著贡献</td></tr>
+          <tr><td>M8 · DRAM</td><td>Chengju, Korea</td><td>8"/12"</td><td>0.0</td><td>10.0</td><td>10.0</td><td>10.0</td><td>老线少量贡献</td></tr>
+          <tr class="section-row"><td colspan="8">NAND / Others 产能</td></tr>
+          <tr><td>Solidigm · NAND</td><td>Dalian, China</td><td>12"</td><td>91.3</td><td>95.0</td><td>95.0</td><td>95.0</td><td>NAND 最大单线，基本稳定</td></tr>
+          <tr><td>M15 · NAND</td><td>Chengju, Korea</td><td>12"</td><td>70.0</td><td>72.5</td><td>85.0</td><td>90.0</td><td>NAND 主要增量线</td></tr>
+          <tr><td>M12 · NAND</td><td>Chengju, Korea</td><td>12"</td><td>30.0</td><td>30.0</td><td>30.0</td><td>30.0</td><td>稳定贡献</td></tr>
+          <tr><td>M14 · NAND</td><td>Icheon, Korea</td><td>12"</td><td>25.0</td><td>25.0</td><td>25.0</td><td>25.0</td><td>稳定贡献</td></tr>
+          <tr><td>M11 · NAND</td><td>Chengju, Korea</td><td>12"</td><td>20.0</td><td>20.0</td><td>20.0</td><td>20.0</td><td>稳定贡献</td></tr>
+          <tr><td>Yongin fab · NAND</td><td>Yongin, Korea</td><td>12"</td><td>0.0</td><td>0.0</td><td>0.0</td><td>3.8</td><td>2028E 小量起步</td></tr>
+          <tr><td>M10 · Others</td><td>Icheon, Korea</td><td>12"</td><td>30.0</td><td>30.0</td><td>30.0</td><td>30.0</td><td>其他用途稳定产能</td></tr>
+          <tr><td>M8 · Others</td><td>Chengju, Korea</td><td>8"/12"</td><td>50.0</td><td>0.0</td><td>0.0</td><td>0.0</td><td>2026E 后退出 Others 贡献</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="card" style="margin-bottom:16px">
+    <div class="st">模型摘要：2023-2028E</div>
+    <div class="model-wrap">
+      <table class="model-table">
+        <thead><tr><th>指标</th><th>2023</th><th>2024</th><th>2025</th><th>2026E</th><th>2027E</th><th>2028E</th></tr></thead>
+        <tbody>
+          <tr class="section-row"><td colspan="7">收入与利润（KRW tn，除非另有说明）</td></tr>
+          <tr><td>收入</td><td>32.8</td><td>66.2</td><td>97.1</td><td>357.0</td><td>506.9</td><td>589.2</td></tr>
+          <tr><td>DRAM 收入</td><td>20.8</td><td>45.1</td><td>74.9</td><td>269.9</td><td>387.1</td><td>463.3</td></tr>
+          <tr><td>NAND 收入</td><td>9.7</td><td>18.9</td><td>20.4</td><td>86.5</td><td>119.1</td><td>125.0</td></tr>
+          <tr><td>营业利润</td><td class="c-dn">-7.7</td><td>23.5</td><td>47.2</td><td>271.1</td><td>400.7</td><td>453.9</td></tr>
+          <tr><td>净利润</td><td class="c-dn">-9.1</td><td>19.8</td><td>42.9</td><td>222.1</td><td>311.7</td><td>354.7</td></tr>
+          <tr><td>EPS（KRW）</td><td class="c-dn">-13,242</td><td>28,719</td><td>62,158</td><td>321,429</td><td>451,170</td><td>513,369</td></tr>
+          <tr class="section-row"><td colspan="7">利润率与回报</td></tr>
+          <tr><td>毛利率</td><td class="c-dn">-1.6%</td><td>48.1%</td><td>60.4%</td><td>83.9%</td><td>88.0%</td><td>87.0%</td></tr>
+          <tr><td>营业利润率</td><td class="c-dn">-23.6%</td><td>35.5%</td><td>48.6%</td><td>75.9%</td><td>79.0%</td><td>77.0%</td></tr>
+          <tr><td>净利率</td><td class="c-dn">-27.8%</td><td>29.9%</td><td>44.2%</td><td>62.2%</td><td>61.5%</td><td>60.2%</td></tr>
+          <tr><td>ROE</td><td class="c-dn">-15.6%</td><td>31.1%</td><td>44.2%</td><td>96.3%</td><td>64.7%</td><td>45.9%</td></tr>
+          <tr class="section-row"><td colspan="7">DRAM 驱动因子</td></tr>
+          <tr><td>DRAM ASP（USD / 1Gb equiv.）</td><td>0.25</td><td>0.44</td><td>0.57</td><td>1.62</td><td>2.12</td><td>2.17</td></tr>
+          <tr><td>DRAM bit 出货（bn 1Gb equiv.）</td><td>64.0</td><td>75.1</td><td>93.1</td><td>115.0</td><td>133.1</td><td>158.3</td></tr>
+          <tr><td>DRAM 月产能（12吋等效 kwpm）</td><td>326</td><td>400</td><td>519</td><td>618</td><td>674</td><td>725</td></tr>
+          <tr class="section-row"><td colspan="7">资本开支</td></tr>
+          <tr><td>总 capex</td><td>7.9</td><td>16.0</td><td>28.0</td><td>45.0</td><td>58.0</td><td>62.0</td></tr>
+          <tr><td>DRAM capex 占比</td><td>72.2%</td><td>83.1%</td><td>89.2%</td><td>89.9%</td><td>88.8%</td><td>88.9%</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="grid3">
+    <div class="card">
+      <div class="st">A 股映射</div>
+      <div class="note">海力士验证的是全球 HBM/DRAM 景气强度。映射方向优先看 <span class="tag up">HBM 材料/设备</span><span class="tag">先进封装</span><span class="tag warn">模组涨价</span>，具体标的仍需结合国内订单和业绩弹性再筛。</div>
+    </div>
+    <div class="card">
+      <div class="st">季度跟踪</div>
+      <div class="note">重点跟踪：DRAM ASP、HBM 收入占比、NAND OP margin、capex 指引、HBM4 认证/量产节奏，以及英伟达/云厂商对 HBM3E/HBM4 的拉货变化。</div>
+    </div>
+    <div class="card">
+      <div class="st">待补数据</div>
+      <div class="note warn"><span class="todo">待补</span> HBM 单独收入拆分、HBM 客户结构、库存周数、季度 ASP 实际值、与三星/美光同口径估值比较。</div>
+    </div>
+  </div>
+
+  <div class="footer">SK 海力士公司看板 · 来源：workwork/research/fundamentals/industry-dashboards/存储/原始数据/SK Hynix model.xlsx · 2026-06-24</div>
+</div>
+
+<script>
+const years=['2023','2024','2025','2026E','2027E','2028E'];
+const grid='#f1f5f9';
+const opts=(yt)=>({responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'top',labels:{font:{size:10},padding:8}},tooltip:{mode:'index',intersect:false}},scales:{x:{grid:{color:grid},ticks:{font:{size:9}}},y:{grid:{color:grid},ticks:{font:{size:9}},title:yt?{display:true,text:yt,font:{size:9},color:'#94a3b8'}:undefined}}});
+
+new Chart(document.getElementById('revChart'),{type:'bar',
+  data:{labels:years,datasets:[
+    {label:'DRAM',data:[20.8,45.1,74.9,269.9,387.1,463.3],backgroundColor:'#2563eb',borderRadius:3},
+    {label:'NAND',data:[9.7,18.9,20.4,86.5,119.1,125.0],backgroundColor:'#d97706',borderRadius:3},
+    {label:'其他',data:[2.2,2.1,1.8,0.6,0.8,0.9],backgroundColor:'#cbd5e1',borderRadius:3}]},
+  options:{...opts('KRW tn'),scales:{...opts('KRW tn').scales,x:{stacked:true,grid:{color:grid},ticks:{font:{size:9}}},y:{stacked:true,grid:{color:grid},ticks:{font:{size:9}},title:{display:true,text:'KRW tn',font:{size:9},color:'#94a3b8'}}}}});
+
+new Chart(document.getElementById('opChart'),{type:'bar',
+  data:{labels:years,datasets:[
+    {type:'bar',label:'营业利润（KRW tn）',data:[-7.7,23.5,47.2,271.1,400.7,453.9],backgroundColor:'#16a34a',borderRadius:3,yAxisID:'y'},
+    {type:'line',label:'OP margin',data:[-23.6,35.5,48.6,75.9,79.0,77.0],borderColor:'#dc2626',backgroundColor:'#dc2626',tension:.3,borderWidth:2,yAxisID:'y1'}]},
+  options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'top',labels:{font:{size:10},padding:8}},tooltip:{mode:'index',intersect:false}},scales:{x:{grid:{color:grid},ticks:{font:{size:9}}},y:{position:'left',grid:{color:grid},ticks:{font:{size:9}},title:{display:true,text:'KRW tn',font:{size:9},color:'#94a3b8'}},y1:{position:'right',grid:{drawOnChartArea:false},ticks:{font:{size:9},callback:v=>v+'%'},title:{display:true,text:'%',font:{size:9},color:'#94a3b8'}}}}});
+
+new Chart(document.getElementById('dramChart'),{type:'line',
+  data:{labels:years,datasets:[
+    {label:'DRAM ASP（USD/1Gb）',data:[0.25,0.44,0.57,1.62,2.12,2.17],borderColor:'#2563eb',backgroundColor:'rgba(37,99,235,.08)',tension:.3,borderWidth:2,yAxisID:'y'},
+    {label:'Bit 出货（bn 1Gb）',data:[64.0,75.1,93.1,115.0,133.1,158.3],borderColor:'#16a34a',backgroundColor:'#16a34a',tension:.3,borderWidth:2,yAxisID:'y1'}]},
+  options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'top',labels:{font:{size:10},padding:8}},tooltip:{mode:'index',intersect:false}},scales:{x:{grid:{color:grid},ticks:{font:{size:9}}},y:{position:'left',grid:{color:grid},ticks:{font:{size:9}},title:{display:true,text:'USD',font:{size:9},color:'#94a3b8'}},y1:{position:'right',grid:{drawOnChartArea:false},ticks:{font:{size:9}},title:{display:true,text:'bn 1Gb equiv.',font:{size:9},color:'#94a3b8'}}}}});
+
+new Chart(document.getElementById('capexChart'),{type:'bar',
+  data:{labels:years,datasets:[
+    {label:'DRAM capex',data:[5.7,13.3,25.0,40.5,51.6,55.2],backgroundColor:'#2563eb',borderRadius:3},
+    {label:'NAND capex',data:[2.2,2.7,3.0,4.5,6.5,6.9],backgroundColor:'#d97706',borderRadius:3}]},
+  options:{...opts('KRW tn'),scales:{...opts('KRW tn').scales,x:{stacked:true,grid:{color:grid},ticks:{font:{size:9}}},y:{stacked:true,grid:{color:grid},ticks:{font:{size:9}},title:{display:true,text:'KRW tn',font:{size:9},color:'#94a3b8'}}}}});
+
+new Chart(document.getElementById('capacityChart'),{type:'bar',
+  data:{labels:years,datasets:[
+    {label:'DRAM',data:[326,400,519,618,674,725],backgroundColor:'#2563eb',borderRadius:3},
+    {label:'NAND',data:[213,205,236,243,255,264],backgroundColor:'#d97706',borderRadius:3},
+    {label:'Others',data:[52,52,52,30,30,30],backgroundColor:'#cbd5e1',borderRadius:3}]},
+  options:{...opts('kwpm'),scales:{...opts('kwpm').scales,x:{stacked:true,grid:{color:grid},ticks:{font:{size:9}}},y:{stacked:true,grid:{color:grid},ticks:{font:{size:9}},title:{display:true,text:'12-inch equiv. kwpm',font:{size:9},color:'#94a3b8'}}}}});
+
+new Chart(document.getElementById('fabCapacityChart'),{type:'bar',
+  data:{labels:['M16 DRAM','M14 DRAM','C2 DRAM','C2扩建 DRAM','M15X DRAM','Yongin DRAM','Solidigm NAND','M15 NAND','其他 NAND/Others'],
+    datasets:[{label:'2028E kwpm',data:[210,160,100,100,90,55,95,90,208.75],
+      backgroundColor:['#2563eb','#2563eb','#2563eb','#2563eb','#3b82f6','#60a5fa','#d97706','#d97706','#cbd5e1'],borderRadius:3}]},
+  options:{responsive:true,maintainAspectRatio:false,indexAxis:'y',
+    plugins:{legend:{display:false},tooltip:{mode:'index'}},
+    scales:{x:{grid:{color:grid},ticks:{font:{size:9}},title:{display:true,text:'12-inch equiv. kwpm',font:{size:9},color:'#94a3b8'}},y:{grid:{color:grid},ticks:{font:{size:9}}}}}});
+</script>
+</body>
+</html>
