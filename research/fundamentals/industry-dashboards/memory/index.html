@@ -237,77 +237,6 @@ code{font-size:10px;background:var(--tag-bg);color:var(--tag);padding:1px 5px;bo
   </div>
 </div>
 
-<!-- 利润速算器 -->
-<div id="sec-calc" class="st" onclick="toggleSec(this)">📐 利润速算器（Bits × ASP，可调整假设）<span class="st-arrow">▾</span></div>
-<div class="sec-body" style="margin-bottom:16px">
-  <div class="card">
-    <div class="note-box">核心公式：<strong>营收 = 出货量(Bits) × 单价(ASP)；利润 = 出货量 × (ASP − 单位成本)</strong>。三个输入框默认填的是 <strong>2025（美光为FY25）实际年化值</strong>，单位成本是用该年度披露的利润率反推出的隐含值（<code>成本/bit = ASP×(1−利润率%)</code>），可直接改 Bits/ASP/成本任意一项做敏感性测算。<strong style="color:var(--warn)">注意口径差异</strong>：美光单列 COGS，是三表里唯一的真毛利率；海力士/三星只给营业利润率（已扣SG&A/研发），反推出的"成本"是更宽口径的隐含值，三家利润率不能直接横比。隐含成本本身也不是恒定的（如海力士 DRAM 隐含成本 2025→2026E 模型里其实从 $0.226 涨到 $0.322/Gb），改 ASP 测算未来时建议同步检查成本假设是否还合理。</div>
-    <div class="calc-grid">
-      <div class="calc-col" data-co="skh">
-        <div class="calc-h">海力士 SK Hynix</div>
-        <div class="calc-seg-h tg-dram">DRAM（含 HBM 混合）</div>
-        <label>出货量（bn Gb）<input type="number" step="0.01" value="93.10" oninput="calcProfit()"></label>
-        <label>ASP（$/Gb）<input type="number" step="0.0001" value="0.5662" oninput="calcProfit()"></label>
-        <label>单位成本（$/Gb）<input type="number" step="0.0001" value="0.2265" oninput="calcProfit()"></label>
-        <div class="calc-out"><span>营收</span><b class="o-rev">-</b></div>
-        <div class="calc-out"><span>利润</span><b class="o-prof">-</b></div>
-        <div class="calc-out"><span>利润率</span><b class="o-marg">-</b></div>
-        <div class="calc-seg-h tg-nand" style="margin-top:10px">NAND</div>
-        <label>出货量（bn GB）<input type="number" step="0.01" value="174.80" oninput="calcProfit()"></label>
-        <label>ASP（$/GB）<input type="number" step="0.0001" value="0.0821" oninput="calcProfit()"></label>
-        <label>单位成本（$/GB）<input type="number" step="0.0001" value="0.0716" oninput="calcProfit()"></label>
-        <div class="calc-out"><span>营收</span><b class="o-rev">-</b></div>
-        <div class="calc-out"><span>利润</span><b class="o-prof">-</b></div>
-        <div class="calc-out"><span>利润率</span><b class="o-marg">-</b></div>
-        <div class="calc-out calc-total"><span>合计营收</span><b class="o-rev">-</b></div>
-        <div class="calc-out calc-total"><span>合计利润</span><b class="o-prof">-</b></div>
-        <div class="calc-out calc-total"><span>综合利润率</span><b class="o-marg">-</b></div>
-      </div>
-      <div class="calc-col" data-co="sam">
-        <div class="calc-h">三星 Samsung</div>
-        <div class="calc-seg-h tg-dram">DRAM（含 HBM 混合）</div>
-        <label>出货量（bn Gb）<input type="number" step="0.01" value="116.45" oninput="calcProfit()"></label>
-        <label>ASP（$/Gb）<input type="number" step="0.0001" value="0.4385" oninput="calcProfit()"></label>
-        <label>单位成本（$/Gb）<input type="number" step="0.0001" value="0.2622" oninput="calcProfit()"></label>
-        <div class="calc-out"><span>营收</span><b class="o-rev">-</b></div>
-        <div class="calc-out"><span>利润</span><b class="o-prof">-</b></div>
-        <div class="calc-out"><span>利润率</span><b class="o-marg">-</b></div>
-        <div class="calc-seg-h tg-nand" style="margin-top:10px">NAND</div>
-        <label>出货量（bn GB）<input type="number" step="0.01" value="336.00" oninput="calcProfit()"></label>
-        <label>ASP（$/GB）<input type="number" step="0.0001" value="0.0655" oninput="calcProfit()"></label>
-        <label>单位成本（$/GB）<input type="number" step="0.0001" value="0.0600" oninput="calcProfit()"></label>
-        <div class="calc-out"><span>营收</span><b class="o-rev">-</b></div>
-        <div class="calc-out"><span>利润</span><b class="o-prof">-</b></div>
-        <div class="calc-out"><span>利润率</span><b class="o-marg">-</b></div>
-        <div class="calc-out calc-total"><span>合计营收</span><b class="o-rev">-</b></div>
-        <div class="calc-out calc-total"><span>合计利润</span><b class="o-prof">-</b></div>
-        <div class="calc-out calc-total"><span>综合利润率</span><b class="o-marg">-</b></div>
-      </div>
-      <div class="calc-col" data-co="mu">
-        <div class="calc-h">美光 Micron（真毛利率口径）</div>
-        <div class="calc-seg-h tg-dram">DRAM（含 HBM 混合）</div>
-        <label>出货量（bn Gb）<input type="number" step="0.01" value="69.02" oninput="calcProfit()"></label>
-        <label>ASP（$/Gb）<input type="number" step="0.0001" value="0.4139" oninput="calcProfit()"></label>
-        <label>单位成本（$/Gb）<input type="number" step="0.0001" value="0.1917" oninput="calcProfit()"></label>
-        <div class="calc-out"><span>营收</span><b class="o-rev">-</b></div>
-        <div class="calc-out"><span>利润</span><b class="o-prof">-</b></div>
-        <div class="calc-out"><span>利润率</span><b class="o-marg">-</b></div>
-        <div class="calc-seg-h tg-nand" style="margin-top:10px">NAND</div>
-        <label>出货量（bn GB）<input type="number" step="0.01" value="127.91" oninput="calcProfit()"></label>
-        <label>ASP（$/GB）<input type="number" step="0.0001" value="0.0665" oninput="calcProfit()"></label>
-        <label>单位成本（$/GB）<input type="number" step="0.0001" value="0.0559" oninput="calcProfit()"></label>
-        <div class="calc-out"><span>营收</span><b class="o-rev">-</b></div>
-        <div class="calc-out"><span>利润</span><b class="o-prof">-</b></div>
-        <div class="calc-out"><span>利润率</span><b class="o-marg">-</b></div>
-        <div class="calc-out calc-total"><span>合计营收</span><b class="o-rev">-</b></div>
-        <div class="calc-out calc-total"><span>合计利润</span><b class="o-prof">-</b></div>
-        <div class="calc-out calc-total"><span>综合利润率</span><b class="o-marg">-</b></div>
-      </div>
-    </div>
-    <div class="calc-out calc-sum"><span>三家合计营收</span><b id="calc-sum-rev">-</b><span>三家合计利润</span><b id="calc-sum-prof">-</b></div>
-  </div>
-</div>
-
 <!-- ════════ 第一部分 · 三大原厂（业务拆 HBM / DRAM / NAND） ════════ -->
 <div class="part part-co"><span class="pn">第一部分</span> 三大原厂 · 业务拆分 <span class="pd">海力士 · 三星 · 美光，各拆 HBM / DRAM / NAND</span></div>
 
@@ -796,6 +725,78 @@ code{font-size:10px;background:var(--tag-bg);color:var(--tag);padding:1px 5px;bo
     <div class="seg-sum">两条逻辑链的核心区别：<strong>逻辑链一（HBM）</strong>赚的是"HBM 渗透率提升+先进封装良率爬坡"的钱，跟随海力士/三星/美光的 HBM bit 出货与资本开支节奏，弹性大但收入体量小（HBM 仅占三大厂总营收 10%-20%，见"当前判断速览"）；<strong>逻辑链二（存储大周期）</strong>赚的是"commodity DRAM/NAND 合约价上涨"的钱，跟随 DDR5/DDR4/NAND 价格曲线，体量更大、覆盖三大厂绝大部分收入，1Q26 后是业绩兑现的主战场。A 股标的为产业链常见方向占位，具体代码/关注度（🟢核心/🟡观察）与最终名单需结合海外映射、业绩相关性与估值水位由用户确认。</div>
   </div>
 </div>
+
+<!-- 利润速算器 -->
+<div id="sec-calc" class="st" onclick="toggleSec(this)">📐 利润速算器（Bits × ASP，可调整假设）<span class="st-arrow">▾</span></div>
+<div class="sec-body" style="margin-bottom:16px">
+  <div class="card">
+    <div class="note-box">核心公式：<strong>营收 = 出货量(Bits) × 单价(ASP)；利润 = 出货量 × (ASP − 单位成本)</strong>。三个输入框默认填的是 <strong>2025（美光为FY25）实际年化值</strong>，单位成本是用该年度披露的利润率反推出的隐含值（<code>成本/bit = ASP×(1−利润率%)</code>），可直接改 Bits/ASP/成本任意一项做敏感性测算。<strong style="color:var(--warn)">注意口径差异</strong>：美光单列 COGS，是三表里唯一的真毛利率；海力士/三星只给营业利润率（已扣SG&A/研发），反推出的"成本"是更宽口径的隐含值，三家利润率不能直接横比。隐含成本本身也不是恒定的（如海力士 DRAM 隐含成本 2025→2026E 模型里其实从 $0.226 涨到 $0.322/Gb），改 ASP 测算未来时建议同步检查成本假设是否还合理。</div>
+    <div class="calc-grid">
+      <div class="calc-col" data-co="skh">
+        <div class="calc-h">海力士 SK Hynix</div>
+        <div class="calc-seg-h tg-dram">DRAM（含 HBM 混合）</div>
+        <label>出货量（bn Gb）<input type="number" step="0.01" value="93.10" oninput="calcProfit()"></label>
+        <label>ASP（$/Gb）<input type="number" step="0.0001" value="0.5662" oninput="calcProfit()"></label>
+        <label>单位成本（$/Gb）<input type="number" step="0.0001" value="0.2265" oninput="calcProfit()"></label>
+        <div class="calc-out"><span>营收</span><b class="o-rev">-</b></div>
+        <div class="calc-out"><span>利润</span><b class="o-prof">-</b></div>
+        <div class="calc-out"><span>利润率</span><b class="o-marg">-</b></div>
+        <div class="calc-seg-h tg-nand" style="margin-top:10px">NAND</div>
+        <label>出货量（bn GB）<input type="number" step="0.01" value="174.80" oninput="calcProfit()"></label>
+        <label>ASP（$/GB）<input type="number" step="0.0001" value="0.0821" oninput="calcProfit()"></label>
+        <label>单位成本（$/GB）<input type="number" step="0.0001" value="0.0716" oninput="calcProfit()"></label>
+        <div class="calc-out"><span>营收</span><b class="o-rev">-</b></div>
+        <div class="calc-out"><span>利润</span><b class="o-prof">-</b></div>
+        <div class="calc-out"><span>利润率</span><b class="o-marg">-</b></div>
+        <div class="calc-out calc-total"><span>合计营收</span><b class="o-rev">-</b></div>
+        <div class="calc-out calc-total"><span>合计利润</span><b class="o-prof">-</b></div>
+        <div class="calc-out calc-total"><span>综合利润率</span><b class="o-marg">-</b></div>
+      </div>
+      <div class="calc-col" data-co="sam">
+        <div class="calc-h">三星 Samsung</div>
+        <div class="calc-seg-h tg-dram">DRAM（含 HBM 混合）</div>
+        <label>出货量（bn Gb）<input type="number" step="0.01" value="116.45" oninput="calcProfit()"></label>
+        <label>ASP（$/Gb）<input type="number" step="0.0001" value="0.4385" oninput="calcProfit()"></label>
+        <label>单位成本（$/Gb）<input type="number" step="0.0001" value="0.2622" oninput="calcProfit()"></label>
+        <div class="calc-out"><span>营收</span><b class="o-rev">-</b></div>
+        <div class="calc-out"><span>利润</span><b class="o-prof">-</b></div>
+        <div class="calc-out"><span>利润率</span><b class="o-marg">-</b></div>
+        <div class="calc-seg-h tg-nand" style="margin-top:10px">NAND</div>
+        <label>出货量（bn GB）<input type="number" step="0.01" value="336.00" oninput="calcProfit()"></label>
+        <label>ASP（$/GB）<input type="number" step="0.0001" value="0.0655" oninput="calcProfit()"></label>
+        <label>单位成本（$/GB）<input type="number" step="0.0001" value="0.0600" oninput="calcProfit()"></label>
+        <div class="calc-out"><span>营收</span><b class="o-rev">-</b></div>
+        <div class="calc-out"><span>利润</span><b class="o-prof">-</b></div>
+        <div class="calc-out"><span>利润率</span><b class="o-marg">-</b></div>
+        <div class="calc-out calc-total"><span>合计营收</span><b class="o-rev">-</b></div>
+        <div class="calc-out calc-total"><span>合计利润</span><b class="o-prof">-</b></div>
+        <div class="calc-out calc-total"><span>综合利润率</span><b class="o-marg">-</b></div>
+      </div>
+      <div class="calc-col" data-co="mu">
+        <div class="calc-h">美光 Micron（真毛利率口径）</div>
+        <div class="calc-seg-h tg-dram">DRAM（含 HBM 混合）</div>
+        <label>出货量（bn Gb）<input type="number" step="0.01" value="69.02" oninput="calcProfit()"></label>
+        <label>ASP（$/Gb）<input type="number" step="0.0001" value="0.4139" oninput="calcProfit()"></label>
+        <label>单位成本（$/Gb）<input type="number" step="0.0001" value="0.1917" oninput="calcProfit()"></label>
+        <div class="calc-out"><span>营收</span><b class="o-rev">-</b></div>
+        <div class="calc-out"><span>利润</span><b class="o-prof">-</b></div>
+        <div class="calc-out"><span>利润率</span><b class="o-marg">-</b></div>
+        <div class="calc-seg-h tg-nand" style="margin-top:10px">NAND</div>
+        <label>出货量（bn GB）<input type="number" step="0.01" value="127.91" oninput="calcProfit()"></label>
+        <label>ASP（$/GB）<input type="number" step="0.0001" value="0.0665" oninput="calcProfit()"></label>
+        <label>单位成本（$/GB）<input type="number" step="0.0001" value="0.0559" oninput="calcProfit()"></label>
+        <div class="calc-out"><span>营收</span><b class="o-rev">-</b></div>
+        <div class="calc-out"><span>利润</span><b class="o-prof">-</b></div>
+        <div class="calc-out"><span>利润率</span><b class="o-marg">-</b></div>
+        <div class="calc-out calc-total"><span>合计营收</span><b class="o-rev">-</b></div>
+        <div class="calc-out calc-total"><span>合计利润</span><b class="o-prof">-</b></div>
+        <div class="calc-out calc-total"><span>综合利润率</span><b class="o-marg">-</b></div>
+      </div>
+    </div>
+    <div class="calc-out calc-sum"><span>三家合计营收</span><b id="calc-sum-rev">-</b><span>三家合计利润</span><b id="calc-sum-prof">-</b></div>
+  </div>
+</div>
+
 
 <div style="font-size:11px;color:var(--text2);text-align:center;padding:18px 0 4px">存储 / HBM 研究看板 · 结构：HBM → DRAM → NAND → 三大原厂 · 数据源：全球存储模型（2026-06-24）· 标 <span class="todo">TODO</span> 项为待补数据</div>
 
