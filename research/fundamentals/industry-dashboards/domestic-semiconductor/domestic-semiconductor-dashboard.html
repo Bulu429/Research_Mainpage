@@ -103,20 +103,59 @@ code{font-size:10px;background:var(--tag-bg);color:var(--tag);padding:1px 5px;bo
 .tip-conflict-row{display:flex;flex-direction:column;gap:3px;padding:4px 0;border-bottom:1px solid rgba(255,255,255,.05)}
 .tip-conflict-row:last-of-type{border-bottom:none}
 .tip-conflict-src{color:#fbbf24;font-size:10px}
+.tip-conflict-val{font-size:11px}
 .tip-chosen{color:#4ade80;font-size:10px;margin-top:5px;padding-top:5px;border-top:1px solid rgba(255,255,255,.1)}
 
 /* localization bar */
 .loc-bar-wrap{height:8px;background:#e2e8f0;border-radius:4px;margin-top:4px;overflow:hidden}
 .loc-bar{height:100%;border-radius:4px;transition:width .5s ease}
 
-@media(max-width:900px){.kpi-g{grid-template-columns:repeat(2,1fr)}.chart-row{grid-template-columns:1fr}.crit-g{grid-template-columns:1fr}.b-grid{grid-template-columns:1fr}.j-grid{grid-template-columns:1fr}}
+/* 投资逻辑图谱 */
+.logic-map-g{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:14px}
+.lm-card{border-radius:9px;border:1px solid var(--border);background:#fff;overflow:hidden;display:flex;flex-direction:column}
+.lm-head{padding:9px 12px 8px;color:#fff}
+.lm-num{font-size:10px;font-weight:700;opacity:.85;letter-spacing:.5px}
+.lm-title{font-size:13px;font-weight:800;margin-top:2px}
+.lm-kw{display:inline-block;margin-top:5px;font-size:10px;font-weight:600;background:rgba(255,255,255,.22);padding:2px 7px;border-radius:10px}
+.lm-body{padding:10px 12px 12px;flex:1;display:flex;flex-direction:column;gap:8px}
+.lm-desc{font-size:11.5px;line-height:1.65;color:var(--text)}
+.lm-drivers{font-size:10.5px;line-height:1.7;color:var(--text2);padding-left:14px;margin:0}
+.lm-drivers li{margin-bottom:2px}
+.lm-tickers{display:flex;flex-wrap:wrap;gap:5px;margin-top:auto}
+.lm-chip{font-size:10px;font-weight:600;padding:2px 7px;border-radius:5px;border:1px solid;white-space:nowrap}
+.lm-note{font-size:10px;color:var(--warn);background:var(--warn-bg);border-radius:5px;padding:6px 8px;line-height:1.55;border-left:3px solid var(--warn)}
+
+/* 产能扩产跟踪表 */
+.cap-tbl{width:100%;border-collapse:collapse;font-size:11.5px;margin-bottom:10px}
+.cap-tbl th{text-align:center;padding:6px 6px;font-size:10px;font-weight:700;color:var(--text2);background:var(--bg);border:1px solid var(--border);white-space:nowrap}
+.cap-tbl td{text-align:center;padding:5px 6px;border:1px solid var(--border);vertical-align:middle}
+.cap-tbl td.cap-lbl{text-align:left;font-size:11px}
+.cap-fab-row td{background:#fde4d6;font-weight:700}
+.cap-sub-row td{background:#fdf1e9;color:var(--text2);font-size:10.5px}
+.cap-hl{background:#dbeafe;color:#1d4ed8;font-weight:700}
+.cap-note{font-size:10px;color:var(--text2);font-style:italic}
+.cap-pending{color:var(--text2);font-style:italic;font-weight:400}
+.cap-pending::after{content:'*';color:var(--warn)}
+.logic-deep-sub{font-size:13px;font-weight:700;color:var(--accent);margin:18px 0 8px;padding-top:14px;border-top:1px dashed var(--border)}
+.logic-deep-sub:first-child{margin-top:0;padding-top:0;border-top:none}
+
+@media(max-width:900px){.kpi-g{grid-template-columns:repeat(2,1fr)}.chart-row{grid-template-columns:1fr}.crit-g{grid-template-columns:1fr}.b-grid{grid-template-columns:1fr}.j-grid{grid-template-columns:1fr}.logic-map-g{grid-template-columns:1fr}}
+
+/* 图片点击放大 */
+.zoomable-img{cursor:zoom-in;transition:opacity .15s}
+.zoomable-img:hover{opacity:.88}
+.img-lightbox{display:none;position:fixed;inset:0;z-index:10000;background:rgba(15,15,20,.86);align-items:center;justify-content:center;padding:24px;cursor:zoom-out}
+.img-lightbox.visible{display:flex}
+.img-lightbox img{max-width:92vw;max-height:92vh;border-radius:6px;box-shadow:0 10px 40px rgba(0,0,0,.5)}
 </style>
 </head>
 <body>
 
+<div class="img-lightbox" id="imgLightbox"><img id="imgLightboxPic" src="" alt=""></div>
+
 <header class="hdr">
   <div class="hdr-l">
-    <a class="back-link" href="../industry-fundamentals-entry.html">← 行业基本面入口</a>
+    <a class="back-link" href="../行业基本面入口.html">← 行业基本面入口</a>
     <span class="hdr-title">国产半导体产业链</span>
     <span class="hdr-sub">设备 · 材料 · 芯片设计 · 晶圆+封装</span>
     <span class="badge-warn">🟡 结构分化</span>
@@ -127,276 +166,610 @@ code{font-size:10px;background:var(--tag-bg);color:var(--tag);padding:1px 5px;bo
 
 <div class="wrap">
 
-<!-- ── 核心KPI ── -->
-<div class="st">📊 核心国产化指标</div>
-<div class="kpi-g">
-  <div class="card kpi"><div class="lbl">中国大陆设备市场（2025E）</div><div class="val c-acc">$350亿</div><div class="note">↑ 同比+13%，全球最大单一市场</div></div>
-  <div class="card kpi"><div class="lbl">国产设备整体渗透率</div><div class="val c-warn">~22%</div><div class="note">目标2027年40%；CMP最高40%，光刻机≈0%</div></div>
-  <div class="card kpi"><div class="lbl">国产材料整体渗透率</div><div class="val c-warn">~18%</div><div class="note">CMP液最高40%；12寸硅片<10%，光刻胶<5%</div></div>
-  <div class="card kpi"><div class="lbl">中芯+华虹CapEx（2025E）</div><div class="val c-up">$75亿</div><div class="note">→ 持平；国产设备需求前置指标</div></div>
-</div>
-
-<!-- ── 三大量化判据 ── -->
-<div class="st">🎯 三大量化判据</div>
-<div class="crit-g">
-  <div class="card crit"><div class="cl">判据一：国产设备渗透率</div><div class="cv">当前~22% → 目标35%（2027E）</div><div class="cn">✅ ≥35%估值溢价成立　⚠ ≤20%估值收缩；每年提升3-5pct为景气基准</div></div>
-  <div class="card crit"><div class="cl">判据二：晶圆厂CapEx指引</div><div class="cv">中芯+华虹+长存合计≥$100亿</div><div class="cn">当前~$75亿（偏低）；需持续跟踪H2指引；每减少$10亿设备收入压~3%</div></div>
-  <div class="card crit"><div class="cl">判据三：出口管制升级风险</div><div class="cv">新增Entity List → 反向催化</div><div class="cn">持续收紧是主旋律；每次管制升级短期冲击+中期催化国产替代加速</div></div>
-</div>
-
-<!-- ── 国产化率追踪 ── -->
-<div class="st">🔢 国产化率追踪（静态分析）</div>
-
-<!-- 设备品类国产化率 -->
-<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px">
-  <div class="card">
-    <h4 style="font-size:11px;font-weight:700;color:var(--text2);margin-bottom:12px;text-transform:uppercase;letter-spacing:.4px">设备品类国产化率（2025E）</h4>
-    <table style="width:100%;font-size:11px;border-collapse:collapse">
-      <thead><tr style="border-bottom:1px solid var(--border)"><th style="text-align:left;padding:4px 0;font-size:10px;color:var(--text2)">品类</th><th style="text-align:right;padding:4px 0;font-size:10px;color:var(--text2)">国产化率</th><th style="width:120px;padding:4px 8px;font-size:10px;color:var(--text2)">进度</th></tr></thead>
-      <tbody>
-        <tr><td style="padding:6px 0"><strong>CMP设备</strong></td><td style="text-align:right;color:var(--up);font-weight:700">~40%</td><td style="padding:6px 8px"><div class="loc-bar-wrap"><div class="loc-bar" style="width:40%;background:#16a34a"></div></div></td></tr>
-        <tr><td style="padding:6px 0">清洗设备</td><td style="text-align:right;color:var(--up)">~35%</td><td style="padding:6px 8px"><div class="loc-bar-wrap"><div class="loc-bar" style="width:35%;background:#16a34a"></div></div></td></tr>
-        <tr><td style="padding:6px 0">PVD设备</td><td style="text-align:right;color:var(--up)">~35%</td><td style="padding:6px 8px"><div class="loc-bar-wrap"><div class="loc-bar" style="width:35%;background:#16a34a"></div></div></td></tr>
-        <tr><td style="padding:6px 0">刻蚀设备</td><td style="text-align:right;color:var(--warn);font-weight:700">~30%</td><td style="padding:6px 8px"><div class="loc-bar-wrap"><div class="loc-bar" style="width:30%;background:#d97706"></div></div></td></tr>
-        <tr><td style="padding:6px 0">CVD设备</td><td style="text-align:right;color:var(--warn)">~20%</td><td style="padding:6px 8px"><div class="loc-bar-wrap"><div class="loc-bar" style="width:20%;background:#d97706"></div></div></td></tr>
-        <tr><td style="padding:6px 0">涂胶显影</td><td style="text-align:right;color:var(--warn)">~15%</td><td style="padding:6px 8px"><div class="loc-bar-wrap"><div class="loc-bar" style="width:15%;background:#d97706"></div></div></td></tr>
-        <tr><td style="padding:6px 0">离子注入</td><td style="text-align:right;color:var(--dn)">~10%</td><td style="padding:6px 8px"><div class="loc-bar-wrap"><div class="loc-bar" style="width:10%;background:#dc2626"></div></div></td></tr>
-        <tr><td style="padding:6px 0"><strong>光刻机</strong></td><td style="text-align:right;color:var(--dn);font-weight:700">≈0%</td><td style="padding:6px 8px"><div class="loc-bar-wrap"><div class="loc-bar" style="width:0%;background:#dc2626"></div></div></td></tr>
-      </tbody>
-    </table>
-  </div>
-  <div class="card">
-    <h4 style="font-size:11px;font-weight:700;color:var(--text2);margin-bottom:12px;text-transform:uppercase;letter-spacing:.4px">材料品类国产化率（2025E）</h4>
-    <table style="width:100%;font-size:11px;border-collapse:collapse">
-      <thead><tr style="border-bottom:1px solid var(--border)"><th style="text-align:left;padding:4px 0;font-size:10px;color:var(--text2)">品类</th><th style="text-align:right;padding:4px 0;font-size:10px;color:var(--text2)">国产化率</th><th style="width:120px;padding:4px 8px;font-size:10px;color:var(--text2)">进度</th></tr></thead>
-      <tbody>
-        <tr><td style="padding:6px 0"><strong>CMP抛光液</strong></td><td style="text-align:right;color:var(--up);font-weight:700">~40%</td><td style="padding:6px 8px"><div class="loc-bar-wrap"><div class="loc-bar" style="width:40%;background:#16a34a"></div></div></td></tr>
-        <tr><td style="padding:6px 0">CMP抛光垫</td><td style="text-align:right;color:var(--up)">~30%</td><td style="padding:6px 8px"><div class="loc-bar-wrap"><div class="loc-bar" style="width:30%;background:#16a34a"></div></div></td></tr>
-        <tr><td style="padding:6px 0">靶材</td><td style="text-align:right;color:var(--warn)">~35%</td><td style="padding:6px 8px"><div class="loc-bar-wrap"><div class="loc-bar" style="width:35%;background:#d97706"></div></div></td></tr>
-        <tr><td style="padding:6px 0">前驱体材料</td><td style="text-align:right;color:var(--warn)">~30%</td><td style="padding:6px 8px"><div class="loc-bar-wrap"><div class="loc-bar" style="width:30%;background:#d97706"></div></div></td></tr>
-        <tr><td style="padding:6px 0">湿化学品</td><td style="text-align:right;color:var(--warn)">~30%</td><td style="padding:6px 8px"><div class="loc-bar-wrap"><div class="loc-bar" style="width:30%;background:#d97706"></div></div></td></tr>
-        <tr><td style="padding:6px 0">特种气体</td><td style="text-align:right;color:var(--warn)">~20%</td><td style="padding:6px 8px"><div class="loc-bar-wrap"><div class="loc-bar" style="width:20%;background:#d97706"></div></div></td></tr>
-        <tr><td style="padding:6px 0"><strong>12寸硅片</strong></td><td style="text-align:right;color:var(--dn);font-weight:700">&lt;10%</td><td style="padding:6px 8px"><div class="loc-bar-wrap"><div class="loc-bar" style="width:10%;background:#dc2626"></div></div></td></tr>
-        <tr><td style="padding:6px 0"><strong>光刻胶</strong></td><td style="text-align:right;color:var(--dn);font-weight:700">~5%</td><td style="padding:6px 8px"><div class="loc-bar-wrap"><div class="loc-bar" style="width:5%;background:#dc2626"></div></div></td></tr>
-      </tbody>
-    </table>
-  </div>
-</div>
-
-<!-- 设备市场规模图 -->
-<div class="chart-row">
-  <div class="chart-box">
-    <h4>中国大陆半导体设备市场规模（$亿）</h4>
-    <div class="chart-wrap"><canvas id="c-equip-market"></canvas></div>
-  </div>
-  <div class="chart-box">
-    <h4>国产化率提升路径（设备 vs 材料，%）</h4>
-    <div class="chart-wrap"><canvas id="c-loc-trend"></canvas></div>
-  </div>
-</div>
-
-<!-- ── 竞争格局 ── -->
-<div class="st">🏭 竞争格局 — 分环节（2026Q1业绩）</div>
-<div class="card" style="margin-bottom:20px">
-  <div class="tab-nav" id="semiTabNav">
-    <button class="tab-btn active" data-tab="semi-equip">① 半导体设备</button>
-    <button class="tab-btn" data-tab="semi-mat">② 半导体材料</button>
-    <button class="tab-btn" data-tab="semi-design">③ 芯片设计</button>
-    <button class="tab-btn" data-tab="semi-foundry">④ 晶圆+封装</button>
+<!-- ── 投资逻辑图谱（半导体设备材料子板块） ── -->
+<div class="st">🧠 半导体设备材料 · 投资逻辑图谱</div>
+<div class="sec-body" style="margin-bottom:16px">
+<div class="card">
+  <div class="logic-box">
+    <strong style="color:var(--text)">一句话主线：</strong>"半导体设备材料零部件"这28只标的是同一批股票，但驱动它们涨跌的不是一条逻辑，而是<strong>4条并行、互不排斥的投资逻辑</strong>——存储扩产、先进封装、先进制程、全球缺货涨价。同一只股票常常同时挂在2-3条逻辑线上，下面按逻辑而非按产业链环节重新切一遍，方便判断当前哪条逻辑在主导行情。
   </div>
 
-  <!-- ① 半导体设备 -->
-  <div class="tab-pane active" id="tab-semi-equip">
-    <table class="ctable">
-      <thead><tr><th>公司</th><th>代码</th><th>业绩</th><th>26Q1收入</th><th>收入YoY</th><th>26Q1毛利率</th><th>毛利率YoY</th><th>26Q1扣非</th><th>扣非YoY</th><th>核心看点</th></tr></thead>
-      <tbody>
-        <tr><td><strong>北方华创</strong></td><td><code>002371</code></td><td><span class="a-meet">待更新</span></td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td style="color:var(--text2)">刻蚀/CVD/PVD/清洗多品类龙头，大基金第一受益方；CapEx景气最直接受益</td></tr>
-        <tr><td><strong>中微公司</strong></td><td><code>688012</code></td><td><span class="a-meet">待更新</span></td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td style="color:var(--text2)">等离子刻蚀对标Lam Research；28nm以上成熟制程占优，高毛利率~42%</td></tr>
-        <tr><td><strong>拓荆科技</strong></td><td><code>688072</code></td><td><span class="a-meet">待更新</span></td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td style="color:var(--text2)">CVD最高弹性；PECVD+ALD双线突破，中芯/长存快速认证中</td></tr>
-        <tr><td><strong>华海清科</strong></td><td><code>688120</code></td><td><span class="a-meet">待更新</span></td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td style="color:var(--text2)">CMP设备国内唯一，中芯认证突破，国产化率提升最确定的设备品类</td></tr>
-        <tr><td><strong>芯源微</strong></td><td><code>688037</code></td><td><span class="a-meet">待更新</span></td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td style="color:var(--text2)">涂胶显影（Track）打破TEL/SCREEN垄断，验证周期仍在推进</td></tr>
-        <tr><td><strong>盛美上海</strong></td><td><code>688082</code></td><td><span class="a-meet">待更新</span></td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td style="color:var(--text2)">清洗设备+电镀两条腿，半导体+泛半导体双驱动</td></tr>
-      </tbody>
-    </table>
-    <div class="seg-sum">设备是国产替代最先受益的环节，景气度最高。北方华创产品线最全、护城河最宽；中微刻蚀毛利率稳固；拓荆弹性最大但规模仍小；华海清科CMP独家地位稳固。整体：刻蚀≈清洗≈PVD（较成熟）→ CVD→ 涂胶显影（追赶中）→ 光刻机（10年差距，暂不布局）。</div>
-    <div style="font-size:10px;color:var(--text2);margin-top:8px;padding:6px 10px;background:var(--warn-bg);border-radius:5px;border-left:3px solid var(--warn)">
-      ⚠️ <strong>26Q1数据待补充</strong>：请在财报季后更新收入/毛利率实际数字，以上数据需从Excel数据库或iFind MCP获取
-    </div>
-    <div class="chart-row" style="margin-top:14px">
-      <div class="chart-box"><h4>半导体设备 — 季度收入（亿元）</h4><div class="chart-wrap"><canvas id="c-semi-equip-rev"></canvas></div></div>
-      <div class="chart-box"><h4>半导体设备 — 毛利率（%）</h4><div class="chart-wrap"><canvas id="c-semi-equip-gm"></canvas></div></div>
-    </div>
-  </div>
+  <div class="logic-map-g">
 
-  <!-- ② 半导体材料 -->
-  <div class="tab-pane" id="tab-semi-mat">
-    <table class="ctable">
-      <thead><tr><th>公司</th><th>代码</th><th>业绩</th><th>26Q1收入</th><th>收入YoY</th><th>26Q1毛利率</th><th>毛利率YoY</th><th>26Q1扣非</th><th>扣非YoY</th><th>核心看点</th></tr></thead>
-      <tbody>
-        <tr><td><strong>沪硅产业</strong></td><td><code>688126</code></td><td><span class="a-meet">待更新</span></td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td style="color:var(--text2)">12寸硅片国产唯一规模玩家，25年底产能爬坡，客户认证突破是关键信号</td></tr>
-        <tr><td><strong>安集科技</strong></td><td><code>688019</code></td><td><span class="a-meet">待更新</span></td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td style="color:var(--text2)">CMP抛光液龙头，毛利率~50%验证定价权；高端配方进阶中</td></tr>
-        <tr><td><strong>雅克科技</strong></td><td><code>002409</code></td><td><span class="a-meet">待更新</span></td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td style="color:var(--text2)">前驱体材料+电子特气双主业，国产替代确定性高，品类扩张清晰</td></tr>
-        <tr><td><strong>鼎龙股份</strong></td><td><code>300054</code></td><td><span class="a-meet">待更新</span></td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td style="color:var(--text2)">CMP抛光垫，与安集科技形成CMP耗材双雄</td></tr>
-        <tr><td><strong>江丰电子</strong></td><td><code>688321</code></td><td><span class="a-meet">待更新</span></td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td style="color:var(--text2)">靶材龙头（铝/钛/钨），国内第一，下游认证突破持续</td></tr>
-        <tr><td>博纯材料</td><td><code>688025</code></td><td><span class="a-meet">待更新</span></td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td style="color:var(--text2)">高纯特种气体差异化品类，小而美</td></tr>
-      </tbody>
-    </table>
-    <div class="seg-sum">材料国产化比设备慢约2-3年，认证周期更长（2-3年）。CMP耗材（安集+鼎龙）国产化率最高约40%，是当前最确定的受益；硅片是最大短板（沪硅25年底爬坡，需持续验证）；光刻胶短期无解。材料的核心逻辑是"认证突破→份额快速提升"，单个突破事件带来非线性增长。</div>
-    <div class="chart-row" style="margin-top:14px">
-      <div class="chart-box"><h4>半导体材料 — 季度收入（亿元）</h4><div class="chart-wrap"><canvas id="c-semi-mat-rev"></canvas></div></div>
-      <div class="chart-box"><h4>半导体材料 — 毛利率（%）</h4><div class="chart-wrap"><canvas id="c-semi-mat-gm"></canvas></div></div>
-    </div>
-  </div>
-
-  <!-- ③ 芯片设计 -->
-  <div class="tab-pane" id="tab-semi-design">
-    <table class="ctable">
-      <thead><tr><th>公司</th><th>代码</th><th>业绩</th><th>26Q1收入</th><th>收入YoY</th><th>26Q1毛利率</th><th>毛利率YoY</th><th>26Q1扣非</th><th>扣非YoY</th><th>核心看点</th></tr></thead>
-      <tbody>
-        <tr><td><strong>海光信息</strong></td><td><code>688041</code></td><td><span class="a-meet">待更新</span></td><td>—</td><td>—</td><td>~70%</td><td>—</td><td>—</td><td>—</td><td style="color:var(--text2)">x86 CPU+DCU（AI计算），政务/金融替代最确定；毛利率~70%彰显定价权</td></tr>
-        <tr><td><strong>寒武纪</strong></td><td><code>688256</code></td><td><span class="a-meet">待更新</span></td><td>—</td><td>—</td><td>~65%</td><td>—</td><td>—</td><td>—</td><td style="color:var(--text2)">AI推理训练芯片，国产算力政策催化受益最纯粹；盈利能力仍是核心观察点</td></tr>
-        <tr><td><strong>澜起科技</strong></td><td><code>688008</code></td><td><span class="a-meet">待更新</span></td><td>—</td><td>—</td><td>~70%</td><td>—</td><td>—</td><td>—</td><td style="color:var(--text2)">内存接口芯片RCD/MXC，AI服务器DDR5升级受益；全球市占率高</td></tr>
-        <tr><td>龙芯中科</td><td><code>688047</code></td><td><span class="a-meet">待更新</span></td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td style="color:var(--text2)">自研LoongArch架构，党政军市场防御性强；商业化拓展是关键</td></tr>
-      </tbody>
-    </table>
-    <div class="seg-sum">芯片设计分化最明显。海光靠x86兼容+政策背书确定性最强；寒武纪纯AI芯片弹性最大但盈利待验证；澜起科技是AI服务器内存接口确定受益。龙芯是防御仓。核心风险：技术制裁深化（7nm以下制程受限），商业竞争力与NVIDIA差距难以短期弥合。</div>
-    <div class="chart-row" style="margin-top:14px">
-      <div class="chart-box"><h4>芯片设计 — 季度收入（亿元）</h4><div class="chart-wrap"><canvas id="c-semi-design-rev"></canvas></div></div>
-      <div class="chart-box"><h4>芯片设计 — 毛利率（%）</h4><div class="chart-wrap"><canvas id="c-semi-design-gm"></canvas></div></div>
-    </div>
-  </div>
-
-  <!-- ④ 晶圆+封装 -->
-  <div class="tab-pane" id="tab-semi-foundry">
-    <table class="ctable">
-      <thead><tr><th>公司</th><th>代码</th><th>业绩</th><th>26Q1收入</th><th>收入YoY</th><th>26Q1毛利率</th><th>毛利率YoY</th><th>26Q1扣非</th><th>扣非YoY</th><th>核心看点</th></tr></thead>
-      <tbody>
-        <tr><td><strong>中芯国际</strong></td><td><code>688981</code></td><td><span class="a-meet">待更新</span></td><td>—</td><td>—</td><td>~22%</td><td>—</td><td>—</td><td>—</td><td style="color:var(--text2)">国内最先进制程（N+1/N+2），成熟制程扩产为主；稼动率回升是核心观察指标</td></tr>
-        <tr><td>华虹半导体</td><td><code>1347.HK</code></td><td><span class="a-meet">港股</span></td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td style="color:var(--text2)">特色工艺（BCD/功率半导体），差异化竞争；周期底部，关注稼动率回升</td></tr>
-        <tr><td><strong>长电科技</strong></td><td><code>600584</code></td><td><span class="a-meet">待更新</span></td><td>—</td><td>—</td><td>~15%</td><td>—</td><td>—</td><td>—</td><td style="color:var(--text2)">先进封装（SiP/Bumping/WLCSP），AI芯片封装切入；CoWoS类是2027年关键能力</td></tr>
-        <tr><td><strong>通富微电</strong></td><td><code>002156</code></td><td><span class="a-meet">待更新</span></td><td>—</td><td>—</td><td>~14%</td><td>—</td><td>—</td><td>—</td><td style="color:var(--text2)">AMD认证封测，先进封装与国际接轨；Chiplet封装布局</td></tr>
-        <tr><td>华天科技</td><td><code>002185</code></td><td><span class="a-meet">待更新</span></td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td style="color:var(--text2)">传统封测规模大，AI转型中；体量最大但弹性偏低</td></tr>
-      </tbody>
-    </table>
-    <div class="seg-sum">晶圆代工受制于光刻机，先进制程（5nm以下）暂时无解；中芯专注成熟制程（28nm+），稼动率是核心指标。封装端：长电/通富在先进封装追赶，CoWoS类工艺是2027年看弹性的关键能力点，当前仍处于布局阶段。</div>
-    <div class="chart-row" style="margin-top:14px">
-      <div class="chart-box"><h4>晶圆+封装 — 季度收入（亿元）</h4><div class="chart-wrap"><canvas id="c-semi-foundry-rev"></canvas></div></div>
-      <div class="chart-box"><h4>晶圆+封装 — 毛利率（%）</h4><div class="chart-wrap"><canvas id="c-semi-foundry-gm"></canvas></div></div>
-    </div>
-  </div>
-</div><!-- /card -->
-
-<!-- ── A股映射 + 催化剂 ── -->
-<div class="b-grid">
-  <div>
-    <div class="st">📈 A股标的映射</div>
-    <div class="card">
-      <table class="ctable">
-        <thead><tr><th>代码</th><th>公司</th><th>细分</th><th>资产类型</th><th>核心看点</th><th>观点</th></tr></thead>
-        <tbody>
-          <tr><td><code>002371</code></td><td><strong>北方华创</strong></td><td style="color:var(--text2)">设备龙头</td><td style="color:var(--up)">①确定受益</td><td>多品类护城河，CapEx景气直接受益</td><td><span class="a-super">🟢核心仓</span></td></tr>
-          <tr><td><code>688012</code></td><td><strong>中微公司</strong></td><td style="color:var(--text2)">刻蚀设备</td><td style="color:var(--up)">①确定受益</td><td>刻蚀对标Lam，高毛利率~42%稳固</td><td><span class="a-super">🟢核心仓</span></td></tr>
-          <tr><td><code>688041</code></td><td><strong>海光信息</strong></td><td style="color:var(--text2)">AI芯片设计</td><td style="color:var(--up)">①确定受益</td><td>x86兼容+政务替代，确定性最强的国产AI算力</td><td><span class="a-super">🟢核心仓</span></td></tr>
-          <tr><td><code>688072</code></td><td><strong>拓荆科技</strong></td><td style="color:var(--text2)">CVD设备</td><td style="color:var(--up)">①确定受益</td><td>PECVD/ALD双线，最高弹性设备标的</td><td><span class="a-meet">🔵进攻仓</span></td></tr>
-          <tr><td><code>688120</code></td><td><strong>华海清科</strong></td><td style="color:var(--text2)">CMP设备</td><td style="color:var(--up)">①确定受益</td><td>国内唯一CMP设备，认证突破</td><td><span class="a-meet">🔵进攻仓</span></td></tr>
-          <tr><td><code>688019</code></td><td><strong>安集科技</strong></td><td style="color:var(--text2)">CMP材料</td><td style="color:var(--up)">①确定受益</td><td>毛利率~50%验证定价权，国产化率稳步提升</td><td><span class="a-meet">🟡观察</span></td></tr>
-          <tr><td><code>002409</code></td><td><strong>雅克科技</strong></td><td style="color:var(--text2)">前驱体</td><td style="color:var(--up)">①确定受益</td><td>国产替代确定性高，品类扩张清晰</td><td><span class="a-meet">🟡观察</span></td></tr>
-          <tr><td><code>688126</code></td><td>沪硅产业</td><td style="color:var(--text2)">硅片材料</td><td style="color:var(--warn)">②待兑现</td><td>12寸硅片国产化，客户认证是核心观察点</td><td><span class="a-meet">🟡观察</span></td></tr>
-          <tr><td><code>688256</code></td><td>寒武纪</td><td style="color:var(--text2)">AI推理芯片</td><td style="color:var(--dn)">③期权价值</td><td>政策+国产算力催化，盈利能力待验证</td><td><span class="a-meet">🟡观察</span></td></tr>
-          <tr><td><code>688981</code></td><td>中芯国际</td><td style="color:var(--text2)">晶圆代工</td><td style="color:var(--warn)">②待兑现</td><td>稼动率回升+先进制程；受光刻机限制，慢变量</td><td><span class="a-meet">🟡观察</span></td></tr>
-          <tr><td><code>600584</code></td><td>长电科技</td><td style="color:var(--text2)">先进封装</td><td style="color:var(--warn)">②待兑现</td><td>CoWoS类工艺布局，2027年见弹性</td><td><span class="a-meet">🟡观察</span></td></tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
-  <div>
-    <div class="st">📅 催化剂跟踪</div>
-    <div class="card">
-      <div class="tl-item"><div class="tl-dot tl-d-r"></div><div class="tl-date">持续</div><div class="tl-content"><div class="tl-evt">美国出口管制政策更新</div><div class="tl-meta">新增Entity List = 催化；放松 = 压制；是最重要的外生变量</div></div><span class="tl-st st-r">⚠核心风险</span></div>
-      <div class="tl-item"><div class="tl-dot tl-d-t"></div><div class="tl-date">每季度</div><div class="tl-content"><div class="tl-evt">中芯国际季报 + CapEx指引</div><div class="tl-meta">直接决定设备/材料需求景气；稼动率是关键指标</div></div><span class="tl-st st-t">🔵核心跟踪</span></div>
-      <div class="tl-item"><div class="tl-dot tl-d-p"></div><div class="tl-date">2026Q2-Q3</div><div class="tl-content"><div class="tl-evt">大基金三期（3440亿）投资落地</div><div class="tl-meta">政策资金实际到位进度，设备/材料直接受益</div></div><span class="tl-st st-p">🕐待观察</span></div>
-      <div class="tl-item"><div class="tl-dot tl-d-p"></div><div class="tl-date">2026H2</div><div class="tl-content"><div class="tl-evt">北方华创/拓荆 28nm以下认证进展</div><div class="tl-meta">突破制程节点 = 设备龙头估值重估信号</div></div><span class="tl-st st-p">🕐关键节点</span></div>
-      <div class="tl-item"><div class="tl-dot tl-d-p"></div><div class="tl-date">2026H2</div><div class="tl-content"><div class="tl-evt">沪硅12寸硅片客户认证结果</div><div class="tl-meta">最大材料短板突破信号；认证周期2-3年</div></div><span class="tl-st st-p">🕐关键节点</span></div>
-      <div class="tl-item"><div class="tl-dot tl-d-g"></div><div class="tl-date">2027</div><div class="tl-content"><div class="tl-evt">CoWoS类先进封装国产化验证</div><div class="tl-meta">长电/通富切入AI芯片封装；HBM国产化若突破则重大催化</div></div><span class="tl-st st-g">🟢未来催化</span></div>
-    </div>
-  </div>
-</div>
-
-<!-- ── 当前判断 ── -->
-<div class="st">💡 当前判断</div>
-<div class="j-grid">
-  <div>
-    <div class="logic-box">
-      <strong>核心判断（2026-05）</strong>：维持结构分化判断。<br>
-      设备（北方华创/中微/拓荆）景气最确定，是国产替代最先、最快受益的环节，持仓优先级最高。<br>
-      材料（安集/雅克）国产化率稳步提升，高毛利率验证定价权；硅片（沪硅）是慢变量，等认证突破信号。<br>
-      芯片设计：海光最确定、寒武纪高弹性但盈利待验证。<br>
-      晶圆/封装：中芯稼动率回升是基础，封装（长电）2027年才见弹性。
-    </div>
-    <!-- 三种情景 -->
-    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px">
-      <div style="padding:10px 12px;background:var(--up-bg);border-radius:8px;border:1px solid #86efac">
-        <div style="font-size:10px;font-weight:700;color:var(--up);margin-bottom:4px">乐观情景</div>
-        <div style="font-size:11px;color:var(--text2)">出口管制超预期升级，晶圆厂被迫大幅提高国产占比，大基金三期加速 → 设备龙头估值重估+30-50%</div>
+    <!-- ① 长存/长鑫扩产+IPO -->
+    <div class="lm-card">
+      <div class="lm-head" style="background:#2563eb">
+        <div class="lm-num">逻辑 ①</div>
+        <div class="lm-title">长存/长鑫扩产 + IPO</div>
+        <span class="lm-kw">关键词：扩产产能 · 存储敞口</span>
       </div>
-      <div style="padding:10px 12px;background:var(--tag-bg);border-radius:8px;border:1px solid #c4b5fd">
-        <div style="font-size:10px;font-weight:700;color:var(--accent);margin-bottom:4px">基准情景（最可能）</div>
-        <div style="font-size:11px;color:var(--text2)">CapEx持平，国产化率稳步+5pct/年，出口管制维持 → 设备龙头20-30%年化，材料逐步验证</div>
-      </div>
-      <div style="padding:10px 12px;background:var(--dn-bg);border-radius:8px;border:1px solid #fecaca">
-        <div style="font-size:10px;font-weight:700;color:var(--dn);margin-bottom:4px">悲观情景</div>
-        <div style="font-size:11px;color:var(--text2)">贸易协议放松管制，或晶圆厂产能过剩→CapEx大幅下调 → 国产替代逻辑减弱，估值压缩30-40%</div>
+      <div class="lm-body">
+        <div class="lm-desc">长江存储、长鑫存储是国内资本开支最大的两家晶圆厂，目前处于持续扩产状态；长鑫存储已启动科创板IPO辅导，上市预期是潜在估值催化。设备/零部件商里<strong>存储产线收入占比越高、认证越深</strong>的标的，敞口越大。</div>
+        <ul class="lm-drivers" style="color:var(--dn)">
+          <li>长鑫长存扩产预期提升，年初预期2年各9万片，现在预期长鑫20万片、长存14万片</li>
+          <li>苹果、腾讯订单提供了进一步扩产的经济性</li>
+          <li>存储敞口最大的公司依然不变</li>
+        </ul>
+        <div class="lm-tickers">
+          <span class="lm-chip" style="border-color:#bfdbfe;background:#eff6ff;color:#1d4ed8"><code>688072</code> 拓荆科技</span>
+          <span class="lm-chip" style="border-color:#bfdbfe;background:#eff6ff;color:#1d4ed8"><code>688012</code> 中微公司</span>
+          <span class="lm-chip" style="border-color:#bfdbfe;background:#eff6ff;color:#1d4ed8"><code>688037</code> 芯源微</span>
+          <span class="lm-chip" style="border-color:#bfdbfe;background:#eff6ff;color:#1d4ed8"><code>688147</code> 微导纳米</span>
+          <span class="lm-chip" style="border-color:#bfdbfe;background:#eff6ff;color:#1d4ed8"><code>688627</code> 精智达</span>
+          <span class="lm-chip" style="border-color:#bfdbfe;background:#eff6ff;color:#1d4ed8"><code>688120</code> 华海清科</span>
+        </div>
       </div>
     </div>
-    <!-- 证伪清单 -->
-    <div style="font-weight:700;font-size:12px;margin-bottom:8px">证伪清单</div>
-    <div class="risk-i"><span class="rn">F1</span><span>晶圆厂CapEx连续两季度下调超10%　<span style="color:var(--text2);font-size:11px">🟠较强 — 当前状态：🟢未触发</span></span></div>
-    <div class="risk-i"><span class="rn">F2</span><span>国产设备验证失败 / 被移除供应链　<span style="color:var(--text2);font-size:11px">🟠较强 — 当前状态：🟢未触发</span></span></div>
-    <div class="risk-i"><span class="rn">F3</span><span>出口管制实质性放松（贸易协议）　<span style="color:var(--text2);font-size:11px">🔴最强 — 当前状态：🟢未触发</span></span></div>
-    <div class="risk-i"><span class="rn">F4</span><span>国产芯片被大客户移除首选供应商列表　<span style="color:var(--text2);font-size:11px">🟠设计环节 — 当前状态：🟢未触发</span></span></div>
-    <div class="risk-i" style="background:var(--dn-bg);padding:6px 8px;border-radius:6px;margin-top:4px"><span class="rn" style="background:#dc2626">系统</span><span><strong>F1+F3同时触发（CapEx下调+政策松动）→ 立即降评</strong></span></div>
-  </div>
-  <div>
-    <div style="font-weight:700;font-size:12px;margin-bottom:8px">持仓策略</div>
-    <div class="strat-g">
-      <div class="strat-i s-core"><div class="strat-l">🟢 核心仓</div><div style="font-size:10px">北方华创<br>中微公司<br>海光信息</div></div>
-      <div class="strat-i s-atk"><div class="strat-l">🔵 进攻仓</div><div style="font-size:10px">拓荆科技<br>华海清科</div></div>
-      <div class="strat-i s-wch"><div class="strat-l">🟡 观察</div><div style="font-size:10px">安集科技<br>雅克科技<br>沪硅产业<br>寒武纪</div></div>
+
+    <!-- ② 先进封装 & HBM设备 -->
+    <div class="lm-card">
+      <div class="lm-head" style="background:#7c3aed">
+        <div class="lm-num">逻辑 ②</div>
+        <div class="lm-title">先进封装 & HBM设备</div>
+        <span class="lm-kw">关键词：封装工艺路径 · 关键设备</span>
+      </div>
+      <div class="lm-body">
+        <div class="lm-desc">HBM堆叠（TSV/混合键合）+ Chiplet先进封装是AI芯片绕开先进制程瓶颈的另一条路，核心是<strong>每道封装工艺对应哪类设备</strong>（减薄、TSV刻蚀/镀铜、键合Bonder、检测等），以及国产设备在哪些工艺环节已有突破。</div>
+        <ul class="lm-drivers" style="color:var(--dn)">
+          <li>核心工艺：前道——TSV、micro-bump；后道——键合</li>
+          <li>核心设备：刻蚀、沉积、电镀、CMP、减薄、键合</li>
+          <li>新技术：Hybrid bonding，对CMP有更多需求</li>
+        </ul>
+        <div class="lm-tickers">
+          <span class="lm-chip" style="border-color:#ddd6fe;background:#f5f3ff;color:#6d28d9"><code>0522.HK</code> ASMPT</span>
+          <span class="lm-chip" style="border-color:#ddd6fe;background:#f5f3ff;color:#6d28d9"><code>688072</code> 拓荆科技</span>
+          <span class="lm-chip" style="border-color:#ddd6fe;background:#f5f3ff;color:#6d28d9"><code>688120</code> 华海清科</span>
+          <span class="lm-chip" style="border-color:#ddd6fe;background:#f5f3ff;color:#6d28d9"><code>688082</code> 盛美上海</span>
+          <span class="lm-chip" style="border-color:#ddd6fe;background:#f5f3ff;color:#6d28d9"><code>688012</code> 中微公司</span>
+        </div>
+      </div>
     </div>
-    <div style="margin-top:12px;font-size:11px;color:var(--text2);background:var(--bg);padding:10px;border-radius:6px;border-left:3px solid var(--accent)">
-      <strong>当前最大风险</strong>：出口管制路径不可预测；建议以设备龙头为底仓（确定性最高），材料和设计作为弹性仓，封装/晶圆作为防御仓。
+
+    <!-- ③ 先进制程设备 -->
+    <div class="lm-card">
+      <div class="lm-head" style="background:#dc2626">
+        <div class="lm-num">逻辑 ③</div>
+        <div class="lm-title">先进制程设备</div>
+        <span class="lm-kw">关键词：光刻机</span>
+      </div>
+      <div class="lm-body">
+        <div class="lm-desc">先进制程（&lt;14nm）国产化的终极瓶颈是光刻机——国产化率≈0%，A股<strong>没有光刻机整机上市公司</strong>。当前能交易的是能在先进制程节点持续通过认证的<strong>刻蚀/薄膜沉积/量测</strong>设备，光刻机更像是这条逻辑的"天花板想象空间"而非现实持仓依据。</div>
+        <ul class="lm-drivers">
+          <li>中芯国际等先进制程产线扩产/良率进展</li>
+          <li>光刻机国产化（上海微电子等，A股无直接标的）任何突破性消息</li>
+          <li>出口管制对先进制程设备/光刻机零部件的限制变化</li>
+        </ul>
+        <div class="lm-tickers">
+          <span class="lm-chip" style="border-color:#fecaca;background:#fef2f2;color:#b91c1c"><code>688012</code> 中微公司</span>
+          <span class="lm-chip" style="border-color:#fecaca;background:#fef2f2;color:#b91c1c"><code>688072</code> 拓荆科技</span>
+          <span class="lm-chip" style="border-color:#fecaca;background:#fef2f2;color:#b91c1c"><code>688361</code> 中科飞测</span>
+          <span class="lm-chip" style="border-color:#fecaca;background:#fef2f2;color:#b91c1c"><code>300567</code> 精测电子</span>
+          <span class="lm-chip" style="border-color:#fecaca;background:#fef2f2;color:#b91c1c"><code>688502</code> 茂莱光学</span>
+        </div>
+        <div class="lm-note">⚠️ 茂莱光学（光学元件）是光刻机光学系统潜在配套的<strong>期权价值</strong>逻辑，并非已验证订单，不等同于"国产光刻机标的"。</div>
+      </div>
+    </div>
+
+    <!-- ④ 全球缺货涨价 -->
+    <div class="lm-card">
+      <div class="lm-head" style="background:#d97706">
+        <div class="lm-num">逻辑 ④</div>
+        <div class="lm-title">全球缺货涨价</div>
+        <span class="lm-kw">关键词：设备零部件和材料</span>
+      </div>
+      <div class="lm-body">
+        <div class="lm-desc">存储芯片缺货涨价正在外溢到上游：设备零部件加工产能紧张、特种气体/前驱体等材料涨价。这条逻辑直接对应28只名单里的<strong>"零部件"+"材料"</strong>两个二级分类，是4条逻辑里映射最直接的一条。</div>
+        <ul class="lm-drivers">
+          <li>晶圆厂扩产需求暴增 → 零部件加工产能/交期紧张</li>
+          <li>特种气体/前驱体等材料涨价传导</li>
+          <li>设备厂商提价权验证（毛利率是否同步走高）</li>
+        </ul>
+        <div class="lm-tickers">
+          <span class="lm-chip" style="border-color:#fde68a;background:#fffbeb;color:#92400e"><code>688409</code> 富创精密</span>
+          <span class="lm-chip" style="border-color:#fde68a;background:#fffbeb;color:#92400e"><code>301611</code> 珂玛科技</span>
+          <span class="lm-chip" style="border-color:#fde68a;background:#fffbeb;color:#92400e"><code>688797</code> 臻宝科技</span>
+          <span class="lm-chip" style="border-color:#fde68a;background:#fffbeb;color:#92400e"><code>688502</code> 茂莱光学</span>
+          <span class="lm-chip" style="border-color:#fde68a;background:#fffbeb;color:#92400e"><code>688268</code> 华特气体</span>
+          <span class="lm-chip" style="border-color:#fde68a;background:#fffbeb;color:#92400e"><code>688146</code> 中船特气</span>
+          <span class="lm-chip" style="border-color:#fde68a;background:#fffbeb;color:#92400e"><code>688300</code> 联瑞新材</span>
+          <span class="lm-chip" style="border-color:#fde68a;background:#fffbeb;color:#92400e"><code>300346</code> 南大光电</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+</div>
+
+<!-- ── 逻辑①深度：长存/长鑫扩产 + IPO（多个子模块） ── -->
+<div class="st">🔍 逻辑①深度：长存/长鑫扩产 + IPO</div>
+<div class="sec-body" style="margin-bottom:16px">
+<div class="card">
+
+  <!-- 子模块：产能扩产跟踪 -->
+  <div class="logic-deep-sub">📐 产能扩产跟踪</div>
+  <div style="font-size:12px;font-weight:700;color:var(--dn);margin-bottom:8px">26-27年扩产，长鑫从原先的6万、3万片提高到了11万、9万，长存从原先的两年9万提高到了14万</div>
+  <div style="font-size:10px;color:var(--text2);margin-bottom:8px">单位：规划月产能/各年产能＝kwpm（千片/月）；投资金额＝亿元；CapEx测算＝1万片月产能对应资本开支（亿元）</div>
+  <table class="cap-tbl">
+    <thead>
+      <tr>
+        <th>地点</th><th>厂</th><th>生产项目</th><th>投资金额<br>（亿元）</th><th>生产状态</th><th>规划月产能</th>
+        <th>2022</th><th>2023</th><th>2024</th><th>2025</th><th>2026</th><th>2027</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="cap-fab-row">
+        <td colspan="6" class="cap-lbl">长鑫存储（kwpm）</td>
+        <td>120</td><td>170</td><td>210</td><td>240</td>
+        <td><span data-tip="changxin-2026-27">350</span></td><td><span data-tip="changxin-2026-27">440</span></td>
+      </tr>
+      <tr class="cap-sub-row">
+        <td colspan="6" class="cap-lbl">扩产</td>
+        <td>55</td><td>50</td><td>40</td><td>30</td><td>110</td><td>90</td>
+      </tr>
+      <tr class="cap-sub-row">
+        <td colspan="6" class="cap-lbl">对应CapEx（亿元）：1万片=60亿，HBM=90亿</td>
+        <td>330</td><td>300</td><td>240</td><td>180</td><td class="cap-pending">360</td><td class="cap-pending">270</td>
+      </tr>
+      <tr>
+        <td rowspan="3">合肥</td><td>一期 A1（Fab1）</td><td class="cap-lbl">DDR4、LPDDR4X</td><td>494</td><td>满产</td><td>100</td>
+        <td class="cap-hl">100</td><td>100</td><td>100</td><td>100</td><td>100</td><td>100</td>
+      </tr>
+      <tr>
+        <td>二期 A2（Fab2）</td><td class="cap-lbl">DDR5、LPDDR5</td><td>400~500</td><td>爬坡</td><td>100</td>
+        <td class="cap-note">2H买设备</td><td class="cap-hl">20</td><td>40</td><td>60</td><td>100</td><td>100</td>
+      </tr>
+      <tr>
+        <td>三期</td><td class="cap-lbl">—</td><td>—</td><td>基建</td><td>100</td>
+        <td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td>
+      </tr>
+      <tr>
+        <td rowspan="3">北京</td><td>一期 C1A</td><td class="cap-lbl">DDR4、LPDDR4X</td><td>—</td><td>满产</td><td>30</td>
+        <td class="cap-hl">20</td><td>30</td><td>30</td><td>30</td><td>30</td><td>30</td>
+      </tr>
+      <tr>
+        <td>二期 C1B</td><td class="cap-lbl">DDR5、LPDDR5、潜在HBM TSV</td><td>—</td><td>爬坡</td><td>50</td>
+        <td class="cap-note">2H买设备</td><td class="cap-hl">20</td><td>40</td><td>50</td><td>50</td><td>50</td>
+      </tr>
+      <tr>
+        <td>三期 C1C</td><td class="cap-lbl">—</td><td>—</td><td>—</td><td>20</td>
+        <td>—</td><td>—</td><td>—</td><td>—</td><td>20</td><td>20</td>
+      </tr>
+      <tr>
+        <td>上海</td><td>一期 A3</td><td class="cap-lbl">HBM3、HBM3E</td><td>—</td><td>基建</td><td>100</td>
+        <td>—</td><td>—</td><td>—</td><td class="cap-note">6月开工</td>
+        <td class="cap-hl"><span data-tip="changxin-sh-2026-27">50</span></td><td class="cap-hl"><span data-tip="changxin-sh-2026-27">140</span></td>
+      </tr>
+      <tr class="cap-fab-row">
+        <td colspan="6" class="cap-lbl">长江存储（kwpm）</td>
+        <td>100</td><td>120</td><td>140</td><td>160</td>
+        <td><span data-tip="yangtze-2026-27">300</span></td><td><span data-tip="yangtze-2026-27">300</span></td>
+      </tr>
+      <tr class="cap-sub-row">
+        <td colspan="6" class="cap-lbl">扩产</td>
+        <td>10</td><td>20</td><td>20</td><td>20</td><td>140</td><td>0</td>
+      </tr>
+      <tr class="cap-sub-row">
+        <td colspan="6" class="cap-lbl">对应CapEx（亿元）：1万片=70亿</td>
+        <td>70</td><td>140</td><td>140</td><td>140</td><td class="cap-pending">280</td><td class="cap-pending">350</td>
+      </tr>
+      <tr>
+        <td rowspan="3">长江存储</td><td>一期</td><td class="cap-lbl">232层 + 296层 3D NAND</td><td>200</td><td>满产</td><td>100</td>
+        <td class="cap-hl">100</td><td>100</td><td>100</td><td>100</td><td>100</td><td>100</td>
+      </tr>
+      <tr>
+        <td>二期</td><td class="cap-lbl">232层 + 296层 3D NAND</td><td>200~300</td><td>爬坡</td><td>100</td>
+        <td>—</td><td class="cap-hl">20</td><td>40</td><td>60</td><td>100</td><td>100</td>
+      </tr>
+      <tr>
+        <td>三期</td><td class="cap-lbl">296层为主，同步试产300+层产品</td><td>—</td><td>爬坡<br><span class="cap-note">(提前至26H2)</span></td><td>100</td>
+        <td>—</td><td>—</td><td>—</td><td>—</td>
+        <td class="cap-hl"><span data-tip="yangtze-p3-2026-27">100</span></td><td class="cap-hl"><span data-tip="yangtze-p3-2026-27">100</span></td>
+      </tr>
+    </tbody>
+  </table>
+  <div style="font-size:10px;color:var(--text2);margin-top:8px;padding:6px 10px;background:var(--warn-bg);border-radius:5px;border-left:3px solid var(--warn)">
+    ⚠️ 原始数据表格中"二期/三期"相关单元格带有批注标记（右上角小三角），本次还原未能读取批注文字内容；如有批注原文，请补充以便完整还原。<br>
+    ⚠️ 标*的CapEx数字（长鑫2026/2027对应CapEx、长江2026/2027对应CapEx）仍按各自旧产能口径测算，尚未跟随新口径（长鑫扩产110/90kwpm；长江扩产140/0kwpm）重新测算，待补充。
+  </div>
+
+  <!-- 子模块：长鑫存储财务与产能 vs 海力士/三星/美光 -->
+  <div class="logic-deep-sub">💰 长鑫存储财务与产能 · 对比海力士/三星/美光</div>
+  <div style="font-size:10px;color:var(--text2);margin-bottom:10px">数据来源：SemiAnalysis《China's CXMT Is Set to Challenge DRAM Incumbents》（Ray Wang，2026-06-23）；HBM相关内容暂不纳入本模块</div>
+
+  <div class="kpi-g" style="grid-template-columns:repeat(4,1fr);margin-bottom:14px">
+    <div class="card kpi"><div class="lbl">2025年营收</div><div class="val c-up">86亿美元</div><div class="note">YoY +156%（2024年33亿美元，2023年12亿美元）</div></div>
+    <div class="card kpi"><div class="lbl">2025年净利润</div><div class="val c-up">10亿美元</div><div class="note">首次年度转正；FY23毛利率-113%→FY25毛利率37.8%</div></div>
+    <div class="card kpi"><div class="lbl">2026E营收预测</div><div class="val c-acc">＞500亿美元</div><div class="note">SemiAnalysis预测，YoY超6倍；1Q26已达73亿美元（+~700%）</div></div>
+    <div class="card kpi"><div class="lbl">1Q26营业利润率</div><div class="val c-up">~70%</div><div class="note">SK海力士73%/三星81%/美光84%，差距收窄但仍落后</div></div>
+  </div>
+
+  <div class="chart-row">
+    <div class="chart-box"><h4>长鑫存储营收路径（亿美元，2023-2026E）</h4><div class="chart-wrap"><canvas id="c-cxmt-rev"></canvas></div></div>
+    <div class="chart-box"><h4>2025年DRAM营收对比（亿美元）</h4><div class="chart-wrap"><canvas id="c-dram-rev-cmp"></canvas></div></div>
+  </div>
+  <div style="font-size:10px;color:var(--text2);margin:-8px 0 14px">注：长鑫为公司总营收（DRAM为主业）；美光/SK海力士/三星为其DRAM分部营收，非完全可比口径，仅作量级参考</div>
+
+  <div class="chart-row">
+    <div class="chart-box"><h4>毛利率 / 营业利润率对比（%）</h4><div class="chart-wrap"><canvas id="c-margin-cmp"></canvas></div></div>
+    <div class="chart-box"><h4>晶圆产能对比（kwspm，约2026年末口径）</h4><div class="chart-wrap"><canvas id="c-capacity-cmp"></canvas></div></div>
+  </div>
+
+  <div class="chart-row">
+    <div class="chart-box"><h4>长鑫存储晶圆产能路径（kwspm）</h4><div class="chart-wrap"><canvas id="c-cxmt-capacity-path"></canvas></div></div>
+    <div class="chart-box"><h4>年度新增晶圆产能对比（kwspm/年）</h4><div class="chart-wrap"><canvas id="c-wafer-adds-cmp"></canvas></div></div>
+  </div>
+
+  <div class="seg-sum">
+    长鑫存储营收/盈利的爆发主要由<strong>DRAM涨价驱动而非份额抢夺</strong>——2025年位元出货量份额仅9%，2027E预计提升至12%。
+    <br><br>
+    1Q26 ASP仅落后三星/海力士/美光5-10%，差距主要来自产品结构（龙头服务器DRAM占比更高，单价更高）而非定价能力差距，且该差距未来还会走阔。
+    <br><br>
+    产能端，长鑫2026年末预计350kwspm，已逼近美光（385），但仍明显落后三星（720）/海力士（595）。
+    <br><br>
+    2026-2028年长鑫年均新增产能（85/70/80kwspm）在四家中增速领先，是国产存储扩产逻辑的核心驱动，也呼应上方"产能扩产跟踪"里长鑫26-27年扩产上修的结论。
+  </div>
+  <div style="font-size:10px;color:var(--text2);margin-top:8px;padding:6px 10px;background:var(--warn-bg);border-radius:5px;border-left:3px solid var(--warn)">
+    ⚠️ 全球DRAM产能份额口径原文存在两个不同基准："2027E~17%（较2025年13%提升）"与"2028E~17%（较2025年11%提升）"，原文未解释口径差异，本模块未强行统一，仅在此处如实标注。
+  </div>
+
+  <!-- 子模块：设备商客户收入占比拆分 -->
+  <div class="logic-deep-sub">📊 设备商客户收入占比拆分（估算）</div>
+  <table class="ctable" style="font-size:11.5px">
+    <thead>
+      <tr><th></th><th>中芯</th><th>长鑫</th><th>长存</th><th>其它</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><strong>北方华创</strong></td><td>25~30%</td><td>20~25%</td><td>20~25%</td><td>20%+</td></tr>
+      <tr><td><strong>中微公司</strong></td><td>25~30%</td><td>20~25%</td><td>30~35%</td><td>15%+</td></tr>
+      <tr><td><strong>盛美上海</strong></td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+      <tr><td><strong>拓荆科技</strong></td><td>15~20%</td><td>25~30%</td><td>30~40%</td><td>15%+</td></tr>
+      <tr><td><strong>华海清科</strong></td><td>25~30%</td><td>20%+</td><td>30~35%</td><td>15%+</td></tr>
+    </tbody>
+  </table>
+  <div style="font-size:10px;color:var(--text2);margin-top:6px">注：估算占比，盛美上海客户拆分数据暂缺；与上方"存储敞口最大的公司依然不变"判断互为印证——长存/长鑫合计占比最高的是拓荆科技（55~70%）和中微公司/华海清科（50~60%），是逻辑①存储敞口最集中的设备标的。</div>
+
+  <!-- 后续子模块（如 IPO进程跟踪、标的存储敞口测算等）依次追加在此，用 .logic-deep-sub 起新子标题 -->
+
+</div>
+</div>
+
+<!-- ── 逻辑②深度：先进封装 & HBM设备（多个子模块） ── -->
+<div class="st">🔍 逻辑②深度：先进封装 & HBM设备</div>
+<div class="sec-body" style="margin-bottom:16px">
+<div class="card">
+  <div style="font-size:10px;color:var(--text2);margin-bottom:8px">数据/图片来源：SemiAnalysis《Scaling the Memory Wall: The Rise and Roadmap of HBM》（Dylan Patel，2025-08-12）</div>
+
+  <!-- 子模块：HBM制造工艺流程图谱 -->
+  <div class="logic-deep-sub">🏭 HBM制造工艺流程图谱（前道 → 后道）</div>
+
+  <div style="text-align:center;margin-bottom:14px">
+    <img class="zoomable-img" src="https://substackcdn.com/image/fetch/$s_!i8jF!,w_1456,c_limit,f_webp,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2F79988328-1635-4895-be95-1c18bf5064f2_1536x883.png" style="max-width:640px;width:100%;border-radius:8px;border:1px solid var(--border)" alt="HBM堆叠结构总览">
+    <div style="font-size:9px;color:var(--text2);margin-top:4px">HBM裸片通过TSV+Microbump逐层堆叠在Logic Die上，再经Interposer连接到CPU/GPU/SoC Die（原图来源：Rambus，via SemiAnalysis）</div>
+  </div>
+
+  <div style="font-size:12px;color:var(--text2);line-height:1.8;margin-bottom:14px;background:var(--bg);border-radius:6px;padding:12px 14px;border-left:3px solid var(--accent)">
+    普通DDR DRAM晶圆"转换"成HBM晶圆，核心增量工序是<strong>TSV（硅通孔）成型</strong>和<strong>双面凸点（Bumping）</strong>——这也是为什么HBM产能现在直接用"TSV产能"来衡量。前道做完后，晶圆被切割成裸片，在后道用键合（Bonding）工艺逐层堆叠成3D立体芯片。
+  </div>
+
+  <div style="font-size:13px;font-weight:800;color:#fff;background:#7c3aed;display:inline-block;padding:4px 12px;border-radius:5px;margin-bottom:10px">前道 · TSV + Bumping</div>
+  <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:10px">
+    <div style="border:1px solid var(--border);border-radius:8px;padding:10px;background:#fff">
+      <div style="font-size:11px;font-weight:800;color:var(--accent);margin-bottom:6px">① 前道：TSV成型</div>
+      <div style="display:flex;flex-wrap:wrap;align-items:center;gap:4px;font-size:9px;margin-bottom:6px">
+        <span style="background:#7c3aed;color:#fff;padding:5px 7px;border-radius:4px;font-weight:700">刻蚀通孔<br>Etch</span>
+        <span style="color:var(--text2)">→</span>
+        <span style="background:#7c3aed;color:#fff;padding:5px 7px;border-radius:4px;font-weight:700">镀铜填孔<br>Deposit/Plating</span>
+        <span style="color:var(--text2)">→</span>
+        <span style="background:#7c3aed;color:#fff;padding:5px 7px;border-radius:4px;font-weight:700">减薄露出TSV<br>Grind</span>
+        <span style="color:var(--text2)">→</span>
+        <span style="background:#7c3aed;color:#fff;padding:5px 7px;border-radius:4px;font-weight:700">二次蚀刻+<br>临时键合</span>
+      </div>
+      <div style="font-size:10px;color:var(--text2)">TSV是HBM与普通DDR的核心区别：每层裸片（顶层除外）都要打通孔传递电源/信号，孔径区域占用使HBM裸片密度比DDR低约85%（海力士D1z DDR4 0.296Gb/mm² vs HBM3 0.16Gb/mm²）。</div>
+    </div>
+    <div style="border:1px solid var(--border);border-radius:8px;padding:10px;background:#fff">
+      <div style="font-size:11px;font-weight:800;color:var(--accent);margin-bottom:6px">① 前道：双面凸点 Bumping</div>
+      <div style="display:flex;flex-wrap:wrap;align-items:center;gap:4px;font-size:9px;margin-bottom:6px">
+        <span style="background:#0891b2;color:#fff;padding:5px 7px;border-radius:4px;font-weight:700">镀铜凸点<br>Deposit/Plating</span>
+        <span style="color:var(--text2)">→</span>
+        <span style="background:#0891b2;color:#fff;padding:5px 7px;border-radius:4px;font-weight:700">褪膜<br>Stripping</span>
+        <span style="color:var(--text2)">→</span>
+        <span style="background:#0891b2;color:#fff;padding:5px 7px;border-radius:4px;font-weight:700">光学检测<br>Camtek/Onto</span>
+      </div>
+      <div style="font-size:10px;color:var(--text2)">HBM晶圆需双面镀凸点（堆叠顶层裸片仅需单面、且不需TSV），光学检测确认凸点无缺陷、轮廓合格，代表厂商为Camtek、Onto Innovation。</div>
     </div>
   </div>
+
+  <div style="text-align:center;margin:4px 0 14px">
+    <img class="zoomable-img" src="https://substackcdn.com/image/fetch/$s_!WwY5!,w_1456,c_limit,f_webp,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2F578862fb-3005-4772-a99e-b7d938813e5a_1280x720.png" style="max-width:560px;width:100%;border-radius:8px;border:1px solid var(--border)" alt="HBM前道工艺流程">
+    <div style="font-size:9px;color:var(--text2);margin-top:4px">原图来源：Applied Materials，via SemiAnalysis</div>
+  </div>
+
+  <div style="font-size:11px;font-weight:800;color:var(--accent);margin-bottom:6px">📋 前道工艺设备总结：工序 → 设备类别 → 厂商对应</div>
+  <table class="ctable" style="font-size:11px;margin-bottom:6px">
+    <thead>
+      <tr><th>环节</th><th>英文工序</th><th>中文含义</th><th>设备类别</th><th>全球代表厂商</th><th>28只名单内对应</th></tr>
+    </thead>
+    <tbody>
+      <tr><td rowspan="5"><strong>TSV Formation</strong><br><span style="font-size:9px;color:var(--text2)">正面</span></td>
+        <td>Deep-via Etch</td><td style="color:var(--text2)">深硅通孔刻蚀</td><td>深硅刻蚀(DSE)</td><td style="color:var(--text2)">Applied Materials、Lam、TEL</td><td>中微公司<span style="font-size:9px;color:var(--text2)">（常规产品偏浅层，深硅刻蚀需单独确认）</span></td></tr>
+      <tr><td>CVD Liner</td><td style="color:var(--text2)">孔壁绝缘衬垫</td><td>CVD沉积</td><td style="color:var(--text2)">Applied Materials、Lam、TEL、ASM</td><td>拓荆科技</td></tr>
+      <tr><td>PVD Barrier｜Seed</td><td style="color:var(--text2)">阻挡层+铜种子层</td><td>PVD溅射</td><td style="color:var(--text2)">Applied Materials(Endura)、ULVAC</td><td>北方华创</td></tr>
+      <tr><td>Cu Plating</td><td style="color:var(--text2)">电镀填铜</td><td>ECP电镀</td><td style="color:var(--text2)">Applied Materials(Raider)、Lam(SABRE)</td><td><strong style="color:var(--up)">盛美上海</strong></td></tr>
+      <tr><td>CMP</td><td style="color:var(--text2)">化学机械研磨</td><td>CMP抛光</td><td style="color:var(--text2)">Applied Materials、Ebara</td><td><strong style="color:var(--up)">华海清科</strong></td></tr>
+      <tr><td rowspan="5"><strong>Micro-bump</strong><br><span style="font-size:9px;color:var(--text2)">正面凸点</span></td>
+        <td>Expose/Develop</td><td style="color:var(--text2)">光刻曝光显影</td><td>涂胶显影(Track)</td><td style="color:var(--text2)">SCREEN、TEL</td><td>芯源微</td></tr>
+      <tr><td>PVD</td><td style="color:var(--text2)">凸点下金属层(UBM)</td><td>PVD溅射</td><td style="color:var(--text2)">同上</td><td>北方华创</td></tr>
+      <tr><td>Plating</td><td style="color:var(--text2)">电镀凸点金属</td><td>ECP电镀</td><td style="color:var(--text2)">同上</td><td><strong style="color:var(--up)">盛美上海</strong></td></tr>
+      <tr><td>Resist Strip</td><td style="color:var(--text2)">剥离光刻胶</td><td>去胶/清洗</td><td style="color:var(--text2)">SCREEN、TEL</td><td><strong style="color:var(--up)">盛美上海</strong></td></tr>
+      <tr><td>Under bump Wet-Etch</td><td style="color:var(--text2)">凸点下湿法刻蚀</td><td>湿法刻蚀/清洗</td><td style="color:var(--text2)">SCREEN、TEL</td><td><strong style="color:var(--up)">盛美上海</strong></td></tr>
+      <tr><td rowspan="4"><strong>TSV Reveal</strong><br><span style="font-size:9px;color:var(--text2)">翻面后背面</span></td>
+        <td>Silicon Grind, Polish</td><td style="color:var(--text2)">背面减薄+抛光</td><td>减薄机+CMP</td><td style="color:var(--text2)"><strong style="color:var(--dn)">DISCO</strong>（减薄机绝对龙头）</td><td style="color:var(--dn)">减薄机暂无对应；抛光见华海清科</td></tr>
+      <tr><td>Recess Etch</td><td style="color:var(--text2)">回蚀刻露出TSV</td><td>刻蚀</td><td style="color:var(--text2)">同Deep-via Etch类</td><td>中微公司</td></tr>
+      <tr><td>CVD Passivation</td><td style="color:var(--text2)">背面钝化层</td><td>CVD沉积</td><td style="color:var(--text2)">同CVD Liner类</td><td>拓荆科技</td></tr>
+      <tr><td>Cu & Oxide Polish</td><td style="color:var(--text2)">铜/氧化层终抛光</td><td>CMP抛光</td><td style="color:var(--text2)">同上</td><td><strong style="color:var(--up)">华海清科</strong></td></tr>
+      <tr><td><strong>Pad-finish micro-bump</strong><br><span style="font-size:9px;color:var(--text2)">背面凸点</span></td>
+        <td colspan="4" style="color:var(--text2);font-size:10px">与Micro-bump五步完全相同（Expose/Develop→PVD→Plating→Resist Strip→Under bump Wet-Etch），做在背面，供下一层堆叠用</td><td><strong style="color:var(--up)">盛美上海</strong>等同上</td></tr>
+    </tbody>
+  </table>
+  <div style="font-size:10px;color:var(--text2);margin-bottom:14px">
+    电镀/清洗类工序贯穿全图，是<strong>盛美上海</strong>对应度最高的环节；CMP出现3次，对应<strong>华海清科</strong>；<strong style="color:var(--dn)">背面减薄(Grind)国产暂无对应标的</strong>，全球被日本DISCO垄断。
+    <br>注：原图底部AMAT自评"覆盖HBM材料工程约3/4工序、封装SAM份额~50%"是其公司整体口径，不代表逐工序份额；上表"全球代表厂商"为工艺-设备类别对应关系，非市占率排名。
+  </div>
+
+  <div style="font-size:13px;font-weight:800;color:#fff;background:#0891b2;display:inline-block;padding:4px 12px;border-radius:5px;margin-bottom:10px">后道 · 堆叠键合 Bonding</div>
+  <div style="font-size:12px;color:var(--text2);line-height:1.8;margin-bottom:6px;background:var(--bg);border-radius:6px;padding:12px 14px;border-left:3px solid var(--accent)">
+    后道把前道做好的裸片堆叠键合成3D立体——8层（HBM3/3E主流）或12层（高端），堆叠高度被JEDEC标准限制在720μm立方体内，为容纳更多层，每片裸片做得更薄、凸点间隙更窄，<strong>更薄=更易翘曲/碎裂，是良率的主要敌人</strong>。堆叠键合具体走哪条路径（下一子模块详述），是后道环节的核心分歧。
+  </div>
+
+  <!-- 子模块：三条堆叠键合路径对比 -->
+  <div class="logic-deep-sub">⚖️ 三条堆叠键合路径对比</div>
+  <table class="ctable" style="font-size:11.5px">
+    <thead>
+      <tr><th>路径</th><th>代表厂商</th><th>原理</th><th>优势</th><th>劣势</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>MR-MUF</strong><br><span style="font-size:9px;color:var(--text2)">批量回流+模塑底部填充</span></td>
+        <td>SK海力士<br><span style="font-size:9px;color:var(--text2)">联合NAMICS自研材料</span></td>
+        <td style="font-size:10.5px;color:var(--text2)">一次性批量回流焊+整体模塑完成所有层joint formation，模塑底部填充材料散热优于NCF</td>
+        <td style="font-size:10.5px;color:var(--up)">良率/产能最优，散热最好（可加更多虚拟凸点辅助散热）</td>
+        <td style="font-size:10.5px;color:var(--dn)">专有工艺+专有材料，专利壁垒高，外部设备商难切入</td>
+      </tr>
+      <tr>
+        <td><strong>TC-NCF</strong><br><span style="font-size:9px;color:var(--text2)">逐层热压键合+非导电膜</span></td>
+        <td>美光、三星</td>
+        <td style="font-size:10.5px;color:var(--text2)">每一层都要单独完成一次完整的热压键合（TCB）工序，逐层施压固化</td>
+        <td style="font-size:10.5px;color:var(--up)">工艺/设备供应链开放（非单一厂商专利垄断）</td>
+        <td style="font-size:10.5px;color:var(--dn)">产能/良率低于MR-MUF；逐层施压增加凸点损伤风险</td>
+      </tr>
+      <tr>
+        <td><strong>Hybrid Bonding</strong><br><span style="font-size:9px;color:var(--text2)">去凸点直接键合</span></td>
+        <td>三星最激进推广<br><span style="font-size:9px;color:var(--text2)">海力士/美光态度谨慎</span></td>
+        <td style="font-size:10.5px;color:var(--text2)">取消凸点（bump-less），裸片间直接键合，省出的间隙空间可塞入更多层</td>
+        <td style="font-size:10.5px;color:var(--up)">堆叠层数上限更高，是16层以上的潜在解法之一</td>
+        <td style="font-size:10.5px;color:var(--dn)">良率/成本挑战大，应用节点已从HBM4推迟到HBM4E，目前仍是"下一代技术"</td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="seg-sum">
+    JEDEC已将堆叠高度标准从720μm放宽至775μm，让12层堆叠在不用混合键合（不去凸点）的前提下也能装得下——这意味着<strong>近两年内Hybrid Bonding对HBM还不是刚需</strong>，更多是为16层及以上的远期堆叠预留的技术选项；与之相对，TC-NCF/MR-MUF两条"带凸点"路径仍是当前主流。
+  </div>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:14px 0">
+    <div style="text-align:center">
+      <img class="zoomable-img" src="https://substackcdn.com/image/fetch/$s_!AESs!,w_1456,c_limit,f_webp,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2F4b9a645c-ff17-4c1d-b7b4-540b08cc26c9_1682x740.png" style="max-width:100%;border-radius:8px;border:1px solid var(--border)" alt="MR-MUF工艺示意">
+      <div style="font-size:9px;color:var(--text2);margin-top:4px">SK海力士 MR-MUF 工艺示意（来源：SK Hynix）</div>
+    </div>
+    <div style="text-align:center">
+      <img class="zoomable-img" src="https://substackcdn.com/image/fetch/$s_!C3AL!,w_1456,c_limit,f_webp,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2F4e6e019a-4951-48ed-9016-30e955c7d313_1024x398.png" style="max-width:100%;border-radius:8px;border:1px solid var(--border)" alt="堆叠高度720um到775um放宽示意">
+      <div style="font-size:9px;color:var(--text2);margin-top:4px">堆叠高度标准 720μm → 775μm 放宽（来源：SemiAnalysis）</div>
+    </div>
+  </div>
+
+  <div class="chart-box" style="margin-bottom:14px">
+    <h4>堆叠层数 → 总良率衰减（简化测算，单层良率99%）</h4>
+    <div class="chart-wrap"><canvas id="c-hbm-yield"></canvas></div>
+    <div style="font-size:9px;color:var(--text2);margin-top:6px">总良率 ≈ 单层良率^键合次数（键合次数=层数-1）；实际还会因非临界缺陷累积而进一步下降，此处仅为简化示意</div>
+  </div>
+
+  <!-- 子模块：键合设备格局演变 -->
+  <div class="logic-deep-sub">🥊 键合设备格局演变：Hanmi vs ASMPT / Besi / Hanwha</div>
+  <div style="font-size:10px;color:var(--text2);margin-bottom:8px">数据来源：SemiAnalysis《Advanced Packaging Part 3 – Intel's Curious Bet on Thermocompression Bonding》（Dylan Patel，2022-01-19，TCB行业背景）+《Scaling the Memory Wall》（HBM专属TCB格局）</div>
+  <div class="logic-box">
+    TCB（热压键合）目前是<strong>所有量产HBM唯一可行的键合方式</strong>——三星/SK海力士/美光全部采用；层数越高对裸片厚度要求越苛刻，海力士12层堆叠HBM3要求单片裸片减薄到仅30μm。值得注意的是，<strong>台积电在逻辑芯片封装上刻意回避TCB（用InFO等标准倒装焊工艺控制成本），但在HBM封装上同样必须用TCB</strong>——说明TCB不是台积电的技术偏好问题，而是HBM堆叠本身在当前技术条件下别无选择。TCB设备三大厂商ASMPT、Kulicke&Soffa、Besi各有细分优势，但HBM这个细分赛道的格局如下：
+  </div>
+  <div class="logic-box">
+    TSV间距约40μm，键合设备需要做到亚微米级对准精度，同时要保证均匀压力（避免逐层累积的翘曲）和吞吐量（决定成本）——这是一个被早期巨头Besi、ASMPT忽视的细分赛道，<strong>Hanmi押注TC bonder</strong>吃下先机，一度在SK海力士实现近100%份额。
+    <br><br>
+    2025年秋天，海力士首次向竞品Hanwha下大单（且报价更高），引爆Hanmi不满——Hanwha当时尚未通过海力士HBM3E 12-hi产线认证，且Hanmi撤出现场服务团队向海力士施压，一度威胁到海力士的HBM出货。最终海力士被迫向Hanmi补小额订单平息事态。
+    <br><br>
+    <strong>ASMPT、Besi等正加速改进HBM专用TC bonder</strong>，试图打破Hanmi的事实垄断——这正是逻辑②卡片里目前28只名单内唯一标的 ASMPT（0522.HK）所在的牌桌：它不是HBM bonder的现任龙头，而是追赶者，能否在HBM专用bonder上拿下订单是观察其先进封装逻辑兑现度的关键信号。
+  </div>
+
+  <table class="ctable" style="font-size:11.5px;margin-top:10px">
+    <thead>
+      <tr><th>厂商</th><th>国别</th><th>核心优势领域</th><th>关键数据/进展</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><strong>BESI</strong></td><td>荷兰</td><td style="color:var(--text2)">混合键合、高精度Die Attach</td><td style="font-size:10.5px;color:var(--text2)">混合键合龙头，2023市占率约67%、2024约70%；2025营收5.913亿欧元、毛利率63.3%；混合键合累计订单超150套，覆盖18家核心客户，新一代原型精度推进至50nm</td></tr>
+      <tr><td><strong>ASMPT</strong></td><td>新加坡/港股</td><td style="color:var(--text2)">TCB全球第一、产品线最全</td><td style="font-size:10.5px;color:var(--text2)">2025 SEMI分部收入73.8亿港元(+21.8%)；HBM4 12H获多家一线订单；HB工具已获客户量产验证；可提供先进对准80%-90%设备</td></tr>
+      <tr><td><strong>K&amp;S</strong></td><td>新加坡</td><td style="color:var(--text2)">引线键合、TCB/Fan-out</td><td style="font-size:10.5px;color:var(--text2)">主推无助焊剂TCB，精度达1μm，在HBM3E等过渡产品占主流</td></tr>
+      <tr><td><strong>应用材料(AMAT)</strong></td><td>美国</td><td style="color:var(--text2)">沉积/刻蚀/CMP/表面处理全流程</td><td style="font-size:10.5px;color:var(--text2)">2025年4月入股BESI约9%成最大股东；联合推出Kinex D2W混合键合平台，对准精度~100nm、1600-2000 die/小时</td></tr>
+      <tr><td><strong>EVG</strong></td><td>奥地利</td><td style="color:var(--text2)">混合键合活化、清洁、晶圆准备</td><td style="font-size:10.5px;color:var(--text2)">与ASMPT合作开发D2W混合键合方案</td></tr>
+      <tr><td><strong>SUSS MicroTec</strong></td><td>德国</td><td style="color:var(--text2)">全自动键合系统（研发到量产）</td><td style="font-size:10.5px;color:var(--text2)">全球混合键合主要厂商之一</td></tr>
+      <tr><td><strong>东京电子(TEL)</strong></td><td>日本</td><td style="color:var(--text2)">3DI混合键合</td><td style="font-size:10.5px;color:var(--text2)">3DI Synapse支持140nm间距、良率99%</td></tr>
+      <tr><td><strong>DISCO</strong></td><td>日本</td><td style="color:var(--text2)">晶圆减薄、切割、研磨</td><td style="font-size:10.5px;color:var(--text2)">主导晶圆级后道加工环节</td></tr>
+    </tbody>
+  </table>
+  <div style="font-size:10px;color:var(--text2);margin:6px 0 14px">注：覆盖TCB与Hybrid Bonding两类设备商，与上方Hanmi/ASMPT/Besi/Hanwha的HBM TCB格局、下方EVG主导的W2W Hybrid Bonding格局相互印证；AMAT入股BESI、EVG与ASMPT合作开发D2W方案，说明键合设备龙头之间正通过资本/技术合作交叉布局两条技术路径。</div>
+
+  <!-- 子模块：Hybrid Bonding设备格局 -->
+  <div class="logic-deep-sub">🔬 Hybrid Bonding：HBM的潜在下一代选项，目前谁在做</div>
+  <div style="font-size:10px;color:var(--text2);margin-bottom:8px">数据来源：SemiAnalysis《Hybrid Bonding Process Flow – Advanced Packaging Part 5》（Dylan Patel，2024-02-09）</div>
+  <div class="logic-box">
+    Hybrid Bonding分两种实现路径，成熟度和玩家完全不同：
+    <br><br>
+    <strong>W2W（晶圆对晶圆）</strong>——目前已经成熟商用，<strong>EVG（EV Group）凭专利SmartView对位技术处于绝对主导地位</strong>，对准精度做到<strong>亚50nm</strong>。W2W良率高、成本低但不能挑KGD（已知良品裸片），适合小芯片高良率场景，已大规模用于CMOS图像传感器（索尼、豪威、三星）和3D NAND（<strong>长江存储</strong>、西部数据、铠侠）——长江存储自家Xtacking架构正是用W2W混合键合把外围电路晶圆和存储阵列晶圆键合在一起，<strong>与本看板"逻辑①"长存模块互为印证</strong>：长存不仅是国产存储扩产的核心标的，在Hybrid Bonding这项更前沿的封装工艺上也已有量产经验。
+    <br><br>
+    <strong>D2W（裸片对晶圆）</strong>——技术更难、成本曲线在大裸片场景下更陡，目前<strong>唯一规模化采用的客户是AMD</strong>（通过台积电SoIC封装做3D V-Cache，2022年至今仍是唯一玩家），可以挑KGD、适合大裸片异构集成，但应用场景仍然很窄。
+    <br><br>
+    <strong>关键配套工艺</strong>：要做到键合所需的极致平整度（介质层粗糙度&lt;0.5nm，铜面&lt;1nm），<strong>CMP是核心步骤</strong>（与我们前道表格里反复出现的CMP/华海清科呼应）；晶圆清洗环节，原文明确点名<strong>ACM Research（盛美上海美股关联公司）的去离子水+超声波清洗方案是业内公认最佳方案之一</strong>——这是盛美上海在Hybrid Bonding环节（不只是TCB/CMP）的又一个潜在受益点。
+    <br><br>
+    <strong>结论</strong>：对照前面"三条堆叠键合路径对比"——HBM目前仍100%用TCB，Hybrid Bonding尚未导入量产（应用节点已从HBM4推迟到HBM4E）；但<strong>EVG是这项技术一旦导入HBM后最值得关注的设备商</strong>，而长江存储是国内少数已具备W2W Hybrid Bonding量产经验的厂商，一旦HBM切换路径，国产产业链的承接基础不算空白。
+  </div>
+
+  <!-- 子模块：中国HBM动向 -->
+  <div class="logic-deep-sub">🇨🇳 中国HBM动向：长江存储（CXMT）</div>
+  <div style="font-size:10px;color:var(--text2);margin-bottom:10px">数据来源：SemiAnalysis《China's CXMT Is Set to Challenge DRAM Incumbents》（Ray Wang，2026-06-23）；与本看板"逻辑①"长存模块为同一家公司CXMT，此处是其HBM专属维度，互为补充</div>
+
+  <div class="chart-row">
+    <div class="chart-box"><h4>CXMT HBM晶圆产能爬坡（kwspm）</h4><div class="chart-wrap"><canvas id="c-cxmt-hbm-capacity"></canvas></div></div>
+    <div class="chart-box"><h4>CXMT全球HBM晶圆份额（%）</h4><div class="chart-wrap"><canvas id="c-cxmt-hbm-share"></canvas></div></div>
+  </div>
+  <div style="font-size:10px;color:var(--text2);margin:-8px 0 14px">注：2026E/2027E为SemiAnalysis基准预测；2027E/2028E（55/100kwspm）已包含其对中国"自主可控"政策因子的上修，份额2028E达12%（较2025年1%）</div>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px">
+    <div class="logic-box" style="margin-bottom:0">
+      <strong>战略权衡：为何HBM晶圆占比这么低？</strong>
+      <br><br>
+      commodity DRAM当前毛利率明显高于CXMT的HBM产品，且同等晶圆下<strong>位元产出多3倍以上</strong>；在HBM技术尚未成熟的阶段，把稀缺晶圆产能投向HBM性价比并不高，<strong>2025年HBM晶圆占比仅约2%（5/265kwspm）</strong>，99%位元出货是常规LPDDR/DDR。中国"自主可控"的政策诉求会倒逼CXMT逐步提高HBM占比，但近两年商业理性仍是优先做commodity DRAM。
+    </div>
+    <div class="logic-box" style="margin-bottom:0">
+      <strong>良率现状：HBM3 8-hi综合良率仅~25%</strong>
+      <br><br>
+      SemiAnalysis测算CXMT HBM3 8-hi<strong>前道良率~35%、后道良率~70%</strong>，综合良率约25%，远低于海力士/美光/三星的成熟水平；12-hi难度更高、良率预计更低。前道瓶颈在大尺寸裸片+TSV电源网络设计经验不足；后道封装与通富微电合作，MR-MUF/TC-NCF路径暂未明确。
+    </div>
+  </div>
+
+  <div class="logic-box">
+    <strong>技术路线：可能跳过HBM3，直奔HBM3E</strong>——一是客户在2027年时间窗需要更有竞争力的HBM产品，二是主流加速器届时已普遍采用HBM3E/HBM4/HBM4E，直接对标更划算。
+    <br><br>
+    <strong>客户结构仍很窄</strong>：目前判断仅华为、寒武纪及少数新兴AI芯片创业公司可能采用CXMT的HBM；多数国内加速器厂商仍更倾向于争取海外HBM3/HBM3E供应（通过库存或可用渠道），CXMT的HBM现阶段更多是"备胎"而非首选。
+    <br><br>
+    <strong>华为定制HBM</strong>：华为与CXMT将采用不完全遵循JEDEC标准的定制HBM方案和PHY，借此弥补与海外标准HBM的带宽差距。
+  </div>
+
+  <!-- 后续子模块依次追加在此，用 .logic-deep-sub 起新子标题 -->
+
+</div>
+</div>
+
+<!-- ── 逻辑④深度：全球缺货涨价（多个子模块） ── -->
+<div class="st">🔍 逻辑④深度：全球缺货涨价</div>
+<div class="sec-body" style="margin-bottom:16px">
+<div class="card">
+
+  <!-- 子模块：AMAT近期交流纪要汇总 -->
+  <div class="logic-deep-sub">📡 AMAT（应用材料）近期交流纪要汇总</div>
+  <div style="font-size:10px;color:var(--text2);margin-bottom:10px">数据来源：2026年内AMAT六场投资者交流纪要——Q2 FY2026业绩会、摩根士丹利TMT大会、Cantor全球科技与工业增长大会、伯恩斯坦第42届战略决策大会、摩根大通第54届全球科技媒体通信大会、美银2026全球科技大会</div>
+
+  <div class="kpi-g" style="grid-template-columns:repeat(4,1fr);margin-bottom:14px">
+    <div class="card kpi"><div class="lbl">2026日历年半导体系统业务增速指引</div><div class="val c-up">20%→30%+</div><div class="note">年内多次上修，非2027年需求提前释放</div></div>
+    <div class="card kpi"><div class="lbl">Q2 FY26非GAAP毛利率</div><div class="val c-up">50%</div><div class="note">系统业务毛利率54.8%，创纪录；十余年累计提升800个基点</div></div>
+    <div class="card kpi"><div class="lbl">AGS服务业务增速指引</div><div class="val c-acc">低两位数→中两位数</div><div class="note">2026年实际增速预计更高于该水平</div></div>
+    <div class="card kpi"><div class="lbl">客户需求可见度</div><div class="val c-warn">8个季度滚动</div><div class="note">历史最佳水平，部分客户已规划至2027-2028年</div></div>
+  </div>
+
+  <div class="logic-box">
+    <strong>为什么AMAT的交流内容能印证"全球缺货涨价"逻辑：</strong>
+    <br><br>
+    <strong>需求端</strong>——AI驱动下，2026年晶圆厂设备（WFE）增量支出中超80%集中在先进逻辑、DRAM、先进封装三大领域，2026年WFE市场规模较此前"1000亿美元"的预期高出50%；半导体行业全年收入有望提前到2026年突破1万亿美元（原预期2030年）。
+    <br><br>
+    <strong>约束端</strong>——核心瓶颈不是AMAT自身产能（已较疫情前接近翻倍），而是<strong>客户洁净室空间</strong>：新建一座晶圆厂需3-4年，短期客户主要靠优化布局、升级旧设备、200mm产线改造300mm/封装厂来挖潜；AMAT管理层坦言"供应链响应速度是当前增长的主要限制因素"——这正是"缺货"逻辑最直接的一手证据。
+    <br><br>
+    <strong>涨价端</strong>——非GAAP毛利率持续创新高（系统业务毛利率从40%区间提升到54.8%~55%，CEO Gary Dickerson任内累计提升800个基点），核心驱动是"基于产品价值的定价"而非简单提价，但客户对涨价的接受度很高——管理层原话："客户最关注设备交付能力和新技术获取，对价格接受度较高"。
+  </div>
+
+  <table class="ctable" style="font-size:11.5px">
+    <thead>
+      <tr><th>板块</th><th>核心数据/进展</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><strong>DRAM</strong></td><td style="color:var(--text2)">HBM晶圆损耗比从3:1提升至4:1（一颗HBM需要约4倍普通DRAM的晶圆面积）；DRAM月开工量约230万片，预计每年净增30-40万片；过去10年AMAT在DRAM设备份额累计提升10个百分点，最新季度DRAM收入17亿美元(+18% YoY)</td></tr>
+      <tr><td><strong>先进封装</strong></td><td style="color:var(--text2)">2026年收入增速指引超50%；HBM占当前DRAM晶圆开工量15%，堆叠需额外19道工序（其中15道是设备步骤），AMAT在这些增量步骤中占据超50%设备价值份额；近期收购NEXX强化面板级封装技术组合</td></tr>
+      <tr><td><strong>先进逻辑</strong></td><td style="color:var(--text2)">GAA节点带来超2000个工艺步骤，材料厚度精确到原子级；FinFET非光刻设备份额接近50%；铜布线至少还能再延伸3个技术节点，不会被钼(moly)替代</td></tr>
+      <tr><td><strong>供应链</strong></td><td style="color:var(--text2)">2000多家直接供应商，已将8季度滚动需求预测同步给全部供应商；制造产能较疫情前接近翻倍；管理层明确"供应链响应速度是当前增长的主要限制因素"</td></tr>
+      <tr><td><strong>中国/ICAPS</strong></td><td style="color:var(--text2)">2025年出口管制大幅加码，AMAT受限业务占比从约10%提升至超20%；中国区收入占公司半导体系统+AGS总营收的24%，预计维持在25%-30%区间；ICAPS业务2026年预计持平至小幅增长，300mm产线利用率已恢复健康区间</td></tr>
+      <tr><td><strong>EPIC创新平台</strong></td><td style="color:var(--text2)">硅谷EPIC中心计划2026年秋季投运，已公布台积电、三星、美光、SK海力士、Advantest等8家创始合作伙伴；目标把技术从研发到量产的商业化周期从10-15年缩短约50%</td></tr>
+    </tbody>
+  </table>
+
+  <div class="seg-sum">
+    AMAT作为全球晶圆制造设备龙头，自身的"涨价能力"（毛利率屡创新高）和"供应链响应速度跟不上需求"（明确点出是当前增长的核心限制），是<strong>全球设备/零部件/材料"缺货涨价"逻辑最直接的一手验证</strong>——AMAT把2年以上的订单需求提前同步给2000家供应商，本质上是把涨价/扩产的压力沿产业链向上游传导，这正好对应28只名单里"零部件"+"材料"两个二级分类（与逻辑④锁定的范畴完全一致）：上游零部件/材料商在AMAT这类龙头扩产/挖潜的拉动下，同样面临产能紧张和提价窗口。
+  </div>
+
+  <!-- 子模块：海外设备龙头财务数据库 -->
+  <div class="logic-deep-sub">📊 海外设备龙头财务数据库（六大厂商）</div>
+  <div style="font-size:10px;color:var(--text2);margin-bottom:10px">数据来源：半导体上游数据库.xlsx「海外」sheet，单季度数据，2021Q1-2026Q1，单位：亿美元口径</div>
+
+  <table class="ctable" style="font-size:11.5px">
+    <thead>
+      <tr><th>代码</th><th>公司</th><th>最新季度营收</th><th>营收YoY</th><th>毛利率</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><code>AMAT.O</code></td><td><strong>应用材料</strong></td><td>79.10亿美元</td><td class="yp">+11.4%</td><td>49.9%</td></tr>
+      <tr><td><code>ASML.O</code></td><td><strong>阿斯麦</strong></td><td>101.04亿美元</td><td class="yp">+20.4%</td><td>53.0%</td></tr>
+      <tr><td><code>LRCX.O</code></td><td>拉姆研究</td><td>53.45亿美元<span class="cap-pending"></span></td><td class="yp">+13.2%</td><td>49.6%</td></tr>
+      <tr><td><code>KLAC.O</code></td><td>科天半导体(KLA)</td><td>32.97亿美元<span class="cap-pending"></span></td><td class="yp">+7.6%</td><td>61.5%</td></tr>
+      <tr><td><code>8035.T</code></td><td>东京电子</td><td>42.44亿美元<span class="cap-pending"></span></td><td class="yn">-3.9%</td><td>45.2%</td></tr>
+      <tr><td><code>6857.T</code></td><td>爱德万测试</td><td>17.71亿美元<span class="cap-pending"></span></td><td class="yp">+13.2%</td><td>62.2%</td></tr>
+    </tbody>
+  </table>
+  <div style="font-size:10px;color:var(--text2);margin:-4px 0 14px">注：标*的拉姆研究/KLA/东京电子/爱德万测试最新一季（26Q1）财报尚未发布，数据库中为上一季度数值的占位延续，仅AMAT/ASML为已发布实际数据；下方两张趋势图中可见对应公司曲线末端走平。</div>
+
+  <div class="chart-row">
+    <div class="chart-box"><h4>六大设备龙头季度营收（亿美元，21Q1-26Q1）</h4><div class="chart-wrap" style="height:240px"><canvas id="c-overseas-rev"></canvas></div></div>
+    <div class="chart-box"><h4>六大设备龙头毛利率（%，21Q1-26Q1）</h4><div class="chart-wrap" style="height:240px"><canvas id="c-overseas-gm"></canvas></div></div>
+  </div>
+
+  <div class="seg-sum">
+    六家海外设备龙头毛利率全部位于45%-62%的高位区间，且近两年整体趋势向上（科天半导体(KLA)/爱德万测试常年60%+，AMAT/拉姆研究从46%附近抬升至49%-50%），与AMAT交流纪要中"提价+产品组合升级"的说法相互印证；阿斯麦26Q1营收+20.4% YoY领跑，反映EUV/先进制程设备的稀缺性溢价最强，是"全球缺货涨价"逻辑在海外龙头财报层面最直观的体现。
+  </div>
+
+</div>
 </div>
 
 </div><!-- /wrap -->
 
 <script>
-const QTR = ['23Q1','23Q2','23Q3','23Q4','24Q1','24Q2','24Q3','24Q4','25Q1','25Q2','25Q3','25Q4','26Q1'];
-const COLORS_SEMI = ['#7c3aed','#0891b2','#16a34a','#d97706','#f43f5e','#64748b'];
-
-// Tab switching
-document.getElementById('semiTabNav').querySelectorAll('.tab-btn').forEach(btn => {
-  btn.addEventListener('click', () => {
-    document.querySelectorAll('#semiTabNav .tab-btn').forEach(b => b.classList.remove('active'));
-    document.querySelectorAll('#tab-semi-equip,#tab-semi-mat,#tab-semi-design,#tab-semi-foundry').forEach(p => p.classList.remove('active'));
-    btn.classList.add('active');
-    document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
-  });
-});
-
-// ── 设备市场规模图 ──
+// ── 长鑫存储财务/产能 vs 海力士/三星/美光（来源：SemiAnalysis CXMT深度，2026-06-23）──
 (function() {
-  const ctx = document.getElementById('c-equip-market');
+  const ctx = document.getElementById('c-cxmt-rev');
   if (!ctx) return;
   new Chart(ctx, {
     type: 'bar',
     data: {
-      labels: ['2022','2023','2024','2025E','2026E','2027E','2028E'],
+      labels: ['2023', '2024', '2025', '2026E'],
       datasets: [{
-        label: '中国大陆设备市场（$亿）',
-        data: [280, 230, 310, 350, 390, 440, 480],
-        backgroundColor: ['#c4b5fd','#c4b5fd','#c4b5fd','#7c3aed','#a78bfa','#a78bfa','#a78bfa'],
+        label: '长鑫存储营收（亿美元）',
+        data: [12, 33, 86, 500],
+        backgroundColor: ['#c4b5fd', '#c4b5fd', '#a78bfa', '#7c3aed'],
+        borderRadius: 4,
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: { callbacks: { label: c => c.label === '2026E' ? '＞500亿美元（SemiAnalysis预测）' : `${c.raw}亿美元` } }
+      },
+      scales: { y: { beginAtZero: true, grid: { color: '#e9ecef' } }, x: { grid: { display: false } } }
+    }
+  });
+})();
+
+(function() {
+  const ctx = document.getElementById('c-dram-rev-cmp');
+  if (!ctx) return;
+  new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: ['长鑫存储', '美光', 'SK海力士', '三星'],
+      datasets: [{
+        label: '2025年DRAM营收（亿美元）',
+        data: [86, 372, 521, 723],
+        backgroundColor: ['#7c3aed', '#0891b2', '#16a34a', '#d97706'],
         borderRadius: 4,
       }]
     },
@@ -404,101 +777,249 @@ document.getElementById('semiTabNav').querySelectorAll('.tab-btn').forEach(btn =
       responsive: true, maintainAspectRatio: false,
       plugins: { legend: { display: false } },
       scales: {
-        y: { beginAtZero: true, grid: { color: '#e9ecef' } },
+        y: { beginAtZero: true, ticks: { callback: v => v + '亿' }, grid: { color: '#e9ecef' } },
         x: { grid: { display: false } }
       }
     }
   });
 })();
 
-// ── 国产化率提升趋势 ──
 (function() {
-  const ctx = document.getElementById('c-loc-trend');
+  const ctx = document.getElementById('c-margin-cmp');
   if (!ctx) return;
   new Chart(ctx, {
-    type: 'line',
+    type: 'bar',
     data: {
-      labels: ['2020','2021','2022','2023','2024','2025E','2026E','2027E'],
+      labels: ['长鑫存储', '美光', 'SK海力士', '三星'],
       datasets: [
-        { label: '设备国产化率', data: [8, 10, 14, 17, 22, 26, 31, 37], borderColor: '#7c3aed', backgroundColor: '#7c3aed22', tension: 0.3, fill: true },
-        { label: '材料国产化率', data: [6, 8, 11, 14, 18, 21, 25, 30], borderColor: '#0891b2', backgroundColor: '#0891b222', tension: 0.3, fill: true },
+        { label: 'FY25毛利率', data: [37.8, 39.8, 60.4, 39.4], backgroundColor: '#7c3aed99', borderColor: '#7c3aed', borderWidth: 1, borderRadius: 3 },
+        { label: '1Q26营业利润率', data: [70, 84, 73, 81], backgroundColor: '#0891b299', borderColor: '#0891b2', borderWidth: 1, borderRadius: 3 },
       ]
     },
     options: {
       responsive: true, maintainAspectRatio: false,
-      plugins: { legend: { position: 'top', labels: { boxWidth: 10, font: { size: 10 } } } },
+      plugins: { legend: { position: 'top', labels: { boxWidth: 8, font: { size: 9 } } } },
       scales: {
-        y: { beginAtZero: true, max: 50, ticks: { callback: v => v + '%' }, grid: { color: '#e9ecef' } },
+        y: { beginAtZero: true, max: 100, ticks: { callback: v => v + '%' }, grid: { color: '#e9ecef' } },
         x: { grid: { display: false } }
       }
     }
   });
 })();
 
-// ── 各Tab的季度图表（收入+毛利率，数据待补充）──
-function mkSemiRevChart(id, datasets) {
-  const ctx = document.getElementById(id);
+(function() {
+  const ctx = document.getElementById('c-capacity-cmp');
   if (!ctx) return;
   new Chart(ctx, {
     type: 'bar',
-    data: { labels: QTR, datasets: datasets.map((d,i) => ({
-      label: d.name, data: d.rev,
-      backgroundColor: COLORS_SEMI[i] + '99', borderColor: COLORS_SEMI[i], borderWidth: 1, borderRadius: 2,
-    }))},
-    options: { responsive: true, maintainAspectRatio: false,
-      plugins: { legend: { position: 'top', labels: { boxWidth: 8, font: { size: 9 } } } },
-      scales: { x: { stacked: false, grid: { display: false } }, y: { grid: { color: '#e9ecef' } } }
+    data: {
+      labels: ['长鑫存储', '美光', 'SK海力士', '三星'],
+      datasets: [{
+        label: '晶圆产能（kwspm，约2026年末口径）',
+        data: [350, 385, 595, 720],
+        backgroundColor: ['#7c3aed', '#0891b2', '#16a34a', '#d97706'],
+        borderRadius: 4,
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: { y: { beginAtZero: true, grid: { color: '#e9ecef' } }, x: { grid: { display: false } } }
     }
   });
-}
+})();
 
-function mkSemiGmChart(id, datasets) {
-  const ctx = document.getElementById(id);
+(function() {
+  const ctx = document.getElementById('c-cxmt-capacity-path');
   if (!ctx) return;
   new Chart(ctx, {
     type: 'line',
-    data: { labels: QTR, datasets: datasets.map((d,i) => ({
-      label: d.name, data: d.gm.map(v => v ? +(v*100).toFixed(1) : null),
-      borderColor: COLORS_SEMI[i], backgroundColor: 'transparent',
-      tension: 0.3, pointRadius: 3, borderWidth: 2,
-    }))},
-    options: { responsive: true, maintainAspectRatio: false,
+    data: {
+      labels: ['2025', '2026E', '2027E', '2028E'],
+      datasets: [{
+        label: '长鑫存储晶圆产能（kwspm）',
+        data: [265, 350, 420, 500],
+        borderColor: '#7c3aed', backgroundColor: '#7c3aed22', fill: true, tension: 0.25, pointRadius: 4,
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: { y: { beginAtZero: true, grid: { color: '#e9ecef' } }, x: { grid: { display: false } } }
+    }
+  });
+})();
+
+(function() {
+  const ctx = document.getElementById('c-wafer-adds-cmp');
+  if (!ctx) return;
+  new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: ['2026E', '2027E', '2028E'],
+      datasets: [
+        { label: '长鑫存储', data: [85, 70, 80], backgroundColor: '#7c3aedcc', borderRadius: 3 },
+        { label: '美光', data: [30, 90, 115], backgroundColor: '#0891b2cc', borderRadius: 3 },
+        { label: 'SK海力士', data: [60, 60, 90], backgroundColor: '#16a34acc', borderRadius: 3 },
+        { label: '三星', data: [15, 50, 110], backgroundColor: '#d97706cc', borderRadius: 3 },
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
       plugins: { legend: { position: 'top', labels: { boxWidth: 8, font: { size: 9 } } } },
-      scales: { x: { grid: { display: false } },
-        y: { ticks: { callback: v => v + '%' }, grid: { color: '#e9ecef' } }
+      scales: {
+        y: { beginAtZero: true, ticks: { callback: v => v + 'k' }, grid: { color: '#e9ecef' } },
+        x: { grid: { display: false } }
       }
     }
   });
-}
+})();
 
-// 数据：待从实际财报更新（null = 待填充）
-const D = {
-  equip: [
-    { name: '北方华创', rev: [15,18,22,28,30,35,40,52,55,60,65,68,null], gm: [.40,.41,.42,.43,.42,.43,.44,.45,.44,.45,.46,.47,null] },
-    { name: '中微公司', rev: [7,8,9,11,12,13,14,16,17,18,19,20,null], gm: [.40,.41,.42,.43,.42,.43,.43,.44,.42,.43,.44,.44,null] },
-    { name: '拓荆科技', rev: [2,3,4,5,6,7,8,9,9,10,11,12,null], gm: [.42,.43,.44,.45,.44,.45,.45,.46,.44,.45,.46,.46,null] },
-  ],
-  mat: [
-    { name: '沪硅产业', rev: [13,14,15,16,14,15,16,16,15,16,16,16,null], gm: [.16,.17,.17,.18,.16,.17,.17,.18,.17,.17,.18,.18,null] },
-    { name: '安集科技', rev: [3,3.5,4,4.5,4,4.5,5,5,4.8,5,5.2,5.2,null], gm: [.48,.49,.50,.51,.49,.50,.51,.52,.50,.50,.51,.51,null] },
-    { name: '雅克科技', rev: [8,9,10,11,10,11,12,14,13,14,15,16,null], gm: [.32,.33,.34,.35,.33,.34,.35,.36,.34,.35,.35,.36,null] },
-  ],
-  design: [
-    { name: '海光信息', rev: [14,16,18,20,18,20,22,26,25,30,35,38,null], gm: [.67,.68,.69,.70,.68,.69,.70,.71,.69,.70,.71,.71,null] },
-    { name: '寒武纪', rev: [0.5,0.8,1,2,1,1.5,2,3,3,4,4.5,5,null], gm: [.60,.62,.63,.65,.62,.63,.64,.66,.64,.65,.66,.66,null] },
-    { name: '澜起科技', rev: [5,6,7,8,7,8,9,10,9,10,11,11,null], gm: [.67,.68,.69,.70,.68,.69,.70,.71,.69,.70,.71,.71,null] },
-  ],
-  foundry: [
-    { name: '中芯国际', rev: [120,130,140,150,140,150,160,170,160,165,170,180,null], gm: [.20,.21,.22,.23,.21,.22,.22,.23,.22,.22,.23,.23,null] },
-    { name: '长电科技', rev: [70,75,80,85,80,85,90,95,90,92,94,95,null], gm: [.13,.14,.14,.15,.14,.14,.15,.15,.14,.14,.15,.15,null] },
-    { name: '通富微电', rev: [50,55,58,62,58,60,62,65,62,63,64,65,null], gm: [.13,.13,.14,.14,.13,.14,.14,.15,.13,.14,.14,.14,null] },
-  ],
-};
+// ── HBM堆叠层数 → 良率衰减（简化测算）──
+(function() {
+  const ctx = document.getElementById('c-hbm-yield');
+  if (!ctx) return;
+  const perLayerYield = 0.99;
+  const layerCounts = [4, 8, 12, 16];
+  const data = layerCounts.map(n => +(Math.pow(perLayerYield, n - 1) * 100).toFixed(1));
+  new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: layerCounts.map(n => n + '层'),
+      datasets: [{
+        label: '总良率（%）',
+        data,
+        backgroundColor: ['#a78bfa', '#7c3aed', '#6d28d9', '#5b21b6'],
+        borderRadius: 4,
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: { callbacks: { label: c => `${c.raw}%（${layerCounts[c.dataIndex] - 1}次键合）` } }
+      },
+      scales: {
+        y: { beginAtZero: true, max: 100, ticks: { callback: v => v + '%' }, grid: { color: '#e9ecef' } },
+        x: { grid: { display: false } }
+      }
+    }
+  });
+})();
 
-mkSemiRevChart('c-semi-equip-rev', D.equip); mkSemiGmChart('c-semi-equip-gm', D.equip);
-mkSemiRevChart('c-semi-mat-rev',   D.mat);   mkSemiGmChart('c-semi-mat-gm',   D.mat);
-mkSemiRevChart('c-semi-design-rev',D.design); mkSemiGmChart('c-semi-design-gm',D.design);
-mkSemiRevChart('c-semi-foundry-rev',D.foundry); mkSemiGmChart('c-semi-foundry-gm',D.foundry);
+// ── CXMT HBM晶圆产能/份额（来源：SemiAnalysis CXMT深度，2026-06-23）──
+(function() {
+  const ctx = document.getElementById('c-cxmt-hbm-capacity');
+  if (!ctx) return;
+  new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: ['2025', '2026E', '2027E', '2028E'],
+      datasets: [{
+        label: 'CXMT HBM晶圆产能（kwspm）',
+        data: [5, 30, 55, 100],
+        backgroundColor: ['#c4b5fd', '#a78bfa', '#7c3aed', '#5b21b6'],
+        borderRadius: 4,
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: { y: { beginAtZero: true, grid: { color: '#e9ecef' } }, x: { grid: { display: false } } }
+    }
+  });
+})();
+
+(function() {
+  const ctx = document.getElementById('c-cxmt-hbm-share');
+  if (!ctx) return;
+  new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: ['2025', '2028E'],
+      datasets: [{
+        label: 'CXMT全球HBM晶圆份额（%）',
+        data: [1, 12],
+        backgroundColor: ['#c4b5fd', '#7c3aed'],
+        borderRadius: 4,
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false }, tooltip: { callbacks: { label: c => c.raw + '%' } } },
+      scales: { y: { beginAtZero: true, max: 15, ticks: { callback: v => v + '%' }, grid: { color: '#e9ecef' } }, x: { grid: { display: false } } }
+    }
+  });
+})();
+
+// ── 海外设备龙头财务数据库（来源：半导体上游数据库.xlsx「海外」sheet）──
+(function() {
+  const ctx = document.getElementById('c-overseas-rev');
+  if (!ctx) return;
+  const labels = ["21Q1","21Q2","21Q3","21Q4","22Q1","22Q2","22Q3","22Q4","23Q1","23Q2","23Q3","23Q4","24Q1","24Q2","24Q3","24Q4","25Q1","25Q2","25Q3","25Q4","26Q1"];
+  const rev = {
+    "应用材料": [55.82,61.96,61.23,62.71,62.45,65.2,67.49,67.39,66.3,64.25,67.23,67.07,66.46,67.78,70.45,71.66,71,73.02,68,70.12,79.1],
+    "拉姆研究": [38.48,41.45,43.04,42.27,40.6,46.36,50.74,52.78,38.7,32.07,34.82,37.58,37.94,38.72,41.68,43.76,47.2,51.71,53.24,53.45,53.45],
+    "阿斯麦": [51.39,47.61,60.81,56.46,39.12,56.91,56.88,68.53,73.58,75.24,70.5,80.3,57.24,67.11,83.43,96.97,83.89,89.95,87.8,113.86,101.04],
+    "科天半导体(KLA)": [18.04,19.25,20.84,23.53,22.89,24.87,27.24,29.84,24.33,23.55,23.97,24.87,23.6,25.69,28.42,30.77,30.63,31.75,32.1,32.97,32.97],
+    "东京电子": [39.81,40.89,42.92,44.02,46.23,34.68,49.22,35.17,42.0,27.16,28.84,32.87,36.38,34.84,39.68,42.1,44.15,38.07,42.44,42.44,42.44],
+    "爱德万测试": [8.21,8.78,8.12,9.74,9.56,9.95,9.64,10.37,11.09,7.02,7.84,9.45,9.02,8.71,13.34,14.03,15.65,18.27,17.71,17.71,17.71],
+  };
+  const colors = ['#7c3aed','#0891b2','#16a34a','#d97706','#dc2626','#64748b'];
+  new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels,
+      datasets: Object.keys(rev).map((name, i) => ({
+        label: name, data: rev[name],
+        borderColor: colors[i], backgroundColor: 'transparent',
+        tension: 0.25, pointRadius: 0, borderWidth: 1.5,
+      }))
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { position: 'top', labels: { boxWidth: 8, font: { size: 9 } } } },
+      scales: {
+        y: { beginAtZero: true, ticks: { callback: v => v + '亿' }, grid: { color: '#e9ecef' } },
+        x: { ticks: { maxTicksLimit: 10 }, grid: { display: false } }
+      }
+    }
+  });
+})();
+
+(function() {
+  const ctx = document.getElementById('c-overseas-gm');
+  if (!ctx) return;
+  const labels = ["21Q1","21Q2","21Q3","21Q4","22Q1","22Q2","22Q3","22Q4","23Q1","23Q2","23Q3","23Q4","24Q1","24Q2","24Q3","24Q4","25Q1","25Q2","25Q3","25Q4","26Q1"];
+  const gm = {
+    "应用材料": [47.5,47.9,48.1,47.2,46.9,46.1,46.0,46.7,46.7,46.3,47.1,47.8,47.4,47.3,47.3,48.8,49.1,48.8,48.0,49.0,49.9],
+    "拉姆研究": [46.3,46.2,45.9,46.8,44.7,45.3,46.1,45.0,41.5,45.5,47.5,46.8,47.5,47.5,48.0,47.4,49.0,50.1,50.4,49.6,49.6],
+    "阿斯麦": [53.9,50.9,51.7,54.2,49.0,49.1,51.8,51.5,50.6,51.3,51.9,51.4,51.0,51.4,50.8,51.7,54.0,53.7,51.6,52.2,53.0],
+    "科天半导体(KLA)": [60.7,59.9,61.0,61.4,61.0,60.7,61.8,59.5,58.7,59.1,60.5,60.7,57.9,60.7,59.6,60.3,61.6,62.0,61.3,61.5,61.5],
+    "东京电子": [40.6,46.7,44.1,46.0,45.3,42.3,46.3,43.6,45.1,41.4,44.4,47.9,46.8,47.6,45.9,47.6,47.4,46.2,45.2,45.2,45.2],
+    "爱德万测试": [null,56.4,null,null,56.8,58.1,57.5,null,53.4,50.3,49.9,50.6,51.3,55.4,57.8,54.5,59.9,65.1,62.2,62.2,62.2],
+  };
+  const colors = ['#7c3aed','#0891b2','#16a34a','#d97706','#dc2626','#64748b'];
+  new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels,
+      datasets: Object.keys(gm).map((name, i) => ({
+        label: name, data: gm[name],
+        borderColor: colors[i], backgroundColor: 'transparent',
+        tension: 0.25, pointRadius: 0, borderWidth: 1.5, spanGaps: true,
+      }))
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { position: 'top', labels: { boxWidth: 8, font: { size: 9 } } } },
+      scales: {
+        y: { ticks: { callback: v => v + '%' }, grid: { color: '#e9ecef' } },
+        x: { ticks: { maxTicksLimit: 10 }, grid: { display: false } }
+      }
+    }
+  });
+})();
 
 // ── 折叠功能 ──
 (function() {
@@ -534,6 +1055,113 @@ mkSemiRevChart('c-semi-foundry-rev',D.foundry); mkSemiGmChart('c-semi-foundry-gm
     });
   });
 })();
+
+// ── Tooltip：多口径数据对比浮窗 ──
+const tipData = {
+  'changxin-2026-27': {
+    type: 'conflict',
+    label: '长鑫存储 2026E/2027E 总产能（千片/月）',
+    sources: [
+      { source: '本表旧测算（按各期产线逐年爬坡推算）', value: '2026E 300　2027E 330' },
+      { source: 'SemiAnalysis口径（第三方测算）', value: '2026年末≈350　2027年末≈420　2028年末≈500' },
+      { source: '卖方审慎口径（年新增量估计）', value: '2026年新增≈30　2027年新增≈50（年增速级别）' },
+    ],
+    chosen: '机构最新分厂预测：合计2026E 350、2027E 440（详见下表）',
+    note: '与SemiAnalysis的42-44万片/月相比仍有小幅差异，主要落在上海基地2027年爬坡进度的假设差异上；合肥/北京两地各口径基本一致，差异集中在上海基地'
+  },
+  'changxin-sh-2026-27': {
+    type: 'conflict',
+    label: '长鑫存储·上海基地 2026E/2027E 产能（千片/月）',
+    sources: [
+      { source: '本表旧测算（仅一期A3，2027年起规划）', value: '2026E —（未爬坡）　2027E 30' },
+    ],
+    chosen: '机构最新口径：2026E 50、2027E 140（分阶段释放）',
+    note: '2027E 140已超过一期A3单期规划产能（100），隐含上海基地有未单列的新增产能爬坡或扩产假设上修，机构口径未拆分到子阶段'
+  },
+  'yangtze-2026-27': {
+    type: 'conflict',
+    label: '长江存储 2026E/2027E 总产能（千片/月）',
+    sources: [
+      { source: '本表旧测算（三期按原计划2027年起量，2027E仅50）', value: '2026E 200　2027E 250' },
+    ],
+    chosen: '公司最新规划：武汉三期量产提前至2026H2、新增100，达产后总产能升至约300（30万片/月，现有约200）；2027E在三期爬坡基础上稳固300平台',
+    note: '公司另规划再建两座全新晶圆厂，全部落地后总产能较当前提升超100%，但具体落地时间与2027年内贡献尚未披露，本表2027E暂未计入新厂贡献'
+  },
+  'yangtze-p3-2026-27': {
+    type: 'conflict',
+    label: '长江存储·武汉三期 2026E/2027E 产能（千片/月）',
+    sources: [
+      { source: '本表旧测算（三期2027年起量，2026E未投产）', value: '2026E —（未投产）　2027E 50' },
+    ],
+    chosen: '公司最新规划：三期提前至2026H2投产，新增100产能，2026E即达100；2027E维持100（爬坡稳固，暂不进一步新增）',
+    note: '三期提前是2026年长江存储产能上修的核心唯一驱动；两座新规划晶圆厂的时间表与年内贡献未明确，未计入本表预测'
+  }
+};
+
+const tipBubble = document.createElement('div');
+tipBubble.className = 'tip-bubble';
+document.body.appendChild(tipBubble);
+
+function buildTipHtml(key) {
+  const d = tipData[key];
+  if (!d) return '';
+  const icon = d.type === 'history' ? '📅' : '⚠️';
+  let html = `<div class="tip-title">${icon} ${d.label}</div>`;
+  if (d.type === 'history') {
+    d.records.forEach(r => {
+      const dc = r.delta === '↑' ? 'tip-delta-up' : r.delta === '↓' ? 'tip-delta-dn' : 'tip-delta-eq';
+      html += `<div class="tip-row">
+        <span class="tip-date">${r.date}</span>
+        <span class="tip-val">${r.value}</span>
+        <span class="${dc}">${r.delta}</span>
+        <span class="tip-src">${r.source}</span>
+      </div>`;
+    });
+  } else if (d.type === 'conflict') {
+    d.sources.forEach(s => {
+      html += `<div class="tip-conflict-row">
+        <span class="tip-conflict-src">来源：${s.source}</span>
+        <span class="tip-conflict-val">${s.value}</span>
+      </div>`;
+    });
+    if (d.chosen) html += `<div class="tip-chosen">✓ 采用：${d.chosen}</div>`;
+  }
+  if (d.note) html += `<div class="tip-note">${d.note}</div>`;
+  return html;
+}
+
+function positionTip(e) {
+  const bw = tipBubble.offsetWidth, bh = tipBubble.offsetHeight;
+  const x = e.clientX + 14, y = e.clientY + 14;
+  tipBubble.style.left = (x + bw > window.innerWidth - 10 ? e.clientX - bw - 14 : x) + 'px';
+  tipBubble.style.top  = (y + bh > window.innerHeight - 10 ? e.clientY - bh - 14 : y) + 'px';
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('[data-tip]').forEach(el => {
+    el.classList.add('tip-host');
+    el.addEventListener('mouseenter', e => {
+      tipBubble.innerHTML = buildTipHtml(el.dataset.tip);
+      tipBubble.classList.add('visible');
+      positionTip(e);
+    });
+    el.addEventListener('mousemove', positionTip);
+    el.addEventListener('mouseleave', () => tipBubble.classList.remove('visible'));
+  });
+
+  // ── 图片点击放大 ──
+  const lightbox = document.getElementById('imgLightbox');
+  const lightboxPic = document.getElementById('imgLightboxPic');
+  document.querySelectorAll('.zoomable-img').forEach(img => {
+    img.addEventListener('click', () => {
+      lightboxPic.src = img.src;
+      lightboxPic.alt = img.alt;
+      lightbox.classList.add('visible');
+    });
+  });
+  lightbox.addEventListener('click', () => lightbox.classList.remove('visible'));
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') lightbox.classList.remove('visible'); });
+});
 </script>
 </body>
 </html>
