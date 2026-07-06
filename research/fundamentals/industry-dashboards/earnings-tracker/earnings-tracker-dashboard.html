@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>业绩跟踪看板（公开版）</title>
+<style>
+  :root {
+    --bg: #f8f9fa; --card: #ffffff; --border: #e9ecef;
+    --text-primary: #212529; --text-secondary: #6c757d; --accent: #2563eb;
+    --up: #16a34a; --down: #dc2626; --neutral: #d97706;
+    --up-bg: #f0fdf4; --down-bg: #fef2f2; --neutral-bg: #fffbeb;
+    --tag-bg: #eff6ff; --tag-text: #1d4ed8;
+    --shadow: 0 1px 3px rgba(0,0,0,.08), 0 1px 2px rgba(0,0,0,.04);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+    background: var(--bg); color: var(--text-primary); font-size: 14px; line-height: 1.6; }
+  .header { background: var(--card); border-bottom: 1px solid var(--border); padding: 20px 32px;
+    display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; box-shadow: var(--shadow); }
+  .header-left { display: flex; align-items: center; gap: 16px; }
+  .title { font-size: 22px; font-weight: 700; }
+  .meta { font-size: 12px; color: var(--text-secondary); }
+  .container { max-width: 1280px; margin: 0 auto; padding: 24px 32px; }
+  .kpi-row { display: grid; grid-template-columns: repeat(5, 1fr); gap: 14px; margin-bottom: 24px; }
+  .kpi { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 16px; box-shadow: var(--shadow); }
+  .kpi .num { font-size: 26px; font-weight: 700; }
+  .kpi .label { font-size: 12px; color: var(--text-secondary); margin-top: 4px; }
+  .kpi.beat .num { color: var(--up); }
+  .kpi.miss .num { color: var(--down); }
+  .kpi.pending .num { color: var(--text-secondary); }
+  .filters { display: flex; gap: 10px; margin-bottom: 16px; flex-wrap: wrap; }
+  .filters select, .filters input { padding: 6px 10px; border: 1px solid var(--border); border-radius: 6px; font-size: 13px; }
+  table { width: 100%; table-layout: fixed; border-collapse: collapse; background: var(--card); border-radius: 10px; overflow: hidden; box-shadow: var(--shadow); }
+  th, td { padding: 10px 14px; text-align: left; border-bottom: 1px solid var(--border); font-size: 13px; overflow-wrap: break-word; }
+  th { background: #f1f3f5; cursor: pointer; user-select: none; font-weight: 600; color: var(--text-secondary); }
+  tr:hover td { background: #fafbfc; }
+  .tag { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 12px; font-weight: 600; }
+  .tag.beat { background: var(--up-bg); color: var(--up); }
+  .tag.meet { background: var(--neutral-bg); color: var(--neutral); }
+  .tag.miss { background: var(--down-bg); color: var(--down); }
+  .tag.pending { background: #f1f3f5; color: var(--text-secondary); }
+  .pct-up { color: var(--up); font-weight: 600; }
+  .pct-down { color: var(--down); font-weight: 600; }
+  .empty { text-align: center; padding: 60px 0; color: var(--text-secondary); }
+  .name-cell { position: relative; }
+  .name-note, .pct-note { border-bottom: 1px dashed var(--accent); cursor: help; }
+  tr.related td { font-style: italic; color: var(--text-secondary); }
+  tr.related td.name-cell { padding-left: 28px; }
+  .tooltip {
+    position: fixed; z-index: 1000; max-width: 420px; background: var(--card);
+    border: 1px solid var(--border); border-radius: 10px; box-shadow: var(--shadow-md, 0 4px 6px rgba(0,0,0,.12));
+    padding: 12px 14px; font-size: 12.5px; line-height: 1.7; color: var(--text-primary);
+    white-space: pre-line; display: none; pointer-events: none;
+  }
+</style>
+</head>
+<body>
+<div class="header">
+  <div class="header-left">
+    <div class="title">业绩跟踪看板（公开版）</div>
+    <div class="meta">业绩季个股财报 &amp; 股价反应速记</div>
+  </div>
+  <div class="meta">生成时间: 2026-07-06</div>
+</div>
+<div class="container">
+  <div class="kpi-row">
+    <div class="kpi"><div class="num">8</div><div class="label">已记录公司</div></div>
+    <div class="kpi beat"><div class="num">2</div><div class="label">超预期</div></div>
+    <div class="kpi"><div class="num">1</div><div class="label">符合预期</div></div>
+    <div class="kpi miss"><div class="num">1</div><div class="label">低于预期</div></div>
+    <div class="kpi pending"><div class="num">4</div><div class="label">待披露</div></div>
+  </div>
+  <div class="filters">
+    <select id="fRating">
+      <option value="">全部评价</option>
+      <option value="超预期">超预期</option>
+      <option value="符合预期">符合预期</option>
+      <option value="低于预期">低于预期</option>
+      <option value="待披露">待披露</option>
+    </select>
+    <select id="fIndustry"><option value="">全部行业</option></select>
+    <input id="fSearch" placeholder="搜索代码/名称">
+  </div>
+  <table id="tbl">
+    <colgroup>
+      <col style="width:9%"><col style="width:10%"><col style="width:13%">
+      <col style="width:9%"><col style="width:12%">
+      <col style="width:15.67%"><col style="width:15.67%"><col style="width:15.66%">
+    </colgroup>
+    <thead>
+      <tr>
+        <th data-k="rating">评价</th><th data-k="code">代码</th><th data-k="name">名称</th>
+        <th data-k="industry">行业</th><th data-k="report_date">财报日期</th>
+        <th data-k="d1">1日</th><th data-k="d3">3日</th><th data-k="w1">1周</th>
+      </tr>
+    </thead>
+    <tbody id="tbody"></tbody>
+  </table>
+  <div class="empty" id="emptyMsg" style="display:none;">暂无记录 — 在 companies/ 下新增公司速记后重新运行 build_dashboard.py + render_html.py</div>
+</div>
+<div class="tooltip" id="tooltip"></div>
+<script>
+const DATA = [{"code": "600105.SH", "name": "永鼎股份", "industry": "光纤光缆", "period": "2026H1(预告)", "report_date": "2026-07-03", "report_date_note": "财报前5日：-17%，同期中际旭创-11%，跑输约6pp\n", "rating": "超预期", "d1": -8.0, "d3": null, "w1": null, "d1_note": "T+1(7/3)：高开5%，收跌8%；同期中际旭创跌1.5%，跑输约6.5pp\n", "d3_note": "", "w1_note": "", "note": "机构观点：\n• Q2利润超预期，光纤光缆贡献弹性，加回汽车线束/海外工程拖累后Q2利润5亿+\n• 鼎芯光电光芯片供不应求，产能持续爬坡\n• 光棒光纤扩产至1050吨/3600万芯公里，聚焦高价值产品\n• 高温超导带材（核聚变方向）市场未充分定价，预期差大\n• 维持推荐\n\n机构观点：\n• 26H1预告扣非净利润4.9-6.9亿元(中值)，同比+55%~119%，超预期，逐季有望兑现\n• 行业侧光纤价格持续超预期上涨（中国区环比5月+10%以上），支撑业绩逻辑", "related_to": "", "file": "companies/600105.SH_永鼎股份.md", "seq": 0}, {"code": "600487.SH", "name": "亨通光电", "industry": "光纤光缆", "period": "联动-永鼎股份26H1预告", "report_date": "2026-07-03", "report_date_note": "", "rating": "待披露", "d1": -5.39, "d3": null, "w1": null, "d1_note": "", "d3_note": "", "w1_note": "", "note": "", "related_to": "600105.SH", "file": "companies/600487.SH_亨通光电.md", "seq": 1}, {"code": "600522.SH", "name": "中天科技", "industry": "光纤光缆", "period": "联动-永鼎股份26H1预告", "report_date": "2026-07-03", "report_date_note": "", "rating": "待披露", "d1": -4.36, "d3": null, "w1": null, "d1_note": "", "d3_note": "", "w1_note": "", "note": "", "related_to": "600105.SH", "file": "companies/600522.SH_中天科技.md", "seq": 2}, {"code": "6869.HK", "name": "长飞光纤", "industry": "光纤光缆", "period": "联动-永鼎股份26H1预告", "report_date": "2026-07-03", "report_date_note": "", "rating": "待披露", "d1": -15.01, "d3": null, "w1": null, "d1_note": "", "d3_note": "", "w1_note": "", "note": "", "related_to": "600105.SH", "file": "companies/6869.HK_长飞光纤.md", "seq": 3}, {"code": "603618.SH", "name": "杭电股份", "industry": "光纤光缆", "period": "2026H1(预告)", "report_date": "2026-07-03", "report_date_note": "财报前5日：-5.8%，同期中际旭创-11%，跑赢约5.2pp\n", "rating": "低于预期", "d1": -10.0, "d3": null, "w1": null, "d1_note": "T+1(7/3)：开盘涨1.3%，盘中跌停，收跌跌停-10%；同期中际旭创跌1.5%，跑输约8.5pp\n", "d3_note": "", "w1_note": "", "note": "", "related_to": "", "file": "companies/603618.SH_杭电股份.md", "seq": 4}, {"code": "301308.SZ", "name": "江波龙", "industry": "存储", "period": "2026H1(预告)", "report_date": "2026-07-03", "report_date_note": "财报前5日：-9%，同期中际旭创-11%，跑赢约2pp\n", "rating": "符合预期", "d1": 10.3, "d3": null, "w1": null, "d1_note": "T+1(7/3)：上涨10.3%，全天走势持平；同期中际旭创跌1.5%，跑赢约11.8pp\n", "d3_note": "", "w1_note": "", "note": "", "related_to": "", "file": "companies/301308.SZ_江波龙.md", "seq": 5}, {"code": "301165.SZ", "name": "锐捷网络", "industry": "网络设备", "period": "2026H1(预告)", "report_date": "2026-07-02", "report_date_note": "财报前5日：+27%，科创50-3.8%，超额+30.8pp（存在抢跑）\n", "rating": "超预期", "d1": 11.3, "d3": null, "w1": null, "d1_note": "T+1(7/3)：高开20%单边回落，收涨11.3%；科创50-0.6%，超额+11.9pp\nT+2(7/6)：涨7.5%；科创50+1.0%，超额+6.5pp\n", "d3_note": "", "w1_note": "", "note": "个人判断：\n• 26H1归母净利润中值6.75亿，yoy+49.3%（上限7.5亿，yoy+65.9%），超预期\n• Q2加速交付，超节点/交换机放量下半年望持续兑现", "related_to": "", "file": "companies/301165.SZ_锐捷网络.md", "seq": 6}, {"code": "688702.SH", "name": "盛科通信", "industry": "国产算力", "period": "联动-锐捷网络26H1预告", "report_date": "2026-07-02", "report_date_note": "", "rating": "待披露", "d1": -8.0, "d3": null, "w1": null, "d1_note": "锐捷网络联动（非自身财报）\nT+1(7/3)：高开8%，冲高回落收跌8%\nT+2(7/6)：反弹10.3%\n", "d3_note": "", "w1_note": "", "note": "关联标的（非自身财报）：\n• 锐捷网络业绩发布后联动，非自身披露\n• T+1高开8%冲高回落收跌8%，T+2反弹10.3%", "related_to": "301165.SZ", "file": "companies/688702.SH_盛科通信.md", "seq": 7}];
+const RATING_CLASS = {"超预期":"beat","符合预期":"meet","低于预期":"miss","待披露":"pending"};
+
+function pctCell(v, note) {
+  if (v === null || v === undefined) return '-';
+  const cls = v > 0 ? 'pct-up' : (v < 0 ? 'pct-down' : '');
+  const text = `${v > 0 ? '+' : ''}${v.toFixed(1)}%`;
+  if (note) {
+    return `<span class="${cls} pct-note" data-note="${encodeURIComponent(note)}">${text}</span>`;
+  }
+  return `<span class="${cls}">${text}</span>`;
+}
+
+let sortKey = 'seq', sortAsc = true;
+const RATING_ORDER = {"超预期":0,"符合预期":1,"低于预期":2,"待披露":3};
+
+function render() {
+  const rating = document.getElementById('fRating').value;
+  const industry = document.getElementById('fIndustry').value;
+  const q = document.getElementById('fSearch').value.trim().toLowerCase();
+  let rows = DATA.filter(c =>
+    (!rating || c.rating === rating) &&
+    (!industry || c.industry === industry) &&
+    (!q || c.code.toLowerCase().includes(q) || (c.name||'').toLowerCase().includes(q))
+  );
+  rows.sort((a,b) => {
+    let av = a[sortKey], bv = b[sortKey];
+    if (sortKey === 'rating') { av = RATING_ORDER[av]; bv = RATING_ORDER[bv]; }
+    if (av === null || av === undefined) av = sortKey==='d1'||sortKey==='d3'||sortKey==='w1' ? -Infinity : '';
+    if (bv === null || bv === undefined) bv = sortKey==='d1'||sortKey==='d3'||sortKey==='w1' ? -Infinity : '';
+    if (av < bv) return sortAsc ? -1 : 1;
+    if (av > bv) return sortAsc ? 1 : -1;
+    return 0;
+  });
+  const tbody = document.getElementById('tbody');
+  tbody.innerHTML = rows.map(c => {
+    const nameInner = c.note ? `<span class="name-note" data-note="${encodeURIComponent(c.note)}">${c.name||'-'}</span>` : (c.name||'-');
+    const ratingCell = c.related_to ? '' : `<span class="tag ${RATING_CLASS[c.rating]||'pending'}">${c.rating}</span>`;
+    const dateInner = c.report_date_note ? `<span class="pct-note" data-note="${encodeURIComponent(c.report_date_note)}">${c.report_date||'-'}</span>` : (c.report_date||'-');
+    return `
+    <tr class="${c.related_to ? 'related' : ''}">
+      <td>${ratingCell}</td>
+      <td>${c.code}</td>
+      <td class="name-cell">${nameInner}</td>
+      <td>${c.industry||'-'}</td>
+      <td>${dateInner}</td>
+      <td>${pctCell(c.d1, c.d1_note)}</td>
+      <td>${pctCell(c.d3, c.d3_note)}</td>
+      <td>${pctCell(c.w1, c.w1_note)}</td>
+    </tr>`;
+  }).join('');
+  document.getElementById('tbl').style.display = rows.length ? 'table' : 'none';
+  document.getElementById('emptyMsg').style.display = rows.length ? 'none' : 'block';
+}
+
+document.querySelectorAll('th[data-k]').forEach(th => {
+  th.addEventListener('click', () => {
+    const k = th.dataset.k;
+    if (sortKey === k) sortAsc = !sortAsc; else { sortKey = k; sortAsc = true; }
+    render();
+  });
+});
+
+const industries = [...new Set(DATA.map(c => c.industry).filter(Boolean))].sort();
+const fIndustry = document.getElementById('fIndustry');
+industries.forEach(ind => {
+  const opt = document.createElement('option');
+  opt.value = ind; opt.textContent = ind;
+  fIndustry.appendChild(opt);
+});
+
+['fRating','fIndustry'].forEach(id => document.getElementById(id).addEventListener('change', render));
+document.getElementById('fSearch').addEventListener('input', render);
+
+const tooltipEl = document.getElementById('tooltip');
+document.getElementById('tbody').addEventListener('mouseover', e => {
+  const el = e.target.closest('.name-note, .pct-note');
+  if (!el) return;
+  tooltipEl.textContent = decodeURIComponent(el.dataset.note);
+  tooltipEl.style.display = 'block';
+});
+document.getElementById('tbody').addEventListener('mousemove', e => {
+  if (tooltipEl.style.display !== 'block') return;
+  const pad = 16;
+  let x = e.clientX + pad, y = e.clientY + pad;
+  const maxX = window.innerWidth - tooltipEl.offsetWidth - pad;
+  const maxY = window.innerHeight - tooltipEl.offsetHeight - pad;
+  tooltipEl.style.left = Math.min(x, Math.max(pad, maxX)) + 'px';
+  tooltipEl.style.top = Math.min(y, Math.max(pad, maxY)) + 'px';
+});
+document.getElementById('tbody').addEventListener('mouseout', e => {
+  if (e.target.closest('.name-note, .pct-note')) tooltipEl.style.display = 'none';
+});
+
+render();
+</script>
+</body>
+</html>
