@@ -1047,24 +1047,26 @@ code{font-size:10px;background:var(--tag-bg);color:var(--tag);padding:1px 5px;bo
         <div>
           <table class="ctable" style="font-size:11px">
             <thead><tr>
-              <th>公司</th><th>代码</th><th>2022</th><th>2023</th><th>2024</th><th style="color:var(--up)">2025</th><th>25 YoY</th>
+              <th>公司</th><th>代码</th><th>2022</th><th>2023</th><th>2024</th><th>2025</th><th>26Q1</th><th style="color:var(--up)">2026E</th><th>26E YoY</th>
             </tr></thead>
             <tbody>
-              <tr><td><strong>鹏鼎控股</strong></td><td><code>002938</code></td><td>43.4</td><td>35.1</td><td>28.4</td><td><strong style="color:var(--up)">66.3</strong></td><td><span class="yp">+133%</span></td></tr>
-              <tr><td><strong>胜宏科技</strong></td><td><code>300476</code></td><td>10.6</td><td>6.4</td><td>8.3</td><td><strong style="color:var(--up)">66.2</strong></td><td><span class="yp" style="color:var(--dn)">+698% 🔴</span></td></tr>
-              <tr><td><strong>深南电路</strong></td><td><code>002916</code></td><td>33.8</td><td>32.5</td><td>25.3</td><td><strong style="color:var(--up)">37.7</strong></td><td><span class="yp">+49%</span></td></tr>
-              <tr><td><strong>沪电股份</strong></td><td><code>002463</code></td><td>8.8</td><td>8.1</td><td>21.5</td><td><strong style="color:var(--up)">32.0</strong></td><td><span class="yp">+49%</span></td></tr>
-              <tr><td><strong>景旺电子</strong></td><td><code>603228</code></td><td>18.9</td><td>14.5</td><td>18.5</td><td><strong style="color:var(--up)">27.7</strong></td><td><span class="yp">+50%</span></td></tr>
-              <tr><td><strong>生益电子</strong></td><td><code>688183</code></td><td>6.9</td><td>6.2</td><td>4.2</td><td><strong style="color:var(--up)">16.4</strong></td><td><span class="yp">+290%</span></td></tr>
+              <tr><td><strong>鹏鼎控股</strong></td><td><code>002938</code></td><td>43.4</td><td>35.1</td><td>28.4</td><td>66.3</td><td>28.2</td><td><strong style="color:var(--up)">168.0</strong></td><td><span class="yp">+153%</span></td></tr>
+              <tr><td><strong>胜宏科技</strong></td><td><code>300476</code></td><td>10.6</td><td>6.4</td><td>8.3</td><td>66.2</td><td>35.4</td><td><strong style="color:var(--up)">200.0</strong></td><td><span class="yp">+202%</span></td></tr>
+              <tr><td><strong>深南电路</strong></td><td><code>002916</code></td><td>33.8</td><td>32.5</td><td>25.3</td><td>37.7</td><td>19.9</td><td><strong style="color:var(--up)">94.3</strong></td><td><span class="yp">+150%</span></td></tr>
+              <tr><td><strong>沪电股份</strong></td><td><code>002463</code></td><td>8.8</td><td>8.1</td><td>21.5</td><td>32.0</td><td>14.7</td><td><strong style="color:var(--up)">70.4</strong></td><td><span class="yp">+120%</span></td></tr>
+              <tr><td><strong>景旺电子</strong></td><td><code>603228</code></td><td>18.9</td><td>14.5</td><td>18.5</td><td>27.7</td><td>12.6</td><td><strong style="color:var(--up)">60.9</strong></td><td><span class="yp">+120%</span></td></tr>
+              <tr><td><strong>生益电子</strong></td><td><code>688183</code></td><td>6.9</td><td>6.2</td><td>4.2</td><td>16.4</td><td>6.5</td><td><strong style="color:var(--up)">49.2</strong></td><td><span class="yp">+200%</span></td></tr>
               <tr style="background:#f0fdf4">
                 <td><strong>合计</strong></td><td style="color:var(--text2)">—</td>
                 <td><strong>122.4</strong></td><td><strong>102.8</strong></td><td><strong>106.2</strong></td>
-                <td><strong style="color:var(--up);font-size:13px">246.3</strong></td>
-                <td><span class="yp" style="font-weight:700">+132%</span></td>
+                <td><strong>246.3</strong></td>
+                <td><strong>117.3</strong></td>
+                <td><strong style="color:var(--up);font-size:13px">642.8</strong></td>
+                <td><span class="yp" style="font-weight:700">+161%</span></td>
               </tr>
             </tbody>
           </table>
-          <div style="font-size:10px;color:var(--text2);margin-top:5px">注：2025年为年报实际值；2021年历史峰值约150亿（本轮已超历史高点+64%）</div>
+          <div style="font-size:10px;color:var(--text2);margin-top:5px">注：2025年为年报实际值，26Q1为单季实际值；2026E为用户预测（鹏鼎/胜宏给绝对值，深南/沪电/景旺/生益电子按YoY%反推）；2021年历史峰值约150亿（本轮2025已超历史高点+64%，2026E预测进一步达历史峰值的4.3倍）</div>
         </div>
         <!-- 趋势图 -->
         <div class="chart-box" style="padding:12px 14px">
@@ -1655,14 +1657,14 @@ mkRevChart('c-equip-rev',D.equip);mkGmChart('c-equip-gm', D.equip);
   new Chart(ctx, {
     type: 'bar',
     data: {
-      labels: ['2018','2019','2020','2021','2022','2023','2024','2025'],
+      labels: ['2018','2019','2020','2021','2022','2023','2024','2025','2026E'],
       datasets: [
-        { label:'鹏鼎控股', data:[40.4,38.5,54.5,69.7,43.4,35.1,28.4,66.3], backgroundColor:'#7c3aed' },
-        { label:'胜宏科技', data:[11.6,14.8,21.0,15.4,10.6,6.4,8.3,66.2],  backgroundColor:'#dc2626' },
-        { label:'深南电路', data:[11.8,21.8,24.9,26.6,33.8,32.5,25.3,37.7], backgroundColor:'#0891b2' },
-        { label:'沪电股份', data:[2.7,4.4,3.7,5.0,8.8,8.1,21.5,32.0],      backgroundColor:'#16a34a' },
-        { label:'景旺电子', data:[5.3,9.2,18.8,23.9,18.9,14.5,18.5,27.7],  backgroundColor:'#d97706' },
-        { label:'生益电子', data:[2.7,5.8,10.7,9.8,6.9,6.2,4.2,16.4],      backgroundColor:'#94a3b8' },
+        { label:'鹏鼎控股', data:[40.4,38.5,54.5,69.7,43.4,35.1,28.4,66.3,168],   backgroundColor:'#7c3aed' },
+        { label:'胜宏科技', data:[11.6,14.8,21.0,15.4,10.6,6.4,8.3,66.2,200],     backgroundColor:'#dc2626' },
+        { label:'深南电路', data:[11.8,21.8,24.9,26.6,33.8,32.5,25.3,37.7,94.3],  backgroundColor:'#0891b2' },
+        { label:'沪电股份', data:[2.7,4.4,3.7,5.0,8.8,8.1,21.5,32.0,70.4],       backgroundColor:'#16a34a' },
+        { label:'景旺电子', data:[5.3,9.2,18.8,23.9,18.9,14.5,18.5,27.7,60.9],   backgroundColor:'#d97706' },
+        { label:'生益电子', data:[2.7,5.8,10.7,9.8,6.9,6.2,4.2,16.4,49.2],       backgroundColor:'#94a3b8' },
       ]
     },
     options: {

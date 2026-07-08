@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AMAT 应用材料 · 美股映射（半导体设备 WFE 综合龙头）</title>
+<style>
+:root{
+  --bg:#f7f8fa;--card:#fff;--border:#e6e8eb;
+  --text:#1a1d21;--text2:#586271;--text3:#8a94a3;
+  /* AMAT 品牌色：深青蓝 */
+  --accent:#1d6f8c;--accent2:#9fd8e8;--accent-bg:#eff9fb;--accent-ink:#124a5c;
+  --up:#15803d;--up-bg:#eaf6ee;--up-ink:#136130;
+  --dn:#c01d24;--dn-bg:#fbeaeb;--dn-ink:#9a161c;
+  --warn:#b45309;--warn-bg:#fdf4e7;
+  --neu:#475569;--neu-bg:#eef1f5;--neu-bd:#c3cdd9;--neu-ink:#334155;
+  --neu2:#64748b;--neu2-bg:#f4f6f9;--neu2-bd:#d7dee6;
+  --sh:0 1px 3px rgba(0,0,0,.07);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;background:var(--bg);color:var(--text);font-size:14px;line-height:1.6}
+a{color:var(--accent);text-decoration:none}
+a:hover{text-decoration:underline}
+.hdr{background:var(--card);border-bottom:1px solid var(--border);padding:14px 32px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:var(--sh)}
+.hdr-l{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.hdr-title{font-size:19px;font-weight:800}
+.hdr-sub{font-size:11px;color:var(--text2);margin-top:1px}
+.badge{display:inline-flex;align-items:center;padding:3px 10px;border-radius:12px;font-size:11px;font-weight:700;white-space:nowrap}
+.b-ac{background:var(--accent-bg);color:var(--accent);border:1px solid var(--accent2)}
+.b-neu{background:var(--neu-bg);color:var(--neu-ink);border:1px solid var(--neu-bd)}
+.hdr-back{display:inline-flex;align-items:center;gap:5px;padding:5px 12px;border:1px solid var(--accent2);border-radius:8px;background:var(--accent-bg);color:var(--accent);font-size:12px;font-weight:700;text-decoration:none;transition:all .15s}
+.hdr-back:hover{background:var(--accent);color:#fff}
+.hdr-meta{font-size:10.5px;color:var(--text2);text-align:right;line-height:1.7}
+.wrap{max-width:1080px;margin:0 auto;padding:20px 32px 60px}
+.sec{margin-bottom:16px;background:var(--card);border:1px solid var(--border);border-radius:10px;box-shadow:var(--sh);overflow:hidden}
+.sec-hd{padding:11px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;cursor:pointer;background:#fafbfc;user-select:none}
+.sec-hd:hover{background:#f1f3f5}
+.sec-ttl{font-size:13px;font-weight:700;display:flex;align-items:center;gap:8px}
+.sec-num{display:inline-flex;align-items:center;justify-content:center;min-width:20px;height:20px;padding:0 6px;border-radius:10px;background:var(--accent);color:#fff;font-size:11px;font-weight:800;flex-shrink:0;font-variant-numeric:tabular-nums}
+.sec-num.sub{background:var(--accent-bg);color:var(--accent);border:1px solid var(--accent2);font-size:10px}
+.sec-arrow{font-size:12px;color:var(--text2);transition:transform .2s}
+.sec-hd.collapsed .sec-arrow{transform:rotate(-90deg)}
+.sec-body{padding:18px}
+.sec-body.collapsed{display:none}
+.ctable{width:100%;border-collapse:collapse;font-size:12.5px}
+.ctable th{background:#f1f3f5;padding:7px 10px;text-align:left;font-weight:700;border-bottom:2px solid var(--border);font-size:11.5px;color:var(--text2);white-space:nowrap}
+.ctable td{padding:7px 10px;border-bottom:1px solid #f1f3f5;vertical-align:middle}
+.ctable tr:last-child td{border-bottom:none}
+.ctable .num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.ctable .latest{background:var(--accent-bg)}
+.ctable .latest td{font-weight:600}
+.tag{display:inline-block;padding:1px 6px;border-radius:4px;font-size:10px;font-weight:700;border:1px solid;white-space:nowrap}
+.tag-ac{background:var(--accent-bg);color:var(--accent);border-color:var(--accent2)}
+.tag-est{background:#f1f5f9;color:var(--text2);border-color:#cbd5e1}
+.tag-up{background:var(--up-bg);color:var(--up);border-color:#86efac}
+.tag-dn{background:var(--dn-bg);color:var(--dn);border-color:#fca5a5}
+.tag-warn{background:var(--warn-bg);color:var(--warn);border-color:#fcd34d}
+.note{font-size:11px;color:var(--text2);margin-top:10px;line-height:1.6}
+.note b{color:var(--text)}
+.foot{text-align:center;font-size:11px;color:var(--text2);padding:14px;margin-top:10px}
+.kpi-ttl{font-size:11px;font-weight:700;color:var(--text2);letter-spacing:.3px;margin:2px 0 8px}
+.kpi-strip{display:grid;grid-template-columns:repeat(7,1fr);gap:10px;margin-bottom:18px}
+@media(max-width:980px){.kpi-strip{grid-template-columns:repeat(4,1fr)}}
+@media(max-width:560px){.kpi-strip{grid-template-columns:repeat(2,1fr)}}
+.kpi{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:11px 13px;box-shadow:var(--sh);display:flex;flex-direction:column}
+.kpi.accent{border:1.5px solid var(--accent2);background:var(--accent-bg)}
+.kpi .k-lbl{font-size:11px;color:var(--text2);font-weight:600}
+.kpi .k-val{font-size:19px;font-weight:900;letter-spacing:-.5px;margin-top:3px;line-height:1.1}
+.kpi.accent .k-val{color:var(--accent)}
+.kpi .k-unit{font-size:11px;font-weight:700;color:var(--text2);margin-left:2px}
+.kpi .k-sub{font-size:10px;color:var(--text2);margin-top:4px}
+.kpi .k-sub b{color:var(--up)}
+.why-wrap{border:1.5px dashed var(--accent2);background:var(--accent-bg);border-radius:10px;padding:15px 16px;margin-bottom:20px}
+.why-hd{font-size:12.5px;font-weight:800;color:var(--accent);margin-bottom:10px}
+.plist{display:flex;flex-direction:column;gap:9px}
+.plist>div{line-height:1.85;font-size:11.5px;color:var(--text2)}
+.plist>div b{color:var(--text)}
+.plist .pn{display:inline-flex;align-items:center;justify-content:center;width:17px;height:17px;border-radius:50%;font-size:9.5px;font-weight:800;color:#fff;margin-right:6px;vertical-align:1px;flex-shrink:0}
+.gs-cap{font-size:11.5px;font-weight:700;color:var(--accent);margin:14px 0 8px}
+.gs-cap span{color:var(--text2);font-weight:400;font-size:10.5px}
+.gsfc{width:100%;border-collapse:collapse;font-size:11.5px;margin:4px 0 6px}
+.gsfc th{background:var(--accent-bg);color:var(--accent);padding:6px 8px;font-weight:800;font-size:11px;text-align:center;border:1px solid var(--accent2)}
+.gsfc th:first-child{text-align:left}
+.gsfc td{padding:6px 8px;text-align:center;border:1px solid var(--border);font-variant-numeric:tabular-nums}
+.gsfc td:first-child{text-align:left;font-weight:700;color:var(--text2)}
+.gsfc .rev td{font-weight:900;color:var(--text);font-size:13px}
+.gsfc .rev td:first-child{font-size:11.5px;color:var(--accent)}
+.gsfc .yoy td{color:var(--up);font-weight:700;font-size:11px}
+.gsfc .yoy td:first-child{color:var(--text2);font-weight:700}
+.gco{color:var(--dn)}
+.eng3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:14px}
+@media(max-width:760px){.eng3{grid-template-columns:1fr}}
+.eng{border:1px solid var(--border);border-top:3px solid;border-radius:10px;overflow:hidden;background:var(--card)}
+.eng-hd{padding:10px 14px;font-size:13px;font-weight:800;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.eng-hd .pct{margin-left:auto;font-size:10px;font-weight:800;color:#fff;border-radius:5px;padding:2px 8px}
+.eng-bd{padding:0 14px 14px;font-size:11.5px;color:var(--text2);line-height:1.85}
+.eng-bd b{color:var(--text)}
+.spine{border:1px solid var(--border);border-radius:9px;overflow:hidden}
+.lane{display:flex;gap:12px;align-items:stretch;padding:13px 14px;border-bottom:1px solid #f1f3f5}
+.lane:last-child{border-bottom:none}
+.lane-req{width:185px;flex-shrink:0;border-left:4px solid;padding-left:11px}
+.lr-t{font-size:12.5px;font-weight:800}
+.lr-d{font-size:10px;color:var(--text2);line-height:1.5;margin-top:3px}
+.lr-d em{font-style:normal;font-weight:700}
+.lane-arrow{display:flex;align-items:center;color:#cbd5e1;font-weight:900;font-size:17px;flex-shrink:0}
+.lane-fill{flex:1;display:flex;flex-wrap:wrap;gap:7px;align-items:center}
+.fchip{font-size:11px;font-weight:700;border-radius:6px;padding:5px 11px;border:1.5px solid;background:var(--card)}
+.lane-w{width:160px;flex-shrink:0;display:flex;flex-direction:column;gap:4px;align-items:flex-end;justify-content:center}
+@media(max-width:840px){.lane{flex-direction:column;gap:9px}.lane-req,.lane-w{width:auto}.lane-arrow{display:none}.lane-w{flex-direction:row;justify-content:flex-start}}
+.concl{margin-top:16px;border:1.5px solid var(--accent2);border-radius:9px;background:var(--accent-bg);padding:14px 16px;font-size:12px;line-height:1.95;color:var(--text)}
+.concl b{color:var(--accent-ink)}
+.sec.mid{border:1.5px solid var(--accent2);background:linear-gradient(180deg,var(--accent-bg) 0%,#fff 60%)}
+.sec.mid .sec-hd{background:var(--accent-bg)}
+.mid-thesis{font-size:13px;font-weight:800;color:var(--accent-ink);background:var(--accent-bg);border:1px solid var(--accent2);border-radius:8px;padding:13px 16px;margin-bottom:16px;line-height:1.9}
+.mid-thesis .em{color:var(--dn)}
+.cog-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+@media(max-width:840px){.cog-grid{grid-template-columns:1fr}}
+.cog-card{border:1px solid var(--border);border-radius:10px;padding:14px 14px 12px;background:var(--card);box-shadow:var(--sh);position:relative;display:flex;flex-direction:column}
+.cog-card .cog-no{position:absolute;top:-10px;left:14px;width:24px;height:24px;border-radius:50%;background:var(--accent);color:#fff;font-size:12px;font-weight:900;display:flex;align-items:center;justify-content:center;box-shadow:var(--sh)}
+.cog-card .cog-tt{font-size:13px;font-weight:800;margin:8px 0 8px;line-height:1.45;color:var(--text)}
+.cog-card .cog-tt b{color:var(--accent)}
+.cog-card .cog-body{font-size:11.5px;color:var(--text2);line-height:1.8;flex:1}
+.cog-card .cog-body b{color:var(--text)}
+.cog-card .cog-tag{margin-top:10px;font-size:10.5px;font-weight:700;color:var(--accent-ink);background:#fff;border:1px solid var(--accent2);border-radius:6px;padding:5px 9px;line-height:1.5}
+.cog-card .cog-tag .k{color:var(--text2);font-weight:400}
+</style>
+</head>
+<body>
+
+<header class="hdr">
+  <div class="hdr-l">
+    <a class="hdr-back" href="../us-mapping-dashboard.html">← 返回看板</a>
+    <div>
+      <div class="hdr-title">🔧 AMAT · 应用材料（Applied Materials）</div>
+      <div class="hdr-sub">NASDAQ · 全球半导体设备(WFE)综合份额第一 · 沉积/蚀刻/CMP/离子注入/过程控制全品类覆盖 · <b>半导体制造环节"卖机器的人"，不造芯片只造造芯片的机器</b></div>
+    </div>
+    <span class="badge b-ac">半导体设备 · 先进封装</span>
+    <span class="badge b-neu">GAA · HBM设备 · EPIC生态</span>
+  </div>
+  <div class="hdr-meta">
+    更新：2026-07-01<br>最新季度：Q2 FY2026（自然年2026年2-4月）
+  </div>
+</header>
+
+<div class="wrap">
+
+<!-- 估值水位 -->
+<section class="sec" style="border:1.5px solid var(--accent2)">
+  <div class="sec-hd" onclick="toggleSec(this)">
+    <div class="sec-ttl"><span style="font-size:14px">💰</span>估值水位 · GS Key Data & 预测</div>
+    <span class="sec-arrow">▼</span>
+  </div>
+  <div class="sec-body">
+    <div class="kpi-strip" style="grid-template-columns:repeat(6,1fr)">
+      <div class="kpi accent">
+        <div class="k-lbl">市值 Market Cap</div>
+        <div class="k-val">$577.7<span class="k-unit">bn</span></div>
+        <div class="k-sub">EV $577.5bn（近似净现金状态）</div>
+      </div>
+      <div class="kpi">
+        <div class="k-lbl">3m ADTV</div>
+        <div class="k-val">$4.2<span class="k-unit">bn</span></div>
+        <div class="k-sub">3个月日均成交额</div>
+      </div>
+      <div class="kpi">
+        <div class="k-lbl">M&A Rank</div>
+        <div class="k-val">3</div>
+        <div class="k-sub">高盛并购活跃度排名</div>
+      </div>
+      <div class="kpi accent">
+        <div class="k-lbl">GS目标价</div>
+        <div class="k-val">$520.00</div>
+        <div class="k-sub">12个月期</div>
+      </div>
+      <div class="kpi accent">
+        <div class="k-lbl">一致目标价</div>
+        <div class="k-val">$570.07</div>
+        <div class="k-sub">12个月期，较GS目标价<b>高9.6%</b></div>
+      </div>
+      <div class="kpi">
+        <div class="k-lbl">GS/一致 FY26E EPS</div>
+        <div class="k-val">$12.57<span class="k-unit">/$12.26</span></div>
+        <div class="k-sub">GS略高于市场一致预期</div>
+      </div>
+    </div>
+
+    <div class="gs-cap" style="margin-top:4px">📊 GS 预测 & 隐含估值水位（10月结财年；单位：百万美元，EPS/股息率见标注）</div>
+    <table class="gsfc">
+      <thead><tr><th>指标</th><th>FY25(10/25)</th><th>FY26E(10/26E)</th><th>FY27E(10/27E)</th><th>FY28E(10/28E)</th></tr></thead>
+      <tbody>
+        <tr class="rev"><td>营收</td><td>28,368.0</td><td>33,741.6</td><td>43,715.9</td><td>50,665.1</td></tr>
+        <tr><td>EBITDA</td><td>8,997.0</td><td>11,604.7</td><td>15,707.5</td><td>18,590.6</td></tr>
+        <tr><td>EBIT</td><td>8,562.0</td><td>11,122.7</td><td>15,267.5</td><td>18,150.6</td></tr>
+        <tr><td>净利润</td><td>6,998.0</td><td>10,657.1</td><td>13,786.7</td><td>16,388.9</td></tr>
+        <tr><td>GS EPS（$）</td><td>9.42</td><td>12.57</td><td>17.45</td><td>20.93</td></tr>
+        <tr><td>一致预期EPS（$）</td><td>9.32</td><td>12.26</td><td>16.52</td><td>19.49</td></tr>
+        <tr><td>股息率</td><td>1.0%</td><td>0.3%</td><td>0.3%</td><td>0.4%</td></tr>
+        <tr class="yoy"><td>EV/营收</td><td>20.4x</td><td>17.1x</td><td>13.2x</td><td>11.4x</td></tr>
+        <tr class="yoy"><td>EV/EBITDA</td><td>64.2x</td><td>49.8x</td><td>36.8x</td><td>31.1x</td></tr>
+        <tr class="yoy"><td>GS目标价隐含P/E</td><td>55.2x</td><td>41.4x</td><td>29.8x</td><td>24.8x</td></tr>
+        <tr class="yoy"><td>一致目标价隐含P/E</td><td>60.5x</td><td>45.4x</td><td>32.7x</td><td>27.2x</td></tr>
+      </tbody>
+    </table>
+    <div class="note">📌 <b>估值水位解读</b>：以GS目标价$520计算，隐含P/E从FY25的55.2倍快速压缩至FY28E的24.8倍，EV/EBITDA同步从64.2倍压缩至31.1倍——即当前股价隐含市场预期未来3年EPS高速兑现（GS预测FY26E-28E EPS复合增速约+30%/年，与营收增速18.9%→29.6%→15.9%的节奏对应）。GS目标价$520较市场一致目标价$570.07低<b>9.6%</b>，反映高盛对估值消化节奏的判断相对市场更谨慎；GS FY26E EPS $12.57 略高于市场一致预期$12.26，说明分歧主要在估值倍数给法而非盈利预测本身。</div>
+    <div class="note">📌 股息率从FY25的1.0%降至FY26E-28E的0.3%-0.4%区间，主因模型假设股价快速上行使分母扩大摊薄股息率，而非股息削减——公司2026年3月已上调季度股息15%，与"股东回报持续增长"的资本配置优先级一致。</div>
+  </div>
+</section>
+
+<!-- 定位说明 -->
+<div class="why-wrap">
+  <div class="why-hd">🧭 AMAT 是什么角色？——不造芯片，只造"造芯片的机器"，是全球 WFE（晶圆厂设备）市场综合份额第一的公司</div>
+  <div style="font-size:11.5px;color:var(--text2);line-height:1.7">
+    无论台积电、三星、美光、SK海力士、中芯国际造什么芯片——先进逻辑、DRAM/HBM、NAND、先进封装——都要先向应用材料买设备。AMAT 的独特之处是<b style="color:var(--text)">品类最全</b>：沉积(Deposition)份额~44%、CMP及后CMP清洗份额~66%、离子注入份额~55%、蚀刻份额~15%、过程控制份额~12%（CY22口径），综合 WFE 份额~20%，是唯一一家在"几乎所有制造步骤"都有产品线的设备商（不同于 Lam Research 专注蚀刻/沉积、KLA 专注过程控制、ASML 垂直垄断光刻）。<br>
+    本页的核心问题是：<b style="color:var(--accent)">AMAT 管理层把 2026 年半导体设备收入增速指引从年初 20% 上调到 30%+</b>——这是判断全球 WFE 超级周期强度最权威的先行信号；同时<b style="color:var(--accent)">中国受出口管制限制的业务占比从 10% 翻倍到 20%+</b>，这是判断国产半导体设备替代节奏最直接的海外基准。
+  </div>
+</div>
+
+<!-- KPI -->
+<div class="kpi-ttl">关键指标 · Q2 FY2026 实际数据 + Q3 指引（公司口径，非GAAP）</div>
+<div class="kpi-strip">
+  <div class="kpi accent">
+    <div class="k-lbl">Q2 FY26 营收</div>
+    <div class="k-val">79.1<span class="k-unit">亿$</span></div>
+    <div class="k-sub">创纪录 · 环比<b>+13%</b> · 同比<b>+11%</b></div>
+  </div>
+  <div class="kpi accent">
+    <div class="k-lbl">Q3 FY26 营收指引</div>
+    <div class="k-val">89.5<span class="k-unit">亿$±5亿</span></div>
+    <div class="k-sub">中值同比 <b>+23%</b></div>
+  </div>
+  <div class="kpi">
+    <div class="k-lbl">Q2非GAAP毛利率</div>
+    <div class="k-val">50<span class="k-unit">%</span></div>
+    <div class="k-sub">同比+80bp，半导体系统业务达54.8%</div>
+  </div>
+  <div class="kpi">
+    <div class="k-lbl">Q2非GAAP EPS</div>
+    <div class="k-val">$2.86</div>
+    <div class="k-sub">同比<b>+20%</b></div>
+  </div>
+  <div class="kpi">
+    <div class="k-lbl">Q3 EPS指引</div>
+    <div class="k-val">$3.36<span class="k-unit">±0.20</span></div>
+    <div class="k-sub">同比<b>+36%</b></div>
+  </div>
+  <div class="kpi">
+    <div class="k-lbl">FY26设备收入指引</div>
+    <div class="k-val">+30<span class="k-unit">%以上</span></div>
+    <div class="k-sub">年初指引20%，已两次上修</div>
+  </div>
+  <div class="kpi">
+    <div class="k-lbl">中国营收占比</div>
+    <div class="k-val">24<span class="k-unit">%</span></div>
+    <div class="k-sub">半导体系统+AGS口径，Q2 FY26</div>
+  </div>
+</div>
+
+<!-- ① 业务拆解 -->
+<section class="sec">
+  <div class="sec-hd" onclick="toggleSec(this)">
+    <div class="sec-ttl"><span class="sec-num">1</span>业务拆解 · Semiconductor Systems / AGS / Display</div>
+    <span class="sec-arrow">▼</span>
+  </div>
+  <div class="sec-body">
+
+    <div style="font-size:11px;font-weight:700;color:var(--text2);margin-bottom:12px;letter-spacing:.3px">Q2 FY2026 实际营收结构（公司财报口径，财年截至10月）</div>
+    <table class="ctable">
+      <thead><tr><th>业务线</th><th class="num">营收</th><th class="num">占比</th><th class="num">YoY</th><th>说明</th></tr></thead>
+      <tbody>
+        <tr class="latest"><td><b>半导体系统（Semiconductor Systems）</b></td><td class="num"><b>$59.7亿</b></td><td class="num">76%</td><td class="num" style="color:var(--up)">+10%</td><td>创纪录；其中DRAM设备收入$17亿（+18%），毛利率54.8%</td></tr>
+        <tr><td><b>应用全球服务（AGS）</b></td><td class="num"><b>$16.7亿</b></td><td class="num">21%</td><td class="num" style="color:var(--up)">+17%</td><td>创纪录；营业利润率环比+100bp至29%（近2-3年最高）</td></tr>
+        <tr><td><b>Display及其他</b></td><td class="num"><b>$2.8亿</b></td><td class="num">4%</td><td class="num">—</td><td>符合预期</td></tr>
+        <tr><td><b>合计</b></td><td class="num"><b>$79.1亿</b></td><td class="num">100%</td><td class="num" style="color:var(--up)">+11%</td><td>环比+13%，非GAAP毛利率50%（+80bp）</td></tr>
+      </tbody>
+    </table>
+    <div class="note">📌 Semiconductor Systems 终端市场细分（Q2 FY26，模型口径）：<b>先进逻辑代工等（Foundry/Logic/Other）占67%</b>，<b>存储（Memory）占33%</b>——其中DRAM占29%（收入$17亿，公司口径同比+18%）、NAND/Flash占4%。DRAM过去10余年WFE份额累计提升10个百分点。</div>
+
+    <div class="gs-cap">📊 季度营收与利润率趋势 · FY2024 Q1 → FY2026 Q3E（公司披露实际数为主，模型仅补缺口）<span>｜单位：百万美元；红字标注处对应下方「⚠️ 报表口径变化跟踪」清单</span></div>
+    <table class="ctable">
+      <thead><tr><th>财季</th><th class="num">营收</th><th class="num">YoY</th><th class="num">非GAAP毛利率</th><th class="num">非GAAP EPS</th><th>备注</th></tr></thead>
+      <tbody>
+        <tr><td>1QFY24</td><td class="num">6,700</td><td class="num">小幅下降<span class="tag tag-est" style="margin-left:3px">未披露精确%</span></td><td class="num">47.9%（+110bp）</td><td class="num">$2.13</td><td>中国占比<b>45%</b>历史峰值（DRAM出货激增），管理层预期向~30%正常化</td></tr>
+        <tr><td>2QFY24</td><td class="num">—<span class="tag tag-est" style="margin-left:3px">指引上端</span></td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td style="color:var(--dn)">⚠️ GAA收入披露基础从"环比增量收入"改为"当年度全部相关收入"，管理层明确提醒新口径$25亿不可与旧口径$10亿做同比/环比比较（见下方清单#4）</td></tr>
+        <tr><td>3QFY24</td><td class="num">6,780</td><td class="num" style="color:var(--up)">+5%</td><td class="num">47.4%（+100bp）</td><td class="num">$2.12（+12%）</td><td>台积电成为10%客户；首次披露季度股息$0.40/股+回购$8.61亿</td></tr>
+        <tr><td>4QFY24</td><td class="num">7,050</td><td class="num" style="color:var(--up)">+~5%</td><td class="num">~48.5%E</td><td class="num">$2.32（+9%）</td><td>FY24全年营收$272亿(+2.5%)，GM47.6%创24年新高；<span style="color:var(--dn)">⚠️公司/中央费用开始向各分部分摊（见清单#3第一次）</span></td></tr>
+        <tr><td>1QFY25</td><td class="num">7,200</td><td class="num" style="color:var(--up)">+7%</td><td class="num">48.9%（+100bp）</td><td class="num">$2.38（+12%）</td><td style="color:var(--dn)">⚠️设备积压订单(backlog)自本季度起不再按季度披露（见清单#8）</td></tr>
+        <tr><td>2QFY25</td><td class="num">7,100</td><td class="num" style="color:var(--up)">+7%</td><td class="num">49.2%（+170bp）</td><td class="num">$2.39（+14%）</td><td style="color:var(--dn)">⚠️营收指引区间由±$4亿扩大至±$5亿（见清单#7）；中国占比口径首次明确排除显示业务</td></tr>
+        <tr><td>3QFY25</td><td class="num">7,300</td><td class="num" style="color:var(--up)">+8%</td><td class="num">48.9%（+150bp）</td><td class="num">$2.48（+17%）</td><td style="color:var(--dn)">⚠️ICAP节点首次数值化定义为&gt;7纳米（见清单#6）；中国占比口径又切回含显示业务</td></tr>
+        <tr><td>4QFY25</td><td class="num">6,800</td><td class="num" style="color:var(--dn)">-3.5%</td><td class="num">~49.1%（+60bp）</td><td class="num">高于指引中点<span class="tag tag-est" style="margin-left:3px">未披露精确值</span></td><td style="color:var(--dn)">⚠️⚠️FY25收官(营收$284亿+4%)当季公告三项重大重分类：显示并入"企业及其他"/200mm下季度转入半导体系统/企业成本100%分摊（见清单#1#2#3第二次）</td></tr>
+        <tr style="background:var(--dn-bg)"><td colspan="6" style="text-align:center;font-weight:700;color:var(--dn);padding:8px">⚠️ 口径分界线：自 FY2026 Q1 起，200mm设备并入半导体系统 + 显示业务移出独立分部 + 企业成本100%分摊——以上历史数据与下方不可直接跨期连续比较</td></tr>
+        <tr><td>1QFY26</td><td class="num">7,000</td><td class="num" style="color:var(--dn)">-2%</td><td class="num">49.1%（+20bp）</td><td class="num">$2.38（持平）</td><td style="color:var(--dn)">⚠️新分部口径生效首季（对Q1营收影响约$1.25亿）；中国占比首次同季双口径披露（半导体+AGS 27% / 总销售30%，见清单#5）</td></tr>
+        <tr class="latest"><td><b>2QFY26 ★</b></td><td class="num"><b>7,910</b></td><td class="num" style="color:var(--up)"><b>+11%</b></td><td class="num"><b>50.0%（+80bp）</b></td><td class="num"><b>$2.86（+20%）</b></td><td>创纪录；新口径下半导体系统$59.7亿(+10%)/AGS$16.7亿(+17%)；较Q1FY26给出的指引($76.5亿/$2.64)大幅超预期</td></tr>
+        <tr><td>3QFY26E</td><td class="num">~9,139<span class="tag tag-est" style="margin-left:3px">指引</span></td><td class="num" style="color:var(--up)">+23%（指引中值）</td><td class="num">~50.1%（指引）</td><td class="num">$3.36±0.20（指引）</td><td>—</td></tr>
+      </tbody>
+    </table>
+    <div class="note">📌 <b>拐点信号</b>：营收同比增速从 1QFY26 的 <b>-2%</b> 直接跳升至 2QFY26 的 <b>+11%</b>，再到 3QFY26 指引中值 <b>+23%</b>——半导体设备景气拐点正在加速兑现，而非温和复苏。管理层将 2026 年全年半导体设备收入增速指引从年初 20% 上调至<b>30%以上</b>，先进封装收入指引上调至<b>50%以上</b>。</div>
+    <div class="note">📌 <b>数据来源说明</b>：1QFY24-1QFY26共9个季度取自对应季度"AI要点"业绩会纪要原文披露的实际数；个别季度（2QFY24营收精确值、4QFY25 EPS精确值）纪要仅给出定性描述（"处于指引区间高端/高于指引中点"），未列出具体数字，本表如实标注为"未披露精确值"，不做估算填充。2QFY26为公司业绩会实际披露，3QFY26E为公司官方指引区间。</div>
+
+    <div class="gs-cap" style="margin-top:16px">🌍 中国营收占比变化 · 口径（分母）历史上反复切换，需逐季核对</div>
+    <table class="ctable">
+      <thead><tr><th>财季</th><th class="num">中国占比</th><th>口径（分母）</th><th>说明</th></tr></thead>
+      <tbody>
+        <tr><td>1QFY24</td><td class="num">45%</td><td>总营收</td><td>历史峰值区间，中国DRAM出货激增</td></tr>
+        <tr><td>3QFY24</td><td class="num">32%</td><td>总营收</td><td>环比下降，DRAM出货回落</td></tr>
+        <tr><td>4QFY24</td><td class="num">30%</td><td>总营收</td><td>符合历史均值</td></tr>
+        <tr><td>2QFY25</td><td class="num">~25%</td><td style="color:var(--dn)">半导体系统+AGS（不含显示）⚠️首次明确排除显示业务</td><td>—</td></tr>
+        <tr><td>3QFY25</td><td class="num">35%</td><td style="color:var(--dn)">含显示业务 ⚠️口径又切回</td><td>Q4展望29%（同为含显示口径）</td></tr>
+        <tr><td>4QFY25</td><td class="num">28%(全年)/25%(单季)</td><td style="color:var(--dn)">半导体系统+服务（不含显示）</td><td>同一份纪要另处又提及29%（含显示口径），两口径并存未解释</td></tr>
+        <tr><td>1QFY26</td><td class="num" style="color:var(--dn)"><b>27% / 30%</b></td><td style="color:var(--dn)">⚠️首次同季双口径清晰并列披露</td><td>半导体系统+AGS口径27%；总销售口径30%</td></tr>
+        <tr class="latest"><td><b>2QFY26 ★</b></td><td class="num"><b>24%</b></td><td>半导体系统+AGS（不含显示）</td><td>与BofA会议披露一致，短期维持该水平，长期25%-30%区间</td></tr>
+      </tbody>
+    </table>
+    <div class="note">⚠️ <b>出口管制</b>：2025年美国对华半导体设备出口限制大幅增加，<b>受限制业务占公司整体收入的比例从约10%提升超过一倍，达到超20%</b>（Bernstein会议披露）。管理层在Q2业绩会Q&A中<b>明确拒绝就出口管制具体政策做评论</b>，仅表示相关因素已纳入指引。中国区业务2026年预计<b>持平至小幅增长</b>，ICAPS是中国收入的主要构成。</div>
+  </div>
+</section>
+
+<!-- ⚠️ 口径变化清单 -->
+<section class="sec" style="border:1.5px solid var(--dn);background:linear-gradient(180deg,var(--dn-bg) 0%,#fff 55%)">
+  <div class="sec-hd" onclick="toggleSec(this)" style="background:var(--dn-bg)">
+    <div class="sec-ttl"><span style="font-size:14px">⚠️</span>报表口径变化跟踪 · 9项确认变更（FY2024 Q1 → FY2026 Q1）</div>
+    <span class="sec-arrow">▼</span>
+  </div>
+  <div class="sec-body">
+    <div class="note" style="margin-top:0">📌 逐一梳理9个历史季度业绩会纪要后确认的报表口径/披露方式变化，均为管理层原话或财报重述内容，历史数据序列比较时应以此清单标注的分界点为准，<b style="color:var(--dn)">不跨口径直接连线</b>。</div>
+    <table class="ctable" style="margin-top:10px">
+      <thead><tr><th style="width:34px">#</th><th style="width:130px">变化时点</th><th style="width:110px">类型</th><th>具体内容（旧口径 → 新口径）</th></tr></thead>
+      <tbody>
+        <tr style="background:var(--dn-bg)"><td class="num"><b>1</b></td><td><b>FY25 Q4公告<br>FY26 Q1生效</b></td><td><span class="tag tag-dn">分部重分类</span></td><td><b>200mm设备业务由AGS转入半导体系统</b>——管理层原话："提升运营效率，便于投资者查看完整半导体系统营收"；量化影响：<b>约$1.25亿/季度</b>（对Q1FY26及FY25全年影响相近）。此前FY25多个季度已在描述AGS业绩时反复点名"200mm设备销售下滑拖累"，为此次重分类埋下伏笔</td></tr>
+        <tr style="background:var(--dn-bg)"><td class="num"><b>2</b></td><td><b>FY25 Q4起</b></td><td><span class="tag tag-dn">分部重分类</span></td><td><b>显示（Display）业务并入"企业及其他（Corporate and Other）"板块</b>，不再作为独立第三分部披露；管理层原话："战略无变化"</td></tr>
+        <tr style="background:var(--dn-bg)"><td class="num"><b>3</b></td><td><b>FY24（部分）→<br>FY26 Q1（全部）</b></td><td><span class="tag tag-dn">成本分摊口径</span></td><td>公司/中央费用向半导体系统与AGS分摊比例<b>分两次提高</b>：FY2024某季度起"开始将更多公司和中央费用分配到各业务部门"；FY2026 Q1起进一步<b>100%全部分摊</b>——两分部账面营业利润率因此结构性承压，历史利润率<b>不可直接跨期比较</b></td></tr>
+        <tr><td class="num"><b>4</b></td><td>FY24 Q2</td><td><span class="tag tag-dn">技术收入统计基础</span></td><td>GAA相关收入披露基础从"<b>环比增量收入</b>"改为"<b>当年度全部相关收入</b>"；管理层原话："我们只是改变了基础……这个季度谈论的$25亿不应被解释为相对于上季度$10亿的增长"</td></tr>
+        <tr><td class="num"><b>5</b></td><td>历史反复切换<br>FY26 Q1首次说清</td><td><span class="tag tag-dn">中国占比分母</span></td><td>在"总营收"与"半导体系统+AGS（排除显示）"两种分母间反复切换，多数季度未主动说明原因；FY26 Q1首次在同一季度并列披露两个口径（27%/30%）</td></tr>
+        <tr><td class="num"><b>6</b></td><td>FY25 Q3</td><td><span class="tag tag-warn">定义颗粒度提升</span></td><td>ICAP(S)节点首次给出数值化定义（<b>&gt;7纳米</b>），此前8个季度均无精确制程边界，仅作为业务/市场类别笼统提及</td></tr>
+        <tr><td class="num"><b>7</b></td><td>FY25 Q2</td><td><span class="tag tag-warn">指引口径</span></td><td>单季营收指引区间从<b>±$4亿扩大至±$5亿</b>；管理层明确解释：业务规模扩大+宏观/地缘政治/贸易不确定性上升</td></tr>
+        <tr><td class="num"><b>8</b></td><td>FY25 Q1起</td><td><span class="tag tag-dn">信息披露收窄</span></td><td><b>设备业务积压订单(backlog)不再按季度对外披露</b>；管理层原话：疫后供应链正常化使该指标"不能很好地反映底层业务的变化"</td></tr>
+        <tr><td class="num"><b>9</b></td><td>FY24 Q3首次<br>FY25 Q4上调</td><td><span class="tag tag-est">资本回报政策</span></td><td>季度股息首次明确金额披露$0.40/股；FY25 Q4上调15%至$0.46/股</td></tr>
+      </tbody>
+    </table>
+    <div class="note">📌 以上梳理基于"AI要点"会议纪要转录文本，<b>未逐一比对官方10-Q/10-K原文</b>，个别数字可能存在转录误差（如#7指引区间扩大处，纪要原文一度写"正负5000万美元"，与同段落"正负5亿美元"矛盾，判断为转录/OCR误差，已按上下文取$5亿）。未发现非GAAP指标本身定义（哪些项目被剔除）在9个季度间发生变化的直接证据，也未发现财年历法调整。</div>
+  </div>
+</section>
+
+<!-- ② 技术路线与竞争地位 -->
+<section class="sec">
+  <div class="sec-hd" onclick="toggleSec(this)">
+    <div class="sec-ttl"><span class="sec-num">2</span>技术路线与 WFE 竞争地位</div>
+    <span class="sec-arrow">▼</span>
+  </div>
+  <div class="sec-body">
+
+    <div class="gs-cap" style="margin-top:0">📊 AMAT 分品类 WFE 市场份额（Gartner口径，CY18→CY22，模型未提供2023年后更新）</div>
+    <table class="ctable">
+      <thead><tr><th>品类</th><th class="num">CY18</th><th class="num">CY22</th><th>说明</th></tr></thead>
+      <tbody>
+        <tr><td><b>整体WFE份额</b></td><td class="num">18.65%</td><td class="num"><b>19.86%</b></td><td>综合份额第一，覆盖品类最全</td></tr>
+        <tr><td>CMP及后CMP清洗</td><td class="num">66.34%</td><td class="num"><b>66.34%</b></td><td>断档式领先，国产（华海清科）差距最大品类</td></tr>
+        <tr><td>离子注入</td><td class="num">66.89%</td><td class="num">55.42%</td><td>份额有所下降但仍绝对领先</td></tr>
+        <tr><td>沉积（Deposition）</td><td class="num">37.64%</td><td class="num">44.44%</td><td>份额提升最快品类，含GAA相关新平台放量</td></tr>
+        <tr><td>蚀刻（Etch）</td><td class="num">17.98%</td><td class="num">15.23%</td><td>份额相对最低，是北方华创/中微公司追赶空间最大品类</td></tr>
+        <tr><td>过程控制</td><td class="num">11.47%</td><td class="num">12.44%</td><td>KLA为该品类主导者，AMAT份额较低</td></tr>
+      </tbody>
+    </table>
+    <div class="note">📌 文档中管理层未直接点名对比 Lam Research / KLA / ASML / Tokyo Electron 的具体份额数据，均以"行业第一/领导地位"自我定位表述；GAA节点+背面供电落地后，管理层预计非光刻设备份额将<b>超过50%</b>（此前FinFET时代已接近50%）。</div>
+
+    <div class="gs-cap" style="margin-top:16px">⚡ 三条核心技术线 × 景气信号 × A股映射逻辑</div>
+    <div class="eng3">
+      <div class="eng" style="border-top-color:var(--accent)">
+        <div class="eng-hd" style="color:var(--accent)">
+          🔬 GAA环绕栅极 + 铜互连（先进逻辑）
+          <span class="pct" style="background:var(--accent)">SAM扩张</span>
+        </div>
+        <div class="eng-bd">
+          <b>技术进展</b>：GAA节点涉及超2000个工艺步骤、多种新材料（精度以纳米/埃计），大幅提升AMAT可服务市场空间(SAM)；每代先进逻辑制程带来~30%功耗优化、~15%性能提升，GAA+背面供电落地后每万片晶圆开工对应收入提升约30%<br>
+          <b>铜互连</b>：当前GPU中有800多英里布线、铜层数超20层，铜互连至少还能延伸3个技术节点，不会被钼(moly)取代（钼仅替代接触层中的钨）<br>
+          <b>新品</b>：Trillium ALD集成材料解决方案（单平台整合多步金属沉积）、Sym3 Z蚀刻平台（已获超250个反应腔订单，带来数亿美元收入增量）<br>
+          <b style="color:var(--dn)">A股映射</b>：<span style="color:var(--dn)">先进逻辑WFE占2026年行业增量支出核心组成，间接验证国产逻辑晶圆厂（中芯国际/华虹）产能利用率与设备招标节奏</span>
+        </div>
+      </div>
+      <div class="eng" style="border-top-color:var(--warn)">
+        <div class="eng-hd" style="color:var(--warn)">
+          🧱 先进封装 + HBM设备
+          <span class="pct" style="background:var(--warn)">增速超50%</span>
+        </div>
+        <div class="eng-bd">
+          <b>规模变化</b>：先进封装收入2020-2024年从$5亿增长至$17亿，2025年因HBM初始建设放缓有所下降，2026年预计增速<b>超50%</b>，规模达数十亿美元<br>
+          <b>HBM设备价值量</b>：生产HBM所需晶圆面积是标准DRAM的3-4倍（不同会议口径3倍/4倍，为不同HBM代际对比）；HBM额外堆叠需19道额外工序（15道为设备步骤），<b>AMAT在这些额外封装步骤的设备价值份额超过50%</b>；3D DRAM前3项核心技术均来自AMAT<br>
+          <b>并购动作</b>：计划收购NEXX强化面板级封装；已完成X射线检测技术收购（检测堆叠芯片微凸点互连质量）；与Besi成立合资公司分工不同技术方向<br>
+          <b style="color:var(--dn)">A股映射</b>：<span style="color:var(--dn)">HBM设备价值量占比过半，AMAT是HBM景气度的隐性受益者——同步验证国内存储链（兆易创新/北京君正）设备采购节奏与先进封装OSAT（通富微电/长电科技）扩产强度</span>
+        </div>
+      </div>
+      <div class="eng" style="border-top-color:var(--up)">
+        <div class="eng-hd" style="color:var(--up)">
+          🤝 EPIC 创新生态平台
+          <span class="pct" style="background:var(--up)">技术标准卡位</span>
+        </div>
+        <div class="eng-bd">
+          <b>合作伙伴演进</b>：Q2业绩会披露8家创始伙伴（台积电/美光/三星/SK海力士/Advantest+3所高校）；Bernstein会议披露最新已扩大至<b>10家</b>（新增博通/SCREEN）<br>
+          <b>目标</b>：将10-15年的技术商业化周期缩短50%；位于硅谷，2026年秋季投入运营<br>
+          <b>运营协同</b>：面向约2000家直接供应商同步8季度需求预测；超3.5万个反应腔接入AIx软件，全球超3.5万名内部AI用户<br>
+          <b style="color:var(--dn)">A股映射</b>：<span style="color:var(--dn)">EPIC绑定全球头部晶圆厂+存储大厂，是AMAT技术标准制定权的护城河，国产设备厂商目前无法进入该生态，映射逻辑偏"差距确认"而非直接受益</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 产业链层级图 -->
+    <div class="gs-cap">🗺 产业链层级 · AMAT 在半导体制造价值链中的位置</div>
+    <div class="spine">
+      <div class="lane">
+        <div class="lane-req" style="border-left-color:var(--accent)">
+          <div class="lr-t" style="color:var(--accent)">① 半导体设备（AMAT核心）</div>
+          <div class="lr-d">沉积/蚀刻/CMP/离子注入/过程控制<br><em style="color:var(--accent)">综合WFE份额第一</em></div>
+        </div>
+        <div class="lane-arrow">→</div>
+        <div class="lane-fill">
+          <span class="fchip" style="border-color:var(--accent2);color:var(--accent)">台积电 / 三星（先进逻辑代工）</span>
+          <span class="fchip" style="border-color:var(--accent2);color:var(--accent)">美光 / SK海力士（DRAM/HBM）</span>
+          <span class="fchip" style="border-color:var(--accent2);color:var(--accent)">中芯国际 / 华虹（成熟制程）</span>
+        </div>
+        <div class="lane-w">
+          <span style="font-size:9.5px;font-weight:700;color:var(--text2)">→ 全球晶圆厂客户</span>
+        </div>
+      </div>
+      <div class="lane">
+        <div class="lane-req" style="border-left-color:var(--warn)">
+          <div class="lr-t" style="color:var(--warn)">② 出口管制收紧</div>
+          <div class="lr-d">受限业务占比10%→20%+<br><em style="color:var(--warn)">中国晶圆厂被迫加速国产替代</em></div>
+        </div>
+        <div class="lane-arrow">→</div>
+        <div class="lane-fill">
+          <span class="fchip" style="border-color:var(--neu-bd);color:var(--neu-ink)">国产设备验证导入窗口期延长</span>
+        </div>
+        <div class="lane-w">
+          <span style="font-size:9.5px;font-weight:700;color:var(--text2)">→ 替代窗口</span>
+          <span style="font-size:9.5px;color:var(--text2)">CMP/离子注入/沉积缺口最大</span>
+        </div>
+      </div>
+      <div class="lane">
+        <div class="lane-req" style="border-left-color:var(--up)">
+          <div class="lr-t" style="color:var(--up)">③ 国产设备/材料承接</div>
+          <div class="lr-d">份额转移+全球WFE景气验证<br><em style="color:var(--up)">国内映射入口</em></div>
+        </div>
+        <div class="lane-arrow">→</div>
+        <div class="lane-fill">
+          <span class="fchip" style="border-color:#86efac;color:var(--up)">北方华创/中微公司/拓荆科技（设备）</span>
+          <span class="fchip" style="border-color:#86efac;color:var(--up)">华海清科/盛美上海（CMP/清洗）</span>
+          <span class="fchip" style="border-color:#86efac;color:var(--up)">安集科技/鼎龙股份（CMP材料）</span>
+        </div>
+        <div class="lane-w">
+          <span style="font-size:9.5px;font-weight:700;color:var(--up)">→ A股映射标的</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="concl">
+      🎯 <b>为什么 AMAT 是判断全球半导体设备景气度最权威的单一样本？</b>——它是唯一一家在沉积/蚀刻/CMP/离子注入/过程控制五大品类都有产品线的设备商，其指引变化几乎等价于"全行业资本开支强度"信号。<br>
+      <b>景气方向</b>：FY26设备收入指引从20%上调至30%+，先进封装指引上调至50%+，管理层称"领先制程代工逻辑+DRAM+先进封装三领域预计占2026年WFE同比总增长的80%以上"。<br>
+      <b>结构方向</b>：出口管制加严（受限占比10%→20%+）与全球WFE超级周期同时发生——对国内设备链是"景气验证+替代加速"的双重催化，但AMAT自身在CMP/离子注入/沉积等高份额品类恰恰是国产替代的主战场，不是简单的正相关。
+    </div>
+
+  </div>
+</section>
+
+<!-- ③ 近期业绩会/会议交流重点 -->
+<section class="sec">
+  <div class="sec-hd" onclick="toggleSec(this)">
+    <div class="sec-ttl"><span style="font-size:14px">📋</span>历次业绩会关键叙事 + 5场卖方会议交流重点</div>
+    <span class="sec-arrow">▼</span>
+  </div>
+  <div class="sec-body">
+
+    <div class="gs-cap" style="margin-top:0">🗓 历次业绩会关键叙事 · FY2024 Q1 → FY2026 Q2（10个季度，红字为口径/披露变化）</div>
+    <table class="ctable">
+      <thead><tr><th style="width:80px">财季</th><th>核心叙事 / 产品与资本回报里程碑</th><th style="width:190px">下季度指引</th></tr></thead>
+      <tbody>
+        <tr><td>1QFY24</td><td>中国DRAM出货激增拉高中国占比至45%（预期正常化）；Sculpta EUV双重图案化替代方案起量；GAA预计2024年贡献超$15亿收入</td><td>营收$65亿±$4亿 / EPS $1.97±$0.18</td></tr>
+        <tr><td>2QFY24</td><td style="color:var(--dn)">⚠️ GAA收入披露口径从"环比增量"改为"全部相关收入"，管理层明确提醒不可跨口径比较（清单#4）；HBM需求收入预计2024年增长6倍（较此前"4倍"表述上调）</td><td>营收$66.5亿 / EPS $2.01</td></tr>
+        <tr><td>3QFY24</td><td>营收$67.8亿创纪录(+5%)；台积电成为10%客户；首次披露季度股息$0.40/股+回购$8.61亿；EPIC平台建设启动（未获预期政府补贴仍推进）</td><td>全年GM目标48%以上</td></tr>
+        <tr><td>4QFY24<br><span style="color:var(--text2);font-size:10px">FY24收官</span></td><td>FY24全年营收$272亿(+2.5%)，GM47.6%创24年来新高；<span style="color:var(--dn)">⚠️公司/中央费用开始向各分部分摊，压低AGS营业利润率（清单#3第一次）</span>；GAA设备出货FY25预计翻倍至$50亿；服务业务连续21个季度同比增长</td><td>营收$71.5亿 / EPS $2.29</td></tr>
+        <tr><td>1QFY25</td><td>营收$72亿创单季毛利率新高(48.9%)；<span style="color:var(--dn)">⚠️设备积压订单(backlog)自本季度起不再按季度披露（清单#8）</span>；混合键合互连完成关键认证并获批量订单；EPIC先进封装战略新加坡峰会发布；薄膜电池业务与TPG合作分拆</td><td>营收$71亿±$4亿 / EPS $2.30±$0.18</td></tr>
+        <tr><td>2QFY25</td><td>营收$71亿(+7%)，毛利率49.2%创新高；<span style="color:var(--dn)">⚠️指引区间由±$4亿扩大至±$5亿（清单#7）；中国占比口径首次明确排除显示业务（清单#5）</span>；先进DRAM客户收入预计2025年增长超40%；延长BESI合作并披露持股9%</td><td>营收$72亿±$5亿 / EPS $2.35±$0.20</td></tr>
+        <tr><td>3QFY25</td><td>营收$73亿(+8%)超指引；<span style="color:var(--dn)">⚠️ICAP节点首次数值化定义为&gt;7纳米（清单#6）；中国占比口径又切回含显示业务</span>；蚀刻单季收入首破$10亿；先进封装目标未来数年翻倍至超$30亿；苹果美国制造计划合作</td><td>营收$67亿±$5亿 / EPS $2.11±$0.20（指引下修：中国不确定性+出口许可证保守假设）</td></tr>
+        <tr><td>4QFY25<br><span style="color:var(--text2);font-size:10px">FY25收官</span></td><td>FY25全年营收$284亿(+4%)，GM48.8%创25年来新高；<span style="color:var(--dn)">⚠️⚠️⚠️同季公告三项重大重分类：显示并入"企业及其他"/200mm下季度转入半导体系统/企业成本100%分摊（清单#1#2#3第二次）</span>；季度股息上调15%至$0.46/股；出口管制受限业务占比翻倍至20%+</td><td>营收$68.5亿±$5亿 / EPS $2.18±$0.20</td></tr>
+        <tr><td>1QFY26<br><span style="color:var(--text2);font-size:10px">重分类后首季</span></td><td style="color:var(--dn)">⚠️新分部口径正式生效（对当季营收影响约$1.25亿）；中国占比首次同季双口径披露（半导体+AGS 27% / 总销售30%，清单#5）；与三星达成首个EPIC联合开发协议</td><td>营收$76.5亿±$5亿 / EPS $2.64±$0.20</td></tr>
+        <tr class="latest"><td><b>2QFY26 ★</b></td><td>营收创纪录$79.1亿(+11%)，大幅超Q1FY26给出的指引；FY26设备收入指引上调至+30%以上；详见本页各章节</td><td>营收$89.5亿±$5亿 / EPS $3.36±$0.20</td></tr>
+      </tbody>
+    </table>
+    <div class="note">📌 以上10个季度数据取自各季度"AI要点"业绩会纪要，个别数字未逐一比对官方10-Q/10-K原文，可能存在转录误差；红字标注项详见上方「⚠️ 报表口径变化跟踪」章节。</div>
+
+    <div class="gs-cap" style="margin-top:16px">🗓 5场卖方会议交流重点</div>
+    <table class="ctable">
+      <thead><tr><th style="width:150px">场合</th><th>核心增量信息</th></tr></thead>
+      <tbody>
+        <tr><td>Morgan Stanley TMT大会</td><td>半导体市场规模有望<b>提前至2026年即达1万亿美元</b>（原预期2030年）；2026年出货量增速预期超20%，为2021年以来最高；铜互连至少还能延伸3个技术节点；HBM晶圆用量为普通内存3-4倍；提前10-12年布局先进封装，新加坡建EPIC packaging实验室</td></tr>
+        <tr><td>Cantor 全球科技与工业增长大会</td><td>云厂商数据中心AI资本开支2026年预计$6000亿、2027年$7000亿；领先节点产能利用率达100%；先进封装2026年增速超20%；<b>HBM占当前DRAM晶圆开工量15%</b>；ICAPS业务中国占比25%-30%；资本回报长期目标返还80%-100%自由现金流</td></tr>
+        <tr><td>J.P. Morgan 54th Annual大会</td><td>系统业务增长指引从20%上调至30%的三大驱动：新建晶圆厂落地、存量产线优化改造（含2D NAND厂改DRAM厂）、AI良率优化需求；半导体行业2026年有望突破1万亿美元；集成材料系统(IMS)占公司系统销售额30%；AGS长期增速指引上调至"可持续中两位数"</td></tr>
+        <tr><td>Bernstein 42nd Strategic Decisions大会</td><td>领先代工逻辑+DRAM+先进封装占WFE增量支出<b>超80%</b>；WFE市场规模较此前1000亿美元目标<b>高出约50%</b>；AI服务器中HBM晶圆面积占比超80%；检测与量测业务2026年收入将超$10亿；<b>受出口管制业务占比从约10%翻倍至超20%</b>；EPIC合作伙伴扩大至10家（新增博通/SCREEN）</td></tr>
+        <tr><td>Bank of America 2026大会</td><td>系统业务与AGS增速指引均上调（系统20%→30%+，AGS低两位数→中两位数以上）；HBM晶圆损耗比从3:1提升至4:1（新一代HBM）；完成X射线检测收购；领先制程设备已供货4家客户；中国占全球半导体器件需求约30%；资本配置第一优先级为投资增长(ROIC超30%且上升)</td></tr>
+      </tbody>
+    </table>
+    <div class="note">📌 部分数据在不同会议间存在口径差异（如DRAM月均晶圆开工量、HBM晶圆损耗比因代际不同而不同），已在正文相应位置标注来源与时点，引用时建议交叉核实。</div>
+  </div>
+</section>
+
+<!-- ④ 认知沉淀 -->
+<section class="sec mid">
+  <div class="sec-hd" onclick="toggleSec(this)">
+    <div class="sec-ttl"><span style="font-size:14px">🧭</span>认知沉淀 · 为什么 AMAT 是半导体设备景气度最权威的观察窗口</div>
+    <span class="sec-arrow">▼</span>
+  </div>
+  <div class="sec-body">
+
+    <div class="mid-thesis">
+      核心论点：AMAT 是唯一一家在半导体制造几乎<b>所有关键工艺环节</b>都有产品线的设备商，管理层把 2026 年设备收入指引从年初 20% 两次上调至 30%+，且明确"领先代工逻辑+DRAM+先进封装占WFE增量的80%以上"——这是判断全球 AI 驱动半导体资本开支强度最权威、最综合的单一信号。<span class="em">与此同时，中国受出口管制业务占比从10%翻倍至20%+，构成了判断国产设备替代节奏的另一条独立观察线。</span>
+    </div>
+
+    <div class="cog-grid">
+
+      <div class="cog-card">
+        <div class="cog-no">1</div>
+        <div class="cog-tt">指引上修：<b>WFE超级周期的确认信号，而非温和复苏</b></div>
+        <div class="cog-body">
+          FY26设备收入指引两次上调（20%→30%+），营收同比增速从1QFY26的-2.1%直接跳升至2QFY26的+11%，再到3QFY26指引中值+23%——曲线陡峭，说明这是需求端的结构性拐点，而非库存周期的自然修复。管理层称"洁净室空间限制已缓解"，意味着此前的产能瓶颈正在打开，2026年设备交付节奏有望进一步加速。
+        </div>
+        <div class="cog-tag"><span class="k">观察指标：</span> 每季设备收入增速指引变化方向 + 洁净室空间利用率表态</div>
+      </div>
+
+      <div class="cog-card">
+        <div class="cog-no">2</div>
+        <div class="cog-tt">HBM设备：<b>AMAT是隐性受益者，不止NVDA/MU</b></div>
+        <div class="cog-body">
+          HBM堆叠需要19道额外工序（15道为设备步骤），AMAT在这些步骤的设备价值份额超过50%；生产同等比特数HBM所需晶圆开工量是标准DRAM的3-4倍。这意味着HBM景气度不仅传导给美光/SK海力士，也直接传导给AMAT的先进封装业务（2026年指引增速超50%）——是存储超级周期里容易被忽略的"卖水人"环节。
+        </div>
+        <div class="cog-tag"><span class="k">跟踪重点：</span> 先进封装分部收入增速 + HBM晶圆损耗比代际变化</div>
+      </div>
+
+      <div class="cog-card">
+        <div class="cog-no">3</div>
+        <div class="cog-tt">出口管制：<b>短期收入可控，但加速国产替代窗口</b></div>
+        <div class="cog-body">
+          受限制业务占比从10%翻倍至20%+，但公司中国区总收入占比预计维持在25%-30%区间（并非断崖式下滑），说明ICAPS等非受限业务仍在支撑基本盘。对国内设备链而言，这是"倒逼替代"的加速器——AMAT在CMP(66%)/离子注入(55%)/沉积(44%)等份额本就最高的品类，恰恰是华海清科/北方华创/盛美上海承接空间最大的战场。
+        </div>
+        <div class="cog-tag"><span class="k">验证路径：</span> 受限业务占比后续变化 + 国产设备28nm以下认证进展</div>
+      </div>
+
+      <div class="cog-card">
+        <div class="cog-no">4</div>
+        <div class="cog-tt">EPIC生态：<b>技术标准制定权的护城河，国产厂商暂难进入</b></div>
+        <div class="cog-body">
+          EPIC创始伙伴从8家（Q2业绩会）迅速扩大到10家（Bernstein会议，新增博通/SCREEN），绑定台积电/三星/美光/SK海力士等全球头部客户，目标将10-15年的技术商业化周期缩短50%。这是AMAT区别于单一品类设备商（Lam/KLA）的独特护城河，但也意味着国产设备厂商在下一代技术标准制定上暂时缺席，映射逻辑偏"差距确认"而非"直接受益"。
+        </div>
+        <div class="cog-tag"><span class="k">观察指标：</span> EPIC合作伙伴数量变化 + 是否有国产厂商/客户加入</div>
+      </div>
+
+      <div class="cog-card">
+        <div class="cog-no">5</div>
+        <div class="cog-tt">竞争地位：<b>综合份额第一，但蚀刻是相对短板</b></div>
+        <div class="cog-body">
+          AMAT整体WFE份额约20%排名第一，但分品类差异巨大：CMP份额66%断档领先，蚀刻份额仅15%相对最低。文档中管理层未直接对比Lam/KLA/ASML的具体份额数字，均以"行业第一"自我定位。蚀刻份额相对偏低，恰好是中微公司/北方华创在国际对标上追赶速度最快的品类——AMAT自身的份额结构，间接勾勒出国产设备的追赶地图。
+        </div>
+        <div class="cog-tag"><span class="k">跟踪重点：</span> 分品类WFE份额是否有第三方（VLSI Research/Gartner）更新数据</div>
+      </div>
+
+      <div class="cog-card">
+        <div class="cog-no">6</div>
+        <div class="cog-tt">核心风险：<b>模型数据口径需谨慎使用</b></div>
+        <div class="cog-body">
+          本页所用的高盛模型（AMAT Model.xlsx）季度列标注与公司实际财季（11月结）之间存在错位，部分预测数据（如WFE市场规模CY26E达1414亿美元、CY27E达1862亿美元）为卖方情景假设，非公司官方指引，且模型不同标签口径的DRAM月度晶圆开工量、HBM损耗比等数字本身也存在内部不一致，实际使用时应以业绩会/会议纪要披露的公司口径数据为准。
+        </div>
+        <div class="cog-tag"><span class="k">使用提示：</span> 一切"实际数"以业绩会/会议纪要披露为准，模型仅用于历史趋势/结构占比参考</div>
+      </div>
+
+    </div>
+
+  </div>
+</section>
+
+<!-- A股映射结论 -->
+<section class="sec mid" style="border:1.5px solid var(--accent2);background:linear-gradient(180deg,var(--accent-bg) 0%,#fff 60%)">
+  <div class="sec-hd" onclick="toggleSec(this)" style="background:var(--accent-bg)">
+    <div class="sec-ttl"><span style="font-size:14px">🎯</span>A股映射 & 对应交易</div>
+    <span class="sec-arrow">▼</span>
+  </div>
+  <div class="sec-body">
+
+    <div class="concl">
+      💡 <b>核心判断</b>：AMAT 的指引上修验证全球半导体设备超级周期强度，其出口管制受限占比翻倍则验证国产替代窗口正在加速打开——<b>两条信号叠加，指向国产半导体设备/材料链的结构性提升机会</b>，且AMAT自身份额最高的品类（CMP/离子注入/沉积）正是国产厂商差距最大、替代空间最大的战场。
+    </div>
+
+    <div class="gs-cap" style="margin-top:14px">A股映射标的 & 传导路径</div>
+    <table class="ctable">
+      <thead><tr><th>映射方向</th><th>代表标的</th><th>传导路径</th></tr></thead>
+      <tbody>
+        <tr><td><b>设备综合龙头</b></td><td>北方华创（002371）</td><td>刻蚀/CVD/PVD/清洗多品类布局，是AMAT品类覆盖最广的国内对标，直接受益WFE景气+出口管制替代</td></tr>
+        <tr><td><b>刻蚀设备</b></td><td>中微公司（688012）</td><td>AMAT蚀刻份额相对最低（~15%），是国产追赶速度最快的品类</td></tr>
+        <tr><td><b>CVD设备</b></td><td>拓荆科技（688072）</td><td>PECVD/ALD快速放量，对标AMAT沉积份额（~44%）持续提升的品类</td></tr>
+        <tr><td><b>CMP设备</b></td><td>华海清科（688120）</td><td>国内唯一CMP设备商，对标AMAT CMP份额（~66%）——差距最大、替代空间最大的品类</td></tr>
+        <tr><td><b>清洗+电镀</b></td><td>盛美上海（688082）</td><td>清洗设备两条腿走路，对应AMAT在清洗环节的布局</td></tr>
+        <tr><td><b>CMP材料</b></td><td>安集科技（688019）/ 鼎龙股份（300054）</td><td>CMP抛光液/抛光垫国产化率提升，与设备端国产替代同步</td></tr>
+      </tbody>
+    </table>
+    <div class="note">📌 <b>映射强度</b>：中高——AMAT的行业指引和出口管制数据是海外基准信号，但注意映射逻辑是"美国出口管制收紧+全球WFE供给共振"双重驱动国产份额结构性提升，<b>不是"AMAT景气好=国产设备股涨"的简单正相关</b>，实际替代节奏仍需国内厂商自身的认证突破验证。</div>
+    <div class="note">📌 <b>对应交易</b>：买<b>北方华创 / 中微公司 / 华海清科</b>（品类覆盖度对标AMAT最高、出口管制加严下承接空间最大）；催化=AMAT/Lam/KLA季度WFE指引变化、美国对华出口管制新规、国产设备28nm以下认证突破；风险=出口管制超预期放松、全球WFE景气不及预期（尤其AI资本开支放缓）、国产设备验证进度慢于预期。</div>
+  </div>
+</section>
+
+<div class="foot">数据来源：AMAT Model.xlsx（高盛证券模型）/ FY2024 Q1–FY2026 Q2 共10份业绩会纪要 / Morgan Stanley·Cantor·J.P.Morgan·Bernstein·Bank of America 五场卖方会议纪要（均为"AI要点"整理稿）　·　模型季度标注与公司财季存在错位，本页已用业绩会实际数交叉校正，模型仅作结构/趋势参考；报表口径变化详见「⚠️ 报表口径变化跟踪」章节　·　更新：2026-07-01</div>
+
+</div>
+
+<script>
+function toggleSec(hd){
+  hd.classList.toggle('collapsed');
+  hd.nextElementSibling.classList.toggle('collapsed');
+}
+</script>
+
+</body>
+</html>

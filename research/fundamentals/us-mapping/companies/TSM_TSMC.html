@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TSM 台积电 · 美股映射（全球晶圆代工 + CoWoS先进封装绝对龙头）</title>
+<style>
+:root{
+  --bg:#f7f8fa;--card:#fff;--border:#e6e8eb;
+  --text:#1a1d21;--text2:#586271;--text3:#8a94a3;
+  /* TSM 品牌色：台积电红 */
+  --accent:#c8102e;--accent2:#f4a3ae;--accent-bg:#fff1f2;--accent-ink:#9f0b23;
+  --up:#15803d;--up-bg:#eaf6ee;--up-ink:#136130;
+  --dn:#c01d24;--dn-bg:#fbeaeb;--dn-ink:#9a161c;
+  --warn:#b45309;--warn-bg:#fdf4e7;
+  --neu:#475569;--neu-bg:#eef1f5;--neu-bd:#c3cdd9;--neu-ink:#334155;
+  --neu2:#64748b;--neu2-bg:#f4f6f9;--neu2-bd:#d7dee6;
+  --sh:0 1px 3px rgba(0,0,0,.07);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;background:var(--bg);color:var(--text);font-size:14px;line-height:1.6}
+a{color:var(--accent);text-decoration:none}
+a:hover{text-decoration:underline}
+.hdr{background:var(--card);border-bottom:1px solid var(--border);padding:14px 32px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:var(--sh)}
+.hdr-l{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.hdr-title{font-size:19px;font-weight:800}
+.hdr-sub{font-size:11px;color:var(--text2);margin-top:1px}
+.badge{display:inline-flex;align-items:center;padding:3px 10px;border-radius:12px;font-size:11px;font-weight:700;white-space:nowrap}
+.b-ac{background:var(--accent-bg);color:var(--accent);border:1px solid var(--accent2)}
+.b-neu{background:var(--neu-bg);color:var(--neu-ink);border:1px solid var(--neu-bd)}
+.hdr-back{display:inline-flex;align-items:center;gap:5px;padding:5px 12px;border:1px solid var(--accent2);border-radius:8px;background:var(--accent-bg);color:var(--accent);font-size:12px;font-weight:700;text-decoration:none;transition:all .15s}
+.hdr-back:hover{background:var(--accent);color:#fff}
+.hdr-meta{font-size:10.5px;color:var(--text2);text-align:right;line-height:1.7}
+.wrap{max-width:1080px;margin:0 auto;padding:20px 32px 60px}
+.sec{margin-bottom:16px;background:var(--card);border:1px solid var(--border);border-radius:10px;box-shadow:var(--sh);overflow:hidden}
+.sec-hd{padding:11px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;cursor:pointer;background:#fafbfc;user-select:none}
+.sec-hd:hover{background:#f1f3f5}
+.sec-ttl{font-size:13px;font-weight:700;display:flex;align-items:center;gap:8px}
+.sec-num{display:inline-flex;align-items:center;justify-content:center;min-width:20px;height:20px;padding:0 6px;border-radius:10px;background:var(--accent);color:#fff;font-size:11px;font-weight:800;flex-shrink:0}
+.sec-arrow{font-size:12px;color:var(--text2);transition:transform .2s}
+.sec-hd.collapsed .sec-arrow{transform:rotate(-90deg)}
+.sec-body{padding:18px}
+.sec-body.collapsed{display:none}
+.breakdown-top{display:grid;grid-template-columns:1fr auto 1fr auto 1fr;align-items:center;gap:0;margin-bottom:20px}
+.bk-box{text-align:center;padding:14px 16px;border-radius:10px;border:2px solid}
+.bk-box.total{border-color:var(--accent);background:var(--accent-bg)}
+.bk-box.comp{border-color:var(--accent2);background:var(--accent-bg)}
+.bk-box.sys{border-color:var(--neu-bd);background:var(--neu-bg)}
+.bk-val{font-size:22px;font-weight:900;letter-spacing:-.5px}
+.bk-val.total{color:var(--accent)}
+.bk-val.comp{color:var(--accent)}
+.bk-val.sys{color:var(--neu-ink)}
+.bk-lbl{font-size:11px;color:var(--text2);margin-top:3px}
+.bk-pct{font-size:10px;font-weight:700;margin-top:4px;padding:1px 6px;border-radius:4px;display:inline-block}
+.bk-pct.ac{background:var(--accent);color:#fff}
+.bk-pct.neu{background:var(--neu);color:#fff}
+.bk-arrow{font-size:20px;color:var(--text2);padding:0 8px;text-align:center}
+.bk-split{display:flex;flex-direction:column;gap:8px}
+.bk-mini{border:1.5px solid var(--neu-bd);background:#fff;border-radius:8px;padding:8px 10px;text-align:center}
+.bk-mini .v{font-size:13px;font-weight:900;color:var(--neu-ink)}
+.bk-mini .v.ac{color:var(--accent)}
+.bk-mini .l{font-size:10px;color:var(--text2)}
+.ctable{width:100%;border-collapse:collapse;font-size:12.5px}
+.ctable th{background:#f1f3f5;padding:7px 10px;text-align:left;font-weight:700;border-bottom:2px solid var(--border);font-size:11.5px;color:var(--text2);white-space:nowrap}
+.ctable td{padding:7px 10px;border-bottom:1px solid #f1f3f5;vertical-align:middle}
+.ctable tr:last-child td{border-bottom:none}
+.ctable .num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.ctable .latest{background:var(--accent-bg)}
+.ctable .latest td{font-weight:600}
+.tag{display:inline-block;padding:1px 6px;border-radius:4px;font-size:10px;font-weight:700;border:1px solid;white-space:nowrap}
+.tag-ac{background:var(--accent-bg);color:var(--accent);border-color:var(--accent2)}
+.tag-est{background:#f1f5f9;color:var(--text2);border-color:#cbd5e1}
+.tag-up{background:var(--up-bg);color:var(--up);border-color:#86efac}
+.tag-dn{background:var(--dn-bg);color:var(--dn);border-color:#fca5a5}
+.tag-warn{background:var(--warn-bg);color:var(--warn);border-color:#fcd34d}
+.note{font-size:11px;color:var(--text2);margin-top:10px;line-height:1.6}
+.foot{text-align:center;font-size:11px;color:var(--text2);padding:14px;margin-top:10px}
+.kpi-ttl{font-size:11px;font-weight:700;color:var(--text2);letter-spacing:.3px;margin:2px 0 8px}
+.kpi-strip{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;margin-bottom:18px}
+@media(max-width:980px){.kpi-strip{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:560px){.kpi-strip{grid-template-columns:repeat(2,1fr)}}
+.kpi{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:11px 13px;box-shadow:var(--sh);display:flex;flex-direction:column}
+.kpi.accent{border:1.5px solid var(--accent2);background:var(--accent-bg)}
+.kpi .k-lbl{font-size:11px;color:var(--text2);font-weight:600}
+.kpi .k-val{font-size:19px;font-weight:900;letter-spacing:-.5px;margin-top:3px;line-height:1.1}
+.kpi.accent .k-val{color:var(--accent)}
+.kpi .k-unit{font-size:11px;font-weight:700;color:var(--text2);margin-left:2px}
+.kpi .k-sub{font-size:10px;color:var(--text2);margin-top:4px}
+.kpi .k-sub b{color:var(--up)}
+.why-wrap{border:1.5px dashed var(--accent2);background:var(--accent-bg);border-radius:10px;padding:15px 16px;margin-bottom:20px}
+.why-hd{font-size:12.5px;font-weight:800;color:var(--accent);margin-bottom:10px}
+.eng3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:14px}
+@media(max-width:760px){.eng3{grid-template-columns:1fr}}
+.eng{border:1px solid var(--border);border-top:3px solid;border-radius:10px;overflow:hidden;background:var(--card)}
+.eng-hd{padding:10px 14px;font-size:13px;font-weight:800;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.eng-hd .pct{margin-left:auto;font-size:10px;font-weight:800;color:#fff;border-radius:5px;padding:2px 8px}
+.eng-bd{padding:0 14px 14px;font-size:11.5px;color:var(--text2);line-height:1.85}
+.eng-bd b{color:var(--text)}
+.spine{border:1px solid var(--border);border-radius:9px;overflow:hidden}
+.lane{display:flex;gap:12px;align-items:stretch;padding:13px 14px;border-bottom:1px solid #f1f3f5}
+.lane:last-child{border-bottom:none}
+.lane-req{width:185px;flex-shrink:0;border-left:4px solid;padding-left:11px}
+.lr-t{font-size:12.5px;font-weight:800}
+.lr-d{font-size:10px;color:var(--text2);line-height:1.5;margin-top:3px}
+.lr-d em{font-style:normal;font-weight:700}
+.lane-arrow{display:flex;align-items:center;color:#cbd5e1;font-weight:900;font-size:17px;flex-shrink:0}
+.lane-fill{flex:1;display:flex;flex-wrap:wrap;gap:7px;align-items:center}
+.fchip{font-size:11px;font-weight:700;border-radius:6px;padding:5px 11px;border:1.5px solid;background:var(--card)}
+.lane-w{width:160px;flex-shrink:0;display:flex;flex-direction:column;gap:4px;align-items:flex-end;justify-content:center}
+@media(max-width:840px){.lane{flex-direction:column;gap:9px}.lane-req,.lane-w{width:auto}.lane-arrow{display:none}.lane-w{flex-direction:row;justify-content:flex-start}}
+.concl{margin-top:16px;border:1.5px solid var(--accent2);border-radius:9px;background:var(--accent-bg);padding:14px 16px;font-size:12px;line-height:1.95;color:var(--text)}
+.concl b{color:var(--accent-ink)}
+.plist{display:flex;flex-direction:column;gap:9px}
+.plist>div{line-height:1.85;font-size:11.5px;color:var(--text2)}
+.plist>div b{color:var(--text)}
+.pn{display:inline-flex;align-items:center;justify-content:center;width:17px;height:17px;border-radius:50%;font-size:9.5px;font-weight:800;color:#fff;margin-right:6px;vertical-align:1px;flex-shrink:0}
+.sec.mid{border:1.5px solid var(--accent2);background:linear-gradient(180deg,var(--accent-bg) 0%,#fff 60%)}
+.sec.mid .sec-hd{background:var(--accent-bg)}
+.mid-thesis{font-size:13px;font-weight:800;color:#7f0c21;background:var(--accent-bg);border:1px solid var(--accent2);border-radius:8px;padding:13px 16px;margin-bottom:16px;line-height:1.9}
+.mid-thesis .em{color:var(--dn)}
+.cog-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+@media(max-width:840px){.cog-grid{grid-template-columns:1fr}}
+.cog-card{border:1px solid var(--border);border-radius:10px;padding:14px 14px 12px;background:var(--card);box-shadow:var(--sh);position:relative;display:flex;flex-direction:column}
+.cog-card .cog-no{position:absolute;top:-10px;left:14px;width:24px;height:24px;border-radius:50%;background:var(--accent);color:#fff;font-size:12px;font-weight:900;display:flex;align-items:center;justify-content:center;box-shadow:var(--sh)}
+.cog-card .cog-tt{font-size:13px;font-weight:800;margin:8px 0 8px;line-height:1.45;color:var(--text)}
+.cog-card .cog-tt b{color:var(--accent)}
+.cog-card .cog-body{font-size:11.5px;color:var(--text2);line-height:1.8;flex:1}
+.cog-card .cog-body b{color:var(--text)}
+.cog-card .cog-tag{margin-top:10px;font-size:10.5px;font-weight:700;color:var(--accent-ink);background:#fff;border:1px solid var(--accent2);border-radius:6px;padding:5px 9px;line-height:1.5}
+.cog-card .cog-tag .k{color:var(--text2);font-weight:400}
+.gs-cap{font-size:11.5px;font-weight:700;color:var(--accent);margin:14px 0 8px}
+.gs-cap span{color:var(--text2);font-weight:400;font-size:10.5px}
+</style>
+</head>
+<body>
+
+<header class="hdr">
+  <div class="hdr-l">
+    <a class="hdr-back" href="../us-mapping-dashboard.html">← 返回看板</a>
+    <div>
+      <div class="hdr-title">🔴 TSM · 台湾积体电路制造公司（TSMC）</div>
+      <div class="hdr-sub">NYSE · N2/N3/A14先进制程 / CoWoS·SoIC先进封装 / HPC AI芯片全球独家代工 · <b>AI 芯片制造环节唯一不可替代的龙头</b></div>
+    </div>
+    <span class="badge b-ac">W4 先进封装</span>
+    <span class="badge b-neu">CoWoS · SoIC · N2/A14</span>
+  </div>
+  <div class="hdr-meta">
+    更新：2026-07-01（市值实时校准）<br>最新季度：Q1 CY2026（2026-04-16）
+  </div>
+</header>
+
+<div class="wrap">
+
+<!-- 定位说明 -->
+<div class="why-wrap">
+  <div class="why-hd">🧭 TSMC 是什么角色？——全球先进制程晶圆代工绝对龙头，AI 芯片制造环节唯一"不可替代"的节点</div>
+  <div style="font-size:11.5px;color:var(--text2);line-height:1.7">
+    无论 NVIDIA、AMD、Google、Amazon、Broadcom 谁设计出多强的 AI 芯片，最终都必须交给 TSMC 用最先进的制程（N3/N2）+ 最先进的封装（CoWoS/SoIC）造出来——<b style="color:var(--text)">这是当前 AI 算力产业链中唯一没有真正竞争对手的环节</b>。TSMC 的独特之处在于制程和封装是"打包"能力：客户不能只买制程不买封装，反过来也不行，这让 TSMC 同时垄断了 W4 主题里"如何制作算力芯片"的两个关键子环节。<br>
+    本页的核心问题是：<b style="color:var(--accent)">TSMC 先进制程 + CoWoS 先进封装的产能扩张速度，能否跟上 AI 需求增速</b>——以及供需缺口持续外溢时，哪些国内环节（晶圆代工/OSAT封装/半导体设备）会承接这部分溢出需求。
+  </div>
+</div>
+
+<!-- KPI -->
+<div class="kpi-ttl">关键指标 · Q1 CY2026 实际数据 + Q2 指引</div>
+<div class="kpi-strip">
+  <div class="kpi accent">
+    <div class="k-lbl">Q1 CY2026 营收</div>
+    <div class="k-val">359<span class="k-unit">亿$</span></div>
+    <div class="k-sub">环比 <b>+6.4%</b> · 略超指引</div>
+  </div>
+  <div class="kpi accent">
+    <div class="k-lbl">Q2 CY2026 指引</div>
+    <div class="k-val">390–402<span class="k-unit">亿$</span></div>
+    <div class="k-sub">中值同比 <b>+32%</b> · 环比+10%</div>
+  </div>
+  <div class="kpi">
+    <div class="k-lbl">Q1 毛利率</div>
+    <div class="k-val">66.2<span class="k-unit">%</span></div>
+    <div class="k-sub">环比 <b>+390bp</b> · 超指引高端120bp</div>
+  </div>
+  <div class="kpi">
+    <div class="k-lbl">全年2026营收指引</div>
+    <div class="k-val">&gt;30<span class="k-unit">%</span></div>
+    <div class="k-sub">美元口径同比增速 · 管理层上修</div>
+  </div>
+  <div class="kpi">
+    <div class="k-lbl">2026 CapEx</div>
+    <div class="k-val">520–560<span class="k-unit">亿$</span></div>
+    <div class="k-sub">指引至<b>高端</b> · 反映AI需求超预期</div>
+  </div>
+  <div class="kpi">
+    <div class="k-lbl">AI加速器长期CAGR</div>
+    <div class="k-val">中高50<span class="k-unit">%</span></div>
+    <div class="k-sub">2024-2029 · 管理层维持高位指引</div>
+  </div>
+</div>
+
+<!-- ① 业务拆解 -->
+<section class="sec">
+  <div class="sec-hd" onclick="toggleSec(this)">
+    <div class="sec-ttl"><span class="sec-num">1</span>业务拆解</div>
+    <span class="sec-arrow">▼</span>
+  </div>
+  <div class="sec-body">
+
+    <div style="font-size:11px;font-weight:700;color:var(--text2);margin-bottom:12px;letter-spacing:.3px">Q1 CY2026 营收结构（按制程节点 + 按下游平台；HPC=高性能计算/AI，占比首次突破6成）</div>
+    <div class="breakdown-top">
+      <div class="bk-box total">
+        <div class="bk-val total">359<span style="font-size:13px">亿$</span></div>
+        <div class="bk-lbl">Q1 CY2026 总营收</div>
+        <div style="margin-top:6px;font-size:11px;color:var(--text2)">环比 <strong style="color:var(--up)">+6.4%</strong> · 略超指引</div>
+      </div>
+      <div class="bk-arrow">→</div>
+      <div class="bk-split">
+        <div class="bk-box comp">
+          <div class="bk-val comp">61<span style="font-size:13px">%</span></div>
+          <div class="bk-lbl">HPC（高性能计算/AI）</div>
+          <div style="margin-top:4px"><span class="bk-pct ac">环比+20% · 占比首次破6成</span></div>
+        </div>
+        <div class="bk-box sys">
+          <div class="bk-val sys">26/6/4/1<span style="font-size:13px">%</span></div>
+          <div class="bk-lbl">智能手机/IoT/汽车/DCE</div>
+          <div style="margin-top:4px"><span class="bk-pct neu">智能手机环比-11%（季节性）</span></div>
+        </div>
+      </div>
+      <div class="bk-arrow">→</div>
+      <div class="bk-split">
+        <div class="bk-mini"><div class="v ac">N3（3纳米）</div><div class="l">占晶圆收入25% · 需求持续超预期 · 全球扩产中</div></div>
+        <div class="bk-mini"><div class="v ac">N5（5纳米）</div><div class="l">占晶圆收入36% · 仍是收入贡献最大节点</div></div>
+        <div class="bk-mini"><div class="v ac">N2（2纳米）</div><div class="l">占晶圆收入13%(含N7) · 2025Q4已量产 · 良率良好</div></div>
+        <div style="height:2px;background:var(--border);border-radius:2px;margin:2px 0"></div>
+        <div class="bk-mini"><div class="v">先进技术合计（≤7nm）</div><div class="l">占晶圆收入74%</div></div>
+        <div class="bk-mini"><div class="v">CoWoS/SoIC先进封装</div><div class="l">产能持续紧张 · 正扩建CoWoS中试线</div></div>
+        <div class="bk-mini"><div class="v">A14（1.4纳米）</div><div class="l">开发进展顺利 · 客户参与度高 · 2028年量产</div></div>
+      </div>
+    </div>
+
+    <div class="gs-cap">📊 季度营收与利润率演变 · CY2025 Q3 → CY2026 Q2E<span>｜单位：十亿美元；GM = 毛利率；OM = 营业利润率</span></div>
+    <table class="ctable">
+      <thead>
+        <tr><th>季度</th><th class="num">营收（B$）</th><th class="num">环比</th><th class="num">GM</th><th class="num">OM</th><th>核心叙事 / 关键数据</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Q3 CY2025</td>
+          <td class="num">~31.0</td><td class="num" style="color:var(--up)">—</td><td class="num">~59.5%</td><td class="num">~50%</td>
+          <td>N3继续放量；CoWoS产能扩张持续推进</td>
+        </tr>
+        <tr>
+          <td>Q4 CY2025</td>
+          <td class="num">~33.7</td><td class="num" style="color:var(--up)">~+9%</td><td class="num">62.3%</td><td class="num">~54%</td>
+          <td><b>N2正式进入量产（新竹+高雄双厂）</b>；全年CY2025营收创新高</td>
+        </tr>
+        <tr class="latest">
+          <td><b>Q1 CY2026</b></td>
+          <td class="num"><b>35.9</b></td><td class="num" style="color:var(--up)"><b>+6.4%</b></td><td class="num"><b>66.2%</b></td><td class="num"><b>58.1%</b></td>
+          <td><span style="color:var(--dn);font-weight:700">毛利率环比+390bp大幅超预期；HPC占比首破61%；CapEx上修至520-560亿$高端；全年营收指引上修至&gt;30%增速</span></td>
+        </tr>
+        <tr>
+          <td><span class="tag tag-est">Q2 CY2026E</span></td>
+          <td class="num">39.0–40.2</td><td class="num" style="color:var(--up)">~+10%E</td><td class="num">65.5–67.5%</td><td class="num">56.5–58.5%</td>
+          <td>同比中值+32%；N3毛利率预计在下半年跨过公司平均水平</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="note">📌 CapEx纪律：过去三年（2024-2026）累计CapEx约1010亿$，2026年单年CapEx指引520-560亿$已超过去三年总量的一半；管理层明确"未来三年CapEx将显著高于过去三年"，且强调"收入增速将持续跑赢CapEx增速"（资本密集度不会突然飙升）。</div>
+
+    <div style="margin-top:18px">
+    <div class="gs-cap" style="margin-top:0">🏭 先进制程 + 先进封装产能扩张计划</div>
+    <table class="ctable">
+      <thead><tr><th>节点/技术</th><th>地点</th><th>当前状态</th></tr></thead>
+      <tbody>
+        <tr><td><b>N2（2纳米）</b></td><td>新竹 + 高雄</td><td><span class="tag tag-up">2025Q4已进入量产 · 多阶段爬坡 · 良率良好</span></td></tr>
+        <tr class="latest"><td><b>N3新增产能</b></td><td>台南（新建）+ 亚利桑那二厂 + 日本二厂</td><td><span style="color:var(--dn);font-weight:700">台湾2027H1投产 · 亚利桑那2027H2投产 · 日本2028投产（追加产能应对AI超预期需求）</span></td></tr>
+        <tr><td><b>CoWoS 先进封装</b></td><td>台湾（主力）+ 全球布局中</td><td><span class="tag tag-dn">持续满产 · 客户demand远超产能 · 正建CoWoS中试线</span></td></tr>
+        <tr><td><b>A16 / N2P</b></td><td>接续N2的增强节点</td><td><span class="tag tag-ac">规划中 · 延续N2大节点生命周期</span></td></tr>
+        <tr><td><b>A14（1.4纳米）</b></td><td>第二代纳米片晶体管</td><td><span class="tag tag-est">开发进展顺利 · 2028年量产 · 较N2性能+10-15%/功耗-25-30%</span></td></tr>
+      </tbody>
+    </table>
+    <div class="note">📌 CoWoS产能是当前AI芯片供给的最大瓶颈之一——管理层在业绩会上多次强调"先进封装容量非常紧张"，且明确不会因为竞争对手推出EMIB等替代方案而放慢CoWoS扩产（"我们不会把生意留在桌上"）。</div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ② TSM 在先进制程/先进封装产业链的位置 -->
+<section class="sec">
+  <div class="sec-hd" onclick="toggleSec(this)">
+    <div class="sec-ttl"><span class="sec-num">2</span>TSM 在先进制程 / 先进封装产业链的位置</div>
+    <span class="sec-arrow">▼</span>
+  </div>
+  <div class="sec-body">
+
+    <div class="why-wrap" style="margin-bottom:16px">
+      <div class="why-hd">🎯 一句话定位：TSMC 是"制程+封装"双垄断——全球唯一能同时提供最先进制程和最大规模先进封装产能的代工厂</div>
+      <div style="font-size:11.5px;color:var(--text2);line-height:1.75">
+        NVIDIA/AMD/Google/Amazon/Broadcom的AI芯片设计再强，也要交给TSMC用N3/N2制程流片，再用CoWoS/SoIC封装成最终产品——<b style="color:var(--text)">TSMC同时卡住"晶圆制造"和"先进封装"两个环节</b>，这是它区别于Intel（仅是IDM+代工新玩家）和纯OSAT厂商（只做封装不做晶圆）的核心壁垒。当前最大瓶颈不是制程产能（虽然也紧张），而是<b style="color:var(--accent)">CoWoS先进封装产能——即便晶圆造出来了，没有封装产能也无法变成最终芯片交付客户</b>。
+      </div>
+    </div>
+
+    <div class="gs-cap" style="margin-top:0">⚡ 三条核心线 · 技术路线 × 客户结构 × A 股映射逻辑</div>
+    <div class="eng3">
+      <div class="eng" style="border-top-color:var(--accent)">
+        <div class="eng-hd" style="color:var(--accent)">
+          🔴 N3/N2 先进制程（收入主力）
+          <span class="pct" style="background:var(--accent)">供不应求</span>
+        </div>
+        <div class="eng-bd">
+          <b>核心地位</b>：N3占晶圆收入25%，N5占36%，先进技术（≤7nm）合计占74%；N2已于2025Q4量产，良率良好，双厂爬坡<br>
+          <b>供需状态</b>：管理层明确"客户仍在说晶圆是最大瓶颈"，即便追加N3全球扩产（台湾/亚利桑那/日本三地新增产能），仍难完全满足需求<br>
+          <b>建厂周期</b>：2-3年建一座新厂，台南新厂2027H1投产、亚利桑那二厂2027H2投产——供给刚性明确，短期无法快速释放<br>
+          <b>下游客户</b>：NVIDIA / AMD / Apple / Google / Amazon / Broadcom等几乎所有头部芯片设计公司<br>
+          <b style="color:var(--dn)">A股映射</b>：<span style="color:var(--dn)">TSMC先进制程持续满产、供需缺口维持，验证国产晶圆代工（中芯国际/华虹半导体）在成熟制程和特色工艺上的替代必要性与稀缺性溢价</span>
+        </div>
+      </div>
+      <div class="eng" style="border-top-color:var(--warn)">
+        <div class="eng-hd" style="color:var(--warn)">
+          🟠 CoWoS/SoIC 先进封装（最紧瓶颈）
+          <span class="pct" style="background:var(--warn)">持续满产</span>
+        </div>
+        <div class="eng-bd">
+          <b>产品定义</b>：CoWoS（Chip-on-Wafer-on-Substrate，2.5D）+ SoIC（3D堆叠），是AI芯片把GPU/HBM/ASIC拼在一起的关键工艺，正在建设CoWoS中试线扩大产能<br>
+          <b>竞争格局</b>：面对Intel EMIB等替代方案的竞争压力，管理层明确表态"欢迎竞争但不会把生意留在桌上"，同时加码研发更大reticle尺寸的封装技术<br>
+          <b>技术挑战</b>：芯片尺寸越来越大带来翘曲（warpage）、热应力等工程难题，SoIC路线是解决方案之一<br>
+          <b>与OSAT关系</b>：TSMC自身先进封装产能持续紧张，需要与OSAT合作伙伴协同扩产以满足客户需求<br>
+          <b style="color:var(--dn)">A股映射</b>：<span style="color:var(--dn)">CoWoS满产状态下的订单外溢，是国内先进封装OSAT厂（通富微电/长电科技）承接高端订单的核心逻辑；封装设备/材料（键合/研磨/ABF载板）也间接受益</span>
+        </div>
+      </div>
+      <div class="eng" style="border-top-color:var(--up)">
+        <div class="eng-hd" style="color:var(--up)">
+          🟢 CapEx上修 + AI加速器长期CAGR
+          <span class="pct" style="background:var(--up)">高确定性</span>
+        </div>
+        <div class="eng-bd">
+          <b>CapEx轨迹</b>：2026年指引上修至520-560亿$区间高端，较2024-2026三年累计1010亿$的过去三年总量还要高出一半以上，反映客户需求持续超1月指引<br>
+          <b>AI加速器CAGR</b>：管理层维持2024-2029中高50%区间的长期指引，即便近期token消耗量加速增长，也暂未进一步上修<br>
+          <b>行业地位</b>：CapEx强度维持在30%+的健康水平，管理层强调"收入增速将持续跑赢CapEx增速"，即高资本开支不代表利润率被稀释<br>
+          <b>设备采购</b>：TSMC大规模扩产直接拉动全球半导体设备（含EUV光刻机等）需求，是国产半导体设备厂商观察海外龙头资本开支节奏的重要风向标<br>
+          <b style="color:var(--dn)">A股映射</b>：<span style="color:var(--dn)">TSMC CapEx持续上修 = 全球晶圆代工设备需求高景气的直接信号，间接映射国产半导体设备（北方华创/中微公司/拓荆科技），逻辑为"行业景气度确认"而非直接供应商关系</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 产业链层级图 -->
+    <div class="gs-cap">🗺 产业链层级 · TSMC 在 AI 芯片制造价值链中的位置</div>
+    <div class="spine">
+      <div class="lane">
+        <div class="lane-req" style="border-left-color:var(--accent)">
+          <div class="lr-t" style="color:var(--accent)">① 芯片设计（Fabless）</div>
+          <div class="lr-d">GPU/ASIC/CPU设计<br><em style="color:var(--accent)">TSMC上游客户</em></div>
+        </div>
+        <div class="lane-arrow">→</div>
+        <div class="lane-fill">
+          <span class="fchip" style="border-color:var(--accent2);color:var(--accent)">NVIDIA / AMD（HPC AI）</span>
+          <span class="fchip" style="border-color:var(--accent2);color:var(--accent)">Apple（智能手机）</span>
+          <span class="fchip" style="border-color:var(--accent2);color:var(--accent)">Google/Amazon/Broadcom（定制ASIC）</span>
+        </div>
+        <div class="lane-w">
+          <span style="font-size:9.5px;font-weight:700;color:var(--text2)">→ 委托TSMC代工</span>
+        </div>
+      </div>
+      <div class="lane">
+        <div class="lane-req" style="border-left-color:var(--warn)">
+          <div class="lr-t" style="color:var(--warn)">② N3/N2晶圆制造（TSMC核心）</div>
+          <div class="lr-d">先进制程流片<br><em style="color:var(--warn)">全球唯一稀缺产能</em></div>
+        </div>
+        <div class="lane-arrow">→</div>
+        <div class="lane-fill">
+          <span class="fchip" style="border-color:var(--neu-bd);color:var(--neu-ink)">CoWoS/SoIC先进封装（自有+OSAT协同）</span>
+        </div>
+        <div class="lane-w">
+          <span style="font-size:9.5px;font-weight:700;color:var(--text2)">→ 封装环节</span>
+          <span style="font-size:9.5px;color:var(--text2)">产能持续满产</span>
+        </div>
+      </div>
+      <div class="lane">
+        <div class="lane-req" style="border-left-color:var(--up)">
+          <div class="lr-t" style="color:var(--up)">③ 订单外溢 + 设备拉动</div>
+          <div class="lr-d">高端订单外溢/CapEx拉动<br><em style="color:var(--up)">国内映射入口</em></div>
+        </div>
+        <div class="lane-arrow">→</div>
+        <div class="lane-fill">
+          <span class="fchip" style="border-color:#86efac;color:var(--up)">通富微电/长电科技（先进封装OSAT外溢）</span>
+          <span class="fchip" style="border-color:#86efac;color:var(--up)">中芯国际/华虹半导体（成熟制程份额）</span>
+          <span class="fchip" style="border-color:#86efac;color:var(--up)">北方华创/中微公司（设备景气验证）</span>
+        </div>
+        <div class="lane-w">
+          <span style="font-size:9.5px;font-weight:700;color:var(--up)">→ A股映射标的</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="concl">
+      🎯 <b>为什么 TSM 是 W4 先进封装/半导体制造板块最核心的观察标的？</b>——制程+封装双垄断，且供需缺口是当前AI供应链中最紧的环节。<br>
+      <b>制程方向</b>：N3/N2持续满产，CapEx追加扩产但建厂周期2-3年，供给刚性明确，短期缺口难以缓解。<br>
+      <b>封装方向</b>：CoWoS是当前AI芯片交付的最大物理瓶颈，管理层明确态度是"有多少产能就卖多少"，且面对EMIB等竞品也不放松扩产节奏。<br>
+      <b>CapEx信号</b>：2026年CapEx指引上修至历史高位，是判断全球AI资本开支强度、进而映射国内半导体设备/封装链景气拐点的最直接、最权威的先行指标。
+    </div>
+
+  </div>
+</section>
+
+<!-- ③ 近期业绩会交流重点 -->
+<section class="sec">
+  <div class="sec-hd" onclick="toggleSec(this)">
+    <div class="sec-ttl"><span class="sec-num">3</span>Q1 CY2026 业绩会 · 关键信号</div>
+    <span class="sec-arrow">▼</span>
+  </div>
+  <div class="sec-body">
+
+    <div style="padding:12px 16px;background:var(--warn-bg);border:1.5px solid #fcd34d;border-radius:9px;font-size:11.5px;color:var(--text2);line-height:1.7">
+      <b style="color:var(--warn)">💡 Q1 CY2026 关键增量信息</b>
+      <div style="margin-top:8px" class="plist">
+        <div><span class="pn" style="background:var(--dn)">!</span><b>全年2026营收指引上修至美元口径同比&gt;30%增长</b>——较1月指引进一步上修，反映AI需求持续超预期</div>
+        <div><span class="pn" style="background:var(--dn)">!</span><b>2026年CapEx指引上修至520-560亿$区间高端</b>——较过去三年（2024-2026）累计1010亿$总量还要高出一半以上，管理层预计"未来三年CapEx将显著高于过去三年"</div>
+        <div><span class="pn" style="background:var(--accent)">★</span><b>追加N3全球扩产计划</b>——台湾新建晶圆厂（台南，2027H1投产）、亚利桑那二厂（2027H2投产）、日本二厂（2028投产）均追加3纳米产能，应对超预期的多年期需求管线</div>
+        <div><span class="pn" style="background:var(--accent)">★</span><b>先进封装产能持续极度紧张</b>——管理层明确表态"不会因竞品（如EMIB）放慢CoWoS扩产"，同时正建设CoWoS中试线以支撑更大reticle尺寸方案</div>
+        <div><span class="pn" style="background:var(--up)">↑</span><b>N2已于2025Q4进入量产</b>，新竹+高雄双厂多阶段爬坡，良率表现良好，叠加N2P/A16增强节点，预计N2家族将成为又一个长生命周期大节点</div>
+        <div><span class="pn" style="background:var(--up)">↑</span><b>N3毛利率预计2026下半年跨过公司平均水平</b>，随日历折旧完成和良率提升，盈利质量持续改善</div>
+      </div>
+    </div>
+
+    <div class="note" style="margin-top:14px">📌 与Intel关系：TSMC管理层对"客户流失"问题的回应是——供给紧张是当前"流失"的主因而非技术竞争力问题，公司策略是加速扩产而非降价保份额；同时明确"不会因为供给紧张而在客户间挑三拣四"，即对所有客户一视同仁分配产能。</div>
+  </div>
+</section>
+
+<!-- ④ 认知沉淀 -->
+<section class="sec mid">
+  <div class="sec-hd" onclick="toggleSec(this)">
+    <div class="sec-ttl"><span class="sec-num">4</span>认知沉淀 · 为什么 TSM 是 W4 中确定性最高的标的</div>
+    <span class="sec-arrow">▼</span>
+  </div>
+  <div class="sec-body">
+
+    <div class="mid-thesis">
+      核心论点：在整条AI算力产业链里，TSMC是<b>唯一没有真正竞争对手、且客户无法绕开的环节</b>——不管是NVIDIA的GPU还是Google的TPU，最终都要经过TSMC的晶圆厂和封装线。CapEx持续上修、CoWoS产能持续满产，是判断全球AI资本开支强度最直接、最权威的先行指标。<span class="em">TSMC的产能分配决策（谁能拿到多少晶圆+封装产能），本质上决定了下游整条产业链的供给节奏。</span>
+    </div>
+
+    <div class="cog-grid">
+
+      <div class="cog-card">
+        <div class="cog-no">1</div>
+        <div class="cog-tt">CoWoS：<b>当前AI供应链最紧的物理瓶颈</b></div>
+        <div class="cog-body">
+          即便晶圆造出来了，没有CoWoS/SoIC封装产能也无法变成客户能用的最终芯片——这是当前AI芯片交付节奏的最大约束。管理层在Q1业绩会上被反复追问先进封装扩产计划，明确表态"正在建CoWoS中试线"，并强调不会因EMIB等竞品而放慢扩产。<b>CoWoS产能爬坡速度，直接决定了NVIDIA/AMD等下游客户新品的实际出货节奏</b>。
+        </div>
+        <div class="cog-tag"><span class="k">观察指标：</span> CoWoS中试线投产时间 + 先进封装占CapEx比重变化</div>
+      </div>
+
+      <div class="cog-card">
+        <div class="cog-no">2</div>
+        <div class="cog-tt">CapEx上修：<b>全球AI资本开支的最权威先行指标</b></div>
+        <div class="cog-body">
+          TSMC 2026年CapEx指引从年初区间上修至520-560亿$高端，是全行业最具权威性的AI资本开支验证信号——因为TSMC的CapEx决策基于对所有头部芯片设计公司真实需求的直接沟通，比任何单一云厂商的资本开支指引都更综合。管理层明确"过去几年收入增速持续跑赢CapEx增速"，意味着扩产的同时利润率并未被稀释，这是判断AI周期是否健康的重要佐证。
+        </div>
+        <div class="cog-tag"><span class="k">跟踪重点：</span> 每季CapEx指引变化方向 + N3/N2毛利率跨过公司平均的时间点</div>
+      </div>
+
+      <div class="cog-card">
+        <div class="cog-no">3</div>
+        <div class="cog-tt">N3长尾需求：<b>老节点为何还在扩产</b></div>
+        <div class="cog-body">
+          N3自2022年底量产至今已超3年，按历史规律通常不会再新增产能，但TSMC罕见地在台湾/亚利桑那/日本三地追加N3产能——核心原因是HPC AI（含HBM基础的定制ASIC）、智能手机、汽车、IoT客户对N3的多年期需求管线持续加长，说明<b>N3不是过渡节点而是长周期主力节点</b>，这也解释了为何N3设备折旧完成后毛利率将显著改善。
+        </div>
+        <div class="cog-tag"><span class="k">关键信号：</span> N3新增产能投产进度（台湾2027H1/亚利桑那2027H2/日本2028）</div>
+      </div>
+
+      <div class="cog-card">
+        <div class="cog-no">4</div>
+        <div class="cog-tt">对国内OSAT映射：<b>订单外溢是核心逻辑，但需验证节奏</b></div>
+        <div class="cog-body">
+          TSMC先进封装持续满产，意味着部分客户的封装需求会寻求台系/陆系OSAT厂协同或分流，通富微电、长电科技作为国内先进封装龙头，是承接这部分外溢需求的核心标的。但需要注意：<b>TSMC自身也在与OSAT伙伴协同扩产</b>，外溢订单的具体规模和落地节奏仍需通过国内厂商的先进封装产能利用率、订单结构变化来验证，不能简单假设"TSMC满产=国内OSAT订单等比例增长"。
+        </div>
+        <div class="cog-tag"><span class="k">验证路径：</span> 通富微电/长电科技先进封装产能利用率 + 海外客户订单占比变化</div>
+      </div>
+
+      <div class="cog-card">
+        <div class="cog-no">5</div>
+        <div class="cog-tt">核心风险：<b>地缘政治 + 产能高度集中台湾本土</b></div>
+        <div class="cog-body">
+          尽管TSMC在亚利桑那、日本积极扩产海外产能，但最先进制程（N2/A14）仍集中在台湾本土——管理层明确"优先把最新节点放在台湾以贴近研发团队"。这意味着地缘政治风险仍是TSMC估值的重要折价因子：若台海局势升级，即便订单充足，公司核心资产仍可能面临重新定价风险。此外，中东局势带来的能源/材料供应不确定性也是管理层在业绩会上主动提及的风险点。
+        </div>
+        <div class="cog-tag"><span class="k">跟踪重点：</span> 海外产能占比变化（亚利桑那/日本/德国）+ 地缘政治相关表态</div>
+      </div>
+
+      <div class="cog-card">
+        <div class="cog-no">6</div>
+        <div class="cog-tt">TSM vs INTC：<b>互补叙事，映射强度不同</b></div>
+        <div class="cog-body">
+          TSM逻辑：全球唯一不可替代的制程+封装双龙头，供需缺口是当前AI供应链最紧的瓶颈，CoWoS满产外溢和CapEx上修对国内OSAT/半导体设备的映射链条更直接、更强。<br>
+          INTC逻辑：美国本土供给多元化叙事代表，先进封装业务独立高增长但外部客户仍早期，对A股映射更偏"趋势验证"而非"直接传导"。<br>
+          <b>组合角度</b>：TSM应作为W4先进封装/半导体制造板块的核心交易标的，INTC作为辅助的宏观叙事验证窗口。
+        </div>
+        <div class="cog-tag"><span class="k">核心差异：</span> TSM 订单外溢+设备景气强映射 vs INTC 产业趋势验证型弱映射</div>
+      </div>
+
+    </div>
+
+  </div>
+</section>
+
+<div class="foot">TSM · 台湾积体电路制造公司 · 数据来源：Q1 CY2026 业绩电话会（2026-04-16）· Investing.com 电话会实录 · 更新 2026-07-01</div>
+</div>
+
+<script>
+function toggleSec(hd){
+  hd.classList.toggle('collapsed');
+  hd.nextElementSibling.classList.toggle('collapsed');
+}
+</script>
+</body>
+</html>

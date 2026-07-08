@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>INTC 英特尔 · 美股映射（IDM 2.0 先进封装 + 代工）</title>
+<style>
+:root{
+  --bg:#f7f8fa;--card:#fff;--border:#e6e8eb;
+  --text:#1a1d21;--text2:#586271;--text3:#8a94a3;
+  /* INTC 品牌色：英特尔蓝 */
+  --accent:#0068b5;--accent2:#8fd3ff;--accent-bg:#eef7ff;--accent-ink:#00457c;
+  --up:#15803d;--up-bg:#eaf6ee;--up-ink:#136130;
+  --dn:#c01d24;--dn-bg:#fbeaeb;--dn-ink:#9a161c;
+  --warn:#b45309;--warn-bg:#fdf4e7;
+  --neu:#475569;--neu-bg:#eef1f5;--neu-bd:#c3cdd9;--neu-ink:#334155;
+  --neu2:#64748b;--neu2-bg:#f4f6f9;--neu2-bd:#d7dee6;
+  --sh:0 1px 3px rgba(0,0,0,.07);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;background:var(--bg);color:var(--text);font-size:14px;line-height:1.6}
+a{color:var(--accent);text-decoration:none}
+a:hover{text-decoration:underline}
+.hdr{background:var(--card);border-bottom:1px solid var(--border);padding:14px 32px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:var(--sh)}
+.hdr-l{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.hdr-title{font-size:19px;font-weight:800}
+.hdr-sub{font-size:11px;color:var(--text2);margin-top:1px}
+.badge{display:inline-flex;align-items:center;padding:3px 10px;border-radius:12px;font-size:11px;font-weight:700;white-space:nowrap}
+.b-ac{background:var(--accent-bg);color:var(--accent);border:1px solid var(--accent2)}
+.b-neu{background:var(--neu-bg);color:var(--neu-ink);border:1px solid var(--neu-bd)}
+.hdr-back{display:inline-flex;align-items:center;gap:5px;padding:5px 12px;border:1px solid var(--accent2);border-radius:8px;background:var(--accent-bg);color:var(--accent);font-size:12px;font-weight:700;text-decoration:none;transition:all .15s}
+.hdr-back:hover{background:var(--accent);color:#fff}
+.hdr-meta{font-size:10.5px;color:var(--text2);text-align:right;line-height:1.7}
+.wrap{max-width:1080px;margin:0 auto;padding:20px 32px 60px}
+.sec{margin-bottom:16px;background:var(--card);border:1px solid var(--border);border-radius:10px;box-shadow:var(--sh);overflow:hidden}
+.sec-hd{padding:11px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;cursor:pointer;background:#fafbfc;user-select:none}
+.sec-hd:hover{background:#f1f3f5}
+.sec-ttl{font-size:13px;font-weight:700;display:flex;align-items:center;gap:8px}
+.sec-num{display:inline-flex;align-items:center;justify-content:center;min-width:20px;height:20px;padding:0 6px;border-radius:10px;background:var(--accent);color:#fff;font-size:11px;font-weight:800;flex-shrink:0}
+.sec-arrow{font-size:12px;color:var(--text2);transition:transform .2s}
+.sec-hd.collapsed .sec-arrow{transform:rotate(-90deg)}
+.sec-body{padding:18px}
+.sec-body.collapsed{display:none}
+.breakdown-top{display:grid;grid-template-columns:1fr auto 1fr auto 1fr;align-items:center;gap:0;margin-bottom:20px}
+.bk-box{text-align:center;padding:14px 16px;border-radius:10px;border:2px solid}
+.bk-box.total{border-color:var(--accent);background:var(--accent-bg)}
+.bk-box.comp{border-color:var(--accent2);background:var(--accent-bg)}
+.bk-box.sys{border-color:var(--neu-bd);background:var(--neu-bg)}
+.bk-val{font-size:22px;font-weight:900;letter-spacing:-.5px}
+.bk-val.total{color:var(--accent)}
+.bk-val.comp{color:var(--accent)}
+.bk-val.sys{color:var(--neu-ink)}
+.bk-lbl{font-size:11px;color:var(--text2);margin-top:3px}
+.bk-pct{font-size:10px;font-weight:700;margin-top:4px;padding:1px 6px;border-radius:4px;display:inline-block}
+.bk-pct.ac{background:var(--accent);color:#fff}
+.bk-pct.neu{background:var(--neu);color:#fff}
+.bk-arrow{font-size:20px;color:var(--text2);padding:0 8px;text-align:center}
+.bk-split{display:flex;flex-direction:column;gap:8px}
+.bk-mini{border:1.5px solid var(--neu-bd);background:#fff;border-radius:8px;padding:8px 10px;text-align:center}
+.bk-mini .v{font-size:13px;font-weight:900;color:var(--neu-ink)}
+.bk-mini .v.ac{color:var(--accent)}
+.bk-mini .l{font-size:10px;color:var(--text2)}
+.ctable{width:100%;border-collapse:collapse;font-size:12.5px}
+.ctable th{background:#f1f3f5;padding:7px 10px;text-align:left;font-weight:700;border-bottom:2px solid var(--border);font-size:11.5px;color:var(--text2);white-space:nowrap}
+.ctable td{padding:7px 10px;border-bottom:1px solid #f1f3f5;vertical-align:middle}
+.ctable tr:last-child td{border-bottom:none}
+.ctable .num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.ctable .latest{background:var(--accent-bg)}
+.ctable .latest td{font-weight:600}
+.tag{display:inline-block;padding:1px 6px;border-radius:4px;font-size:10px;font-weight:700;border:1px solid;white-space:nowrap}
+.tag-ac{background:var(--accent-bg);color:var(--accent);border-color:var(--accent2)}
+.tag-est{background:#f1f5f9;color:var(--text2);border-color:#cbd5e1}
+.tag-up{background:var(--up-bg);color:var(--up);border-color:#86efac}
+.tag-dn{background:var(--dn-bg);color:var(--dn);border-color:#fca5a5}
+.tag-warn{background:var(--warn-bg);color:var(--warn);border-color:#fcd34d}
+.note{font-size:11px;color:var(--text2);margin-top:10px;line-height:1.6}
+.foot{text-align:center;font-size:11px;color:var(--text2);padding:14px;margin-top:10px}
+.kpi-ttl{font-size:11px;font-weight:700;color:var(--text2);letter-spacing:.3px;margin:2px 0 8px}
+.kpi-strip{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;margin-bottom:18px}
+@media(max-width:980px){.kpi-strip{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:560px){.kpi-strip{grid-template-columns:repeat(2,1fr)}}
+.kpi{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:11px 13px;box-shadow:var(--sh);display:flex;flex-direction:column}
+.kpi.accent{border:1.5px solid var(--accent2);background:var(--accent-bg)}
+.kpi .k-lbl{font-size:11px;color:var(--text2);font-weight:600}
+.kpi .k-val{font-size:19px;font-weight:900;letter-spacing:-.5px;margin-top:3px;line-height:1.1}
+.kpi.accent .k-val{color:var(--accent)}
+.kpi .k-unit{font-size:11px;font-weight:700;color:var(--text2);margin-left:2px}
+.kpi .k-sub{font-size:10px;color:var(--text2);margin-top:4px}
+.kpi .k-sub b{color:var(--up)}
+.why-wrap{border:1.5px dashed var(--accent2);background:var(--accent-bg);border-radius:10px;padding:15px 16px;margin-bottom:20px}
+.why-hd{font-size:12.5px;font-weight:800;color:var(--accent);margin-bottom:10px}
+.eng3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:14px}
+@media(max-width:760px){.eng3{grid-template-columns:1fr}}
+.eng{border:1px solid var(--border);border-top:3px solid;border-radius:10px;overflow:hidden;background:var(--card)}
+.eng-hd{padding:10px 14px;font-size:13px;font-weight:800;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.eng-hd .pct{margin-left:auto;font-size:10px;font-weight:800;color:#fff;border-radius:5px;padding:2px 8px}
+.eng-bd{padding:0 14px 14px;font-size:11.5px;color:var(--text2);line-height:1.85}
+.eng-bd b{color:var(--text)}
+.spine{border:1px solid var(--border);border-radius:9px;overflow:hidden}
+.lane{display:flex;gap:12px;align-items:stretch;padding:13px 14px;border-bottom:1px solid #f1f3f5}
+.lane:last-child{border-bottom:none}
+.lane-req{width:185px;flex-shrink:0;border-left:4px solid;padding-left:11px}
+.lr-t{font-size:12.5px;font-weight:800}
+.lr-d{font-size:10px;color:var(--text2);line-height:1.5;margin-top:3px}
+.lr-d em{font-style:normal;font-weight:700}
+.lane-arrow{display:flex;align-items:center;color:#cbd5e1;font-weight:900;font-size:17px;flex-shrink:0}
+.lane-fill{flex:1;display:flex;flex-wrap:wrap;gap:7px;align-items:center}
+.fchip{font-size:11px;font-weight:700;border-radius:6px;padding:5px 11px;border:1.5px solid;background:var(--card)}
+.lane-w{width:160px;flex-shrink:0;display:flex;flex-direction:column;gap:4px;align-items:flex-end;justify-content:center}
+@media(max-width:840px){.lane{flex-direction:column;gap:9px}.lane-req,.lane-w{width:auto}.lane-arrow{display:none}.lane-w{flex-direction:row;justify-content:flex-start}}
+.concl{margin-top:16px;border:1.5px solid var(--accent2);border-radius:9px;background:var(--accent-bg);padding:14px 16px;font-size:12px;line-height:1.95;color:var(--text)}
+.concl b{color:var(--accent-ink)}
+.plist{display:flex;flex-direction:column;gap:9px}
+.plist>div{line-height:1.85;font-size:11.5px;color:var(--text2)}
+.plist>div b{color:var(--text)}
+.pn{display:inline-flex;align-items:center;justify-content:center;width:17px;height:17px;border-radius:50%;font-size:9.5px;font-weight:800;color:#fff;margin-right:6px;vertical-align:1px;flex-shrink:0}
+.sec.mid{border:1.5px solid var(--accent2);background:linear-gradient(180deg,var(--accent-bg) 0%,#fff 60%)}
+.sec.mid .sec-hd{background:var(--accent-bg)}
+.mid-thesis{font-size:13px;font-weight:800;color:#00365f;background:var(--accent-bg);border:1px solid var(--accent2);border-radius:8px;padding:13px 16px;margin-bottom:16px;line-height:1.9}
+.mid-thesis .em{color:var(--dn)}
+.cog-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+@media(max-width:840px){.cog-grid{grid-template-columns:1fr}}
+.cog-card{border:1px solid var(--border);border-radius:10px;padding:14px 14px 12px;background:var(--card);box-shadow:var(--sh);position:relative;display:flex;flex-direction:column}
+.cog-card .cog-no{position:absolute;top:-10px;left:14px;width:24px;height:24px;border-radius:50%;background:var(--accent);color:#fff;font-size:12px;font-weight:900;display:flex;align-items:center;justify-content:center;box-shadow:var(--sh)}
+.cog-card .cog-tt{font-size:13px;font-weight:800;margin:8px 0 8px;line-height:1.45;color:var(--text)}
+.cog-card .cog-tt b{color:var(--accent)}
+.cog-card .cog-body{font-size:11.5px;color:var(--text2);line-height:1.8;flex:1}
+.cog-card .cog-body b{color:var(--text)}
+.cog-card .cog-tag{margin-top:10px;font-size:10.5px;font-weight:700;color:var(--accent-ink);background:#fff;border:1px solid var(--accent2);border-radius:6px;padding:5px 9px;line-height:1.5}
+.cog-card .cog-tag .k{color:var(--text2);font-weight:400}
+.gs-cap{font-size:11.5px;font-weight:700;color:var(--accent);margin:14px 0 8px}
+.gs-cap span{color:var(--text2);font-weight:400;font-size:10.5px}
+</style>
+</head>
+<body>
+
+<header class="hdr">
+  <div class="hdr-l">
+    <a class="hdr-back" href="../us-mapping-dashboard.html">← 返回看板</a>
+    <div>
+      <div class="hdr-title">🔷 INTC · Intel Corporation</div>
+      <div class="hdr-sub">NASDAQ · Foveros 3D堆叠 / EMIB 2.5D / 18A·14A制程 / IDM 2.0代工 · <b>唯一美国本土先进封装+代工双业务IDM</b></div>
+    </div>
+    <span class="badge b-ac">W4 先进封装</span>
+    <span class="badge b-neu">Foveros · EMIB · 18A/14A</span>
+  </div>
+  <div class="hdr-meta">
+    更新：2026-07-01（市值实时校准）<br>业务口径：FY2026E全年度（GS模型2026-06-25）
+  </div>
+</header>
+
+<div class="wrap">
+
+<!-- 定位说明 -->
+<div class="why-wrap">
+  <div class="why-hd">🧭 Intel 是什么角色？——唯一同时拥有"先进封装 + 晶圆代工"双能力的美国本土 IDM</div>
+  <div style="font-size:11.5px;color:var(--text2);line-height:1.7">
+    AI 芯片越做越大、单芯片良率和成本已到极限，行业共识是<b style="color:var(--text)">用先进封装把多颗小芯粒（chiplet）拼成一颗"超级芯片"</b>——这正是 Intel 过去十年在 Foveros（3D 垂直堆叠）和 EMIB（2.5D 平面互联）两条技术路线上持续投入的底层逻辑。IDM 2.0 战略下，Intel 同时是<b style="color:var(--accent)">x86 CPU 垄断者（与 AMD 双寡头）+ 美国本土稀缺的先进封装产能 + 正在追赶的晶圆代工新玩家（18A/14A）</b>——三重身份叠加，使其成为"去台积电依赖"叙事下最直接的美国本土供给标的。<br>
+    本页以 <b style="color:var(--accent)">FY2026 全年度（而非单一季度）</b>视角拆分业务：核心问题是——DCAI（数据中心/AI）和 Intel Foundry（含先进封装）两条线全年增速能否持续跑赢仍在温和收缩的 CCG（客户端），以及 18A/14A 良率爬坡节奏能否支撑代工业务从"内部自用"走向真正对外接单。
+  </div>
+</div>
+
+<!-- KPI -->
+<div class="kpi-ttl">关键指标 · FY2026E 全年度预测（GS模型，2026-06-25更新）vs FY2025A 实际</div>
+<div class="kpi-strip">
+  <div class="kpi accent">
+    <div class="k-lbl">FY2026E 总营收</div>
+    <div class="k-val">581.5<span class="k-unit">亿$</span></div>
+    <div class="k-sub">同比 <b>+10.0%</b> · 结束2023-2025三年零增长</div>
+  </div>
+  <div class="kpi accent">
+    <div class="k-lbl">FY2026E DCAI营收</div>
+    <div class="k-val">235.1<span class="k-unit">亿$</span></div>
+    <div class="k-sub">同比 <b>+39.0%</b> · 全公司最强增长引擎</div>
+  </div>
+  <div class="kpi">
+    <div class="k-lbl">FY2026E Foundry营收</div>
+    <div class="k-val">227.6<span class="k-unit">亿$</span></div>
+    <div class="k-sub">同比 <b>+27.7%</b> · 含内部结算，先进封装+18A驱动</div>
+  </div>
+  <div class="kpi">
+    <div class="k-lbl">FY2026E CCG营收</div>
+    <div class="k-val">317.9<span class="k-unit">亿$</span></div>
+    <div class="k-sub">同比 <b>-1.4%</b> · 客户端仍是拖累项</div>
+  </div>
+  <div class="kpi">
+    <div class="k-lbl">FY2026E 毛利率</div>
+    <div class="k-val">38.9<span class="k-unit">%</span></div>
+    <div class="k-sub">较2025A <b>+330bp</b> · 18A良率改善驱动</div>
+  </div>
+  <div class="kpi">
+    <div class="k-lbl">FY2026E Non-GAAP EPS</div>
+    <div class="k-val">$1.05</div>
+    <div class="k-sub">较2025A $0.42 <b>+153%</b> · GAAP口径仍为负</div>
+  </div>
+</div>
+
+<!-- ① 业务拆解 -->
+<section class="sec">
+  <div class="sec-hd" onclick="toggleSec(this)">
+    <div class="sec-ttl"><span class="sec-num">1</span>业务拆解</div>
+    <span class="sec-arrow">▼</span>
+  </div>
+  <div class="sec-body">
+
+    <div style="font-size:11px;font-weight:700;color:var(--text2);margin-bottom:12px;letter-spacing:.3px">FY2026E 分部营收结构（GS模型口径；CCG=客户端PC芯片，DCAI=数据中心与AI，Intel Foundry=晶圆代工含先进封装且<b>含对CCG/DCAI的内部结算收入</b>，故四分部合计&gt;集团合并营收）</div>
+    <div class="breakdown-top">
+      <div class="bk-box total">
+        <div class="bk-val total">581.5<span style="font-size:13px">亿$</span></div>
+        <div class="bk-lbl">FY2026E 集团合并营收</div>
+        <div style="margin-top:6px;font-size:11px;color:var(--text2)">同比 <strong style="color:var(--up)">+10.0%</strong> · 2027E再增18%至685亿$</div>
+      </div>
+      <div class="bk-arrow">→</div>
+      <div class="bk-split">
+        <div class="bk-box comp">
+          <div class="bk-val comp">235/228<span style="font-size:13px">亿$</span></div>
+          <div class="bk-lbl">DCAI + Foundry（增长双引擎）</div>
+          <div style="margin-top:4px"><span class="bk-pct ac">同比+39% / +28%</span></div>
+        </div>
+        <div class="bk-box sys">
+          <div class="bk-val sys">318/24<span style="font-size:13px">亿$</span></div>
+          <div class="bk-lbl">CCG + All Other（拖累项）</div>
+          <div style="margin-top:4px"><span class="bk-pct neu">同比-1% / -34%</span></div>
+        </div>
+      </div>
+      <div class="bk-arrow">→</div>
+      <div class="bk-split">
+        <div class="bk-mini"><div class="v ac">DCAI：Xeon 6 + AI服务器</div><div class="l">同比+39% · Google等多年期协议驱动</div></div>
+        <div class="bk-mini"><div class="v ac">Foundry：Foveros/EMIB先进封装</div><div class="l">同比+28% · 18A量产爬坡+先进封装积压转化</div></div>
+        <div class="bk-mini"><div class="v ac">18A/14A制程</div><div class="l">18A良率超预期 · 14A同期成熟度反超18A</div></div>
+        <div style="height:2px;background:var(--border);border-radius:2px;margin:2px 0"></div>
+        <div class="bk-mini"><div class="v">CCG：AIPC渗透放缓下滑</div><div class="l">同比-1.4% · PC市场temperate需求下的结构性挑战</div></div>
+        <div class="bk-mini"><div class="v">马来西亚后端扩产</div><div class="l">先进封装积压转化 · 2027年起贡献收入</div></div>
+        <div class="bk-mini"><div class="v">All Other（Mobileye/Altera等）</div><div class="l">同比-34% · 反映资产剥离/少数股权处置</div></div>
+      </div>
+    </div>
+
+    <div class="gs-cap">📊 全年度营收与分部演变 · FY2023A → FY2027E<span>｜单位：十亿美元；GM=毛利率(含SBC)；OM=GAAP营业利润率；数据来源GS模型2026-06-25更新</span></div>
+    <table class="ctable">
+      <thead>
+        <tr><th>财年</th><th class="num">总营收</th><th class="num">GM</th><th class="num">OM</th><th class="num">DCAI</th><th class="num">Foundry</th><th>核心叙事</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>FY2023A</td>
+          <td class="num">54.2</td><td class="num">42.3%</td><td class="num">2.7%</td><td class="num">16.0</td><td class="num">18.9</td>
+          <td>PC需求周期底部，AI资本开支尚未大规模拉动DCAI</td>
+        </tr>
+        <tr>
+          <td>FY2024A</td>
+          <td class="num">53.1</td><td class="num">34.3%</td><td class="num" style="color:var(--dn)">-6.9%</td><td class="num">16.1</td><td class="num">17.5</td>
+          <td>营业利润转负，IDM 2.0重组阵痛期，18A早期投入拖累毛利率</td>
+        </tr>
+        <tr>
+          <td>FY2025A</td>
+          <td class="num">52.9</td><td class="num">35.6%</td><td class="num">0.9%</td><td class="num">16.9</td><td class="num">17.8</td>
+          <td>Lip-Bu Tan上任，营收持平但利润率触底回升，先进封装积压开始累积</td>
+        </tr>
+        <tr class="latest">
+          <td><b>FY2026E</b></td>
+          <td class="num"><b>58.2</b></td><td class="num"><b>38.9%</b></td><td class="num"><b>7.6%</b></td><td class="num"><b>23.5</b></td><td class="num"><b>22.8</b></td>
+          <td><span style="color:var(--dn);font-weight:700">重回两位数增长；DCAI/Foundry合计贡献几乎全部增量；18A良率改善+先进封装放量是核心驱动</span></td>
+        </tr>
+        <tr>
+          <td><span class="tag tag-est">FY2027E</span></td>
+          <td class="num">68.5</td><td class="num">42.2%</td><td class="num">12.3%</td><td class="num">29.9</td><td class="num">29.9</td>
+          <td>DCAI/Foundry同比再增27%/31%；GAAP EPS首次转正（$0.69）</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="note">📌 数据来源：Goldman Sachs INTC模型（"worksheet"分部表，2026-06-25更新），与公司实际披露口径交叉验证（如FY2026E 1Q26 CCG=77.3亿$、All Other=6.3亿$均与业绩会披露一致）。Foundry分部数字含对CCG/DCAI的内部晶圆结算价，因此不能直接等同于"外部代工收入"（后者披露口径下Q1仅1.74亿$/季），先进封装积压增长主要体现在Foundry对内和对外收入的合计增速中。</div>
+
+    <div style="margin-top:18px">
+    <div class="gs-cap" style="margin-top:0">🏭 先进封装 + 制程节点布局</div>
+    <table class="ctable">
+      <thead><tr><th>技术/产能</th><th>定位</th><th>当前状态</th></tr></thead>
+      <tbody>
+        <tr><td><b>Foveros（3D堆叠）</b></td><td>逻辑芯粒垂直堆叠，Panther Lake/Core Ultra Series 3核心封装工艺</td><td><span class="tag tag-up">全量产 · 5年最快新品爬坡</span></td></tr>
+        <tr><td><b>EMIB（2.5D互联）</b></td><td>多芯粒平面桥接互联，大reticle尺寸方案，对标台积电CoWoS-L</td><td><span class="tag tag-ac">量产中 · 客户积压扩大</span></td></tr>
+        <tr><td><b>Intel 18A</b></td><td>RibbonFET+PowerVia，Panther Lake主力制程</td><td><span class="tag tag-dn">早期爬坡 · 良率超内部预期，目标提前至年中达成</span></td></tr>
+        <tr class="latest"><td><b>Intel 14A</b></td><td>下一代制程，重点面向外部代工客户开放</td><td><span style="color:var(--up);font-weight:700">0.5 PDK已发布 · 多客户评估中 · 同期成熟度反超18A</span></td></tr>
+        <tr><td><b>马来西亚封测基地</b></td><td>后端先进封装扩产，承接积压订单转化</td><td><span class="tag tag-est">多年期扩产已宣布 · 2027年起贡献收入</span></td></tr>
+      </tbody>
+    </table>
+    <div class="note">📌 Fab 34（爱尔兰）买断：以约77亿$现金+65亿$新债从Apollo手中收回合资权益，整合关键欧洲晶圆厂经济利益；同时承诺2026年到期25亿$、2027年到期38亿$债务如期偿还，财务纪律优先。</div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ② INTC 在先进封装/代工产业链的位置 -->
+<section class="sec">
+  <div class="sec-hd" onclick="toggleSec(this)">
+    <div class="sec-ttl"><span class="sec-num">2</span>INTC 在先进封装 / 晶圆代工产业链的位置</div>
+    <span class="sec-arrow">▼</span>
+  </div>
+  <div class="sec-body">
+
+    <div class="why-wrap" style="margin-bottom:16px">
+      <div class="why-hd">🎯 一句话定位：Intel 是"CPU垄断者 + 先进封装稀缺产能 + 追赶型代工新玩家"三重身份叠加的美国本土供给标的</div>
+      <div style="font-size:11.5px;color:var(--text2);line-height:1.75">
+        与 TSM 的"纯代工"模式不同，Intel 是 IDM（自研自产），先进封装最初完全服务自身 CPU/GPU 需求，如今开始向外部客户开放；这意味着 Intel 的先进封装订单增长既反映自身 AI PC/服务器芯片需求，也反映<b style="color:var(--accent)">外部客户对"非台积电"先进封装产能的分散化需求</b>。管理层原本以为这块业务是"数亿美元"级机会，实际验证下来是"每年数十亿美元"级——这一预期差本身就是重要信号。
+      </div>
+    </div>
+
+    <div class="gs-cap" style="margin-top:0">⚡ 三条核心线 · 技术路线 × 客户结构 × A 股映射逻辑</div>
+    <div class="eng3">
+      <div class="eng" style="border-top-color:var(--accent)">
+        <div class="eng-hd" style="color:var(--accent)">
+          🔵 Foveros 3D堆叠（自用主力）
+          <span class="pct" style="background:var(--accent)">全量产</span>
+        </div>
+        <div class="eng-bd">
+          <b>核心地位</b>：把计算/IO/图形芯粒垂直堆叠，Panther Lake（Core Ultra Series 3）核心封装技术，5年最快新品爬坡节奏<br>
+          <b>战略意义</b>：Intel强调"CPU/XPU + 先进封装 + 先进制程"三位一体，能比纯芯片公司更快响应客户定制需求（"XPU"战略）<br>
+          <b>下游</b>：目前以Intel自身产品（Panther Lake、未来Clearwater Forest等）为主，外部客户导入尚早期<br>
+          <b style="color:var(--dn)">A股映射</b>：<span style="color:var(--dn)">对国内先进封装OSAT（通富微电/长电科技/甬矽电子）映射强度<b>偏弱</b>——Foveros以Intel自用为主，技术路线verification价值&gt;订单外溢价值</span>
+        </div>
+      </div>
+      <div class="eng" style="border-top-color:var(--warn)">
+        <div class="eng-hd" style="color:var(--warn)">
+          🟠 EMIB 2.5D + 先进封装代工（外部化提速）
+          <span class="pct" style="background:var(--warn)">积压跃升</span>
+        </div>
+        <div class="eng-bd">
+          <b>产品定义</b>：大reticle尺寸多芯粒平面互联，对标台积电CoWoS-L；是Intel Foundry对外接单的核心产品之一<br>
+          <b>关键信号</b>：管理层原预期"数亿美元"级机会，实际需求达"每年数十亿美元"级别，将成为2020年代Foundry收入的重要组成部分<br>
+          <b>定价</b>：先进封装因技术差异化+客户价值高（支持更大reticle），预计长期毛利率达到<b>Foundry平均水平以上</b><br>
+          <b>下游客户</b>：外部代工客户对分散台积电依赖有诉求，具体客户名未披露，但供给已"主要是内部产能，预计未来赢得更多外部客户"<br>
+          <b style="color:var(--dn)">A股映射</b>：<span style="color:var(--dn)">先进封装需求外溢+验证"去台积电依赖"叙事，间接利好国内OSAT承接海外客户分散化订单（通富微电/长电科技），映射强度<b>中等偏弱</b>，需持续跟踪外部客户名单是否落地</span>
+        </div>
+      </div>
+      <div class="eng" style="border-top-color:var(--up)">
+        <div class="eng-hd" style="color:var(--up)">
+          🟢 18A / 14A 制程（代工能力验证）
+          <span class="pct" style="background:var(--up)">良率超预期</span>
+        </div>
+        <div class="eng-bd">
+          <b>18A</b>：RibbonFET+PowerVia架构，Panther Lake主力制程，良率好于内部预期，目标良率里程碑从年底提前至年中附近达成<br>
+          <b>14A</b>：面向外部代工客户的关键节点，0.5 PDK已发布，多家客户正积极评估；同一时间点对比，14A成熟度/良率已反超18A<br>
+          <b>TSMC关系</b>：管理层明确"TSMC是重要合作伙伴"，Intel产品组会在内部18A/14A和外部TSMC之间做多代工选择，并非非此即彼<br>
+          <b>xAI合作（TeraFab）</b>：与Elon Musk探讨广泛的制造合作关系，具体形式（典型代工 vs 工艺授权）尚未定论<br>
+          <b style="color:var(--dn)">A股映射</b>：<span style="color:var(--dn)">18A/14A是否规模化对外接单，决定Intel能否从"IDM+内部封装"真正升级为"第二代工选项"——这一进展本身是海外晶圆代工格局多元化的信号，但对A股半导体设备/材料的<b>直接映射有限</b>（Intel资本开支主要采购ASML/应用材料等海外设备）</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 产业链层级图 -->
+    <div class="gs-cap">🗺 产业链层级 · Intel 在先进封装 + AI 计算价值链中的位置</div>
+    <div class="spine">
+      <div class="lane">
+        <div class="lane-req" style="border-left-color:var(--accent)">
+          <div class="lr-t" style="color:var(--accent)">① CPU / XPU 设计（IP层）</div>
+          <div class="lr-d">x86架构 · Panther Lake/Clearwater Forest<br><em style="color:var(--accent)">与AMD双寡头</em></div>
+        </div>
+        <div class="lane-arrow">→</div>
+        <div class="lane-fill">
+          <span class="fchip" style="border-color:var(--accent2);color:var(--accent)">PC OEM（AIPC占比&gt;60%）</span>
+          <span class="fchip" style="border-color:var(--accent2);color:var(--accent)">超大规模云厂商（Xeon 6）</span>
+          <span class="fchip" style="border-color:var(--accent2);color:var(--accent)">NVIDIA（DGX Rubin主机CPU）</span>
+        </div>
+        <div class="lane-w">
+          <span style="font-size:9.5px;font-weight:700;color:var(--text2)">→ 终端 + 数据中心</span>
+        </div>
+      </div>
+      <div class="lane">
+        <div class="lane-req" style="border-left-color:var(--warn)">
+          <div class="lr-t" style="color:var(--warn)">② Foveros/EMIB 先进封装（自产+代工）</div>
+          <div class="lr-d">3D堆叠 / 2.5D互联<br><em style="color:var(--warn)">承接内部+外部订单</em></div>
+        </div>
+        <div class="lane-arrow">→</div>
+        <div class="lane-fill">
+          <span class="fchip" style="border-color:var(--neu-bd);color:var(--neu-ink)">Intel自身产品线（主力）</span>
+          <span class="fchip" style="border-color:var(--neu-bd);color:var(--neu-ink)">外部代工客户（早期，未披露名单）</span>
+        </div>
+        <div class="lane-w">
+          <span style="font-size:9.5px;font-weight:700;color:var(--text2)">→ 封装环节</span>
+          <span style="font-size:9.5px;color:var(--text2)">积压已达数十亿$/年级</span>
+        </div>
+      </div>
+      <div class="lane">
+        <div class="lane-req" style="border-left-color:var(--up)">
+          <div class="lr-t" style="color:var(--up)">③ 18A/14A 制程代工（对外拓展）</div>
+          <div class="lr-d">与TSMC并行的第二选项<br><em style="color:var(--up)">早期 · 良率验证阶段</em></div>
+        </div>
+        <div class="lane-arrow">→</div>
+        <div class="lane-fill">
+          <span class="fchip" style="border-color:#86efac;color:var(--up)">多家客户PDK评估中（未披露）</span>
+          <span class="fchip" style="border-color:#86efac;color:var(--up)">xAI（TeraFab，形式待定）</span>
+        </div>
+        <div class="lane-w">
+          <span style="font-size:9.5px;font-weight:700;color:var(--up)">→ 供给多元化叙事</span>
+          <span style="font-size:9.5px;color:var(--text2)">设计承诺预计2026年起陆续出现</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="concl">
+      🎯 <b>为什么 INTC 是 W4 先进封装唯一的美国本土标的？</b>——三重身份叠加带来的稀缺性。<br>
+      <b>先进封装方向</b>：积压量级从"数亿美元"跃升至"数十亿美元/年"，是Q1财报最大的预期差；毛利率有望达到Foundry平均以上，是财务改善的重要杠杆。<br>
+      <b>代工方向</b>：18A良率超预期、14A同期成熟度反超18A，说明IDM 2.0的技术追赶正在验证；但外部客户名单仍未披露，"是否真正接到大单"仍是最大不确定性。<br>
+      <b>与TSM的关系</b>：管理层明确"多代工"策略，TSMC仍是Intel自身产品的重要供应商——这意味着INTC和TSM并非纯替代关系，而是"去台积电单一依赖"叙事下的互补选项。
+    </div>
+
+  </div>
+</section>
+
+<!-- ③ 近期业绩会交流重点 -->
+<section class="sec">
+  <div class="sec-hd" onclick="toggleSec(this)">
+    <div class="sec-ttl"><span class="sec-num">3</span>Q1 FY2026 业绩会 · 关键信号</div>
+    <span class="sec-arrow">▼</span>
+  </div>
+  <div class="sec-body">
+
+    <div style="padding:12px 16px;background:var(--warn-bg);border:1.5px solid #fcd34d;border-radius:9px;font-size:11.5px;color:var(--text2);line-height:1.7">
+      <b style="color:var(--warn)">💡 Q1 FY2026 关键增量信息</b>
+      <div style="margin-top:8px" class="plist">
+        <div><span class="pn" style="background:var(--dn)">!</span><b>先进封装积压跃升至"数十亿美元/年"</b>——CFO明确"最初以为是数亿美元级机会，实际看到的需求是数十亿美元/年级别"，且长期毛利率有望达到Foundry平均以上</div>
+        <div><span class="pn" style="background:var(--dn)">!</span><b>18A良率里程碑提前至年中附近达成</b>（原计划年底），Panther Lake出货Q2环比预计增长6-7倍</div>
+        <div><span class="pn" style="background:var(--accent)">★</span><b>14A同期成熟度反超18A</b>——0.5 PDK已发布，多家客户积极评估，管理层预计设计承诺将从2026年起逐步出现并延伸至2027年</div>
+        <div><span class="pn" style="background:var(--accent)">★</span><b>DCAI签署多年期协议（含Google）</b>；Xeon 6被选为NVIDIA DGX Rubin NVL8系统主机CPU；与SambaNova建立下一代异构AI推理架构合作</div>
+        <div><span class="pn" style="background:var(--up)">↑</span><b>Fab 34（爱尔兰）买断+马来西亚封测基地多年扩产</b>——先进封装承诺需求将从2027年起逐步转化为收入</div>
+        <div><span class="pn" style="background:var(--up)">↑</span><b>TeraFab（与xAI/Elon Musk）</b>——探讨广泛的制造合作关系，具体是典型代工还是工艺授权尚未定论，管理层态度积极但保持信息克制</div>
+      </div>
+    </div>
+
+    <div class="note" style="margin-top:14px">📌 管理层态度转变：CEO Lip-Bu Tan将公司叙事从"一年前的生存模式"明确切换为"当前的供给扩张模式"，2026年CapEx指引小幅上调至170-180亿$区间，反映从"收缩求生"到"扩产接需求"的战略转向。</div>
+  </div>
+</section>
+
+<!-- ④ 认知沉淀 -->
+<section class="sec mid">
+  <div class="sec-hd" onclick="toggleSec(this)">
+    <div class="sec-ttl"><span class="sec-num">4</span>认知沉淀 · 为什么 INTC 是先进封装板块预期差最大的标的</div>
+    <span class="sec-arrow">▼</span>
+  </div>
+  <div class="sec-body">
+
+    <div class="mid-thesis">
+      核心论点：市场此前更多把 Intel 当作"落后的CPU公司+烧钱的代工赌注"，但 Q1 FY2026 財报揭示了一个被低估的事实——<b>先进封装业务本身正在成长为数十亿美元级的独立收入引擎</b>，且不完全依赖18A/14A制程能否追上台积电这个更长周期的赌注。<span class="em">先进封装 + x86垄断地位 + 制程追赶三条线中，先进封装是当前兑现节奏最快、确定性最高的一条。</span>
+    </div>
+
+    <div class="cog-grid">
+
+      <div class="cog-card">
+        <div class="cog-no">1</div>
+        <div class="cog-tt">先进封装积压：<b>被显著低估的独立业务线</b></div>
+        <div class="cog-body">
+          管理层坦言此前对先进封装机会的预估过于保守（"数亿美元"级），实际验证下来是"每年数十亿美元"级别——这不是靠某一个大客户带来的一次性订单，而是行业级的结构性需求（AI芯片越来越依赖多芯粒封装，客户需要台积电之外的第二选项）。由于该业务定价对客户有独特价值（支持更大reticle尺寸），预计毛利率将达到甚至超过Foundry平均水平，是Foundry扭亏的重要杠杆之一。
+        </div>
+        <div class="cog-tag"><span class="k">观察指标：</span> 每季先进封装积压绝对值披露 + 马来西亚扩产投产进度（2027年起贡献）</div>
+      </div>
+
+      <div class="cog-card">
+        <div class="cog-no">2</div>
+        <div class="cog-tt">18A/14A良率：<b>代工业务的生死线</b></div>
+        <div class="cog-body">
+          Foundry深度亏损（Q1营业亏损24亿$）的核心原因是18A早期爬坡成本高企；管理层Q1明确18A良率好于预期、里程碑提前至年中附近达成，这直接反映在毛利率超指引650bp上。更值得关注的是<b>14A同期成熟度已反超18A</b>——如果这一趋势延续，意味着Intel在制程迭代节奏上的执行力正系统性改善，而非孤例。
+        </div>
+        <div class="cog-tag"><span class="k">跟踪重点：</span> 18A/14A季度良率披露口径变化 + Panther Lake出货量环比 + 14A外部PDK客户数量</div>
+      </div>
+
+      <div class="cog-card">
+        <div class="cog-no">3</div>
+        <div class="cog-tt">与TSM关系：<b>互补而非纯替代</b></div>
+        <div class="cog-body">
+          CEO明确表态"TSMC是Intel非常重要的合作伙伴"，Intel自身产品组会在内部18A/14A与外部TSMC产能之间做多代工选择——这意味着市场简单化的"INTC吃TSM份额"叙事并不准确。更贴切的框架是：<b>INTC先进封装承接的是"客户想分散对台积电单一依赖"的增量需求</b>，而非直接抢夺TSM存量订单，两者在"美国AI芯片供应链多元化"这个更大叙事下同时受益。
+        </div>
+        <div class="cog-tag"><span class="k">关键信号：</span> Intel外部代工客户名单是否首次披露 + 客户是否同时使用TSMC和Intel（分散策略验证）</div>
+      </div>
+
+      <div class="cog-card">
+        <div class="cog-no">4</div>
+        <div class="cog-tt">对A股映射：<b>强度中等偏弱，需谨慎对待</b></div>
+        <div class="cog-body">
+          与TSM不同，Intel的先进封装以自用为主、外部客户仍处早期导入阶段，设备/材料采购也主要来自ASML、应用材料等海外供应商——对国内先进封装OSAT（通富微电/长电科技/甬矽电子）的直接映射强度<b>不如台积电CoWoS满产外溢明显</b>。更合理的映射逻辑是：Intel先进封装需求验证了"多芯粒封装是行业刚需"这一大方向，属于<b>产业趋势验证而非直接订单传导</b>，建议作为辅助信号而非核心交易逻辑。
+        </div>
+        <div class="cog-tag"><span class="k">映射标的：</span> 通富微电 / 长电科技 / 甬矽电子（弱映射，跟踪先进封装行业景气验证）</div>
+      </div>
+
+      <div class="cog-card">
+        <div class="cog-no">5</div>
+        <div class="cog-tt">核心风险：<b>Foundry仍是深度亏损业务</b></div>
+        <div class="cog-body">
+          尽管环比改善，Q1 Foundry营业亏损仍高达24亿$，且管理层明确18A仍是2026年下半年毛利率的逆风因素之一（尤其考虑内存等原材料成本上升）。外部代工客户能否真正落地大额承诺订单，仍需等到2026年下半年至2027年才能看到更明确信号；在此之前，先进封装的"数十亿美元/年"积压更多是管理层口径披露，尚未转化为可验证的季度收入贡献。
+        </div>
+        <div class="cog-tag"><span class="k">跟踪重点：</span> Foundry营业亏损收窄斜率 + 外部代工营收（当前仅1.74亿$/季）绝对值变化</div>
+      </div>
+
+      <div class="cog-card">
+        <div class="cog-no">6</div>
+        <div class="cog-tt">INTC vs TSM：<b>互补叙事下的两种映射逻辑</b></div>
+        <div class="cog-body">
+          TSM逻辑：全球AI芯片制造的绝对龙头，CoWoS满产缺口直接外溢给国内OSAT厂承接，是最强、最直接的映射链。<br>
+          INTC逻辑：美国本土供给多元化叙事的代表，先进封装业务本身独立高速增长，但对A股的映射更多是"验证行业趋势"而非"直接订单传导"。<br>
+          <b>组合角度</b>：TSM映射更适合做核心交易逻辑（国内OSAT+晶圆代工），INTC更适合做"美国AI供应链自主化"这一宏观叙事的观察窗口。
+        </div>
+        <div class="cog-tag"><span class="k">核心差异：</span> TSM 订单外溢直接映射 vs INTC 产业趋势验证型映射</div>
+      </div>
+
+    </div>
+
+  </div>
+</section>
+
+<div class="foot">INTC · Intel Corporation · 数据来源：Q1 FY2026 业绩电话会（2026-04-23）· The Motley Fool 电话会实录 · 更新 2026-07-01</div>
+</div>
+
+<script>
+function toggleSec(hd){
+  hd.classList.toggle('collapsed');
+  hd.nextElementSibling.classList.toggle('collapsed');
+}
+</script>
+</body>
+</html>

@@ -108,7 +108,7 @@ a:hover{text-decoration:underline}
       <div class="kpi"><div class="kpi-val">8 周</div><div class="kpi-lbl">8 主题 · 层次推进</div></div>
     </div>
     <div style="font-size:11px;color:var(--text2);margin-bottom:4px">补课进度（技术路线 + 对应交易已填写）</div>
-    <div class="prog-wrap"><div class="prog-bar" style="width:7%">4/56</div></div>
+    <div class="prog-wrap"><div class="prog-bar" style="width:18%">10/56</div></div>
 
     <div style="font-size:13px;font-weight:800;margin:16px 0 8px;padding-left:8px;border-left:3px solid var(--accent)">▍ 主题排期（按认知层次从内到外推进，核心公司多周出现）</div>
     <table class="ctable">
@@ -242,6 +242,66 @@ a:hover{text-decoration:underline}
   </div>
 </section>
 
+<!-- ====== 模块2.7：W3 映射总结 ====== -->
+<section class="sec">
+  <div class="sec-hd" onclick="toggleSec(this)">
+    <div class="sec-ttl"><span class="icon">🗂️</span>W3 映射总结 · 光互联实现层三个核心供应商（LITE / COHR / GLW）</div>
+    <span class="sec-arrow">▼</span>
+  </div>
+  <div class="sec-body">
+
+    <div style="font-size:13px;line-height:1.8;background:var(--accent-bg);border:1px solid var(--accent2);border-radius:9px;padding:13px 16px;margin-bottom:16px">
+      W2 判断的"铜向光切换"，在光互联最上游具体落地为三个环节：<b>LITE</b> 是最纯粹的"光燃料"供应商，专注 InP 激光芯片（EML/泵浦/CW），不做模块整机；
+      <b>COHR</b> 是"全栈平台型"选手，从 InP 晶圆到光模块整机到 OCS 到 CPO 全布局，规模是 LITE 的 2.25 倍，且直接与中际旭创/新易盛竞争同一批光模块客户；
+      <b>GLW</b> 处于更下游、更基础的物理传输层——光纤光缆连接器，是光子离开激光器后走完全程的物理介质，不受 InP 稀缺性约束，护城河是 170 年的玻璃制造工艺积累。
+    </div>
+
+    <div style="font-size:13px;line-height:1.8;background:var(--up-bg);border:1px solid #86efac;border-radius:9px;padding:13px 16px;margin-bottom:16px">
+      <b style="color:var(--up)">📌 W3 产业总结</b>：三家公司共同验证了同一个供需错配——<b>InP 磷化铟晶圆厂建设周期长达 3-5 年</b>，产能扩张速度远跟不上 AI 集群对光互联的需求增速，这正是 LITE EML 缺口扩大至 &gt;30%、COHR Book-to-Bill &gt;4x、GLW 拿下 Meta 60亿$ 框架协议的共同根源。<b>凡是能验证"InP 稀缺→涨价→扩产"这条逻辑链的季度数据（毛利率环比、供需缺口披露、新签长协规模），都是判断国内光模块/光纤光缆链景气拐点的直接信号。</b>
+    </div>
+
+    <div style="font-size:13px;line-height:1.8;background:var(--warn-bg);border:1px solid #fcd34d;border-radius:9px;padding:13px 16px;margin-bottom:16px">
+      <b style="color:var(--warn)">💡 方法论沉淀</b>：<b>InP 晶圆产能是 LITE / COHR 共同的物理"根"</b>——LITE 的 EML/泵浦激光器和 COHR 的光模块+OCS+CPO 全栈，本质上都受制于同一种稀缺材料的晶圆产能；两家毛利率同步大幅改善（LITE 32%→48%、COHR 34%→40%）不是各自产品竞争力单独提升，而是全行业 InP 供给紧缺带来的<b>系统性定价权转移</b>。GLW 则代表一条独立于 InP 瓶颈之外的护城河——<b>光纤玻璃制造 + 垂直整合</b>是"物理传输层"而非"光子生成层"的稀缺性，两条逻辑链互不替代，因此 W3 需要同时跟踪 InP 产能数据（LITE/COHR）和资本开支/长协数据（GLW）两组指标。
+    </div>
+
+    <div style="font-size:12px;font-weight:700;color:var(--text2);margin-bottom:8px">映射标的（按"对应供应商环节"分类）</div>
+    <table class="ctable">
+      <thead><tr><th style="width:110px">标的</th><th style="width:150px">对应</th><th>逻辑</th><th style="width:170px">A 股标的</th><th style="width:110px">展开</th></tr></thead>
+      <tbody>
+        <tr style="border-left:3px solid var(--up)">
+          <td><strong style="color:#15803d">EML 激光器 / 光源</strong><span class="tag tag-up">核心</span></td>
+          <td>LITE InP 激光芯片</td>
+          <td>InP 产能稀缺性带来<b>最纯粹的定价权</b>——缺口 &gt;30%，2027-2028 产能已全部锁定。<b style="color:var(--dn)">LITE 出货好 = 光模块厂上游成本/产能确认</b></td>
+          <td>中际旭创 / 新易盛 / 天孚通信</td>
+          <td><a href="companies/LITE_Lumentum.html">→ LITE</a></td>
+        </tr>
+        <tr style="border-left:3px solid var(--up)">
+          <td><strong style="color:#15803d">光模块 + OCS + CPO 全栈</strong><span class="tag tag-up">核心</span></td>
+          <td>COHR 垂直整合平台</td>
+          <td>规模2.25×LITE，与国内厂商<b>同赛道竞争同一批超大规模客户</b>；6英寸 InP 成本红利 + Book-to-Bill &gt;4x 是需求强度的直接验证</td>
+          <td>中际旭创 / 新易盛</td>
+          <td><a href="companies/COHR_Coherent.html">→ COHR</a></td>
+        </tr>
+        <tr style="border-left:3px solid var(--warn)">
+          <td><strong style="color:#b45309">OCS 光电路交换</strong><span class="tag tag-warn">颠覆者</span></td>
+          <td>LITE（MEMS）+ COHR（液晶）两条路线并行</td>
+          <td>Spine 层电交换替代趋势，TAM 从 20亿$ 上调至 40亿$；<b>两家路线不同但可共存</b>，非零和竞争</td>
+          <td>光器件 / MEMS 上游供应链</td>
+          <td><a href="companies/LITE_Lumentum.html">→ LITE</a> / <a href="companies/COHR_Coherent.html">→ COHR</a></td>
+        </tr>
+        <tr style="border-left:3px solid #7dd3fc">
+          <td><strong style="color:#0369a1">光纤光缆 / 连接器</strong><span class="tag tag-blue">物理基础层</span></td>
+          <td>GLW 垂直整合光纤制造</td>
+          <td>不受 InP 瓶颈约束的独立逻辑链；企业业务 CAGR 30% 目标 + Meta 60亿$ 长协，是<b>海外资本开支扩张最直接的物理信号</b></td>
+          <td>烽火通信 / 中天科技 / 亨通光电</td>
+          <td><a href="companies/GLW_Corning.html">→ GLW</a></td>
+        </tr>
+      </tbody>
+    </table>
+    <div style="margin-top:8px;font-size:11px;color:var(--text2)">📌 详细推演见 <a href="companies/LITE_Lumentum.html">LITE 公司页</a>「三驾马车」、<a href="companies/COHR_Coherent.html">COHR 公司页</a>「垂直整合护城河」与 <a href="companies/GLW_Corning.html">GLW 公司页</a>「Springboard 计划深度」。</div>
+  </div>
+</section>
+
 <!-- ====== 模块3：全量映射框架表 ====== -->
 <section class="sec">
   <div class="sec-hd" onclick="toggleSec(this)">
@@ -262,15 +322,18 @@ a:hover{text-decoration:underline}
         <tr><td><strong>MRVL.O</strong></td><td>迈威尔科技 <span class="tag tag-blue" style="font-size:9px;padding:1px 4px">W2+W5</span></td><td class="num">2456亿$</td><td class="num">89.7×</td><td><a href="companies/MRVL_Marvell.html">→ 查看公司页</a>（光互联+定制ASIC双主线）</td><td>🟢</td></tr>
         <!-- ===== W3 ===== -->
         <tr style="background:#f0fdf4"><td colspan="6" style="font-size:11px;font-weight:700;color:#047857;padding:5px 8px">📅 W3 · Scale-up / Scale-out 的实现——光器件（光模块 / 光纤 / 线缆）</td></tr>
-        <tr><td><strong>LITE.O</strong></td><td>Lumentum</td><td class="num">735亿$</td><td class="num">—</td><td><a href="companies/LITE_Lumentum.html">→ 查看公司页</a></td><td>🟢</td></tr>
-        <tr><td><strong>COHR.N</strong></td><td>Coherent</td><td class="num">825亿$</td><td class="num">—</td><td><a href="companies/COHR_Coherent.html">→ 查看公司页</a></td><td>🟢</td></tr>
-        <tr><td><strong>GLW.N</strong></td><td>康宁</td><td class="num">1701亿$</td><td class="num">—</td><td><a href="companies/GLW_Corning.html">→ 查看公司页</a></td><td>🟢</td></tr>
+        <tr><td><strong>LITE.O</strong></td><td>Lumentum</td><td class="num">735亿$</td><td class="num">—</td><td><a href="companies/LITE_Lumentum.html">→ 查看公司页</a>（EML激光器+OCS+CPO光燃料供应商）</td><td>🟢</td></tr>
+        <tr><td><strong>COHR.N</strong></td><td>Coherent</td><td class="num">825亿$</td><td class="num">—</td><td><a href="companies/COHR_Coherent.html">→ 查看公司页</a>（光模块+OCS+CPO全栈平台）</td><td>🟢</td></tr>
+        <tr><td><strong>GLW.N</strong></td><td>康宁</td><td class="num">1701亿$</td><td class="num">—</td><td><a href="companies/GLW_Corning.html">→ 查看公司页</a>（光纤光缆+连接器物理基础层）</td><td>🟢</td></tr>
         <tr><td><strong>APH.N</strong></td><td>安费诺</td><td class="num">1806亿$</td><td class="num">—</td><td><span class="tag tag-gray">待补课</span></td><td>⚪</td></tr>
         <tr><td><strong>CRDO.O</strong></td><td>Credo</td><td class="num">401亿$</td><td class="num">—</td><td><span class="tag tag-gray">待补课</span></td><td>⚪</td></tr>
         <!-- ===== W4 ===== -->
         <tr style="background:#f5f3ff"><td colspan="6" style="font-size:11px;font-weight:700;color:#5b21b6;padding:5px 8px">📅 W4 · 如何制作算力芯片——先进封装 / 玻璃基板</td></tr>
-        <tr><td><strong>INTC.O</strong></td><td>英特尔 <span class="tag tag-blue" style="font-size:9px;padding:1px 4px">W4+W5</span></td><td class="num">5615亿$</td><td class="num">—</td><td><span class="tag tag-gray">待补课</span></td><td>⚪</td></tr>
-        <tr><td><strong>TSM.N</strong></td><td>台积电</td><td class="num">2.3万亿$</td><td class="num">—</td><td><span class="tag tag-gray">待补课</span></td><td>⚪</td></tr>
+        <tr><td><strong>INTC.O</strong></td><td>英特尔 <span class="tag tag-blue" style="font-size:9px;padding:1px 4px">W4+W5</span></td><td class="num">7018亿$</td><td class="num">—</td><td><a href="companies/INTC_Intel.html">→ 查看公司页</a>（Foveros/EMIB先进封装+18A/14A代工）</td><td>🟢</td></tr>
+        <tr><td><strong>TSM.N</strong></td><td>台积电</td><td class="num">2.11万亿$</td><td class="num">40.3×</td><td><a href="companies/TSM_TSMC.html">→ 查看公司页</a>（N2/N3先进制程+CoWoS/SoIC先进封装）</td><td>🟢</td></tr>
+        <!-- ===== 半导体设备（补充） ===== -->
+        <tr style="background:#eff9fb"><td colspan="6" style="font-size:11px;font-weight:700;color:#1d6f8c;padding:5px 8px">🔧 半导体设备（补充 · 非原56家清单，衔接 W4 先进封装/Fab 主题）</td></tr>
+        <tr><td><strong>AMAT.O</strong></td><td>应用材料 <span class="tag tag-gray" style="font-size:9px;padding:1px 4px">设备·补充</span></td><td class="num">5777亿$</td><td class="num">—</td><td><a href="companies/AMAT_AppliedMaterials.html">→ 查看公司页</a>（WFE综合份额第一，沉积/蚀刻/CMP/离子注入全品类）</td><td>🟢</td></tr>
         <!-- ===== W5 ===== -->
         <tr style="background:#fdf4ff"><td colspan="6" style="font-size:11px;font-weight:700;color:#7e22ce;padding:5px 8px">📅 W5 · 非英伟达体系的算力芯片（AVGO / MRVL / INTC 亦在此周）</td></tr>
         <tr><td><strong>AMD.O</strong></td><td>超威半导体</td><td class="num">8531亿$</td><td class="num">—</td><td><span class="tag tag-gray">待补课</span></td><td>⚪</td></tr>
@@ -301,7 +364,7 @@ a:hover{text-decoration:underline}
         <tr><td><strong>ANET.N</strong></td><td>Arista 网络</td><td class="num">2090亿$</td><td class="num">—</td><td><span class="tag tag-gray">待补课</span></td><td>⚪</td></tr>
         <tr><td><strong>VRT.N</strong></td><td>Vertiv</td><td class="num">1244亿$</td><td class="num">—</td><td><span class="tag tag-gray">待补课</span></td><td>⚪</td></tr>
         <tr><td><strong>ASML.O</strong></td><td>阿斯麦</td><td class="num">6921亿$</td><td class="num">—</td><td><span class="tag tag-gray">待补课</span></td><td>⚪</td></tr>
-        <tr><td><strong>MU.O</strong></td><td>美光科技</td><td class="num">~1800亿$</td><td class="num">—</td><td><span class="tag tag-gray">待补课</span></td><td>⚪</td></tr>
+        <tr><td><strong>MU.O</strong></td><td>美光科技</td><td class="num">~1800亿$</td><td class="num">—</td><td><a href="companies/MU_Micron.html">→ 查看公司页</a>（DRAM/NAND/HBM存储供给方）</td><td>🟢</td></tr>
         <tr><td><strong>000660.KS</strong></td><td>SK海力士</td><td class="num">~1500亿$</td><td class="num">—</td><td><span class="tag tag-gray">待补课</span></td><td>⚪</td></tr>
         <tr><td><strong>005930.KS</strong></td><td>三星电子</td><td class="num">~3000亿$</td><td class="num">—</td><td><span class="tag tag-gray">待补课</span></td><td>⚪</td></tr>
         <tr><td><strong>WDC.O</strong></td><td>西部数据</td><td class="num">1984亿$</td><td class="num">—</td><td><span class="tag tag-gray">待补课</span></td><td>⚪</td></tr>
@@ -349,15 +412,87 @@ a:hover{text-decoration:underline}
 
     <!-- AVGO 样例 -->
     <div style="border:1.5px solid #6ee7b7;border-radius:10px;background:#f0fdf4;padding:14px 16px">
-      <div style="font-size:14px;font-weight:800;color:#047857;margin-bottom:8px">✓ 样例：AVGO 博通 → <a href="../industry-dashboards/switch-chip/switch-chip-dashboard.html">交换芯片</a></div>
+      <div style="font-size:14px;font-weight:800;color:#047857;margin-bottom:8px">✓ 样例：AVGO 博通 → <a href="../行业看板/交换芯片/交换芯片_看板.html">交换芯片</a></div>
       <div style="font-size:12px;line-height:1.8;color:var(--text)">
         <div><strong>① 定位</strong>：全球以太网交换芯片绝对龙头（~70% 份额）+ AI 定制 ASIC 双主线，数据中心网络"中枢"。</div>
         <div><strong>② 技术路线</strong>：Tomahawk 6（102.4T，2025/6 量产，含 CPO 版 Davisson）；200G SerDes 在产→224G；TSMC 3nm。</div>
         <div><strong>③ 景气信号</strong>：FY26Q2 指引 AI 半导体营收 ~$107亿（+140% YoY），AI 网络约占 40%≈$43亿/季；2027 AI 芯片营收破 $1000亿；供货 52 周交期紧张。</div>
-        <div><strong>④ A股映射</strong>：① 交换芯片国产替代——<strong>盛科通信</strong>（25.6T 拼接替代 51.2T，阿里 3 万颗/9 亿订单）、<strong>中兴微</strong>（凌云 51.2T）；② <strong>博通缺货倒逼国产</strong>，映射强度高。详见 <a href="../industry-dashboards/switch-chip/switch-chip-dashboard.html">交换芯片看板</a>。</div>
+        <div><strong>④ A股映射</strong>：① 交换芯片国产替代——<strong>盛科通信</strong>（25.6T 拼接替代 51.2T，阿里 3 万颗/9 亿订单）、<strong>中兴微</strong>（凌云 51.2T）；② <strong>博通缺货倒逼国产</strong>，映射强度高。详见 <a href="../行业看板/交换芯片/交换芯片_看板.html">交换芯片看板</a>。</div>
         <div><strong>⑤ 对应交易</strong>：买<strong>盛科通信（688702）</strong>——超节点 25.6T 独供，弹性测算见交换芯片量价模型；催化=博通交期/缺货新闻 + 盛科 51.2T 回片（2026H2）；风险=博通扩产缓解缺口、盛科 51.2T 量产不及预期。</div>
       </div>
     </div>
+    <!-- LITE 样例 -->
+    <div style="border:1.5px solid #6ee7b7;border-radius:10px;background:#f0fdf4;padding:14px 16px;margin-top:12px">
+      <div style="font-size:14px;font-weight:800;color:#047857;margin-bottom:8px">✓ 样例：LITE Lumentum → <a href="../行业看板/光模块/光模块_看板.html">光模块</a></div>
+      <div style="font-size:12px;line-height:1.8;color:var(--text)">
+        <div><strong>① 定位</strong>：全球 InP 晶圆产能最大、EML 激光器绝对龙头，是光模块产业链最上游的"光燃料"供应商——不做模块整机，只卖光模块厂商必须采购的激光芯片，产能约束即定价权。</div>
+        <div><strong>② 技术路线</strong>：EML 激光器（400G/800G 标配光源，200G EML 占比快速提升）+ 泵浦/窄线宽激光器（Scale-Across 相干DCI）+ OCS 光电路交换（MEMS 路线）+ CPO 超高功率激光器（NVIDIA 绑定）。</div>
+        <div><strong>③ 景气信号</strong>：Q3 FY2026 营收 8.08亿$（+90% YoY）创历史新高，非GAAP毛利率 47.9%（环比+540bp）；EML 供需缺口扩至 &gt;30%，2027-2028产能已通过长协全部锁定；NVIDIA 战略投资 20亿$+数十亿采购承诺；OCS 积压 &gt;4亿$；Q4 指引 9.85亿$。</div>
+        <div><strong>④ A股映射</strong>：EML 出货量是光模块出货的先行指标——LITE 全品类供不应求 → 映射光模块链全体，<strong>中际旭创</strong>/<strong>新易盛</strong>/<strong>天孚通信</strong>/<strong>华工科技</strong>。详见 <a href="../行业看板/光模块/光模块_看板.html">光模块看板</a>。</div>
+        <div><strong>⑤ 对应交易</strong>：买<strong>中际旭创 / 新易盛</strong>（LITE 定价权确立=下游光模块出货景气验证）；催化=LITE 季度 EML 缺口数据、毛利率变化；风险=EML 缺口收窄、光模块环节 ASP 下行。</div>
+      </div>
+    </div>
+
+    <!-- COHR 样例 -->
+    <div style="border:1.5px solid #6ee7b7;border-radius:10px;background:#f0fdf4;padding:14px 16px;margin-top:12px">
+      <div style="font-size:14px;font-weight:800;color:#047857;margin-bottom:8px">✓ 样例：COHR Coherent → <a href="../行业看板/光模块/光模块_看板.html">光模块</a></div>
+      <div style="font-size:12px;line-height:1.8;color:var(--text)">
+        <div><strong>① 定位</strong>：AI 光学产业链唯一"全栈平台型"供应商，从 InP 晶圆到光模块整机到 OCS 到 CPO 全栈布局，规模是 LITE 的 2.25 倍；既是上游激光芯片供应商，也是光模块厂商（与中际旭创/新易盛同赛道竞争同一批客户）。</div>
+        <div><strong>② 技术路线</strong>：全球唯一量产 6英寸 InP（单晶圆产出 4× 于3英寸、成本&lt;50%）；光模块（EML+硅光并行）+ OCS 液晶光交换（TAM 上调至 40亿$）+ CPO 全栈 ELS 外部光源模块（ASP 溢价 2-2.5倍）+ VCSEL（Apple 供应商）+ THERMADITE 热管理材料。</div>
+        <div><strong>③ 景气信号</strong>：Q3 FY2026 营收 18亿$（+21% YoY）创新高，非GAAP毛利率 39.6%；InP 产能翻倍提前1个季度达成；Book-to-Bill &gt;4x 创历史纪录，在手订单排至2028年；NVIDIA 战略投资 20亿$+供应协议至2030；Q4 指引 19.8亿$。</div>
+        <div><strong>④ A股映射</strong>：COHR 光模块业务与中际旭创/新易盛直接竞争同一超大规模客户群，出货趋势高度同步；InP 稀缺性同时传导至国内光模块厂商成本端。详见 <a href="../行业看板/光模块/光模块_看板.html">光模块看板</a>。</div>
+        <div><strong>⑤ 对应交易</strong>：买<strong>中际旭创 / 新易盛 / 天孚通信</strong>（COHR Book-to-Bill 数据同步验证 AI 光模块高景气）；催化=Book-to-Bill 变化、6英寸InP占比提升；风险=InP 产能释放超预期压低涨价空间。</div>
+      </div>
+    </div>
+
+    <!-- GLW 样例 -->
+    <div style="border:1.5px solid #6ee7b7;border-radius:10px;background:#f0fdf4;padding:14px 16px;margin-top:12px">
+      <div style="font-size:14px;font-weight:800;color:#047857;margin-bottom:8px">✓ 样例：GLW 康宁 → <a href="../行业看板/光纤光缆/光纤光缆_看板.html">光纤光缆</a></div>
+      <div style="font-size:12px;line-height:1.8;color:var(--text)">
+        <div><strong>① 定位</strong>：全球光纤光缆制造龙头，光互联产业链"物理基础层"——光子必须经光纤才能传输，自有垂直整合（玻璃熔炉→拉丝→光缆→连接器）。</div>
+        <div><strong>② 技术路线</strong>：数据中心光纤连接（企业业务 Scale-out，CAGR 目标 30%）+ Springboard 战略（2028年年化销售额目标 240亿$，5年翻倍）+ CPO Scale-up 新型连接器（未来期权，TAM 为现有企业业务2-3倍）+ 铜缆转光纤迁移（现份额为零的纯增量市场）。</div>
+        <div><strong>③ 景气信号</strong>：Q4 CY2025 营收 44.1亿$（+14% YoY）历史新高，营业利润率 20.2%提前一年达成 Springboard 目标；Meta 60亿$框架协议锚定北卡扩产；CY2025全年营收164亿$（+13%），自由现金流17亿$（+36%，2023年以来近乎翻倍）。</div>
+        <div><strong>④ A股映射</strong>：GLW 企业业务增速是海外超大规模资本开支扩张的直接信号，映射国内光缆厂——<strong>烽火通信</strong>/<strong>中天科技</strong>/<strong>亨通光电</strong>。详见 <a href="../行业看板/光纤光缆/光纤光缆_看板.html">光纤光缆看板</a>。</div>
+        <div><strong>⑤ 对应交易</strong>：买<strong>烽火通信 / 中天科技 / 亨通光电</strong>（海外资本开支加速的国内映射标的）；催化=GLW季度企业业务增速、新签LTA协议；风险=超大规模资本开支不及预期、国产厂商份额未能同步提升。</div>
+      </div>
+    </div>
+
+    <!-- TSM 样例 -->
+    <div style="border:1.5px solid #6ee7b7;border-radius:10px;background:#f0fdf4;padding:14px 16px;margin-top:12px">
+      <div style="font-size:14px;font-weight:800;color:#047857;margin-bottom:8px">✓ 样例：TSM 台积电 → <a href="../行业看板/先进封装/先进封装_看板.html">先进封装</a></div>
+      <div style="font-size:12px;line-height:1.8;color:var(--text)">
+        <div><strong>① 定位</strong>：全球先进制程晶圆代工绝对龙头，同时垄断"制程+先进封装"两个环节——AI芯片设计再强也必须交给台积电用N3/N2造出来、用CoWoS/SoIC封装成最终产品，是AI供应链唯一不可替代的节点。</div>
+        <div><strong>② 技术路线</strong>：N3（占晶圆收入25%）+ N5（36%）+ N2（2025Q4量产，新竹/高雄双厂爬坡）；CoWoS/SoIC先进封装（正建中试线扩产）；A14（1.4nm，2028年量产）。</div>
+        <div><strong>③ 景气信号</strong>：Q1 CY2026营收359亿$（环比+6.4%），毛利率66.2%（环比+390bp，超指引120bp）；全年2026营收指引上修至美元口径同比&gt;30%；2026 CapEx上修至520-560亿$高端（超过去三年总量一半）；CoWoS持续满产，AI加速器长期CAGR维持中高50%。</div>
+        <div><strong>④ A股映射</strong>：CoWoS满产外溢利好国内先进封装OSAT——<strong>通富微电</strong>/<strong>长电科技</strong>；N3持续满产验证成熟制程国产替代必要性——<strong>中芯国际</strong>/<strong>华虹半导体</strong>；CapEx上修映射国产半导体设备——<strong>北方华创</strong>/<strong>中微公司</strong>。详见 <a href="../行业看板/先进封装/先进封装_看板.html">先进封装看板</a>。</div>
+        <div><strong>⑤ 对应交易</strong>：买<strong>通富微电 / 长电科技</strong>（CoWoS满产外溢的直接承接方）；催化=TSM季度CapEx指引变化、CoWoS中试线投产进度；风险=AI资本开支不及预期、地缘政治扰动台湾本土产能。</div>
+      </div>
+    </div>
+
+    <!-- INTC 样例 -->
+    <div style="border:1.5px solid #6ee7b7;border-radius:10px;background:#f0fdf4;padding:14px 16px;margin-top:12px">
+      <div style="font-size:14px;font-weight:800;color:#047857;margin-bottom:8px">✓ 样例：INTC 英特尔 → <a href="../行业看板/先进封装/先进封装_看板.html">先进封装</a></div>
+      <div style="font-size:12px;line-height:1.8;color:var(--text)">
+        <div><strong>① 定位</strong>：唯一同时拥有"先进封装+晶圆代工"双能力的美国本土IDM，x86 CPU垄断者（与AMD双寡头）+ 先进封装稀缺产能 + 追赶型代工新玩家三重身份叠加，是"去台积电依赖"叙事下最直接的美国本土供给标的。</div>
+        <div><strong>② 技术路线</strong>：Foveros（3D堆叠，Panther Lake主力封装）+ EMIB（2.5D互联，对标CoWoS-L）+ Intel 18A（早期爬坡，良率超预期）+ Intel 14A（面向外部代工，0.5 PDK已发布，同期成熟度反超18A）。</div>
+        <div><strong>③ 景气信号</strong>：FY2026E总营收581.5亿$（+10.0%，结束三年零增长），其中DCAI 235.1亿$（+39%）和Foundry 227.6亿$（+28%）是增长双引擎，CCG 317.9亿$仍同比-1.4%；毛利率38.9%（+330bp）；先进封装积压从"数亿$"跃升至"数十亿$/年"级别，是Foundry增速的核心驱动。</div>
+        <div><strong>④ A股映射</strong>：先进封装以自用为主、外部客户早期，对通富微电/长电科技等国内OSAT映射强度<strong>偏弱</strong>，更多是验证"多芯粒封装是行业刚需"这一趋势，而非直接订单传导。详见 <a href="../行业看板/先进封装/先进封装_看板.html">先进封装看板</a>。</div>
+        <div><strong>⑤ 对应交易</strong>：暂不做核心多头逻辑，作为"美国AI供应链自主化"宏观叙事的观察窗口；催化=18A/14A良率数据、外部代工客户是否首次披露；风险=Foundry持续深度亏损、外部订单不及预期。</div>
+      </div>
+    </div>
+
+    <!-- AMAT 样例 -->
+    <div style="border:1.5px solid #6ee7b7;border-radius:10px;background:#f0fdf4;padding:14px 16px;margin-top:12px">
+      <div style="font-size:14px;font-weight:800;color:#047857;margin-bottom:8px">✓ 样例：AMAT 应用材料 → 半导体设备（补充，衔接<a href="../行业看板/先进封装/先进封装_看板.html">先进封装</a>）</div>
+      <div style="font-size:12px;line-height:1.8;color:var(--text)">
+        <div><strong>① 定位</strong>：全球WFE（晶圆厂设备）综合份额第一（~20%），覆盖沉积/蚀刻/CMP/离子注入/过程控制全品类——半导体制造环节"卖机器的人"，不造芯片，只造造芯片的机器；不同于Lam Research(专注蚀刻/沉积)、KLA(专注过程控制)，AMAT是唯一品类最全的综合设备商。</div>
+        <div><strong>② 技术路线</strong>：GAA环绕栅极+铜互连（先进逻辑SAM扩张）；先进封装+HBM设备（HBM额外堆叠步骤设备价值份额超50%）；EPIC创新生态平台（10家创始伙伴，绑定台积电/三星/美光/SK海力士/博通）。</div>
+        <div><strong>③ 景气信号</strong>：Q2 FY26营收$79.1亿(+11%YoY)创纪录，营收增速从1QFY26的-2.1%跳升至3QFY26指引中值+23%；FY26设备收入指引从年初20%两次上调至30%以上，先进封装指引上调至50%以上；GS目标价$520（隐含FY28E P/E 24.8x），较市场一致目标价$570.07低9.6%。</div>
+        <div><strong>④ A股映射</strong>：品类覆盖最广，对应国内设备综合龙头——<strong>北方华创</strong>（002371，刻蚀/CVD/PVD/清洗）、<strong>中微公司</strong>（688012，刻蚀）、<strong>拓荆科技</strong>（688072，CVD）、<strong>华海清科</strong>（688120，CMP）、<strong>盛美上海</strong>（688082，清洗+电镀）；中国受出口管制限制业务占比从10%翻倍至20%+，加速国产替代窗口，且AMAT份额最高品类（CMP66%/离子注入55%/沉积44%）恰是国产差距最大、替代空间最大的战场。详见 <a href="companies/AMAT_AppliedMaterials.html">AMAT 公司页</a>。</div>
+        <div><strong>⑤ 对应交易</strong>：买<strong>北方华创 / 中微公司 / 华海清科</strong>（品类覆盖度对标AMAT最高，出口管制加严下承接空间最大）；催化=AMAT/Lam/KLA季度WFE指引变化、美国对华出口管制新规、国产设备28nm以下认证突破；风险=出口管制超预期放松、全球WFE景气不及预期、国产设备验证进度慢于预期。</div>
+      </div>
+    </div>
+
     <div style="margin-top:12px;font-size:11px;color:var(--text2)">↑ 以此为范式，每周按排期补 2-3 家，填入模块三对应行的「技术路线/交易」并更新状态 ⚪→🟢。</div>
   </div>
 </section>
