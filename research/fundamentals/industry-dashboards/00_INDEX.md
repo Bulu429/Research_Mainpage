@@ -28,6 +28,7 @@ tags:
 | 光通信（早期版） | 🟢 上行 | 已被光模块/光纤光缆细分覆盖，保留作父概念 | [[光通信/光通信_看板]] | [[optical-communication/optical-communication-dashboard.html\|🔗]] | 2026-05-14 |
 | **台股电子（交叉验证）** | — | 台股月营收披露领先A股财报2-4周，含A股逻辑映射，非独立行业thesis | — | [[taiwan-electronics/taiwan-electronics-dashboard.html\|🔗]] | 2026-06-26 |
 | **业绩跟踪（业绩季专题）** | — | 财报数据、机构观点摘要与股价反应速记，跨行业，非独立行业thesis | — | [[earnings-tracker/earnings-tracker-dashboard.html\|🔗]] | 2026-07-09 |
+| **AI Labs（Anthropic）** | 🟢 上行 | API收入占比75-85%+毛利率~65%+3Q26 GAAP EBIT转正，SemiA给$6万亿估值基准 | [[ai-labs/anthropic-dashboard]] | [[ai-labs/anthropic-dashboard.html\|🔗]] | 2026-07-09 |
 | 服务器 | ⚪ 待建 | — | — | — | — |
 | 存储 | ⚪ 待建 | — | — | — | — |
 | AI-配电 | ⚪ 待建 | — | — | — | — |
@@ -39,7 +40,7 @@ tags:
 
 ---
 
-## 已完成版块（7 个主版块 + 1 个早期版本）
+## 已完成版块（8 个主版块 + 1 个早期版本）
 
 ### 🟢 PCB
 > CCL · PCB制造 · 铜箔 · 电子布 · 钻针 · 钻孔设备｜18 支标的
@@ -88,6 +89,14 @@ tags:
 - **重点标的**：英维克 `688286`、佳力图 `301110`、中科曙光 `603019`
 - **状态**：8 模块骨架完成，市场规模/渗透率数据待填实
 - 底稿：[[液冷/液冷_看板]]　·　看板：[[liquid-cooling/liquid-cooling-dashboard.html]]
+
+### 🟢 AI Labs（首期：Anthropic）
+> IPO财务与估值 · 与OpenAI对比 · 商业模式与产品 · 算力与技术路线｜海外AI实验室专题
+
+- **重点标的**：Anthropic（未上市，2026-06-01秘密提交IPO）
+- **核心催化剂**：IPO进程节点、下一轮融资、Fable/Mythos新模型定价、电力/TPU供给瓶颈演变
+- **看板亮点**：5 Tab深度拆解（IPO财务/OpenAI对比/商业模式/算力技术路线/风险催化剂），数据来自SemiAnalysis Tokenomics Model + Yipit高频数据 + 谷歌内部调研访谈，多信源口径差异均已标注
+- 底稿：[[ai-labs/anthropic-dashboard]]　·　看板：[[ai-labs/anthropic-dashboard.html]]
 
 ---
 

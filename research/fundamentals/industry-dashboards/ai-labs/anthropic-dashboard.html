@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Anthropic · AI Labs 看板</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+  :root {
+    --bg: #f8f9fa;
+    --card: #ffffff;
+    --border: #e9ecef;
+    --text-primary: #212529;
+    --text-secondary: #6c757d;
+    --accent: #2563eb;
+    --up: #16a34a;
+    --down: #dc2626;
+    --neutral: #d97706;
+    --up-bg: #f0fdf4;
+    --down-bg: #fef2f2;
+    --neutral-bg: #fffbeb;
+    --tag-bg: #eff6ff;
+    --tag-text: #1d4ed8;
+    --shadow: 0 1px 3px rgba(0,0,0,.08), 0 1px 2px rgba(0,0,0,.04);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+    background: var(--bg);
+    color: var(--text-primary);
+    font-size: 14px;
+    line-height: 1.6;
+  }
+  .header {
+    background: var(--card);
+    border-bottom: 1px solid var(--border);
+    padding: 20px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: var(--shadow);
+  }
+  .header-left { display: flex; align-items: center; gap: 16px; }
+  .sector-name { font-size: 22px; font-weight: 700; color: var(--text-primary); }
+  .sub-badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 4px 12px; border-radius: 20px; font-size: 13px; font-weight: 600;
+    background: var(--tag-bg); color: var(--tag-text); border: 1px solid #bfdbfe;
+  }
+  .header-meta { font-size: 12px; color: var(--text-secondary); }
+  .container { max-width: 1280px; margin: 0 auto; padding: 24px 32px; }
+  .kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 28px; }
+  .kpi-card { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 18px 20px; box-shadow: var(--shadow); }
+  .kpi-label { font-size: 12px; color: var(--text-secondary); margin-bottom: 6px; }
+  .kpi-value { font-size: 24px; font-weight: 700; color: var(--text-primary); margin-bottom: 4px; }
+  .kpi-trend { font-size: 12px; display: flex; align-items: center; gap: 4px; }
+  .trend-up { color: var(--up); }
+  .trend-down { color: var(--down); }
+  .trend-flat { color: var(--text-secondary); }
+  .tab-nav { display: flex; gap: 4px; margin-bottom: 20px; border-bottom: 1px solid var(--border); flex-wrap: wrap; }
+  .tab-btn {
+    padding: 10px 18px; font-size: 13px; font-weight: 600; color: var(--text-secondary);
+    background: none; border: none; cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -1px;
+  }
+  .tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+  .section-title {
+    font-size: 15px; font-weight: 700; color: var(--text-primary); margin-bottom: 14px; padding-bottom: 8px;
+    border-bottom: 2px solid var(--accent); display: flex; align-items: center; gap: 8px;
+  }
+  .section-title .icon { font-size: 16px; }
+  .charts-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 16px; margin-bottom: 28px; }
+  .charts-grid-even { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 28px; }
+  .chart-card { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 20px; box-shadow: var(--shadow); }
+  .chart-card h3 { font-size: 13px; font-weight: 600; color: var(--text-secondary); margin-bottom: 14px; }
+  .chart-wrapper { position: relative; height: 240px; }
+  .table-card { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 20px; box-shadow: var(--shadow); margin-bottom: 20px; overflow-x: auto; }
+  .table-card h3 { font-size: 13px; font-weight: 600; color: var(--text-secondary); margin-bottom: 14px; }
+  table { width: 100%; border-collapse: collapse; }
+  th { text-align: left; padding: 8px 12px; font-size: 12px; font-weight: 600; color: var(--text-secondary); background: var(--bg); border-bottom: 1px solid var(--border); white-space: nowrap; }
+  td { padding: 10px 12px; font-size: 13px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: var(--bg); }
+  .info-card { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 18px 20px; box-shadow: var(--shadow); margin-bottom: 16px; }
+  .info-card h4 { font-size: 13px; font-weight: 700; margin-bottom: 8px; color: var(--text-primary); }
+  .info-card p { font-size: 13px; line-height: 1.75; color: var(--text-primary); }
+  .info-card p + p { margin-top: 8px; }
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px; }
+  .caveat-banner { background: var(--neutral-bg); border: 1px solid #fcd34d; border-radius: 8px; padding: 10px 14px; font-size: 13px; font-weight: 600; color: #92400e; margin-bottom: 16px; }
+  .source-note { font-size: 11px; color: var(--text-secondary); margin-top: 8px; }
+  .timeline { padding-left: 4px; }
+  .tl-item { display: flex; gap: 16px; padding: 10px 0; border-bottom: 1px solid var(--border); }
+  .tl-item:last-child { border-bottom: none; }
+  .tl-dot { width: 10px; height: 10px; border-radius: 50%; margin-top: 5px; flex-shrink: 0; }
+  .tl-dot-pending { background: var(--neutral); }
+  .tl-dot-verified { background: var(--up); }
+  .tl-dot-falsified { background: var(--down); }
+  .tl-date { font-size: 12px; color: var(--text-secondary); white-space: nowrap; min-width: 100px; }
+  .tl-content { flex: 1; }
+  .tl-event { font-size: 13px; font-weight: 500; }
+  .tl-meta { font-size: 12px; color: var(--text-secondary); margin-top: 2px; }
+  .tl-status { font-size: 11px; padding: 2px 7px; border-radius: 4px; white-space: nowrap; align-self: flex-start; margin-top: 3px; }
+  .status-pending { background: var(--neutral-bg); color: var(--neutral); }
+  .status-verified { background: var(--up-bg); color: var(--up); }
+  .status-falsified { background: var(--down-bg); color: var(--down); }
+  .bottom-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 28px; }
+  .judgment-card { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 20px; box-shadow: var(--shadow); }
+  .judgment-text { font-size: 14px; line-height: 1.8; color: var(--text-primary); background: var(--bg); border-radius: 6px; padding: 14px 16px; border-left: 3px solid var(--accent); margin-bottom: 14px; }
+  .risk-item { display: flex; gap: 8px; margin-bottom: 6px; font-size: 13px; }
+  .risk-icon { color: var(--down); flex-shrink: 0; }
+  @media (max-width: 900px) {
+    .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+    .charts-grid, .charts-grid-even, .grid-2, .bottom-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div class="header-left">
+    <span class="sector-name">Anthropic</span>
+    <span class="sub-badge">AI Labs · 秘密提交IPO</span>
+  </div>
+  <div class="header-meta">
+    <span>行业看板</span>
+    <span style="margin: 0 8px; color: var(--border)">|</span>
+    <span>更新：2026-07-09</span>
+  </div>
+</header>
+
+<div class="container">
+
+  <div class="kpi-grid" id="kpiGrid"><!-- KPI由JS填充 --></div>
+
+  <div class="tab-nav" id="tabNav">
+    <button class="tab-btn active" data-tab="tab1">IPO财务与估值</button>
+    <button class="tab-btn" data-tab="tab2">与OpenAI对比</button>
+    <button class="tab-btn" data-tab="tab3">商业模式与产品</button>
+    <button class="tab-btn" data-tab="tab4">TPU视角看Anthropic</button>
+    <button class="tab-btn" data-tab="tab5">风险与催化剂</button>
+  </div>
+
+  <div class="tab-panel active" id="tab1">
+    <div class="charts-grid">
+      <div class="chart-card">
+        <h3>ARR轨迹：Anthropic vs OpenAI（2025年下半年→2026年6月，$B）</h3>
+        <div class="chart-wrapper"><canvas id="arrTrendChart"></canvas></div>
+        <div class="source-note">来源：Anthropic线：SaaStr/多家报道（2025年7-10月）+ Yipit高频数据（2026年，截至6/14约$62B）；OpenAI线：Tab2"OpenAI ARR时间线"数据点，虚线为缺失月份的插值连线（非精确值）。可见Anthropic自2025年底起持续拉大对OpenAI的领先差距</div>
+      </div>
+      <div class="chart-card">
+        <h3>毛利率演变</h3>
+        <div class="chart-wrapper"><canvas id="marginTrendChart"></canvas></div>
+        <div class="source-note">来源：SemiAnalysis Tokenomics Model，Anthropic Tab（Total Gross Margins）；2024-2025年为年度值按季度重复填充，仅2026年起为真实季度数据。API业务毛利率已超80%，是支撑综合毛利率持续改善的核心结构（订阅/免费用户业务毛利率更低，拖累综合值）</div>
+      </div>
+    </div>
+
+    <div class="table-card">
+      <h3>Anthropic ARR 时间线（创立以来）</h3>
+      <table>
+        <thead><tr><th>时间点</th><th>ARR / 年化收入</th><th>消息口径</th></tr></thead>
+        <tbody>
+          <tr><td>2022（成立年）</td><td>~$10M</td><td>SaaStr梳理的收入时间线</td></tr>
+          <tr><td>2023年3月</td><td>$22M</td><td>Sacra估算</td></tr>
+          <tr><td>2023全年</td><td>~$100M</td><td>SaaStr梳理</td></tr>
+          <tr><td>2024年3月</td><td>$316M</td><td>Sacra估算（Claude 3 Opus发布后，同比+1341%）</td></tr>
+          <tr><td>2024年12月 / 2025年初</td><td>~$1B</td><td>SaaStr（Dec 2024 $1B ARR）；Anthropic官方（Jan 2025约$1B）</td></tr>
+          <tr><td>2025年7月</td><td>$4B</td><td>SaaStr / 多家报道</td></tr>
+          <tr><td>2025年8月</td><td>$5B+</td><td>Anthropic官方（Series F公告，8个月内运行率破$5B）</td></tr>
+          <tr><td>2025年10月</td><td>~$7B</td><td>Anthropic官方（Google云合作公告称运行率"approaching $7B"）</td></tr>
+          <tr><td>2025年底</td><td>$9B+</td><td>消息人士 / Reuters（达成内部$9B年化运行率目标）</td></tr>
+          <tr><td>2026年2月</td><td>$14B</td><td>Yipit</td></tr>
+          <tr><td>2026年4月</td><td>$30B</td><td>Yipit</td></tr>
+          <tr><td>2026年5月</td><td>$44-47B</td><td>Yipit / 机构预测区间</td></tr>
+          <tr><td>2026年6月14日</td><td>~$62B</td><td>Yipit最新数据，打破"6月后Claude失速"传言</td></tr>
+          <tr><td>2026年底（机构预期）</td><td>$100B</td><td>机构预期，以当前增速看仍是保守锚定，存在更乐观上修声音</td></tr>
+        </tbody>
+      </table>
+      <div class="source-note">口径不完全统一（部分为第三方估算，部分为官方披露，部分为Yipit等高频消费数据），与左上ARR轨迹图衔接，构成Anthropic自2022年成立以来完整ARR增长脉络：约4年从$10M增长至$62B（截至2026-06-14）</div>
+    </div>
+
+    <div class="charts-grid-even">
+      <div class="chart-card">
+        <h3>月度净新增ARR（$B）</h3>
+        <div class="chart-wrapper"><canvas id="nnarrChart"></canvas></div>
+        <div class="source-note">来源：SemiAnalysis《Anthropic's Monthly Net New ARR》图表读数，近似值</div>
+      </div>
+      <div class="info-card">
+        <h4>估值逻辑：$6万亿基准</h4>
+        <p>SemiAnalysis 基准情形：2027年末 ARR 达 $300B（对应2027年月均净新增ARR约$15B），给予20倍 PS，得到 Anthropic 企业价值 $6万亿——若实现将成为全球市值最高企业。</p>
+        <p>长期利润率假设：毛利率升至75%中段，训练/研发占总算力48%，其他运营支出占营收20%，对应30-40%的EBIT/FCF利润率区间（对标历史最优秀软件公司）。</p>
+      </div>
+    </div>
+
+    <div class="info-card">
+      <h4>增速远超原定算力规划</h4>
+      <p>据Bloomberg 2026年6月对Dario Amodei的专访，Anthropic 2026年Q1单季度收入环比增长超过3倍，年化增速约80倍，远超公司原定10倍/年的算力规划节奏——这也是"算力供给持续掉队于需求"这一叙事的直接来源。</p>
+      <p>机构预期2026年底ARR达$100B，以当前增速看仍属保守锚定，市场存在更乐观的上修声音。</p>
+    </div>
+
+    <div class="chart-card">
+      <h3>分模型API收入结构（$M，1Q24-4Q26）</h3>
+      <div class="chart-wrapper"><canvas id="modelRevenueChart"></canvas></div>
+      <div class="source-note">来源：SemiAnalysis Tokenomics Model，Anthropic Tab分模型明细；图表读数近似值。仅展示图中列出的模型线（不含消费者订阅/Haiku等其他产品线），不代表公司总收入，用于观察新模型对老模型的收入替代节奏</div>
+    </div>
+
+    <div class="table-card">
+      <h3>融资历程（Series A → H）</h3>
+      <table>
+        <thead><tr><th>轮次</th><th>时间</th><th>融资额</th><th>投后估值</th></tr></thead>
+        <tbody>
+          <tr><td>Series A</td><td>2021-05</td><td>$124M</td><td>—</td></tr>
+          <tr><td>Series B</td><td>2022-04</td><td>$580M</td><td>—</td></tr>
+          <tr><td>Google</td><td>2023-02</td><td>$300M</td><td>—</td></tr>
+          <tr><td>Series C</td><td>2023-03</td><td>$300M</td><td>$4.1B</td></tr>
+          <tr><td>Amazon</td><td>2023-09</td><td>最高$4B（首付$1.25B）</td><td>—</td></tr>
+          <tr><td>Google</td><td>2023-10</td><td>最高$2B（首付$500M）</td><td>—</td></tr>
+          <tr><td>Series E</td><td>2025-03</td><td>$3.5B</td><td>$61.5B</td></tr>
+          <tr><td>Series F</td><td>2025-09</td><td>$13B</td><td>$183B</td></tr>
+          <tr><td>Series G</td><td>2026-02</td><td>$30B</td><td>$380B</td></tr>
+          <tr><td>Series H</td><td>2026-05</td><td>$65B</td><td>$965B</td></tr>
+        </tbody>
+      </table>
+      <div class="source-note">来源：SemiAnalysis《Anthropic Funding History》</div>
+    </div>
+  </div>
+  <div class="tab-panel" id="tab2">
+    <div class="table-card">
+      <h3>OpenAI ARR 时间线（对照）</h3>
+      <table>
+        <thead><tr><th>时间点</th><th>ARR / 年化收入</th><th>消息口径</th></tr></thead>
+        <tbody>
+          <tr><td>2022年底</td><td>~$200M</td><td>Sacra估算</td></tr>
+          <tr><td>2023年底</td><td>$2B</td><td>Sacra估算；OpenAI CFO后续确认2023年$2B</td></tr>
+          <tr><td>2024年12月</td><td>$5.5B</td><td>Reuters报道的年化运行率</td></tr>
+          <tr><td>2024全年</td><td>$6B</td><td>OpenAI CFO Sarah Friar口径</td></tr>
+          <tr><td>2025年6月</td><td>$10B</td><td>OpenAI官方（CNBC/Reuters首报，剔除微软授权及一次性大单）</td></tr>
+          <tr><td>2025年8月</td><td>$13B</td><td>融资报道 / Epoch AI（The Information报道年化收入破$13B）</td></tr>
+          <tr><td>2025年底</td><td>$20B+</td><td>OpenAI CFO Sarah Friar表态，年化收入2025超$20B（较2024年$6B增长约3倍）</td></tr>
+          <tr><td>2026年2月（官方最后一次披露）</td><td>$25B</td><td>OpenAI官方</td></tr>
+          <tr><td>2026年5月</td><td>$40-50B</td><td>机构测算（官方此后未再披露）</td></tr>
+          <tr><td>2026年6月</td><td>$55B+</td><td>机构测算，仍低于同期Anthropic（$62B）</td></tr>
+        </tbody>
+      </table>
+      <div class="source-note">口径不完全统一（部分为第三方估算，部分为官方披露）；对照Tab1"Anthropic ARR时间线"可见：2023-2024年OpenAI规模领先，但2025年下半年起Anthropic增速反超并持续拉大差距（2026年6月：Anthropic $62B vs OpenAI $55B+）。OpenAI自2026年2月$25B后不再官方披露ARR，后续均为机构测算，跟踪难度上升</div>
+    </div>
+
+    <div class="charts-grid-even">
+      <div class="chart-card">
+        <h3>消费端订阅占ARR比例：Anthropic vs OpenAI</h3>
+        <div class="chart-wrapper"><canvas id="consumerMixChart"></canvas></div>
+        <div class="source-note">来源：SemiAnalysis《Less Consumer, Better Business》图表读数，近似值</div>
+      </div>
+      <div class="chart-card">
+        <h3>毛利率对比：Anthropic vs OpenAI</h3>
+        <div class="chart-wrapper"><canvas id="marginCompareChart"></canvas></div>
+        <div class="source-note">来源：SemiAnalysis《Gross Margin Over Time》图表读数，近似值</div>
+      </div>
+    </div>
+
+    <div class="charts-grid">
+      <div class="chart-card">
+        <h3>EBTIT对比：Anthropic vs OpenAI（FY24-28E，$B）</h3>
+        <div class="chart-wrapper"><canvas id="ebtitChart"></canvas></div>
+        <div class="source-note">来源：SemiAnalysis《Annual EBTIT, FY24-28E》图表读数，近似值；2028E累计差距约$250B。注：EBTIT（训练前/利息前/税前收益）为年度口径，与KPI卡片中"3Q26 GAAP EBIT"为单季度口径的不同指标，两者不可直接比较</div>
+      </div>
+      <div class="info-card">
+        <h4>免费用户成本拖累</h4>
+        <p>OpenAI 需支持9亿+免费用户，估算每用户月服务成本约$0.70，历史上侵蚀总毛利率20-30个百分点。若双方ARR均为$100B（1000亿），OpenAI毛利润将比Anthropic少$25B（250亿，注意与右侧图表"2028E累计差距约$250B"为不同口径的两个数字，量级相差10倍，勿混淆）。</p>
+        <p>Anthropic Free MAU约5500-6000万，付费转化率约9%；OpenAI WAU约9.5亿，付费转化率约6%。</p>
+      </div>
+    </div>
+
+    <div class="table-card">
+      <h3>关键差异对比</h3>
+      <table>
+        <thead><tr><th>指标</th><th>Anthropic</th><th>OpenAI</th></tr></thead>
+        <tbody>
+          <tr><td>API/使用量收入占ARR</td><td>75-85%</td><td>低于35%（订阅占65%+，1Q26）</td></tr>
+          <tr><td>消费端订阅占ARR</td><td>~5%</td><td>~40%（2Q26末估算）</td></tr>
+          <tr><td>综合毛利率（2026年中）</td><td>~65%</td><td>~38-40%</td></tr>
+          <tr><td>免费用户规模</td><td>Free MAU约5500-6000万</td><td>WAU约9.5亿</td></tr>
+          <tr><td>2028E累计EBTIT优势</td><td>基准</td><td>落后约$250B</td></tr>
+          <tr><td>每$1算力换收入（不含训练成本）</td><td>$2.10</td><td>$1.60</td></tr>
+          <tr><td>每$1算力换收入（含训练成本，估算）</td><td>$1.70</td><td>$0.68（跌破$1盈亏线）</td></tr>
+        </tbody>
+      </table>
+      <div class="source-note">来源：SemiAnalysis Tokenomics Model；末两行"每$1算力换收入"来自WSJ投资者文件测算（2026年4月）及作者按训练成本预测的推算，口径与其他行不同，仅供交叉参考</div>
+    </div>
+  </div>
+  <div class="tab-panel" id="tab3">
+    <div class="table-card">
+      <h3>Consumer / Team / Enterprise 定价体系</h3>
+      <table>
+        <thead><tr><th>产品线</th><th>档位</th><th>价格</th><th>说明</th></tr></thead>
+        <tbody>
+          <tr><td>Consumer</td><td>Free</td><td>$0</td><td>含Claude Code/Cowork/Claude for Microsoft 365</td></tr>
+          <tr><td>Consumer</td><td>Pro</td><td>$20/月</td><td>付费用户平均月支出约$45</td></tr>
+          <tr><td>Consumer</td><td>Max 5x</td><td>$100/月</td><td>—</td></tr>
+          <tr><td>Consumer</td><td>Max 20x</td><td>$200/月</td><td>—</td></tr>
+          <tr><td>Team</td><td>标准档</td><td>$20/月（按年付费）</td><td>面向5-150席位中小企业</td></tr>
+          <tr><td>Team</td><td>高阶档</td><td>$100/月（按年付费）</td><td>—</td></tr>
+          <tr><td>Enterprise</td><td>超150席位</td><td>$20/月 + 全部API费率</td><td>订阅价不含任何使用额度</td></tr>
+        </tbody>
+      </table>
+      <div class="source-note">来源：Anthropic官网，转引自SemiAnalysis</div>
+    </div>
+
+    <div class="table-card">
+      <h3>API 模型定价（$ / 百万Token）</h3>
+      <table>
+        <thead><tr><th>模型</th><th>基础输入</th><th>5分钟缓存写入</th><th>1小时缓存写入</th><th>缓存命中/刷新</th><th>输出</th></tr></thead>
+        <tbody>
+          <tr><td>Claude Fable 5</td><td>$10</td><td>$12.50</td><td>$20</td><td>$1</td><td>$50</td></tr>
+          <tr><td>Claude Mythos 5（限量）</td><td>$10</td><td>$12.50</td><td>$20</td><td>$1</td><td>$50</td></tr>
+          <tr><td>Claude Opus 4.8/4.7/4.6/4.5</td><td>$5</td><td>$6.25</td><td>$10</td><td>$0.50</td><td>$25</td></tr>
+          <tr><td>Claude Sonnet 5（至2026-08-31）</td><td>$2</td><td>$2.50</td><td>$4</td><td>$0.20</td><td>$10</td></tr>
+          <tr><td>Claude Sonnet 5（2026-09-01起）</td><td>$3</td><td>$3.75</td><td>$6</td><td>$0.30</td><td>$15</td></tr>
+          <tr><td>Claude Haiku 4.5</td><td>$1</td><td>$1.25</td><td>$2</td><td>$0.10</td><td>$5</td></tr>
+        </tbody>
+      </table>
+      <div class="source-note">来源：Anthropic官网定价页，转引自SemiAnalysis（2026-07）</div>
+    </div>
+
+    <div class="info-card">
+      <h4>企业客户渗透最新数据</h4>
+      <p>Claude企业/API收入占比83-85%；财富10强企业中已有8家采用；年消费$100万美元以上的客户数已破千。Coding与Agent场景是调用量与客户留存的主要驱动力。</p>
+    </div>
+
+    <div class="charts-grid-even">
+      <div class="chart-card">
+        <h3>Claude Code 占 GitHub 总提交比例</h3>
+        <div class="chart-wrapper"><canvas id="claudeCodeChart"></canvas></div>
+        <div class="source-note">来源：SemiAnalysis Research，7日移动平均，图表读数近似值</div>
+      </div>
+      <div class="chart-card">
+        <h3>间接渠道（Bedrock/Foundry）占ARR比例</h3>
+        <div class="chart-wrapper"><canvas id="taasChart"></canvas></div>
+        <div class="source-note">来源：SemiAnalysis Tokenomics Model；注：图中数值为间接渠道占ARR比例，另有20-30%的收入分成是Anthropic向渠道方支付的费率，二者为不同指标</div>
+      </div>
+    </div>
+  </div>
+  <div class="tab-panel" id="tab4">
+    <div class="caveat-banner">⚠ 本Tab大部分数据来自「模型厂关于近期热点的碎碎念」（谷歌内部大模型调研访谈，2026-07-05），与Tab1/Tab2的SemiAnalysis口径为不同信源，ARR相关表述存在差异，仅作交叉参考，不作为主口径。下方标注"SemiAnalysis"的卡片除外，口径与Tab1/Tab2一致。</div>
+
+    <div class="grid-2">
+      <div class="info-card">
+        <h4>算力供需缺口（SemiAnalysis）</h4>
+        <p>当前OpenAI与Anthropic合计可获取算力仅略超<strong>6GW</strong>，但SemiAnalysis预计到2030年底两家合计算力需求将超过<strong>100GW</strong>——算力瓶颈的本质是供给问题，而非需求不足。</p>
+        <p>这也是Anthropic选择此时IPO的核心动因之一：打开股权和债务融资渠道，用于抢算力、租算力、训练下一代模型。</p>
+      </div>
+      <div class="info-card">
+        <h4>每兆瓦算力ARR效率提升（SemiAnalysis）</h4>
+        <p>Anthropic每兆瓦算力产生的ARR预计年内将达到约<strong>$60M/MW</strong>，而9个月前这一数字仅约<strong>$16M/MW</strong>——接近4倍提升。</p>
+        <p>驱动因素：推理效率提升、token吞吐量提升、新模型定价更高，三者共同作用下，同样的算力能换来更多收入，这正是Tab1毛利率从-94%到~65%的底层机制。</p>
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div class="info-card">
+        <h4>TPU分配现状</h4>
+        <p>Google V6 在内部已很少使用，基本全部供给Anthropic；新一代V7除DeepMind训练任务外也优先供给Anthropic，甚至Google内部Gemini项目都还没用上。</p>
+        <p>Anthropic弹性占用约200-250万片TPU，占GCP总量30%以上，峰值时期（2026年3-4月）一度接近40%。工作日为保Anthropic的算力需求，Google甚至要停掉自己的部分服务。</p>
+      </div>
+      <div class="info-card">
+        <h4>瓶颈判断：电力 > 芯片本身</h4>
+        <p>近两月首次出现"卡到货但数据中心插不上电"的情况，电力短缺开始成为实质瓶颈。为筛选客户、应对电力限制，TPU与英伟达算力租赁价格预计未来两个月大幅提价，涨幅远超20-30%（长期合同API客户如苹果、三星不受影响）。</p>
+      </div>
+    </div>
+
+    <div class="charts-grid-even">
+      <div class="chart-card">
+        <h3>每$1算力换回收入对比</h3>
+        <div class="chart-wrapper"><canvas id="efficiencyChart"></canvas></div>
+        <div class="source-note">来源：WSJ投资者文件测算（不含训练成本口径，2026年4月）+ 作者按WSJ训练成本预测推算（含训练成本口径）；OpenAI 2028年预计训练支出高达$121B，是含训练成本口径下Anthropic与OpenAI"$85B差距"的主因，OpenAI含训练成本后已跌破$1盈亏线</div>
+      </div>
+      <div class="chart-card">
+        <h3>单机架硬件BOM成本对比（$百万美元）</h3>
+        <div class="chart-wrapper"><canvas id="hardwareCostChart"></canvas></div>
+        <div class="source-note">来源：行业机架级BOM拆解测算；TPU v7机架(64卡)内部BOM约150万美元，为GB200 NVL72(约324万美元)的不到一半；下一代TPU v8i单卡性能已超越GB300</div>
+      </div>
+    </div>
+
+    <div class="table-card">
+      <h3>单机架BOM成本详细拆解（$千美元）</h3>
+      <table>
+        <thead><tr><th>成本项</th><th>NVIDIA GB200 NVL72</th><th>Google TPU v7机架（Ironwood，64卡）</th></tr></thead>
+        <tbody>
+          <tr><td>CPU 晶圆成本</td><td>90</td><td>40</td></tr>
+          <tr><td>CPU DRAM / 其他</td><td>150</td><td>144</td></tr>
+          <tr><td><strong>CPU小计</strong>（36颗Grace CPU / 16颗CPU）</td><td><strong>240</strong></td><td><strong>184</strong></td></tr>
+          <tr><td>HBM</td><td>180</td><td>160</td></tr>
+          <tr><td>加速卡晶圆成本</td><td>160</td><td>51</td></tr>
+          <tr><td>供应商毛利（Nvidia / Broadcom）</td><td>1,728</td><td>422</td></tr>
+          <tr><td>其他</td><td>236</td><td>134</td></tr>
+          <tr><td><strong>加速卡小计</strong>（72颗B200 / 64颗TPU）</td><td><strong>2,304</strong></td><td><strong>768</strong></td></tr>
+          <tr><td>网络</td><td>500</td><td>400</td></tr>
+          <tr><td>其他</td><td>200</td><td>150</td></tr>
+          <tr><td><strong>机架总BOM</strong></td><td><strong>3,244</strong></td><td><strong>1,502</strong></td></tr>
+        </tbody>
+      </table>
+      <div class="source-note">来源：行业机架级BOM拆解测算。核心差异并非芯片晶圆本身（CPU/HBM/晶圆成本两者接近），而在供应商毛利：Nvidia在GB200上留存的毛利（$1,728k）是Broadcom在TPU v7上留存毛利（$422k）的4倍以上，是两种架构总BOM相差超1倍的主因</div>
+    </div>
+
+    <div class="grid-2">
+      <div class="info-card">
+        <h4>架构路线之争：MoE"小专家" vs "大专家"</h4>
+        <p>OpenAI/Google现有MoE架构倾向"小专家"路线（专家数量多、单专家维度小），早期适配LongCoT式深度思考，对物理/数学等规则固定问题有效，但编程这类高动态性任务效果存疑。</p>
+        <p>Anthropic 2025年为长文本/长程任务选择"大专家"架构，配合大量高质量反馈循环数据，被认为是其coding场景领先的架构性根源。追赶方需重新预训练不同架构模型，短期难以弥补，这种领先可能形成难以打破的正循环。</p>
+      </div>
+      <div class="chart-card">
+        <h3>Google TPU 出货量路线图（万片）</h3>
+        <div class="chart-wrapper"><canvas id="tpuRoadmapChart"></canvas></div>
+        <div class="source-note">来源：谷歌内部调研访谈；2028年Google-台积电合资TPU工厂投产为关键产能释放节点</div>
+      </div>
+    </div>
+
+    <div class="table-card">
+      <h3>TPU 量产（MP）时间表</h3>
+      <table>
+        <thead><tr><th>型号</th><th>代号</th><th>代工厂</th><th>制程</th><th>Compute Die数量</th><th>Die尺寸（mm²）</th><th>量产（MP）时间</th></tr></thead>
+        <tbody>
+          <tr><td>TPU v7</td><td>Ironwood</td><td>Broadcom</td><td>3nm</td><td>2</td><td>600</td><td>2025年已量产</td></tr>
+          <tr><td>TPU v8x</td><td>Zebrafish</td><td>MediaTek</td><td>3nm</td><td>1</td><td>400</td><td>2026年下半年量产</td></tr>
+          <tr><td>TPU v8ax / v8p</td><td>Sunfish</td><td>Broadcom</td><td>3nm</td><td>4</td><td>490</td><td>2027年量产</td></tr>
+          <tr><td>TPU v8e</td><td>Humufish</td><td>MediaTek</td><td>2nm</td><td>4</td><td>490</td><td>2027年下半年量产</td></tr>
+          <tr><td>TPU v9p</td><td>Pumafish</td><td>Broadcom</td><td>2nm</td><td>8</td><td>510</td><td>2027年量产</td></tr>
+          <tr><td>TPU v9e</td><td>—</td><td>MediaTek</td><td>2nm</td><td>12</td><td>约500</td><td>2028年量产</td></tr>
+        </tbody>
+      </table>
+      <div class="source-note">来源：行业TPU产品路线图测算。双代工策略（Broadcom + MediaTek并行）+ Compute Die数量随制程收缩持续增加（2颗→12颗），显示Google通过chiplet堆叠弥补单die性能提升放缓的路径</div>
+    </div>
+
+    <div class="table-card">
+      <h3>TPU 出货量分型号明细（万片）</h3>
+      <table>
+        <thead><tr><th>型号</th><th>代工厂</th><th>2026E</th><th>2027E</th></tr></thead>
+        <tbody>
+          <tr><td>TPU v7（Ironwood）</td><td>Broadcom</td><td>180</td><td>—（已进入量产尾声，产能让位v8系列）</td></tr>
+          <tr><td>TPU v8x（Zebrafish）</td><td>MediaTek</td><td>40</td><td>200</td></tr>
+          <tr><td>TPU v8ax / v8p（Sunfish）</td><td>Broadcom</td><td>90</td><td>330</td></tr>
+          <tr><td>TPU v8e（Humufish）</td><td>MediaTek</td><td>30</td><td>170</td></tr>
+          <tr><td><strong>合计</strong></td><td>—</td><td><strong>340</strong></td><td><strong>700</strong></td></tr>
+        </tbody>
+      </table>
+      <div class="source-note">来源：行业TPU出货量测算，图表读数近似值，各型号已按官方2026E 340万/2027E 700万合计口径调整，仅供观察型号结构变化（v7逐步让位给v8系列，Broadcom与MediaTek双供应商占比大致均衡）</div>
+    </div>
+  </div>
+  <div class="tab-panel" id="tab5">
+    <div class="bottom-grid">
+      <div>
+        <div class="section-title"><span class="icon">📅</span>催化剂跟踪</div>
+        <div class="table-card">
+          <div class="timeline" id="catalystTimeline"><!-- JS填充 --></div>
+        </div>
+      </div>
+      <div>
+        <div class="section-title"><span class="icon">💡</span>当前判断</div>
+        <div class="judgment-card">
+          <h3 style="font-size:13px; color:var(--text-secondary); margin-bottom:10px;">核心逻辑</h3>
+          <div class="judgment-text" id="coreLogic"></div>
+          <h3 style="font-size:13px; color:var(--text-secondary); margin:14px 0 10px;">主要风险</h3>
+          <div id="riskList"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="info-card">
+      <h4>本期关键判断（2026-07-09）</h4>
+      <p><strong>1）2B/高价值客户策略更接近可持续现金流：</strong>今年谁更专注企业级、抢占高价值模型客户，谁就更接近可持续现金流。Anthropic的企业集中度与大客户扩张，在估值定价上获得"质量溢价"，这是其融资顺利、IPO抢跑的重要底层支撑。</p>
+      <p><strong>2）出口管制边际缓和不改主力收入引擎：</strong>Fable5/Mythos5的"分级开放"与"部分解禁"并未动摇Anthropic主力收入引擎；政策边际缓和叠加年内算力集中上量，或支撑ARR增速韧性延续至下半场。</p>
+      <p><strong>3）OpenAI跟踪难度上升，Codex转化效果待观察：</strong>OpenAI不披露期延长（自2026年2月$25B后未再官方披露）叠加上市时间线分歧，增加了跟踪难度；但市场对Codex评价明显提升，其能否将Claude"战略性放弃"的部分2C客户转化为商业化收入，仍需持续观察。</p>
+    </div>
+  </div>
+
+</div>
+
+<script>
+/* ════════════════════════════════════════════════════════════
+   DATA CONFIG
+   ════════════════════════════════════════════════════════════ */
+const DATA = {
+  kpis: [
+    { label: "最新ARR（6月14日，Yipit）", value: "$62B", trend: "up", trendText: "较2025年底$9B大幅跳升，6月仍陡峭增长" },
+    { label: "综合毛利率", value: "~65%", trend: "up", trendText: "2024年为-94%" },
+    { label: "3Q26 GAAP EBIT", value: "$1.0B", trend: "up", trendText: "6%利润率" },
+    { label: "SemiAnalysis估值预测", value: "$6万亿", trend: "flat", trendText: "2027E ARR $300B×20x PS" },
+  ],
+  tab1: {
+    arrTrend: {
+      labels: ["2025-07", "2025-08", "2025-10", "2025-12", "2026-02", "2026-04", "2026-05", "2026-06-14"],
+      data: [4, 5, 7, 9, 14, 30, 45.5, 62],
+      openai: [10, 13, null, 20, 25, null, 45, 55],
+    },
+    marginTrend: {
+      labels: ["1Q24","2Q24","3Q24","4Q24","1Q25","2Q25","3Q25","4Q25","1Q26","2Q26","3Q26","4Q26"],
+      data: [-94,-94,-94,-94,38,38,38,38,60,62,64,65],
+    },
+    nnarr: {
+      labels: ["2026-01","2026-02","2026-03","2026-04E","2026-05E","2026-06E"],
+      data: [3,7,11,10,10,10],
+    },
+    modelRevenue: {
+      labels: ["1Q24","2Q24","3Q24","4Q24","1Q25","2Q25","3Q25","4Q25","1Q26","2Q26","3Q26","4Q26"],
+      series: [
+        { name: "Opus 4.6 Fast Mode", data: [0,0,0,0,0,0,0,0,2036,4316,6996,10196], color: "#7c3aed" },
+        { name: "Opus 4.6/4.5", data: [0,0,0,0,0,0,0,2322,17815,38305,62964,94313], color: "#2563eb" },
+        { name: "Opus 4.1/4.3", data: [23,45,66,88,174,305,516,387,229,324,350,255], color: "#94a3b8" },
+        { name: "Sonnet系列", data: [204,394,578,766,1514,2649,4489,4721,4581,9711,15741,21667], color: "#16a34a" },
+      ],
+    },
+  },
+  tab2: {
+    consumerMix: {
+      labels: ["1Q24","2Q24","3Q24","4Q24","1Q25","2Q25","3Q25","4Q25","1Q26","2Q26","3Q26","4Q26"],
+      anthropic: [11,7,9,8,7,8,6,5,5,5,5,4],
+      openai: [59,58,60,65,65,66,66,55,45,40,35,30],
+    },
+    marginCompare: {
+      labels: ["1Q24","2Q24","3Q24","4Q24","1Q25","2Q25","3Q25","4Q25","1Q26","2Q26","3Q26","4Q26"],
+      anthropic: [-94,-94,-94,-94,38,38,38,38,60,62,64,65],
+      openai: [40,40,40,40,40,40,38,38,38,39,38,38],
+    },
+    ebtit: {
+      labels: ["2024","2025","2026","2027","2028"],
+      anthropic: [-5,15,60,90,130],
+      openai: [-5,-5,-5,15,40],
+    },
+  },
+  tab3: {
+    claudeCode: {
+      labels: ["2025-01","2025-06","2025-12","2026-03","2026-06","2026-07"],
+      data: [0.1,1,3,5,6.5,7.3],
+    },
+    taas: {
+      labels: ["1季度前","目前"],
+      data: [7.5,17.5],
+    },
+  },
+  tab4: {
+    efficiency: {
+      labels: ["Anthropic（不含训练成本）","OpenAI（不含训练成本）","Anthropic（含训练成本）","OpenAI（含训练成本）"],
+      data: [2.10, 1.60, 1.70, 0.68],
+    },
+    hardwareCost: {
+      labels: ["TPU v7机架（64卡）","NVIDIA GB200 NVL72"],
+      data: [1.5, 3.24],
+    },
+    tpuRoadmap: {
+      labels: ["2026E","2027E"],
+      data: [340, 700],
+    },
+  },
+  tab5: {
+    catalysts: [
+      { date: "2026-06-01", event: "Anthropic秘密提交IPO申请", impact: "正面", status: "verified" },
+      { date: "2026-06", event: "Bloomberg专访Dario Amodei：1Q26收入环比>3x，年化~80x，远超原定10x/年算力规划", impact: "正面", status: "verified" },
+      { date: "2026-06-14", event: "Yipit数据显示ARR达约$62B，打破\"6月后Claude失速\"传言", impact: "正面", status: "verified" },
+      { date: "2026-07-08", event: "SemiAnalysis发布3Q26财务预测报告", impact: "中性", status: "verified" },
+      { date: "一周内（市场传言）", event: "Fable5/Mythos5出口限制分级解禁：Mythos5已有限解禁，Fable5待批准", impact: "正面", status: "pending" },
+      { date: "待定", event: "下一轮股权/债务融资（对标Alphabet 2026年6月$84.75B股权融资）", impact: "正面", status: "pending" },
+      { date: "待定", event: "NYT报道OpenAI考虑IPO推迟至2027年（此前已秘密提交、估值目标约$1万亿），Anthropic抢跑窗口", impact: "正面", status: "pending" },
+      { date: "待定", event: "电力/TPU供给瓶颈演变（近两月租赁价格预期大幅提价）", impact: "负面", status: "pending" },
+    ],
+    coreLogic: "Anthropic在增长率与盈利能力两大核心财务指标上是AI实验室竞赛的明显赢家：API收入占比75-85%、毛利率已升至~65%、3Q26 GAAP EBIT转正（6%利润率）。SemiAnalysis给出$6万亿估值基准（2027E ARR $300B×20倍PS），但OpenAI通过Codex/API业务正在追赶，且算力/电力短缺是双方共同的硬约束。",
+    risks: [
+      "代币预算担忧（TokenBudgeting）：Claude Code企业用户平均月支出仅$150-250，90%用户日支出低于$30，高消费案例是长尾而非主流，企业渗透率仍低，短期风险有限",
+      "开源模型与OpenAI降价策略侵蚀定价权",
+      "Google/Meta编程模型突破，coding市场从双雄变四强",
+      "算力短缺与电力瓶颈：2030年AI Labs算力需求缺口90GW+净新增",
+      "美国监管延迟前沿模型发布，削弱Anthropic对开源的领先窗口",
+    ],
+  },
+};
+
+/* ════════════════════════════════════════════════════════════
+   TAB SWITCHING
+   ════════════════════════════════════════════════════════════ */
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById(btn.dataset.tab).classList.add('active');
+  });
+});
+
+/* ════════════════════════════════════════════════════════════
+   RENDER
+   ════════════════════════════════════════════════════════════ */
+document.addEventListener('DOMContentLoaded', () => {
+  const kpiGrid = document.getElementById('kpiGrid');
+  DATA.kpis.forEach(k => {
+    const trendClass = k.trend === 'up' ? 'trend-up' : k.trend === 'down' ? 'trend-down' : 'trend-flat';
+    const arrow = k.trend === 'up' ? '↑' : k.trend === 'down' ? '↓' : '→';
+    kpiGrid.innerHTML += `
+      <div class="kpi-card">
+        <div class="kpi-label">${k.label}</div>
+        <div class="kpi-value">${k.value}</div>
+        <div class="kpi-trend ${trendClass}">${arrow} ${k.trendText}</div>
+      </div>`;
+  });
+
+  new Chart(document.getElementById('arrTrendChart'), {
+    type: 'line',
+    data: {
+      labels: DATA.tab1.arrTrend.labels,
+      datasets: [
+        { label: 'Anthropic', data: DATA.tab1.arrTrend.data, borderColor: '#2563eb', backgroundColor: 'rgba(37,99,235,0.08)', tension: 0.3, fill: true },
+        { label: 'OpenAI', data: DATA.tab1.arrTrend.openai, borderColor: '#d97706', backgroundColor: 'rgba(217,119,6,0.06)', tension: 0.3, fill: false, spanGaps: true, borderDash: [4, 3] },
+      ],
+    },
+    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'top', labels: { font: { size: 11 } } },
+      tooltip: { callbacks: { label: (ctx) => ctx.dataset.label + ': $' + (ctx.parsed.y < 1 ? Math.round(ctx.parsed.y * 1000) + 'M' : ctx.parsed.y + 'B') } } },
+      scales: { x: { grid: { color: '#f1f5f9' }, ticks: { font: { size: 10 } } },
+        y: { min: 0, grid: { color: '#f1f5f9' }, ticks: { font: { size: 11 }, stepSize: 1, callback: (v) => '$' + v + 'B' } } } },
+  });
+
+  new Chart(document.getElementById('marginTrendChart'), {
+    type: 'line',
+    data: {
+      labels: DATA.tab1.marginTrend.labels,
+      datasets: [{ label: '毛利率 (%)', data: DATA.tab1.marginTrend.data, borderColor: '#16a34a', backgroundColor: 'rgba(22,163,74,0.06)', tension: 0.3, fill: true }],
+    },
+    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } },
+      scales: { x: { grid: { color: '#f1f5f9' }, ticks: { font: { size: 10 } } }, y: { grid: { color: '#f1f5f9' }, ticks: { font: { size: 11 } } } } },
+  });
+
+  new Chart(document.getElementById('nnarrChart'), {
+    type: 'bar',
+    data: {
+      labels: DATA.tab1.nnarr.labels,
+      datasets: [{ label: '月度净新增ARR ($B)', data: DATA.tab1.nnarr.data, backgroundColor: '#2563eb' }],
+    },
+    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } },
+      scales: { x: { grid: { color: '#f1f5f9' }, ticks: { font: { size: 11 } } }, y: { grid: { color: '#f1f5f9' }, ticks: { font: { size: 11 } } } } },
+  });
+
+  new Chart(document.getElementById('modelRevenueChart'), {
+    type: 'line',
+    data: {
+      labels: DATA.tab1.modelRevenue.labels,
+      datasets: DATA.tab1.modelRevenue.series.map(s => ({
+        label: s.name, data: s.data, borderColor: s.color, backgroundColor: s.color + '99',
+        fill: true, tension: 0.3, pointRadius: 0,
+      })),
+    },
+    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'top', labels: { font: { size: 11 } } } },
+      scales: { x: { grid: { color: '#f1f5f9' }, ticks: { font: { size: 11 } } }, y: { stacked: true, grid: { color: '#f1f5f9' }, ticks: { font: { size: 11 } } } } },
+  });
+
+  new Chart(document.getElementById('consumerMixChart'), {
+    type: 'line',
+    data: {
+      labels: DATA.tab2.consumerMix.labels,
+      datasets: [
+        { label: 'Anthropic', data: DATA.tab2.consumerMix.anthropic, borderColor: '#2563eb', backgroundColor: 'rgba(37,99,235,0.06)', tension: 0.3 },
+        { label: 'OpenAI', data: DATA.tab2.consumerMix.openai, borderColor: '#d97706', backgroundColor: 'rgba(217,119,6,0.06)', tension: 0.3 },
+      ],
+    },
+    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'top', labels: { font: { size: 11 } } } },
+      scales: { x: { ticks: { font: { size: 10 } } }, y: { ticks: { font: { size: 11 } } } } },
+  });
+
+  new Chart(document.getElementById('marginCompareChart'), {
+    type: 'line',
+    data: {
+      labels: DATA.tab2.marginCompare.labels,
+      datasets: [
+        { label: 'Anthropic', data: DATA.tab2.marginCompare.anthropic, borderColor: '#2563eb', backgroundColor: 'rgba(37,99,235,0.06)', tension: 0.3 },
+        { label: 'OpenAI', data: DATA.tab2.marginCompare.openai, borderColor: '#d97706', backgroundColor: 'rgba(217,119,6,0.06)', tension: 0.3 },
+      ],
+    },
+    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'top', labels: { font: { size: 11 } } } },
+      scales: { x: { ticks: { font: { size: 10 } } }, y: { ticks: { font: { size: 11 } } } } },
+  });
+
+  new Chart(document.getElementById('ebtitChart'), {
+    type: 'line',
+    data: {
+      labels: DATA.tab2.ebtit.labels,
+      datasets: [
+        { label: 'Anthropic', data: DATA.tab2.ebtit.anthropic, borderColor: '#2563eb', backgroundColor: 'rgba(37,99,235,0.08)', tension: 0.3, fill: true },
+        { label: 'OpenAI', data: DATA.tab2.ebtit.openai, borderColor: '#d97706', backgroundColor: 'rgba(217,119,6,0.08)', tension: 0.3, fill: true },
+      ],
+    },
+    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'top', labels: { font: { size: 11 } } } },
+      scales: { x: { ticks: { font: { size: 11 } } }, y: { ticks: { font: { size: 11 } } } } },
+  });
+  new Chart(document.getElementById('claudeCodeChart'), {
+    type: 'line',
+    data: {
+      labels: DATA.tab3.claudeCode.labels,
+      datasets: [{ label: 'Claude Code占GitHub每日提交比例 (%)', data: DATA.tab3.claudeCode.data, borderColor: '#2563eb', backgroundColor: 'rgba(37,99,235,0.08)', tension: 0.3, fill: true }],
+    },
+    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } },
+      scales: { x: { ticks: { font: { size: 11 } } }, y: { ticks: { font: { size: 11 } } } } },
+  });
+
+  new Chart(document.getElementById('taasChart'), {
+    type: 'bar',
+    data: { labels: DATA.tab3.taas.labels, datasets: [{ label: '间接渠道占ARR (%)', data: DATA.tab3.taas.data, backgroundColor: '#2563eb' }] },
+    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } },
+      scales: { x: { ticks: { font: { size: 11 } } }, y: { ticks: { font: { size: 11 } } } } },
+  });
+  new Chart(document.getElementById('efficiencyChart'), {
+    type: 'bar',
+    data: { labels: DATA.tab4.efficiency.labels, datasets: [{ label: '每$1算力换回收入 ($)', data: DATA.tab4.efficiency.data, backgroundColor: ['#2563eb','#d97706','#60a5fa','#dc2626'] }] },
+    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } },
+      scales: { x: { ticks: { font: { size: 9 } } }, y: { ticks: { font: { size: 11 } } } } },
+  });
+
+  new Chart(document.getElementById('hardwareCostChart'), {
+    type: 'bar',
+    data: { labels: DATA.tab4.hardwareCost.labels, datasets: [{ label: '单机架BOM成本 ($M)', data: DATA.tab4.hardwareCost.data, backgroundColor: ['#16a34a','#6c757d'] }] },
+    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } },
+      scales: { x: { ticks: { font: { size: 11 } } }, y: { ticks: { font: { size: 11 } } } } },
+  });
+
+  new Chart(document.getElementById('tpuRoadmapChart'), {
+    type: 'bar',
+    data: { labels: DATA.tab4.tpuRoadmap.labels, datasets: [{ label: 'TPU出货量（万片）', data: DATA.tab4.tpuRoadmap.data, backgroundColor: '#2563eb' }] },
+    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } },
+      scales: { x: { ticks: { font: { size: 11 } } }, y: { ticks: { font: { size: 11 } } } } },
+  });
+  const statusMap = { pending: ['tl-dot-pending','status-pending','🕐 待观察'], verified: ['tl-dot-verified','status-verified','✅ 已验证'], falsified: ['tl-dot-falsified','status-falsified','❌ 已证伪'] };
+  const timeline = document.getElementById('catalystTimeline');
+  DATA.tab5.catalysts.forEach(c => {
+    const [dotClass, statusClass, statusText] = statusMap[c.status] || statusMap.pending;
+    timeline.innerHTML += `
+      <div class="tl-item">
+        <div class="tl-dot ${dotClass}"></div>
+        <div class="tl-date">${c.date}</div>
+        <div class="tl-content">
+          <div class="tl-event">${c.event}</div>
+          <div class="tl-meta">预期影响：${c.impact}</div>
+        </div>
+        <span class="tl-status ${statusClass}">${statusText}</span>
+      </div>`;
+  });
+  document.getElementById('coreLogic').textContent = DATA.tab5.coreLogic;
+  const riskList = document.getElementById('riskList');
+  DATA.tab5.risks.forEach(r => {
+    riskList.innerHTML += `<div class="risk-item"><span class="risk-icon">⚠</span><span>${r}</span></div>`;
+  });
+});
+</script>
+</body>
+</html>
