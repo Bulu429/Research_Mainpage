@@ -27,7 +27,7 @@ tags:
 | **液冷** | 🟡 加速期 | AI算力驱动，单柜功率密度突破30kW→液冷必选 | [[液冷/液冷_看板]] | [[liquid-cooling/liquid-cooling-dashboard.html\|🔗]] | 2026-05-19 |
 | 光通信（早期版） | 🟢 上行 | 已被光模块/光纤光缆细分覆盖，保留作父概念 | [[光通信/光通信_看板]] | [[optical-communication/optical-communication-dashboard.html\|🔗]] | 2026-05-14 |
 | **台股电子（交叉验证）** | — | 台股月营收披露领先A股财报2-4周，含A股逻辑映射，非独立行业thesis | — | [[taiwan-electronics/taiwan-electronics-dashboard.html\|🔗]] | 2026-06-26 |
-| **业绩跟踪（业绩季专题）** | — | 财报数据、机构观点摘要与股价反应速记，跨行业，非独立行业thesis | — | [[earnings-tracker/earnings-tracker-dashboard.html\|🔗]] | 2026-07-08 |
+| **业绩跟踪（业绩季专题）** | — | 财报数据、机构观点摘要与股价反应速记，跨行业，非独立行业thesis | — | [[earnings-tracker/earnings-tracker-dashboard.html\|🔗]] | 2026-07-09 |
 | 服务器 | ⚪ 待建 | — | — | — | — |
 | 存储 | ⚪ 待建 | — | — | — | — |
 | AI-配电 | ⚪ 待建 | — | — | — | — |
