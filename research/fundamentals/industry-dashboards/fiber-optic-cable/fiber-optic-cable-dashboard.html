@@ -202,7 +202,31 @@
 
   .bottom-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 26px; }
 
+  .sensitivity-workbench { display:grid; grid-template-columns:340px 1fr; gap:14px; margin-bottom:26px; }
+  .sensitivity-panel,.sensitivity-card,.sensitivity-table { background:var(--card); border:1px solid var(--border); border-radius:10px; padding:16px; box-shadow:var(--shadow); }
+  .sensitivity-panel { border-color:#a5f3fc; }
+  .sensitivity-panel h3,.sensitivity-table h3 { font-size:13px; margin-bottom:10px; }
+  .sensitivity-sub { font-size:11px; color:var(--text-secondary); margin:-7px 0 10px; }
+  .sensitivity-input-grid { display:grid; grid-template-columns:1fr 92px; gap:7px 10px; align-items:center; font-size:12px; }
+  .sensitivity-input { width:100%; border:1px solid #67e8f9; background:#ecfeff; border-radius:6px; padding:5px 7px; text-align:right; color:var(--text-primary); font-weight:600; }
+  .sensitivity-divider { border:0; border-top:1px solid var(--border); margin:14px 0; }
+  .sensitivity-company-grid { display:grid; grid-template-columns:1fr 82px 82px; gap:6px; align-items:center; font-size:11px; }
+  .sensitivity-company-grid .head { color:var(--text-secondary); text-align:center; }
+  .sensitivity-error { min-height:18px; color:var(--down); font-size:11px; margin-top:7px; }
+  .sensitivity-reset { width:100%; border:1px solid var(--border); background:var(--bg); border-radius:6px; padding:7px; cursor:pointer; }
+  .sensitivity-results { min-width:0; }
+  .sensitivity-cards { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; }
+  .sensitivity-card { border-top:3px solid var(--ai-color); }
+  .sensitivity-card .ticker { color:var(--text-secondary); font-size:11px; }
+  .sensitivity-profit { font-size:22px; font-weight:800; margin:9px 0 1px; }
+  .sensitivity-row { display:flex; justify-content:space-between; gap:8px; margin-top:7px; font-size:12px; }
+  .sensitivity-upside { color:var(--up); }
+  .sensitivity-table { margin-top:10px; overflow-x:auto; }
+  .sensitivity-table table { min-width:560px; }
+  .sensitivity-note { margin-top:9px; font-size:11px; color:var(--text-secondary); }
   @media (max-width: 1000px) {
+    .sensitivity-workbench { grid-template-columns:1fr; }
+    .sensitivity-cards { grid-template-columns:1fr; }
     .kpi-grid { grid-template-columns: repeat(3,1fr); }
     .two-col, .two-col-l, .two-col-r, .bottom-grid, .judgment-grid, .three-col { grid-template-columns: 1fr; }
   }
@@ -259,6 +283,43 @@
       <div class="kpi-label">SM-16光缆需求 26E</div>
       <div class="kpi-value kpi-ai">9,204<span style="font-size:13px">万芯km</span></div>
       <div class="kpi-note">800G/1.6T DR主力用缆，YoY +246%</div>
+    </div>
+  </div>
+
+  <!-- ══════════ 个股盈利弹性测算 ══════════ -->
+  <div class="section-title"><span>🧮</span>个股盈利弹性测算（2026E）</div>
+  <div class="sensitivity-workbench">
+    <div class="sensitivity-panel">
+      <h3>① 行业价格假设</h3>
+      <div class="sensitivity-sub">元/芯公里 · 联动三家公司</div>
+      <div class="sensitivity-input-grid">
+        <label for="g652-domestic-price">652D 国内价</label><input class="sensitivity-input" id="g652-domestic-price" type="number" min="0" max="1000" step="1">
+        <label for="g652-overseas-price">652D 海外价</label><input class="sensitivity-input" id="g652-overseas-price" type="number" min="0" max="1000" step="1">
+        <label for="non652-domestic-price">非 652D 国内基准价</label><input class="sensitivity-input" id="non652-domestic-price" type="number" min="0" max="1000" step="1">
+        <label for="non652-overseas-price">非 652D 海外基准价</label><input class="sensitivity-input" id="non652-overseas-price" type="number" min="0" max="1000" step="1">
+      </div>
+      <hr class="sensitivity-divider">
+      <h3>② 公司结构参数</h3>
+      <div class="sensitivity-company-grid">
+        <span></span><span class="head">652D占比</span><span class="head">非652D系数</span>
+        <strong>亨通</strong><input class="sensitivity-input" id="hengtong-g652-share" type="number" min="0" max="100" step="1"><input class="sensitivity-input" id="hengtong-realization" type="number" min="0" max="100" step="0.1">
+        <strong>中天</strong><input class="sensitivity-input" id="zhongtian-g652-share" type="number" min="0" max="100" step="1"><input class="sensitivity-input" id="zhongtian-realization" type="number" min="0" max="100" step="0.1">
+        <strong>长飞</strong><input class="sensitivity-input" id="yangtze-g652-share" type="number" min="0" max="100" step="1"><input class="sensitivity-input" id="yangtze-realization" type="number" min="0" max="100" step="0.1">
+      </div>
+      <div class="sensitivity-note">长飞默认实现价系数 71.4%，对应非 652D 实现价约 100 元，反映散纤较少、数据中心大单较多。</div>
+      <div class="sensitivity-error" id="sensitivity-error" aria-live="polite"></div>
+      <button class="sensitivity-reset" id="reset-sensitivity" type="button">恢复 Excel 基准值</button>
+    </div>
+    <div class="sensitivity-results">
+      <div class="sensitivity-cards" id="sensitivity-cards"></div>
+      <div class="sensitivity-table">
+        <h3>关键结果横向比较</h3>
+        <table>
+          <thead><tr><th>指标</th><th class="r">亨通</th><th class="r">中天</th><th class="r">长飞</th></tr></thead>
+          <tbody id="sensitivity-comparison"></tbody>
+        </table>
+      </div>
+      <div class="sensitivity-note">口径：复刻“弹性测算-复杂最新版”；产能利用率、地域结构、成本费用、PE 与当前市值按原表固定。</div>
     </div>
   </div>
 
@@ -1040,6 +1101,85 @@
 </div><!-- /container -->
 
 <script>
+// MODEL_START
+const DEFAULT_PARAMS = {
+  g652DomesticPrice: 70, g652OverseasPrice: 50,
+  non652DomesticBasePrice: 140, non652OverseasBasePrice: 140,
+  companies: {
+    hengtong: { g652Share: 0.35, non652Realization: 1 },
+    zhongtian: { g652Share: 0.35, non652Realization: 1 },
+    yangtze: { g652Share: 0.45, non652Realization: 100 / 140 },
+  },
+};
+const COMPANY_MODELS = {
+  hengtong: { name:"亨通光电",ticker:"600487.SH",capacity:3300,util:0.95,production25:8302.8,fiberRevenue25:23.563122,cablingRevenue25:31.436878,cost25:39.8585,periodExpense25:10.7415,opticalProfit25:4.4,originalProfit:37,pe:20,marketCap:1200 },
+  zhongtian:{ name:"中天科技",ticker:"600522.SH",capacity:3000,util:0.95,production25:7548,fiberRevenue25:21.42102,cablingRevenue25:28.57898,cost25:37.5,periodExpense25:8.5,opticalProfit25:4,originalProfit:38,pe:20,marketCap:920 },
+  yangtze:  { name:"长飞光纤",ticker:"6869.HK",capacity:4200,util:0.95,production25:10567.2,fiberRevenue25:29.989428,cablingRevenue25:53.510572,cost25:53.5235,periodExpense25:24.9665,opticalProfit25:5.01,originalProfit:13,pe:25,marketCap:1250 },
+};
+function validateNumber(value,{min,max}) { return Number.isFinite(value) && value >= min && value <= max; }
+function calculateCompany(key,params) {
+  const c=COMPANY_MODELS[key], p=params.companies[key];
+  const g652Qty=c.capacity*c.util*p.g652Share*3.4;
+  const otherQty=c.capacity*c.util*(1-p.g652Share)*0.7*3.4;
+  const fiberRevenue=(g652Qty*0.5*params.g652DomesticPrice+g652Qty*0.5*params.g652OverseasPrice+
+    otherQty*0.45*params.non652DomesticBasePrice*p.non652Realization+
+    otherQty*0.55*params.non652OverseasBasePrice*p.non652Realization)/10000;
+  const production=g652Qty+otherQty;
+  const totalRevenue=fiberRevenue+c.cablingRevenue25*production/c.production25;
+  const operatingCost=c.cost25*production/c.production25;
+  const opticalProfit=totalRevenue-operatingCost-c.periodExpense25*1.1;
+  const newNetProfit=c.originalProfit+opticalProfit-c.opticalProfit25;
+  const targetMarketCap=newNetProfit*c.pe;
+  return {...c,fiberRevenue,totalRevenue,newNetProfit,targetMarketCap,upside:targetMarketCap/c.marketCap-1};
+}
+// MODEL_END
+
+const sensitivityIds={
+  g652DomesticPrice:"g652-domestic-price",g652OverseasPrice:"g652-overseas-price",
+  non652DomesticBasePrice:"non652-domestic-price",non652OverseasBasePrice:"non652-overseas-price",
+};
+let lastValidSensitivity=structuredClone(DEFAULT_PARAMS);
+const fmt1=v=>v.toLocaleString("zh-CN",{minimumFractionDigits:1,maximumFractionDigits:1});
+function writeSensitivityInputs(p){
+  Object.entries(sensitivityIds).forEach(([k,id])=>document.getElementById(id).value=p[k]);
+  Object.entries(p.companies).forEach(([k,v])=>{
+    document.getElementById(`${k}-g652-share`).value=(v.g652Share*100).toFixed(1);
+    document.getElementById(`${k}-realization`).value=(v.non652Realization*100).toFixed(1);
+  });
+}
+function readSensitivityParams(){
+  const p=structuredClone(lastValidSensitivity);
+  for(const [k,id] of Object.entries(sensitivityIds)){
+    const v=Number(document.getElementById(id).value);
+    if(!validateNumber(v,{min:0,max:1000})) return null; p[k]=v;
+  }
+  for(const k of Object.keys(p.companies)){
+    const share=Number(document.getElementById(`${k}-g652-share`).value)/100;
+    const realization=Number(document.getElementById(`${k}-realization`).value)/100;
+    if(!validateNumber(share,{min:0,max:1})||!validateNumber(realization,{min:0,max:1})) return null;
+    p.companies[k]={g652Share:share,non652Realization:realization};
+  }
+  return p;
+}
+function renderSensitivity(p){
+  const keys=["hengtong","zhongtian","yangtze"], results=keys.map(k=>calculateCompany(k,p));
+  document.getElementById("sensitivity-cards").innerHTML=results.map(r=>`<div class="sensitivity-card"><strong>${r.name}</strong><div class="ticker">${r.ticker}</div><div class="sensitivity-profit">${fmt1(r.newNetProfit)} 亿</div><div class="ticker">新测算净利润</div><div class="sensitivity-row"><span>目标市值</span><strong>${fmt1(r.targetMarketCap)} 亿</strong></div><div class="sensitivity-row sensitivity-upside"><span>上涨空间</span><strong>${fmt1(r.upside*100)}%</strong></div></div>`).join("");
+  const rows=[["光纤收入","fiberRevenue"],["光纤缆总收入","totalRevenue"],["新测算净利润","newNetProfit"],["目标市值","targetMarketCap"],["上涨空间","upside"]];
+  document.getElementById("sensitivity-comparison").innerHTML=rows.map(([label,k])=>`<tr><td>${label}</td>${results.map(r=>`<td class="r ${k==="upside"?"sensitivity-upside":""}">${k==="upside"?fmt1(r[k]*100)+"%":fmt1(r[k])}</td>`).join("")}</tr>`).join("");
+}
+function updateSensitivity(){
+  const p=readSensitivityParams(), err=document.getElementById("sensitivity-error");
+  if(!p){err.textContent="请输入有效范围：价格 0–1000，占比与系数 0–100%。";return;}
+  err.textContent=""; lastValidSensitivity=p; renderSensitivity(p);
+}
+function resetSensitivity(){lastValidSensitivity=structuredClone(DEFAULT_PARAMS);writeSensitivityInputs(lastValidSensitivity);renderSensitivity(lastValidSensitivity);document.getElementById("sensitivity-error").textContent="";}
+function initSensitivityWorkbench(){
+  writeSensitivityInputs(lastValidSensitivity); renderSensitivity(lastValidSensitivity);
+  document.querySelectorAll(".sensitivity-input").forEach(el=>el.addEventListener("input",updateSensitivity));
+  document.getElementById("reset-sensitivity").addEventListener("click",resetSensitivity);
+}
+initSensitivityWorkbench();
+
 // ── 供需总览折线图
 new Chart(document.getElementById("supplyDemandChart"), {
   type: "line",
