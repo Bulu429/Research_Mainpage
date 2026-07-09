@@ -319,7 +319,7 @@
           <tbody id="sensitivity-comparison"></tbody>
         </table>
       </div>
-      <div class="sensitivity-note">口径：复刻“弹性测算-复杂最新版”；产能利用率、地域结构、成本费用、PE 与当前市值按原表固定。</div>
+      <div class="sensitivity-note">口径：复刻“弹性测算-复杂最新版”；产能利用率、地域结构、成本费用与 PE 按原表固定。当前市值取自 TMT周度涨跌幅.xlsx（2026-07-05）。</div>
     </div>
   </div>
 
@@ -1112,9 +1112,9 @@ const DEFAULT_PARAMS = {
   },
 };
 const COMPANY_MODELS = {
-  hengtong: { name:"亨通光电",ticker:"600487.SH",capacity:3300,util:0.95,production25:8302.8,fiberRevenue25:23.563122,cablingRevenue25:31.436878,cost25:39.8585,periodExpense25:10.7415,opticalProfit25:4.4,originalProfit:37,pe:20,marketCap:1200 },
-  zhongtian:{ name:"中天科技",ticker:"600522.SH",capacity:3000,util:0.95,production25:7548,fiberRevenue25:21.42102,cablingRevenue25:28.57898,cost25:37.5,periodExpense25:8.5,opticalProfit25:4,originalProfit:38,pe:20,marketCap:920 },
-  yangtze:  { name:"长飞光纤",ticker:"6869.HK",capacity:4200,util:0.95,production25:10567.2,fiberRevenue25:29.989428,cablingRevenue25:53.510572,cost25:53.5235,periodExpense25:24.9665,opticalProfit25:5.01,originalProfit:13,pe:25,marketCap:1250 },
+  hengtong: { name:"亨通光电",ticker:"600487.SH",capacity:3300,util:0.95,production25:8302.8,fiberRevenue25:23.563122,cablingRevenue25:31.436878,cost25:39.8585,periodExpense25:10.7415,opticalProfit25:4.4,originalProfit:37,pe:20,marketCap:2205.4479562094 },
+  zhongtian:{ name:"中天科技",ticker:"600522.SH",capacity:3000,util:0.95,production25:7548,fiberRevenue25:21.42102,cablingRevenue25:28.57898,cost25:37.5,periodExpense25:8.5,opticalProfit25:4,originalProfit:38,pe:20,marketCap:1713.9833152344 },
+  yangtze:  { name:"长飞光纤",ticker:"6869.HK",capacity:4200,util:0.95,production25:10567.2,fiberRevenue25:29.989428,cablingRevenue25:53.510572,cost25:53.5235,periodExpense25:24.9665,opticalProfit25:5.01,originalProfit:13,pe:25,marketCap:1665.7450773 },
 };
 function validateNumber(value,{min,max}) { return Number.isFinite(value) && value >= min && value <= max; }
 function calculateCompany(key,params) {
