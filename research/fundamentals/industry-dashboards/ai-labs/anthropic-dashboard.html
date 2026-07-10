@@ -417,6 +417,25 @@
       <div class="source-note">来源：行业机架级BOM拆解测算。核心差异并非芯片晶圆本身（CPU/HBM/晶圆成本两者接近），而在供应商毛利：Nvidia在GB200上留存的毛利（$1,728k）是Broadcom在TPU v7上留存毛利（$422k）的4倍以上，是两种架构总BOM相差超1倍的主因</div>
     </div>
 
+    <div class="table-card">
+      <h3>1GW AI算力年化持有+运营成本拆解（$B/年）</h3>
+      <table>
+        <thead><tr><th>成本项</th><th>年化金额（$B）</th><th>占比</th><th>说明</th></tr></thead>
+        <tbody>
+          <tr><td>服务器</td><td>4.6</td><td>58%</td><td>48万块GPU，6,700套系统，6年折旧寿命</td></tr>
+          <tr><td>机房设施</td><td>1.4</td><td>18%</td><td>建筑外壳、供电与散热，14年折旧寿命</td></tr>
+          <tr><td>数据中心网络</td><td>1.0</td><td>13%</td><td>交换与互联网络，6年折旧寿命</td></tr>
+          <tr><td>土地+公用设施</td><td>0.033</td><td>&lt;1%</td><td>土地按资金成本计，公用设施14年寿命</td></tr>
+          <tr><td><strong>资本性支出小计</strong></td><td><strong>7.0</strong></td><td><strong>89%</strong></td><td>—</td></tr>
+          <tr><td>电费</td><td>0.594</td><td>8%</td><td>运行整套机队的电力，占运营支出66%</td></tr>
+          <tr><td>其他运营支出</td><td>0.308</td><td>4%</td><td>人员、维护、管理费用</td></tr>
+          <tr><td><strong>运营支出小计</strong></td><td><strong>0.9</strong></td><td><strong>11%</strong></td><td>—</td></tr>
+          <tr><td><strong>合计</strong></td><td><strong>7.9</strong></td><td><strong>100%</strong></td><td>年化持有+运营总成本</td></tr>
+        </tbody>
+      </table>
+      <div class="source-note">来源：Exponential View《State of the AI Economy》(2026-06-25)；口径为1GW IT容量（6,700套GB200 NVL72系统，48万块GPU）的年化成本（含资金成本），非一次性建设CapEx。按各项折旧年限粗略反推一次性CapEx：服务器约$27.6B（4.6×6年）+ 机房设施约$19.6B（1.4×14年）+ 网络约$6.0B（1.0×6年），合计约<strong>$50-55B/GW</strong>（因年化数含资金成本溢价，实际一次性支出可能略低于此数）。交叉验证：用上表GB200 NVL72机架BOM（$3.244M/机架）× 6,700套 = <strong>$21.7B</strong>，仅计算硬件本身，与此处反推的服务器成本（$27.6B）量级一致，差异或来自存储/冗余/集成费用等口径差异</div>
+    </div>
+
     <div class="grid-2">
       <div class="info-card">
         <h4>架构路线之争：MoE"小专家" vs "大专家"</h4>
