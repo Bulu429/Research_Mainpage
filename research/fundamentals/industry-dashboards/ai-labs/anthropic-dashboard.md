@@ -47,6 +47,8 @@ Dario Amodei 于 2021 年初离开 OpenAI 创立 Anthropic。2026 年 6 月 1 �
 
 2025年底 ARR 为 $9B；2026年1月新增$3B（→$12B）、2月新增$7B（→$19B）、3月（1Q26末）新增$11B（→$30B）；月度净新增ARR现稳定在$10B+/月区间。据Yipit高频数据，截至2026年6月14日ARR已达约**$62B**，6月仍保持陡峭增长，打破市场部分"6月后Claude失速"传言。
 
+**Claude Code并非发布即引爆，增速先抑后扬**：据Exponential View对全行业（覆盖OpenAI/Anthropic等，非Anthropic单独口径）季度环比收入增速的统计，Claude Enterprise发布当季环比增速达65%，但随后增速一路走低，到Claude Code发布当季一度探底至17%；此后随Agentic Coding时代到来才重新爬升，近几个季度企稳在35% QoQ（约合年化3.2倍）。这一先抑后扬的曲线说明新产品发布不等于收入立即拉升，往往要经过几个季度的企业采用爬坡后增长才充分体现——这也是判断Fable/Mythos等新模型ARR拉动效果时需要的耐心窗口。
+
 **Anthropic ARR 时间线（创立以来）**：
 
 | 时间点 | ARR / 年化收入 | 消息口径 |
@@ -148,6 +150,8 @@ Dario Amodei 于 2021 年初离开 OpenAI 创立 Anthropic。2026 年 6 月 1 �
 | Claude Sonnet 5（2026-09-01起） | $3 | $3.75 | $6 | $0.30 | $15 |
 | Claude Sonnet 5（至2026-08-31） | $2 | $2.50 | $4 | $0.20 | $10 |
 | Claude Haiku 4.5 | $1 | $1.25 | $2 | $0.10 | $5 |
+
+**旗舰模型输出定价历史演变**（近似值，来源：Exponential View《State of the AI Economy》2026-06-25）：Claude 1（2023年）约$15/M输出token → Claude 2.1（2023年底）约$30 → **Opus 3（2024年，定价峰值）约$75** → Opus 4.1（2025年）仍维持$75 → Opus 4.6/4.8（现在）降至$25。定价峰值出现在Opus 3附近，此后随竞争加剧与推理效率提升持续下探；Opus 4.1/4.8档位与本节上表官方定价数据一致。
 
 ### Claude Code 与分销
 
@@ -254,10 +258,12 @@ TPU v7机架（64卡）BOM成本约$150万，仅为NVIDIA GB200 NVL72（约$324�
 
 **主要风险**：
 1. 代币预算担忧（TokenBudgeting）：Claude Code企业用户平均月支出仅$150-250，90%用户日支出低于$30，高消费案例是长尾而非主流，企业渗透率仍低，短期风险有限
-2. 开源模型与OpenAI降价策略侵蚀定价权
+2. 开源模型与OpenAI降价策略侵蚀定价权：OpenRouter上闭源三巨头（Google+OpenAI+Anthropic）合计token份额一年内从72%降至33%（据Exponential View，OpenRouter用户为价格敏感型自选路由开发者，非市场整体截面，但方向性信号值得关注）
 3. Google/Meta编程模型突破，coding市场从双雄变四强
 4. 算力短缺与电力瓶颈：2030年AI Labs算力需求缺口90GW+净新增
 5. 美国监管延迟前沿模型发布，削弱Anthropic对开源的领先窗口
+
+**前沿模型商品化速度**（Exponential View数据）：达到同一能力门槛所需的最低单价，闭源前沿模型从2023年约$40/M token降至2026年约$0.3；开源模型通常在约1年后追平同等能力，价格仅为闭源首发价的一个零头（2025下半年约$0.3、2026年约$0.1）。这一商品化速度是Anthropic"大专家"架构领先窗口能维持多久的核心变量。
 
 **本期关键判断（2026-07-09）**：
 1. **2B/高价值客户策略更接近可持续现金流**：今年谁更专注企业级、抢占高价值模型客户，谁就更接近可持续现金流。Anthropic的企业集中度与大客户扩张，在估值定价上获得"质量溢价"，这是其融资顺利、IPO抢跑的重要底层支撑。
@@ -266,7 +272,7 @@ TPU v7机架（64卡）BOM成本约$150万，仅为NVIDIA GB200 NVL72（约$324�
 
 **下次更新关注点**：Anthropic下一轮融资/IPO进程节点；Fable5/Mythos5出口限制解禁进展；OpenAI下一次ARR官方披露或IPO时间线澄清；电力瓶颈是否演变为实质性收入限制。
 
-**数据来源**：SemiAnalysis《Anthropic 3Q26 Profit Over $1B: The Anthropic IPO Financials Sneak Peak》（2026-07-08）／「深扒Anthropic」微信摘要（2026-07-09）／「模型厂关于近期热点的碎碎念」谷歌内部调研访谈（2026-07-05）／Yipit高频ARR数据、Bloomberg对Dario Amodei专访、NYT关于OpenAI IPO时间线报道（2026-06至07月）
+**数据来源**：SemiAnalysis《Anthropic 3Q26 Profit Over $1B: The Anthropic IPO Financials Sneak Peak》（2026-07-08）／「深扒Anthropic」微信摘要（2026-07-09）／「模型厂关于近期热点的碎碎念」谷歌内部调研访谈（2026-07-05）／Yipit高频ARR数据、Bloomberg对Dario Amodei专访、NYT关于OpenAI IPO时间线报道（2026-06至07月）／Exponential View《The State of the AI Economy》（2026-06-25）
 
 ---
 

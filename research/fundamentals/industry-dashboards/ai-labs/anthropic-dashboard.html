@@ -207,6 +207,12 @@
       <div class="source-note">来源：SemiAnalysis Tokenomics Model，Anthropic Tab分模型明细；图表读数近似值。仅展示图中列出的模型线（不含消费者订阅/Haiku等其他产品线），不代表公司总收入，用于观察新模型对老模型的收入替代节奏</div>
     </div>
 
+    <div class="info-card">
+      <h4>Claude Code并非发布即引爆：增速先抑后扬</h4>
+      <p>据Exponential View对全行业（覆盖OpenAI/Anthropic等，非Anthropic单独口径）季度环比收入增速的统计：Claude Enterprise发布当季环比增速达65%，但随后增速一路走低，到Claude Code发布当季一度探底至17%；此后随Agentic Coding时代到来才重新爬升，近几个季度企稳在35% QoQ（约合年化3.2倍）。</p>
+      <p>这一先抑后扬的曲线说明：新产品发布不等于收入立即拉升，往往要经过几个季度的企业采用爬坡后，增长才充分体现在数字上——这也是判断Fable/Mythos等新模型ARR拉动效果时需要的耐心窗口。</p>
+    </div>
+
     <div class="table-card">
       <h3>融资历程（Series A → H）</h3>
       <table>
@@ -342,6 +348,12 @@
         <div class="source-note">来源：SemiAnalysis Tokenomics Model；注：图中数值为间接渠道占ARR比例，另有20-30%的收入分成是Anthropic向渠道方支付的费率，二者为不同指标</div>
       </div>
     </div>
+
+    <div class="chart-card">
+      <h3>旗舰模型输出定价演变（$/百万输出Token，对数轴）</h3>
+      <div class="chart-wrapper"><canvas id="pricingEvolutionChart"></canvas></div>
+      <div class="source-note">来源：Exponential View《State of the AI Economy》(2026-06-25)图表读数，近似值，标注型号为该时点的Anthropic旗舰模型；Opus 4.1/Opus 4.8档位价格与Tab3定价表官方数据一致。定价峰值出现在Opus 3（约2024年），此后随竞争加剧与推理效率提升持续下探</div>
+    </div>
   </div>
   <div class="tab-panel" id="tab4">
     <div class="caveat-banner">⚠ 本Tab大部分数据来自「模型厂关于近期热点的碎碎念」（谷歌内部大模型调研访谈，2026-07-05），与Tab1/Tab2的SemiAnalysis口径为不同信源，ARR相关表述存在差异，仅作交叉参考，不作为主口径。下方标注"SemiAnalysis"的卡片除外，口径与Tab1/Tab2一致。</div>
@@ -450,6 +462,19 @@
     </div>
   </div>
   <div class="tab-panel" id="tab5">
+    <div class="grid-2">
+      <div class="info-card">
+        <h4>开源侵蚀速度：72% → 33%（一年内）</h4>
+        <p>据Exponential View统计，在OpenRouter（自选模型路由平台）上，Google+OpenAI+Anthropic三家闭源龙头合计token份额从一年前的<strong>72%</strong>降至目前的<strong>33%</strong>，份额被DeepSeek、MiniMax、Xiaomi、Tencent等开源模型抢走。</p>
+        <p>OpenRouter用户是主动选择模型路由的价格敏感型开发者，并非市场整体截面，但方向性信号值得关注——闭源前沿模型的定价权正被开源追赶者持续压缩。</p>
+      </div>
+      <div class="chart-card">
+        <h3>前沿模型商品化速度（达到同一能力门槛所需最低单价，$/M tok，对数轴）</h3>
+        <div class="chart-wrapper"><canvas id="commoditizationChart"></canvas></div>
+        <div class="source-note">来源：Exponential View《State of the AI Economy》(2026-06-25)，图表读数近似值；闭源前沿线代表Claude/GPT等旗舰模型首发价，开源线代表约1年后追平同等能力的开源模型价格</div>
+      </div>
+    </div>
+
     <div class="bottom-grid">
       <div>
         <div class="section-title"><span class="icon">📅</span>催化剂跟踪</div>
@@ -539,6 +564,10 @@ const DATA = {
       labels: ["1季度前","目前"],
       data: [7.5,17.5],
     },
+    pricingEvolution: {
+      labels: ["Claude 1(2023)","Claude 2.1(2023底)","Opus 3(2024，峰值)","Opus 4.1(2025)","Opus 4.6/4.8(现在)"],
+      data: [15, 30, 75, 75, 25],
+    },
   },
   tab4: {
     efficiency: {
@@ -568,11 +597,16 @@ const DATA = {
     coreLogic: "Anthropic在增长率与盈利能力两大核心财务指标上是AI实验室竞赛的明显赢家：API收入占比75-85%、毛利率已升至~65%、3Q26 GAAP EBIT转正（6%利润率）。SemiAnalysis给出$6万亿估值基准（2027E ARR $300B×20倍PS），但OpenAI通过Codex/API业务正在追赶，且算力/电力短缺是双方共同的硬约束。",
     risks: [
       "代币预算担忧（TokenBudgeting）：Claude Code企业用户平均月支出仅$150-250，90%用户日支出低于$30，高消费案例是长尾而非主流，企业渗透率仍低，短期风险有限",
-      "开源模型与OpenAI降价策略侵蚀定价权",
+      "开源模型与OpenAI降价策略侵蚀定价权：OpenRouter上闭源三巨头合计token份额一年内从72%降至33%",
       "Google/Meta编程模型突破，coding市场从双雄变四强",
       "算力短缺与电力瓶颈：2030年AI Labs算力需求缺口90GW+净新增",
       "美国监管延迟前沿模型发布，削弱Anthropic对开源的领先窗口",
     ],
+    commoditization: {
+      labels: ["2023","2024上半年","2024下半年","2025上半年","2025下半年","2026"],
+      frontier: [40, 15, 6, 2, 1, 0.3],
+      openWeight: [null, null, null, 2, 0.3, 0.1],
+    },
   },
 };
 
@@ -706,6 +740,13 @@ document.addEventListener('DOMContentLoaded', () => {
     options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } },
       scales: { x: { ticks: { font: { size: 11 } } }, y: { ticks: { font: { size: 11 } } } } },
   });
+
+  new Chart(document.getElementById('pricingEvolutionChart'), {
+    type: 'line',
+    data: { labels: DATA.tab3.pricingEvolution.labels, datasets: [{ label: '输出定价 ($/M tok)', data: DATA.tab3.pricingEvolution.data, borderColor: '#7c3aed', backgroundColor: 'rgba(124,58,237,0.08)', tension: 0.2, fill: true, pointRadius: 4 }] },
+    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } },
+      scales: { x: { ticks: { font: { size: 10 } } }, y: { type: 'logarithmic', ticks: { font: { size: 11 }, callback: (v) => ['10','25','50','75'].includes(String(v)) ? '$'+v : null } } } },
+  });
   new Chart(document.getElementById('efficiencyChart'), {
     type: 'bar',
     data: { labels: DATA.tab4.efficiency.labels, datasets: [{ label: '每$1算力换回收入 ($)', data: DATA.tab4.efficiency.data, backgroundColor: ['#2563eb','#d97706','#60a5fa','#dc2626'] }] },
@@ -726,6 +767,19 @@ document.addEventListener('DOMContentLoaded', () => {
     options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } },
       scales: { x: { ticks: { font: { size: 11 } } }, y: { ticks: { font: { size: 11 } } } } },
   });
+  new Chart(document.getElementById('commoditizationChart'), {
+    type: 'line',
+    data: {
+      labels: DATA.tab5.commoditization.labels,
+      datasets: [
+        { label: '闭源前沿（首发价）', data: DATA.tab5.commoditization.frontier, borderColor: '#2563eb', backgroundColor: 'rgba(37,99,235,0.06)', tension: 0.3, spanGaps: true },
+        { label: '开源追平（追上后价格）', data: DATA.tab5.commoditization.openWeight, borderColor: '#dc2626', backgroundColor: 'rgba(220,38,38,0.06)', tension: 0.3, spanGaps: true, borderDash: [4,3] },
+      ],
+    },
+    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'top', labels: { font: { size: 11 } } } },
+      scales: { x: { ticks: { font: { size: 10 } } }, y: { type: 'logarithmic', ticks: { font: { size: 11 }, callback: (v) => ['0.1','1','10','100'].includes(String(v)) ? '$'+v : null } } } },
+  });
+
   const statusMap = { pending: ['tl-dot-pending','status-pending','🕐 待观察'], verified: ['tl-dot-verified','status-verified','✅ 已验证'], falsified: ['tl-dot-falsified','status-falsified','❌ 已证伪'] };
   const timeline = document.getElementById('catalystTimeline');
   DATA.tab5.catalysts.forEach(c => {
