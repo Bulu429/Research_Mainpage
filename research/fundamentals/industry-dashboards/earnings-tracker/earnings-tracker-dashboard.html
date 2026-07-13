@@ -99,13 +99,13 @@
   <div class="tab-panel" id="panel-price">
     <table id="tbl">
       <colgroup>
-        <col style="width:9%"><col style="width:10%"><col style="width:13%">
-        <col style="width:9%"><col style="width:12%">
-        <col style="width:11.75%"><col style="width:11.75%"><col style="width:11.75%"><col style="width:11.75%">
+        <col style="width:10%"><col style="width:18%">
+        <col style="width:10%"><col style="width:13%">
+        <col style="width:12.25%"><col style="width:12.25%"><col style="width:12.25%"><col style="width:12.25%">
       </colgroup>
       <thead>
         <tr>
-          <th data-k="rating">评价</th><th data-k="code">代码</th><th data-k="name">名称</th>
+          <th data-k="rating">评价</th><th data-k="name">名称</th>
           <th data-k="industry">行业</th><th data-k="report_date">财报日期</th>
           <th data-k="d1">第1日</th><th data-k="d2">第2日</th><th data-k="d3">累计3日</th><th data-k="w1">累计5日</th>
         </tr>
@@ -117,14 +117,14 @@
   <div class="tab-panel" id="panel-earnings" style="display:none;">
     <table id="tbl2">
       <colgroup>
-        <col style="width:7%"><col style="width:8%"><col style="width:9%">
-        <col style="width:6%"><col style="width:8%">
-        <col style="width:6%"><col style="width:6%"><col style="width:6%"><col style="width:6%"><col style="width:6%">
-        <col style="width:14%"><col style="width:12%">
+        <col style="width:8%"><col style="width:11%">
+        <col style="width:7%"><col style="width:9%">
+        <col style="width:6.5%"><col style="width:6.5%"><col style="width:6.5%"><col style="width:6.5%"><col style="width:6.5%">
+        <col style="width:16%"><col style="width:16%">
       </colgroup>
       <thead>
         <tr>
-          <th data-k2="rating">评价</th><th data-k2="code">代码</th><th data-k2="name">名称</th>
+          <th data-k2="rating">评价</th><th data-k2="name">名称</th>
           <th data-k2="industry">行业</th><th data-k2="report_date">财报日期</th>
           <th>1Q25</th><th>2Q25</th><th>3Q25</th><th>4Q25</th><th>1Q26</th>
           <th>2Q26预告</th><th>市场预期</th>
@@ -189,7 +189,6 @@ function render() {
     return `
     <tr class="${c.related_to ? 'related' : ''}">
       <td>${ratingCell}</td>
-      <td>${c.code}</td>
       <td class="name-cell">${nameInner}</td>
       <td>${c.industry||'-'}</td>
       <td>${dateInner}</td>
@@ -230,7 +229,6 @@ function render2() {
     return `
     <tr class="${c.related_to ? 'related' : ''}">
       <td>${ratingCell}</td>
-      <td>${c.code}</td>
       <td class="name-cell">${c.name||'-'}</td>
       <td>${c.industry||'-'}</td>
       <td>${c.report_date||'-'}</td>
