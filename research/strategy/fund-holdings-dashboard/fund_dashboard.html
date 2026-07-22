@@ -144,12 +144,12 @@ tr.jianc-row:hover td{background:#fdf2f1!important}
 
 <div class="tabs">
   <button class="tab-btn active" onclick="switchTab('t1')">机构集中度</button>
+  <button class="tab-btn" onclick="switchTab('t7')">量价拆解</button>
   <button class="tab-btn" onclick="switchTab('t2')">季度增减持</button>
   <button class="tab-btn" onclick="switchTab('t3')">个股历史趋势</button>
   <button class="tab-btn" onclick="switchTab('t4')">行业分布</button>
   <button class="tab-btn" onclick="switchTab('t5')">月末测算</button>
   <button class="tab-btn" onclick="switchTab('t6')">产业分类</button>
-  <button class="tab-btn" onclick="switchTab('t7')">量价拆解</button>
 </div>
 
 <!-- TAB 1: 机构集中度 -->
@@ -557,7 +557,7 @@ function switchTab(id) {
   document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
   document.getElementById(id).classList.add('active');
-  const idx = ['t1','t2','t3','t4','t5','t6','t7'].indexOf(id);
+  const idx = ['t1','t7','t2','t3','t4','t5','t6'].indexOf(id);
   document.querySelectorAll('.tab-btn')[idx].classList.add('active');
   if (id === 't2') renderT2();
   if (id === 't4') renderT4();
@@ -1481,7 +1481,7 @@ function initT7() {
 // ── Init ─────────────────────────────────────────────────────────────
 (function init() {
   document.getElementById('meta-info').textContent =
-    `数据区间：${qs[0]} ~ ${qs[qs.length-1]}  |  生成时间：2026-07-22 09:24`;
+    `数据区间：${qs[0]} ~ ${qs[qs.length-1]}  |  生成时间：2026-07-22 10:15`;
 
   populateQ('t1-q', () => { populateT1Industries(document.getElementById('t1-q').value); renderT1(); });
   populateT1Industries(latestQ);
