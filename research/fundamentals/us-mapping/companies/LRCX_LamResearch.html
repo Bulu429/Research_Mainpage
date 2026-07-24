@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LRCX 泛林集团 · 美股映射（刻蚀 + 沉积双料龙头 · 存储弹性最大）</title>
+<style>
+:root{
+  --bg:#f7f8fa;--card:#fff;--border:#e6e8eb;
+  --text:#1a1d21;--text2:#586271;--text3:#8a94a3;
+  /* LRCX 品牌色：紫罗兰 */
+  --accent:#6d28d9;--accent2:#c4b5fd;--accent-bg:#f5f3ff;--accent-ink:#4c1d95;
+  --up:#15803d;--up-bg:#eaf6ee;--up-ink:#136130;
+  --dn:#c01d24;--dn-bg:#fbeaeb;--dn-ink:#9a161c;
+  --warn:#b45309;--warn-bg:#fdf4e7;
+  --neu:#475569;--neu-bg:#eef1f5;--neu-bd:#c3cdd9;--neu-ink:#334155;
+  --neu2:#64748b;--neu2-bg:#f4f6f9;--neu2-bd:#d7dee6;
+  --sh:0 1px 3px rgba(0,0,0,.07);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;background:var(--bg);color:var(--text);font-size:14px;line-height:1.6}
+a{color:var(--accent);text-decoration:none}
+a:hover{text-decoration:underline}
+.hdr{background:var(--card);border-bottom:1px solid var(--border);padding:14px 32px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:var(--sh)}
+.hdr-l{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.hdr-title{font-size:19px;font-weight:800}
+.hdr-sub{font-size:11px;color:var(--text2);margin-top:1px}
+.badge{display:inline-flex;align-items:center;padding:3px 10px;border-radius:12px;font-size:11px;font-weight:700;white-space:nowrap}
+.b-ac{background:var(--accent-bg);color:var(--accent);border:1px solid var(--accent2)}
+.b-neu{background:var(--neu-bg);color:var(--neu-ink);border:1px solid var(--neu-bd)}
+.hdr-back{display:inline-flex;align-items:center;gap:5px;padding:5px 12px;border:1px solid var(--accent2);border-radius:8px;background:var(--accent-bg);color:var(--accent);font-size:12px;font-weight:700;text-decoration:none;transition:all .15s}
+.hdr-back:hover{background:var(--accent);color:#fff}
+.hdr-meta{font-size:10.5px;color:var(--text2);text-align:right;line-height:1.7}
+.wrap{max-width:1080px;margin:0 auto;padding:20px 32px 60px}
+.sec{margin-bottom:16px;background:var(--card);border:1px solid var(--border);border-radius:10px;box-shadow:var(--sh);overflow:hidden}
+.sec-hd{padding:11px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;cursor:pointer;background:#fafbfc;user-select:none}
+.sec-hd:hover{background:#f1f3f5}
+.sec-ttl{font-size:13px;font-weight:700;display:flex;align-items:center;gap:8px}
+.sec-num{display:inline-flex;align-items:center;justify-content:center;min-width:20px;height:20px;padding:0 6px;border-radius:10px;background:var(--accent);color:#fff;font-size:11px;font-weight:800;flex-shrink:0;font-variant-numeric:tabular-nums}
+.sec-num.sub{background:var(--accent-bg);color:var(--accent);border:1px solid var(--accent2);font-size:10px}
+.sec-arrow{font-size:12px;color:var(--text2);transition:transform .2s}
+.sec-hd.collapsed .sec-arrow{transform:rotate(-90deg)}
+.sec-body{padding:18px}
+.sec-body.collapsed{display:none}
+.ctable{width:100%;border-collapse:collapse;font-size:12.5px}
+.ctable th{background:#f1f3f5;padding:7px 10px;text-align:left;font-weight:700;border-bottom:2px solid var(--border);font-size:11.5px;color:var(--text2);white-space:nowrap}
+.ctable td{padding:7px 10px;border-bottom:1px solid #f1f3f5;vertical-align:middle}
+.ctable tr:last-child td{border-bottom:none}
+.ctable .num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.ctable .latest{background:var(--accent-bg)}
+.ctable .latest td{font-weight:600}
+.tag{display:inline-block;padding:1px 6px;border-radius:4px;font-size:10px;font-weight:700;border:1px solid;white-space:nowrap}
+.tag-ac{background:var(--accent-bg);color:var(--accent);border-color:var(--accent2)}
+.tag-est{background:#f1f5f9;color:var(--text2);border-color:#cbd5e1}
+.tag-up{background:var(--up-bg);color:var(--up);border-color:#86efac}
+.tag-dn{background:var(--dn-bg);color:var(--dn);border-color:#fca5a5}
+.tag-warn{background:var(--warn-bg);color:var(--warn);border-color:#fcd34d}
+.note{font-size:11px;color:var(--text2);margin-top:10px;line-height:1.6}
+.note b{color:var(--text)}
+.foot{text-align:center;font-size:11px;color:var(--text2);padding:14px;margin-top:10px}
+.kpi-ttl{font-size:11px;font-weight:700;color:var(--text2);letter-spacing:.3px;margin:2px 0 8px}
+.kpi-strip{display:grid;grid-template-columns:repeat(7,1fr);gap:10px;margin-bottom:18px}
+@media(max-width:980px){.kpi-strip{grid-template-columns:repeat(4,1fr)}}
+@media(max-width:560px){.kpi-strip{grid-template-columns:repeat(2,1fr)}}
+.kpi{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:11px 13px;box-shadow:var(--sh);display:flex;flex-direction:column}
+.kpi.accent{border:1.5px solid var(--accent2);background:var(--accent-bg)}
+.kpi .k-lbl{font-size:11px;color:var(--text2);font-weight:600}
+.kpi .k-val{font-size:19px;font-weight:900;letter-spacing:-.5px;margin-top:3px;line-height:1.1}
+.kpi.accent .k-val{color:var(--accent)}
+.kpi .k-unit{font-size:11px;font-weight:700;color:var(--text2);margin-left:2px}
+.kpi .k-sub{font-size:10px;color:var(--text2);margin-top:4px}
+.kpi .k-sub b{color:var(--up)}
+.why-wrap{border:1.5px dashed var(--accent2);background:var(--accent-bg);border-radius:10px;padding:15px 16px;margin-bottom:20px}
+.why-hd{font-size:12.5px;font-weight:800;color:var(--accent);margin-bottom:10px}
+.gs-cap{font-size:11.5px;font-weight:700;color:var(--accent);margin:14px 0 8px}
+.gs-cap span{color:var(--text2);font-weight:400;font-size:10.5px}
+.gsfc{width:100%;border-collapse:collapse;font-size:11.5px;margin:4px 0 6px}
+.gsfc th{background:var(--accent-bg);color:var(--accent);padding:6px 8px;font-weight:800;font-size:11px;text-align:center;border:1px solid var(--accent2)}
+.gsfc th:first-child{text-align:left}
+.gsfc td{padding:6px 8px;text-align:center;border:1px solid var(--border);font-variant-numeric:tabular-nums}
+.gsfc td:first-child{text-align:left;font-weight:700;color:var(--text2)}
+.gsfc .rev td{font-weight:900;color:var(--text);font-size:13px}
+.gsfc .rev td:first-child{font-size:11.5px;color:var(--accent)}
+.gsfc .yoy td{color:var(--up);font-weight:700;font-size:11px}
+.gsfc .yoy td:first-child{color:var(--text2);font-weight:700}
+.eng3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:14px}
+@media(max-width:760px){.eng3{grid-template-columns:1fr}}
+.eng{border:1px solid var(--border);border-top:3px solid;border-radius:10px;overflow:hidden;background:var(--card)}
+.eng-hd{padding:10px 14px;font-size:13px;font-weight:800;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.eng-hd .pct{margin-left:auto;font-size:10px;font-weight:800;color:#fff;border-radius:5px;padding:2px 8px}
+.eng-bd{padding:0 14px 14px;font-size:11.5px;color:var(--text2);line-height:1.85}
+.eng-bd b{color:var(--text)}
+.spine{border:1px solid var(--border);border-radius:9px;overflow:hidden}
+.lane{display:flex;gap:12px;align-items:stretch;padding:13px 14px;border-bottom:1px solid #f1f3f5}
+.lane:last-child{border-bottom:none}
+.lane-req{width:185px;flex-shrink:0;border-left:4px solid;padding-left:11px}
+.lr-t{font-size:12.5px;font-weight:800}
+.lr-d{font-size:10px;color:var(--text2);line-height:1.5;margin-top:3px}
+.lr-d em{font-style:normal;font-weight:700}
+.lane-arrow{display:flex;align-items:center;color:#cbd5e1;font-weight:900;font-size:17px;flex-shrink:0}
+.lane-fill{flex:1;display:flex;flex-wrap:wrap;gap:7px;align-items:center}
+.fchip{font-size:11px;font-weight:700;border-radius:6px;padding:5px 11px;border:1.5px solid;background:var(--card)}
+.lane-w{width:160px;flex-shrink:0;display:flex;flex-direction:column;gap:4px;align-items:flex-end;justify-content:center}
+@media(max-width:840px){.lane{flex-direction:column;gap:9px}.lane-req,.lane-w{width:auto}.lane-arrow{display:none}.lane-w{flex-direction:row;justify-content:flex-start}}
+.concl{margin-top:16px;border:1.5px solid var(--accent2);border-radius:9px;background:var(--accent-bg);padding:14px 16px;font-size:12px;line-height:1.95;color:var(--text)}
+.concl b{color:var(--accent-ink)}
+.sec.mid{border:1.5px solid var(--accent2);background:linear-gradient(180deg,var(--accent-bg) 0%,#fff 60%)}
+.sec.mid .sec-hd{background:var(--accent-bg)}
+.mid-thesis{font-size:13px;font-weight:800;color:var(--accent-ink);background:var(--accent-bg);border:1px solid var(--accent2);border-radius:8px;padding:13px 16px;margin-bottom:16px;line-height:1.9}
+.mid-thesis .em{color:var(--dn)}
+.cog-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+@media(max-width:840px){.cog-grid{grid-template-columns:1fr}}
+.cog-card{border:1px solid var(--border);border-radius:10px;padding:14px 14px 12px;background:var(--card);box-shadow:var(--sh);position:relative;display:flex;flex-direction:column}
+.cog-card .cog-no{position:absolute;top:-10px;left:14px;width:24px;height:24px;border-radius:50%;background:var(--accent);color:#fff;font-size:12px;font-weight:900;display:flex;align-items:center;justify-content:center;box-shadow:var(--sh)}
+.cog-card .cog-tt{font-size:13px;font-weight:800;margin:8px 0 8px;line-height:1.45;color:var(--text)}
+.cog-card .cog-tt b{color:var(--accent)}
+.cog-card .cog-body{font-size:11.5px;color:var(--text2);line-height:1.8;flex:1}
+.cog-card .cog-body b{color:var(--text)}
+.cog-card .cog-tag{margin-top:10px;font-size:10.5px;font-weight:700;color:var(--accent-ink);background:#fff;border:1px solid var(--accent2);border-radius:6px;padding:5px 9px;line-height:1.5}
+.cog-card .cog-tag .k{color:var(--text2);font-weight:400}
+</style>
+</head>
+<body>
+
+<header class="hdr">
+  <div class="hdr-l">
+    <a class="hdr-back" href="../us-mapping-dashboard.html">← 返回看板</a>
+    <div>
+      <div class="hdr-title">🔩 LRCX · 泛林集团（Lam Research）</div>
+      <div class="hdr-sub">NASDAQ · 全球刻蚀（Etch）龙头 + 薄膜沉积（Deposition）第二大 · 存储（NAND/DRAM）敞口最高 · <b>WFE 里"深度专精"于步骤最多、随 3D/GAA 持续加码的两大核心环节</b></div>
+    </div>
+    <span class="badge b-ac">半导体设备 · 刻蚀+沉积</span>
+    <span class="badge b-neu">3D NAND · GAA · 存储弹性</span>
+  </div>
+  <div class="hdr-meta">
+    更新：2026-07-23（市值实时校准）<br>模型：GS LRCX Model · 6 月结财年 · 最新实际季度 Q3 FY2026（Mar）
+  </div>
+</header>
+
+<div class="wrap">
+
+<!-- 估值水位 -->
+<section class="sec" style="border:1.5px solid var(--accent2)">
+  <div class="sec-hd" onclick="toggleSec(this)">
+    <div class="sec-ttl"><span style="font-size:14px">💰</span>估值水位 · GS 模型预测（6 月结财年）</div>
+    <span class="sec-arrow">▼</span>
+  </div>
+  <div class="sec-body">
+    <div class="kpi-strip" style="grid-template-columns:repeat(6,1fr)">
+      <div class="kpi accent">
+        <div class="k-lbl">市值 Market Cap</div>
+        <div class="k-val">$399.3<span class="k-unit">bn</span></div>
+        <div class="k-sub">现价 $319.29 · EV≈$397.4bn（近净现金）</div>
+      </div>
+      <div class="kpi">
+        <div class="k-lbl">TTM 市盈率</div>
+        <div class="k-val">59.9<span class="k-unit">×</span></div>
+        <div class="k-sub">滚动 4 季 EPS $5.33</div>
+      </div>
+      <div class="kpi accent">
+        <div class="k-lbl">前瞻 P/E · FY26E</div>
+        <div class="k-val">55.1<span class="k-unit">×</span></div>
+        <div class="k-sub">GS EPS $5.79；FY27E 39.6× / FY28E 33.0×</div>
+      </div>
+      <div class="kpi">
+        <div class="k-lbl">GS FY26E 营收</div>
+        <div class="k-val">$234.5<span class="k-unit">亿</span></div>
+        <div class="k-sub">YoY <b>+27.2%</b>；存储+先进逻辑双击</div>
+      </div>
+      <div class="kpi">
+        <div class="k-lbl">EV/EBITDA · FY26E</div>
+        <div class="k-val">45.5<span class="k-unit">×</span></div>
+        <div class="k-sub">FY27E 32.5× / FY28E 27.2×</div>
+      </div>
+      <div class="kpi accent">
+        <div class="k-lbl">周期弹性</div>
+        <div class="k-val">最强</div>
+        <div class="k-sub">FY24 -14.5% 触底 → FY26E +27.2% 反弹</div>
+      </div>
+    </div>
+
+    <div class="gs-cap" style="margin-top:4px">📊 GS 预测 & 隐含估值水位（单位：百万美元，EPS 为美元；倍数以现价 $319.29 / EV $397bn 静态计算）</div>
+    <table class="gsfc">
+      <thead><tr><th>指标</th><th>FY25(实际)</th><th>FY26E</th><th>FY27E</th><th>FY28E</th></tr></thead>
+      <tbody>
+        <tr class="rev"><td>营收</td><td>18,436</td><td>23,454</td><td>31,544</td><td>37,311</td></tr>
+        <tr class="yoy"><td>营收 YoY</td><td>+23.7%</td><td>+27.2%</td><td>+34.5%</td><td>+18.3%</td></tr>
+        <tr><td>EBITDA</td><td>6,343</td><td>8,739</td><td>12,241</td><td>14,605</td></tr>
+        <tr><td>营业利润(EBIT)</td><td>5,957</td><td>8,301</td><td>11,776</td><td>14,140</td></tr>
+        <tr><td>净利润</td><td>5,358</td><td>7,236</td><td>10,113</td><td>12,166</td></tr>
+        <tr><td>GS EPS（$，摊薄）</td><td>4.14</td><td>5.79</td><td>8.05</td><td>9.69</td></tr>
+        <tr class="yoy"><td>前瞻 P/E</td><td>77.2×</td><td>55.1×</td><td>39.6×</td><td>33.0×</td></tr>
+        <tr class="yoy"><td>EV/营收</td><td>21.6×</td><td>16.9×</td><td>12.6×</td><td>10.7×</td></tr>
+        <tr class="yoy"><td>EV/EBITDA</td><td>62.6×</td><td>45.5×</td><td>32.5×</td><td>27.2×</td></tr>
+      </tbody>
+    </table>
+    <div class="note">📌 <b>估值水位解读</b>：以现价静态计算，前瞻 P/E 从 FY25 的 77.2 倍压缩至 FY28E 的 33.0 倍，EV/EBITDA 从 62.6 倍压缩至 27.2 倍——隐含市场预期 EPS 从 $4.14 升至 $9.69（3 年翻 2.3 倍）。核心逻辑是营收 FY25 $184 亿 → FY28E $373 亿翻倍，叠加毛利率 48.8%→50.7%、OpM 32.3%→37.9% 的经营杠杆。<b>但 LRCX 是三家设备商里周期性最强的</b>——FY24 营收曾 -14.5%（存储下行），因此估值消化高度依赖存储 capex 与 AI 先进逻辑扩产能否持续。</div>
+    <div class="note">⚠️ <b>数据口径</b>：本模型（LRCX Model.xlsx，高盛 James Schneider 团队）未包含 GS 目标价 / 评级 / 订单 backlog / 终端市场拆分（DRAM/NAND/Foundry 分部行为空），故本页不列 GS 目标价，终端市场敞口以行业口径定性描述。市值/股价取自 Google Finance（2026-07-23）。Jun Q4 FY26 起为 GS 估计。</div>
+  </div>
+</section>
+
+<!-- 定位说明 -->
+<div class="why-wrap">
+  <div class="why-hd">🧭 LRCX 是什么角色？——全球刻蚀龙头 + 沉积第二大，WFE 里"深度专精"于步骤最多、存储弹性最大的两大环节</div>
+  <div style="font-size:11.5px;color:var(--text2);line-height:1.7">
+    如果说 AMAT 的打法是<b style="color:var(--text)">品类最全</b>（几乎所有制造步骤都有产品），Lam 的打法则是<b style="color:var(--text)">深度专精</b>——把资源集中在<b style="color:var(--text)">刻蚀（Etch）</b>和<b style="color:var(--text)">薄膜沉积（Deposition）</b>两大环节，做到刻蚀全球第一、沉积全球第二（仅次于 AMAT）。这两个环节的共同特征是：<b style="color:var(--text)">随 3D NAND 层数增加、GAA 环绕栅极、先进 DRAM 演进，工艺步骤成倍增长，单片晶圆的设备价值量持续提升</b>。同时 Lam 的<b style="color:var(--text)">存储（NAND+DRAM）敞口是三大设备商里最高的</b>，这既是弹性也是风险。<br>
+    本页核心问题：<b style="color:var(--accent)">GS 模型把 LRCX FY26-28E 营收增速给到 27.2% / 34.5% / 18.3%（FY25→FY28E 营收翻倍），EPS $4.14→$9.69</b>——这是存储超级周期 + AI 先进逻辑扩产共振的直接映射；而 Lam 聚焦的刻蚀/沉积，<b style="color:var(--accent)">恰恰是国产设备中微公司（刻蚀）、拓荆科技（沉积）最精准的海外对标</b>，映射关系比 AMAT 更聚焦。
+  </div>
+</div>
+
+<!-- KPI -->
+<div class="kpi-ttl">关键指标 · Q3 FY2026 实际（Mar 季）+ FY26E 模型预测（GS 模型口径，非GAAP）</div>
+<div class="kpi-strip">
+  <div class="kpi accent">
+    <div class="k-lbl">Q3'26 营收</div>
+    <div class="k-val">58.4<span class="k-unit">亿$</span></div>
+    <div class="k-sub">同比<b>+24%</b> · 环比<b>+9%</b></div>
+  </div>
+  <div class="kpi accent">
+    <div class="k-lbl">Q4'26E 营收</div>
+    <div class="k-val">69.4<span class="k-unit">亿$</span></div>
+    <div class="k-sub">同比 <b>+34%</b>（GS 模型）</div>
+  </div>
+  <div class="kpi">
+    <div class="k-lbl">Q3'26 毛利率</div>
+    <div class="k-val">50<span class="k-unit">%</span></div>
+    <div class="k-sub">持续在 50% 高位</div>
+  </div>
+  <div class="kpi">
+    <div class="k-lbl">Q3'26 EPS</div>
+    <div class="k-val">$1.47</div>
+    <div class="k-sub">同比<b>+41%</b>（25Q3 $1.04）</div>
+  </div>
+  <div class="kpi">
+    <div class="k-lbl">FY26E 营收</div>
+    <div class="k-val">234.5<span class="k-unit">亿$</span></div>
+    <div class="k-sub">同比<b>+27.2%</b></div>
+  </div>
+  <div class="kpi">
+    <div class="k-lbl">FY26E EPS</div>
+    <div class="k-val">$5.79</div>
+    <div class="k-sub">FY24 触底 $3.03 → 强复苏</div>
+  </div>
+  <div class="kpi">
+    <div class="k-lbl">周期反弹</div>
+    <div class="k-val">+57<span class="k-unit">%</span></div>
+    <div class="k-sub">FY24 $149亿 → FY26E $234.5亿</div>
+  </div>
+</div>
+
+<!-- ① 业务拆解 -->
+<section class="sec">
+  <div class="sec-hd" onclick="toggleSec(this)">
+    <div class="sec-ttl"><span class="sec-num">1</span>业务定位 · 刻蚀 + 沉积 + 终端市场敞口</div>
+    <span class="sec-arrow">▼</span>
+  </div>
+  <div class="sec-body">
+
+    <div style="font-size:11px;font-weight:700;color:var(--text2);margin-bottom:12px;letter-spacing:.3px">产品线定位（行业口径，本 GS 模型未提供分部拆分数据）</div>
+    <table class="ctable">
+      <thead><tr><th>产品线</th><th>全球地位</th><th>说明</th></tr></thead>
+      <tbody>
+        <tr class="latest"><td><b>刻蚀（Etch）</b></td><td><span class="tag tag-ac">全球第一</span></td><td>介质刻蚀（CCP）+ 导体刻蚀（ICP）双龙头；高深宽比刻蚀是 3D NAND（数百层堆叠）与 GAA 先进逻辑的命门</td></tr>
+        <tr><td><b>薄膜沉积（Deposition）</b></td><td><span class="tag tag-ac">全球第二</span></td><td>ALD/CVD/电镀（ECD），仅次于 AMAT；钼（Mo）互连、先进 NAND/逻辑沉积是增量方向</td></tr>
+        <tr><td><b>清洗 / 电镀</b></td><td><span class="tag tag-est">重要参与者</span></td><td>SABRE 电镀等，配套刻蚀/沉积形成工艺闭环</td></tr>
+        <tr><td><b>装机服务（CSBG）</b></td><td><span class="tag tag-est">经常性</span></td><td>客户支持业务，随装机基数累积的经常性收入，周期缓冲</td></tr>
+      </tbody>
+    </table>
+    <div class="note">📌 <b>终端市场敞口（行业口径，非本模型数据）</b>：Lam 是三大 WFE 设备商里<b>存储（NAND+DRAM）敞口最高</b>的——3D NAND 每增加一代层数、DRAM 每推进一代制程，刻蚀/沉积步骤都成倍增加，使 Lam 成为存储资本开支<b>弹性最大</b>的设备商。这解释了为何 FY24 存储下行时 Lam 营收 -14.5%（三家里跌幅最大），而存储复苏时反弹也最猛（FY25 +23.7%）。<span style="color:var(--dn)">本 GS 模型的终端市场分部行（DRAM/NAND/Foundry/Logic）为空，故此处为定性描述，具体占比以公司业绩会披露为准。</span></div>
+
+    <div class="gs-cap" style="margin-top:16px">📊 季度营收轨迹 · FY25 Q1 → FY26 Q4E（单位百万美元；Jun Q4'26 起为 GS 估计）</div>
+    <table class="ctable">
+      <thead><tr><th>财季</th><th class="num">营收</th><th class="num">YoY</th><th class="num">毛利率</th><th class="num">营业利润率</th><th class="num">EPS(op)</th></tr></thead>
+      <tbody>
+        <tr><td>Q1'25（Sep24）</td><td class="num">4,168</td><td class="num" style="color:var(--up)">+20%</td><td class="num">48%</td><td class="num">31%</td><td class="num">$0.86</td></tr>
+        <tr><td>Q2'25（Dec24）</td><td class="num">4,376</td><td class="num" style="color:var(--up)">+16%</td><td class="num">47%</td><td class="num">31%</td><td class="num">$0.91</td></tr>
+        <tr><td>Q3'25（Mar25）</td><td class="num">4,720</td><td class="num" style="color:var(--up)">+24%</td><td class="num">49%</td><td class="num">33%</td><td class="num">$1.04</td></tr>
+        <tr><td>Q4'25（Jun25）</td><td class="num">5,171</td><td class="num" style="color:var(--up)">+34%</td><td class="num">50%</td><td class="num">34%</td><td class="num">$1.33</td></tr>
+        <tr><td>Q1'26（Sep25）</td><td class="num">5,324</td><td class="num" style="color:var(--up)">+28%</td><td class="num">51%</td><td class="num">35%</td><td class="num">$1.26</td></tr>
+        <tr><td>Q2'26（Dec25）</td><td class="num">5,345</td><td class="num" style="color:var(--up)">+22%</td><td class="num">50%</td><td class="num">34%</td><td class="num">$1.27</td></tr>
+        <tr class="latest"><td><b>Q3'26（Mar26）★</b></td><td class="num"><b>5,841</b></td><td class="num" style="color:var(--up)"><b>+24%</b></td><td class="num"><b>50%</b></td><td class="num"><b>35%</b></td><td class="num"><b>$1.47</b></td></tr>
+        <tr><td>Q4'26E（Jun26）</td><td class="num">6,944<span class="tag tag-est" style="margin-left:3px">估计</span></td><td class="num" style="color:var(--up)">+34%</td><td class="num">51%</td><td class="num">37%</td><td class="num">$1.79</td></tr>
+      </tbody>
+    </table>
+    <div class="note">📌 <b>加速兑现</b>：营收连续 7 个季度同比 20%+，Q4'26E 指引中值同比 +34%，毛利率稳在 50% 高位，EPS 从 Q1'25 $0.86 升至 Q4'26E $1.79（翻倍）。<b>注意 EPS 为 2024 年 10 月 1 拆 10 后的摊薄口径</b>（股数约 12.6 亿股）。Jun Q4'26 起为 GS 估计值，实际以业绩会披露为准。</div>
+  </div>
+</section>
+
+<!-- ② 技术路线与竞争地位 -->
+<section class="sec">
+  <div class="sec-hd" onclick="toggleSec(this)">
+    <div class="sec-ttl"><span class="sec-num">2</span>技术路线与竞争地位</div>
+    <span class="sec-arrow">▼</span>
+  </div>
+  <div class="sec-body">
+
+    <div class="gs-cap" style="margin-top:0">⚡ 三条核心技术线 × 景气信号 × A股映射逻辑</div>
+    <div class="eng3">
+      <div class="eng" style="border-top-color:var(--accent)">
+        <div class="eng-hd" style="color:var(--accent)">
+          🔪 刻蚀（Etch）全球龙头
+          <span class="pct" style="background:var(--accent)">份额第一</span>
+        </div>
+        <div class="eng-bd">
+          <b>地位</b>：介质刻蚀（CCP）+ 导体刻蚀（ICP）双龙头，全球刻蚀份额第一<br>
+          <b>驱动</b>：3D NAND 层数从数百层继续向上堆叠，高深宽比刻蚀（HAR）步骤成倍增加；GAA 环绕栅极也大幅提升刻蚀步骤数——刻蚀是"越先进越吃设备"的环节<br>
+          <b>新技术</b>：低温刻蚀（cryogenic etch）等延续技术领先<br>
+          <b style="color:var(--dn)">A股映射</b>：<span style="color:var(--dn)">Lam 是国产刻蚀龙头中微公司（介质刻蚀 CCP 直接对标）、北方华创（硅刻蚀 ICP）最精准的海外基准——份额转移型映射，对标度高于 AMAT</span>
+        </div>
+      </div>
+      <div class="eng" style="border-top-color:var(--warn)">
+        <div class="eng-hd" style="color:var(--warn)">
+          🧪 薄膜沉积 + 钼互连
+          <span class="pct" style="background:var(--warn)">份额第二</span>
+        </div>
+        <div class="eng-bd">
+          <b>地位</b>：ALD/CVD/电镀（ECD）全球第二（仅次于 AMAT）<br>
+          <b>驱动</b>：先进逻辑与 NAND 互连从钨（W）转向钼（Mo），Lam 的钼沉积平台（ALTUS 系列）打开新的 content 增量；先进封装/DRAM 也拉动沉积需求<br>
+          <b style="color:var(--dn)">A股映射</b>：<span style="color:var(--dn)">对标国产沉积设备拓荆科技（PECVD/ALD 直接对标）、北方华创——同为份额转移型映射，先进逻辑/存储放量验证国产沉积导入节奏</span>
+        </div>
+      </div>
+      <div class="eng" style="border-top-color:var(--up)">
+        <div class="eng-hd" style="color:var(--up)">
+          💾 存储弹性最大
+          <span class="pct" style="background:var(--up)">周期放大器</span>
+        </div>
+        <div class="eng-bd">
+          <b>特征</b>：三大设备商里存储（NAND+DRAM）敞口最高，是存储 capex 弹性最大的设备商<br>
+          <b>信号</b>：FY24 存储下行营收 -14.5%（三家跌幅最大）→ FY25 存储复苏 +23.7% → FY26E +27.2%；Lam 的订单/景气是存储扩产最灵敏的先行指标<br>
+          <b style="color:var(--dn)">A股映射</b>：<span style="color:var(--dn)">Lam 存储景气 → 映射国内存储链（长江存储/长鑫）设备招标节奏，间接验证兆易创新/北京君正等存储设计公司的上游景气</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 产业链层级图 -->
+    <div class="gs-cap">🗺 产业链层级 · LRCX 在半导体制造价值链中的位置与对华映射</div>
+    <div class="spine">
+      <div class="lane">
+        <div class="lane-req" style="border-left-color:var(--accent)">
+          <div class="lr-t" style="color:var(--accent)">① 刻蚀 + 沉积（Lam 核心）</div>
+          <div class="lr-d">Etch 全球第一 / Deposition 全球第二<br><em style="color:var(--accent)">步骤最多、存储弹性最大</em></div>
+        </div>
+        <div class="lane-arrow">→</div>
+        <div class="lane-fill">
+          <span class="fchip" style="border-color:var(--accent2);color:var(--accent)">三星 / SK 海力士 / 美光（NAND/DRAM）</span>
+          <span class="fchip" style="border-color:var(--accent2);color:var(--accent)">台积电 / Intel（先进逻辑）</span>
+          <span class="fchip" style="border-color:var(--accent2);color:var(--accent)">长江存储 / 长鑫（国内存储）</span>
+        </div>
+        <div class="lane-w">
+          <span style="font-size:9.5px;font-weight:700;color:var(--text2)">→ 存储 + 逻辑晶圆厂</span>
+        </div>
+      </div>
+      <div class="lane">
+        <div class="lane-req" style="border-left-color:var(--warn)">
+          <div class="lr-t" style="color:var(--warn)">② 出口管制 + 存储景气</div>
+          <div class="lr-d">对华设备限制 + 存储超级周期<br><em style="color:var(--warn)">国产刻蚀/沉积替代加速</em></div>
+        </div>
+        <div class="lane-arrow">→</div>
+        <div class="lane-fill">
+          <span class="fchip" style="border-color:var(--neu-bd);color:var(--neu-ink)">刻蚀/沉积国产验证窗口延长</span>
+        </div>
+        <div class="lane-w">
+          <span style="font-size:9.5px;font-weight:700;color:var(--text2)">→ 替代窗口</span>
+        </div>
+      </div>
+      <div class="lane">
+        <div class="lane-req" style="border-left-color:var(--up)">
+          <div class="lr-t" style="color:var(--up)">③ 国产刻蚀/沉积承接</div>
+          <div class="lr-d">最精准的海外对标<br><em style="color:var(--up)">份额转移型映射</em></div>
+        </div>
+        <div class="lane-arrow">→</div>
+        <div class="lane-fill">
+          <span class="fchip" style="border-color:#86efac;color:var(--up)">中微公司（刻蚀 · 直接对标）</span>
+          <span class="fchip" style="border-color:#86efac;color:var(--up)">拓荆科技（沉积 · 直接对标）</span>
+          <span class="fchip" style="border-color:#86efac;color:var(--up)">北方华创/盛美上海（刻蚀/电镀清洗）</span>
+        </div>
+        <div class="lane-w">
+          <span style="font-size:9.5px;font-weight:700;color:var(--up)">→ A股映射标的</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="concl">
+      🎯 <b>为什么 LRCX 是国产刻蚀/沉积最精准的对标样本？</b>——AMAT 品类最全，映射的是"整条国产设备链"；ASML 是卡脖子替代；而 <b>Lam 深度专精于刻蚀 + 沉积，恰好一一对应国产的中微公司（刻蚀）与拓荆科技（沉积）</b>，是对标度最高的份额转移型映射。<br>
+      <b>景气方向</b>：GS 模型给出 FY26-28E 营收翻倍、EPS $4.14→$9.69，由存储超级周期 + AI 先进逻辑扩产共振驱动。<br>
+      <b>风险特征</b>：Lam 是三家设备商里周期性最强的——存储敞口最高既放大上行弹性，也放大下行风险（FY24 -14.5% 殷鉴），映射时需同步跟踪存储 capex 与 NAND 稼动率。
+    </div>
+
+  </div>
+</section>
+
+<!-- ③ 财务模型详情 -->
+<section class="sec">
+  <div class="sec-hd" onclick="toggleSec(this)">
+    <div class="sec-ttl"><span style="font-size:14px">📊</span>财务模型详情 · GS LRCX Model（FY23 → FY28E）</div>
+    <span class="sec-arrow">▼</span>
+  </div>
+  <div class="sec-body">
+
+    <div class="gs-cap" style="margin-top:0">📈 年度损益与现金流 · 单位百万美元（FY26E 起为 GS 估计）</div>
+    <table class="ctable">
+      <thead><tr><th>指标</th><th class="num">FY23</th><th class="num">FY24</th><th class="num">FY25</th><th class="num">FY26E</th><th class="num">FY27E</th><th class="num">FY28E</th></tr></thead>
+      <tbody>
+        <tr><td><b>营收</b></td><td class="num">17,429</td><td class="num">14,905</td><td class="num">18,436</td><td class="num">23,454</td><td class="num">31,544</td><td class="num">37,311</td></tr>
+        <tr><td>营收 YoY</td><td class="num">+1.2%</td><td class="num" style="color:var(--dn)">-14.5%</td><td class="num" style="color:var(--up)">+23.7%</td><td class="num" style="color:var(--up)">+27.2%</td><td class="num" style="color:var(--up)">+34.5%</td><td class="num" style="color:var(--up)">+18.3%</td></tr>
+        <tr><td>毛利率</td><td class="num">45.3%</td><td class="num">48.2%</td><td class="num">48.8%</td><td class="num">50.3%</td><td class="num">50.8%</td><td class="num">50.7%</td></tr>
+        <tr><td>营业利润</td><td class="num">5,355</td><td class="num">4,513</td><td class="num">5,957</td><td class="num">8,301</td><td class="num">11,776</td><td class="num">14,140</td></tr>
+        <tr><td>营业利润率</td><td class="num">30.7%</td><td class="num">30.3%</td><td class="num">32.3%</td><td class="num" style="color:var(--up)">35.4%</td><td class="num" style="color:var(--up)">37.3%</td><td class="num" style="color:var(--up)">37.9%</td></tr>
+        <tr><td>净利润</td><td class="num">4,511</td><td class="num">3,880</td><td class="num">5,358</td><td class="num">7,236</td><td class="num">10,113</td><td class="num">12,166</td></tr>
+        <tr><td>EPS（$，摊薄 op）</td><td class="num">3.41</td><td class="num">3.03</td><td class="num">4.14</td><td class="num">5.79</td><td class="num">8.05</td><td class="num">9.69</td></tr>
+        <tr><td>EBITDA</td><td class="num">5,698</td><td class="num">4,872</td><td class="num">6,343</td><td class="num">8,739</td><td class="num">12,241</td><td class="num">14,605</td></tr>
+        <tr><td>自由现金流</td><td class="num">4,677</td><td class="num">4,307</td><td class="num">5,414</td><td class="num">5,311</td><td class="num">9,228</td><td class="num">11,554</td></tr>
+        <tr><td>股票回购</td><td class="num">2,017</td><td class="num">2,843</td><td class="num">3,422</td><td class="num">4,768</td><td class="num">5,000</td><td class="num">5,400</td></tr>
+        <tr><td>股息（每股 $）</td><td class="num">0.69</td><td class="num">0.80</td><td class="num">0.92</td><td class="num">1.04</td><td class="num">1.16</td><td class="num">1.28</td></tr>
+      </tbody>
+    </table>
+    <div class="note">📌 <b>周期性 + 经营杠杆</b>：<b style="color:var(--dn)">FY24 营收 -14.5%（存储下行周期）</b>是三家设备商里唯一的两位数负增长——凸显 Lam 的存储弹性/周期性最强。FY25 起强复苏：营收 FY25 → FY28E 翻倍，营业利润却从 $60 亿增至 $141 亿（增 2.4 倍），OpM 32.3%→37.9%。资本回报强劲：回购从 $34 亿升至 $54 亿，股息连年增长。</div>
+    <div class="note">⚠️ <b>使用提示</b>：本模型未提供订单（bookings）、backlog、book-to-bill 及终端市场（DRAM/NAND/Foundry/Logic）拆分，这些恰是判断 Lam 景气拐点与存储敞口最关键的先行指标，使用时需结合业绩会披露交叉验证。FY26E 起为 GS 估计，其三年翻倍预测是 AI + 存储双击的乐观情景。</div>
+  </div>
+</section>
+
+<!-- ④ 认知沉淀 -->
+<section class="sec mid">
+  <div class="sec-hd" onclick="toggleSec(this)">
+    <div class="sec-ttl"><span style="font-size:14px">🧭</span>认知沉淀 · 为什么 LRCX 是国产刻蚀/沉积最精准的对标 + 存储弹性最大的设备商</div>
+    <span class="sec-arrow">▼</span>
+  </div>
+  <div class="sec-body">
+
+    <div class="mid-thesis">
+      核心论点：Lam 深度专精于刻蚀（全球第一）+ 沉积（全球第二）两大"步骤最多、越先进越吃设备"的环节，且存储（NAND+DRAM）敞口三家最高。GS 模型给出 FY26-28E 营收 27.2%/34.5%/18.3% 的高增（营收翻倍、EPS $4.14→$9.69），由存储超级周期 + AI 先进逻辑扩产共振驱动。<span class="em">而 Lam 聚焦的刻蚀/沉积恰好一一对应国产的中微公司（刻蚀）与拓荆科技（沉积），是对标度最高的份额转移型映射——但存储敞口最高也意味着周期弹性向下时最猛（FY24 -14.5%）。</span>
+    </div>
+
+    <div class="cog-grid">
+
+      <div class="cog-card">
+        <div class="cog-no">1</div>
+        <div class="cog-tt">深度专精 vs 品类最全：<b>与 AMAT 的打法分野</b></div>
+        <div class="cog-body">
+          AMAT 品类最全（几乎所有制造步骤），Lam 深度专精于刻蚀 + 沉积。这两个环节随 3D NAND 层数、GAA、先进 DRAM 演进，工艺步骤成倍增长，单片设备价值量持续提升——是"越先进越吃设备"的最佳赛道。这决定了 Lam 的成长弹性高度绑定制程复杂度提升。
+        </div>
+        <div class="cog-tag"><span class="k">观察指标：</span> 3D NAND 层数 / GAA 导入 / 单片刻蚀-沉积步骤数变化</div>
+      </div>
+
+      <div class="cog-card">
+        <div class="cog-no">2</div>
+        <div class="cog-tt">存储弹性最大：<b>周期的放大器</b></div>
+        <div class="cog-body">
+          Lam 存储（NAND+DRAM）敞口三家最高。FY24 存储下行营收 -14.5%（三家跌幅最大），FY25 存储复苏 +23.7% 反弹最猛——Lam 的订单/景气是存储 capex 最灵敏的先行指标。当前 HBM + AI 存储需求驱动 DRAM 先进制程扩产，是 Lam 上行周期的核心引擎。
+        </div>
+        <div class="cog-tag"><span class="k">跟踪重点：</span> 存储 capex 指引 + NAND 稼动率 + HBM/DRAM 扩产节奏</div>
+      </div>
+
+      <div class="cog-card">
+        <div class="cog-no">3</div>
+        <div class="cog-tt">刻蚀龙头：<b>高深宽比刻蚀是 3D NAND/GAA 命门</b></div>
+        <div class="cog-body">
+          Lam 介质刻蚀（CCP）+ 导体刻蚀（ICP）全球第一。3D NAND 数百层堆叠、GAA 环绕栅极都极度依赖高深宽比刻蚀（HAR），步骤数随制程持续增加。低温刻蚀（cryo etch）等新技术延续其领先。这是 Lam 最深的护城河环节。
+        </div>
+        <div class="cog-tag"><span class="k">观察指标：</span> HAR 刻蚀新平台 / 低温刻蚀导入进展</div>
+      </div>
+
+      <div class="cog-card">
+        <div class="cog-no">4</div>
+        <div class="cog-tt">沉积 + 钼互连：<b>content 增量新方向</b></div>
+        <div class="cog-body">
+          Lam 沉积（ALD/CVD/电镀）全球第二。先进逻辑与 NAND 互连从钨（W）转向钼（Mo），Lam 的钼沉积平台（ALTUS 系列）打开新的 content 增量。沉积是 Lam 追赶 AMAT、扩大单片价值量的关键抓手。
+        </div>
+        <div class="cog-tag"><span class="k">观察指标：</span> 钼互连导入客户 / ALD 新平台放量</div>
+      </div>
+
+      <div class="cog-card">
+        <div class="cog-no">5</div>
+        <div class="cog-tt">周期性风险：<b>三家里最强，模型偏乐观</b></div>
+        <div class="cog-body">
+          GS 给出 FY26-28E 营收翻倍的乐观预测，但 Lam 是三家设备商里周期性最强的——存储敞口最高使上行弹性大，下行时弹性向下也最大（FY24 -14.5% 殷鉴）。估值消化高度依赖存储 capex 与 AI 先进逻辑扩产能否持续三年高增。
+        </div>
+        <div class="cog-tag"><span class="k">使用提示：</span> Jun Q4'26 起为 GS 估计；存储下行周期是最大风险变量</div>
+      </div>
+
+      <div class="cog-card">
+        <div class="cog-no">6</div>
+        <div class="cog-tt">映射精准度：<b>国产刻蚀/沉积最直接对标</b></div>
+        <div class="cog-body">
+          Lam 聚焦刻蚀/沉积，恰好一一对应国产的中微公司（刻蚀 CCP）与拓荆科技（沉积 PECVD/ALD），对标度高于 AMAT（品类最全 → 映射整条链）。映射逻辑类 AMAT（份额转移 + 景气验证），但更聚焦、更精准；区别于 ASML 的卡脖子替代型映射。
+        </div>
+        <div class="cog-tag"><span class="k">使用提示：</span> Lam=份额转移型映射（聚焦刻蚀/沉积），勿与 ASML 卡脖子逻辑混用</div>
+      </div>
+
+    </div>
+
+  </div>
+</section>
+
+<!-- A股映射结论 -->
+<section class="sec mid" style="border:1.5px solid var(--accent2);background:linear-gradient(180deg,var(--accent-bg) 0%,#fff 60%)">
+  <div class="sec-hd" onclick="toggleSec(this)" style="background:var(--accent-bg)">
+    <div class="sec-ttl"><span style="font-size:14px">🎯</span>A股映射 & 对应交易</div>
+    <span class="sec-arrow">▼</span>
+  </div>
+  <div class="sec-body">
+
+    <div class="concl">
+      💡 <b>核心判断</b>：Lam 深度专精刻蚀 + 沉积，是国产设备中<b>中微公司（刻蚀）、拓荆科技（沉积）最精准的海外对标</b>——映射逻辑为"份额转移 + 景气验证"（类 AMAT 但更聚焦）。Lam 存储敞口最高，其订单/景气是存储 capex 最灵敏的先行指标，同步验证国内存储链（长江存储/长鑫）设备招标节奏。<b>需注意 Lam 周期性最强，存储下行时映射标的的下行弹性也最大。</b>
+    </div>
+
+    <div class="gs-cap" style="margin-top:14px">A股映射标的 & 传导路径</div>
+    <table class="ctable">
+      <thead><tr><th>映射方向</th><th>代表标的</th><th>传导路径</th></tr></thead>
+      <tbody>
+        <tr><td><b>介质/导体刻蚀</b></td><td>中微公司（688012）</td><td>Lam 是全球刻蚀龙头，中微介质刻蚀（CCP）直接对标——3D NAND 高深宽比刻蚀国产替代核心，对标度最高</td></tr>
+        <tr><td><b>薄膜沉积（PECVD/ALD）</b></td><td>拓荆科技（688072）</td><td>Lam 是沉积全球第二，拓荆 PECVD/ALD 直接对标，先进逻辑/存储放量驱动国产沉积导入</td></tr>
+        <tr><td><b>刻蚀 + 沉积综合</b></td><td>北方华创（002371）</td><td>ICP 硅刻蚀 + 多品类沉积，对标 Lam 刻蚀/沉积综合布局</td></tr>
+        <tr><td><b>电镀 + 清洗</b></td><td>盛美上海（688082）</td><td>对标 Lam 的电镀（SABRE）与清洗环节，配套刻蚀/沉积工艺闭环</td></tr>
+        <tr><td><b>存储 capex 弹性</b></td><td>长江存储 / 长鑫存储链设备招标</td><td>Lam 存储敞口最高，其订单是存储扩产先行指标，间接验证国内存储链设备景气</td></tr>
+      </tbody>
+    </table>
+    <div class="note">📌 <b>映射强度</b>：中高——Lam 聚焦刻蚀/沉积，对标国产中微/拓荆的精准度是三家设备商里最高的（AMAT 品类全但分散，ASML 是卡脖子替代）。相关国产替代逻辑详见 <a href="../../industry-dashboards/domestic-semiconductor/domestic-semiconductor-dashboard.html">国产半导体行业看板</a>。</div>
+    <div class="note">📌 <b>对应交易</b>：买<b>中微公司（刻蚀最精准对标）+ 拓荆科技（沉积对标）</b>；催化 = Lam 季度存储 capex 指引、NAND 层数/DRAM 先进制程推进、国产刻蚀/沉积招标放量、出口管制新规；风险 = 存储下行周期（Lam FY24 -14.5% 殷鉴，映射标的下行弹性同样最大）、国产验证慢于预期、AI capex 回落拖累全球 WFE 景气。</div>
+  </div>
+</section>
+
+<div class="foot">数据来源：LRCX Model.xlsx（高盛证券模型，James Schneider 团队）· 市值/股价取自 Google Finance（2026-07-23）　·　模型未含 GS 目标价/评级/订单 backlog/终端市场拆分，本页估值倍数由财务预测 + 实时市值静态推算，终端市场敞口为行业口径定性；FY26E 起为 GS 估计值，实际以业绩会披露为准　·　EPS 为 2024/10 一拆十后摊薄口径　·　更新：2026-07-23</div>
+
+</div>
+
+<script>
+function toggleSec(hd){
+  hd.classList.toggle('collapsed');
+  hd.nextElementSibling.classList.toggle('collapsed');
+}
+</script>
+
+</body>
+</html>

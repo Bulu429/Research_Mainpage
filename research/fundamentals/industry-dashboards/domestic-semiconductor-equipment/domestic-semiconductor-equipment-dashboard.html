@@ -264,6 +264,9 @@ code{font-size:10px;background:var(--tag-bg);color:var(--tag);padding:1px 5px;bo
 .overseas-table .company-cell b{display:block;color:#183d4b;font-size:11px}
 .overseas-table .company-cell span{display:block;color:#7a8d95;font-size:9.5px}
 .overseas-table .company-cell .gs-tag{display:inline-block;margin-left:5px;padding:1px 5px;border:1px solid #d8a51d;border-radius:999px;background:#fff7d6;color:#8b5b00;font-size:8px;font-weight:800;letter-spacing:.05em;vertical-align:1px}
+.overseas-table .company-cell b a.company-link{color:var(--accent);text-decoration:none;border-bottom:1px dashed var(--accent)}
+.overseas-table .company-cell b a.company-link:hover{border-bottom-style:solid}
+.overseas-table .company-cell b a.company-link::after{content:"↗";font-size:9px;margin-left:2px;vertical-align:1px}
 .overseas-table .ticker{color:#23596b;font-weight:700;white-space:nowrap}
 .overseas-table .market-pill{display:inline-block;min-width:34px;padding:1px 6px;border-radius:10px;background:#e4f1f4;color:#15596e;text-align:center;font-size:9px;font-weight:800}
 .overseas-table .market-pill.jp{background:#f5ede2;color:#805b31}
@@ -860,14 +863,26 @@ if (overseasEquipmentDataNode) {
     return '<span class="' + cls + '">' + (value > 0 ? '+' : '') + value + '%</span>';
   };
   const marketPill = (market) => '<span class="market-pill ' + (market === '日股' ? 'jp' : '') + '">' + market + '</span>';
+  const companyPageUrl = {
+    "AMAT.O": "../../us-mapping/companies/AMAT_AppliedMaterials.html",
+    "LRCX.O": "../../us-mapping/companies/LRCX_LamResearch.html",
+    "ASML.O": "../../us-mapping/companies/ASML_ASML.html"
+  };
+  const companyName = (item) => {
+    const name = escapeHtml(item.cn);
+    const url = companyPageUrl[item.ticker];
+    return url
+      ? '<a class="company-link" href="' + url + '" target="_blank" rel="noopener" title="查看公司页">' + name + '</a>'
+      : name;
+  };
   const companyCell = (item) => {
     const forecastMeta = [item.forecastRange, item.valueUnit].filter(Boolean).join(' · ');
-    return '<div class="company-cell"><b>' + escapeHtml(item.cn) +
+    return '<div class="company-cell"><b>' + companyName(item) +
       (item.forecastSource === 'GS' ? '<i class="gs-tag">GS</i>' : '') +
       '</b><span>' + escapeHtml(item.en) +
       (forecastMeta ? ' · ' + escapeHtml(forecastMeta) : '') + '</span></div>';
   };
-  const mappingCompanyCell = (item) => '<div class="company-cell"><b>' + escapeHtml(item.cn) +
+  const mappingCompanyCell = (item) => '<div class="company-cell"><b>' + companyName(item) +
     (item.forecastSource === 'GS' ? '<i class="gs-tag">GS</i>' : '') +
     '</b><span>' + escapeHtml(item.en) + '</span></div>';
   const marketCapCell = (item) => {

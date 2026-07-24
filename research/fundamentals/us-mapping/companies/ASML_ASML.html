@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ASML 阿斯麦 · 美股映射（EUV 光刻绝对垄断 · 先进制程唯一入口）</title>
+<style>
+:root{
+  --bg:#f7f8fa;--card:#fff;--border:#e6e8eb;
+  --text:#1a1d21;--text2:#586271;--text3:#8a94a3;
+  /* ASML 品牌色：深皇家蓝 */
+  --accent:#1e50a0;--accent2:#a9c3ec;--accent-bg:#eef3fb;--accent-ink:#153a75;
+  --up:#15803d;--up-bg:#eaf6ee;--up-ink:#136130;
+  --dn:#c01d24;--dn-bg:#fbeaeb;--dn-ink:#9a161c;
+  --warn:#b45309;--warn-bg:#fdf4e7;
+  --neu:#475569;--neu-bg:#eef1f5;--neu-bd:#c3cdd9;--neu-ink:#334155;
+  --neu2:#64748b;--neu2-bg:#f4f6f9;--neu2-bd:#d7dee6;
+  --sh:0 1px 3px rgba(0,0,0,.07);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;background:var(--bg);color:var(--text);font-size:14px;line-height:1.6}
+a{color:var(--accent);text-decoration:none}
+a:hover{text-decoration:underline}
+.hdr{background:var(--card);border-bottom:1px solid var(--border);padding:14px 32px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:var(--sh)}
+.hdr-l{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.hdr-title{font-size:19px;font-weight:800}
+.hdr-sub{font-size:11px;color:var(--text2);margin-top:1px}
+.badge{display:inline-flex;align-items:center;padding:3px 10px;border-radius:12px;font-size:11px;font-weight:700;white-space:nowrap}
+.b-ac{background:var(--accent-bg);color:var(--accent);border:1px solid var(--accent2)}
+.b-neu{background:var(--neu-bg);color:var(--neu-ink);border:1px solid var(--neu-bd)}
+.hdr-back{display:inline-flex;align-items:center;gap:5px;padding:5px 12px;border:1px solid var(--accent2);border-radius:8px;background:var(--accent-bg);color:var(--accent);font-size:12px;font-weight:700;text-decoration:none;transition:all .15s}
+.hdr-back:hover{background:var(--accent);color:#fff}
+.hdr-meta{font-size:10.5px;color:var(--text2);text-align:right;line-height:1.7}
+.wrap{max-width:1080px;margin:0 auto;padding:20px 32px 60px}
+.sec{margin-bottom:16px;background:var(--card);border:1px solid var(--border);border-radius:10px;box-shadow:var(--sh);overflow:hidden}
+.sec-hd{padding:11px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;cursor:pointer;background:#fafbfc;user-select:none}
+.sec-hd:hover{background:#f1f3f5}
+.sec-ttl{font-size:13px;font-weight:700;display:flex;align-items:center;gap:8px}
+.sec-num{display:inline-flex;align-items:center;justify-content:center;min-width:20px;height:20px;padding:0 6px;border-radius:10px;background:var(--accent);color:#fff;font-size:11px;font-weight:800;flex-shrink:0;font-variant-numeric:tabular-nums}
+.sec-num.sub{background:var(--accent-bg);color:var(--accent);border:1px solid var(--accent2);font-size:10px}
+.sec-arrow{font-size:12px;color:var(--text2);transition:transform .2s}
+.sec-hd.collapsed .sec-arrow{transform:rotate(-90deg)}
+.sec-body{padding:18px}
+.sec-body.collapsed{display:none}
+.ctable{width:100%;border-collapse:collapse;font-size:12.5px}
+.ctable th{background:#f1f3f5;padding:7px 10px;text-align:left;font-weight:700;border-bottom:2px solid var(--border);font-size:11.5px;color:var(--text2);white-space:nowrap}
+.ctable td{padding:7px 10px;border-bottom:1px solid #f1f3f5;vertical-align:middle}
+.ctable tr:last-child td{border-bottom:none}
+.ctable .num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.ctable .latest{background:var(--accent-bg)}
+.ctable .latest td{font-weight:600}
+.tag{display:inline-block;padding:1px 6px;border-radius:4px;font-size:10px;font-weight:700;border:1px solid;white-space:nowrap}
+.tag-ac{background:var(--accent-bg);color:var(--accent);border-color:var(--accent2)}
+.tag-est{background:#f1f5f9;color:var(--text2);border-color:#cbd5e1}
+.tag-up{background:var(--up-bg);color:var(--up);border-color:#86efac}
+.tag-dn{background:var(--dn-bg);color:var(--dn);border-color:#fca5a5}
+.tag-warn{background:var(--warn-bg);color:var(--warn);border-color:#fcd34d}
+.note{font-size:11px;color:var(--text2);margin-top:10px;line-height:1.6}
+.note b{color:var(--text)}
+.foot{text-align:center;font-size:11px;color:var(--text2);padding:14px;margin-top:10px}
+.kpi-ttl{font-size:11px;font-weight:700;color:var(--text2);letter-spacing:.3px;margin:2px 0 8px}
+.kpi-strip{display:grid;grid-template-columns:repeat(7,1fr);gap:10px;margin-bottom:18px}
+@media(max-width:980px){.kpi-strip{grid-template-columns:repeat(4,1fr)}}
+@media(max-width:560px){.kpi-strip{grid-template-columns:repeat(2,1fr)}}
+.kpi{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:11px 13px;box-shadow:var(--sh);display:flex;flex-direction:column}
+.kpi.accent{border:1.5px solid var(--accent2);background:var(--accent-bg)}
+.kpi .k-lbl{font-size:11px;color:var(--text2);font-weight:600}
+.kpi .k-val{font-size:19px;font-weight:900;letter-spacing:-.5px;margin-top:3px;line-height:1.1}
+.kpi.accent .k-val{color:var(--accent)}
+.kpi .k-unit{font-size:11px;font-weight:700;color:var(--text2);margin-left:2px}
+.kpi .k-sub{font-size:10px;color:var(--text2);margin-top:4px}
+.kpi .k-sub b{color:var(--up)}
+.why-wrap{border:1.5px dashed var(--accent2);background:var(--accent-bg);border-radius:10px;padding:15px 16px;margin-bottom:20px}
+.why-hd{font-size:12.5px;font-weight:800;color:var(--accent);margin-bottom:10px}
+.gs-cap{font-size:11.5px;font-weight:700;color:var(--accent);margin:14px 0 8px}
+.gs-cap span{color:var(--text2);font-weight:400;font-size:10.5px}
+.gsfc{width:100%;border-collapse:collapse;font-size:11.5px;margin:4px 0 6px}
+.gsfc th{background:var(--accent-bg);color:var(--accent);padding:6px 8px;font-weight:800;font-size:11px;text-align:center;border:1px solid var(--accent2)}
+.gsfc th:first-child{text-align:left}
+.gsfc td{padding:6px 8px;text-align:center;border:1px solid var(--border);font-variant-numeric:tabular-nums}
+.gsfc td:first-child{text-align:left;font-weight:700;color:var(--text2)}
+.gsfc .rev td{font-weight:900;color:var(--text);font-size:13px}
+.gsfc .rev td:first-child{font-size:11.5px;color:var(--accent)}
+.gsfc .yoy td{color:var(--up);font-weight:700;font-size:11px}
+.gsfc .yoy td:first-child{color:var(--text2);font-weight:700}
+.eng3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:14px}
+@media(max-width:760px){.eng3{grid-template-columns:1fr}}
+.eng{border:1px solid var(--border);border-top:3px solid;border-radius:10px;overflow:hidden;background:var(--card)}
+.eng-hd{padding:10px 14px;font-size:13px;font-weight:800;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.eng-hd .pct{margin-left:auto;font-size:10px;font-weight:800;color:#fff;border-radius:5px;padding:2px 8px}
+.eng-bd{padding:0 14px 14px;font-size:11.5px;color:var(--text2);line-height:1.85}
+.eng-bd b{color:var(--text)}
+.spine{border:1px solid var(--border);border-radius:9px;overflow:hidden}
+.lane{display:flex;gap:12px;align-items:stretch;padding:13px 14px;border-bottom:1px solid #f1f3f5}
+.lane:last-child{border-bottom:none}
+.lane-req{width:185px;flex-shrink:0;border-left:4px solid;padding-left:11px}
+.lr-t{font-size:12.5px;font-weight:800}
+.lr-d{font-size:10px;color:var(--text2);line-height:1.5;margin-top:3px}
+.lr-d em{font-style:normal;font-weight:700}
+.lane-arrow{display:flex;align-items:center;color:#cbd5e1;font-weight:900;font-size:17px;flex-shrink:0}
+.lane-fill{flex:1;display:flex;flex-wrap:wrap;gap:7px;align-items:center}
+.fchip{font-size:11px;font-weight:700;border-radius:6px;padding:5px 11px;border:1.5px solid;background:var(--card)}
+.lane-w{width:160px;flex-shrink:0;display:flex;flex-direction:column;gap:4px;align-items:flex-end;justify-content:center}
+@media(max-width:840px){.lane{flex-direction:column;gap:9px}.lane-req,.lane-w{width:auto}.lane-arrow{display:none}.lane-w{flex-direction:row;justify-content:flex-start}}
+.concl{margin-top:16px;border:1.5px solid var(--accent2);border-radius:9px;background:var(--accent-bg);padding:14px 16px;font-size:12px;line-height:1.95;color:var(--text)}
+.concl b{color:var(--accent-ink)}
+.sec.mid{border:1.5px solid var(--accent2);background:linear-gradient(180deg,var(--accent-bg) 0%,#fff 60%)}
+.sec.mid .sec-hd{background:var(--accent-bg)}
+.mid-thesis{font-size:13px;font-weight:800;color:var(--accent-ink);background:var(--accent-bg);border:1px solid var(--accent2);border-radius:8px;padding:13px 16px;margin-bottom:16px;line-height:1.9}
+.mid-thesis .em{color:var(--dn)}
+.cog-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+@media(max-width:840px){.cog-grid{grid-template-columns:1fr}}
+.cog-card{border:1px solid var(--border);border-radius:10px;padding:14px 14px 12px;background:var(--card);box-shadow:var(--sh);position:relative;display:flex;flex-direction:column}
+.cog-card .cog-no{position:absolute;top:-10px;left:14px;width:24px;height:24px;border-radius:50%;background:var(--accent);color:#fff;font-size:12px;font-weight:900;display:flex;align-items:center;justify-content:center;box-shadow:var(--sh)}
+.cog-card .cog-tt{font-size:13px;font-weight:800;margin:8px 0 8px;line-height:1.45;color:var(--text)}
+.cog-card .cog-tt b{color:var(--accent)}
+.cog-card .cog-body{font-size:11.5px;color:var(--text2);line-height:1.8;flex:1}
+.cog-card .cog-body b{color:var(--text)}
+.cog-card .cog-tag{margin-top:10px;font-size:10.5px;font-weight:700;color:var(--accent-ink);background:#fff;border:1px solid var(--accent2);border-radius:6px;padding:5px 9px;line-height:1.5}
+.cog-card .cog-tag .k{color:var(--text2);font-weight:400}
+</style>
+</head>
+<body>
+
+<header class="hdr">
+  <div class="hdr-l">
+    <a class="hdr-back" href="../us-mapping-dashboard.html">← 返回看板</a>
+    <div>
+      <div class="hdr-title">🔎 ASML · 阿斯麦（ASML Holding）</div>
+      <div class="hdr-sub">Euronext Amsterdam / NASDAQ · 全球唯一 EUV 光刻机供应商 · High-NA EUV 是 2nm 以下量产唯一路径 · <b>先进制程的绝对咽喉——没有 ASML 就没有 7nm 以下芯片</b></div>
+    </div>
+    <span class="badge b-ac">半导体设备 · 光刻垄断</span>
+    <span class="badge b-neu">EUV · High-NA · 装机基数复利</span>
+  </div>
+  <div class="hdr-meta">
+    更新：2026-07-23（市值实时校准）<br>模型：GS ASML Model（2026-07-16 发布）· 最新实际季度 Q2 2026
+  </div>
+</header>
+
+<div class="wrap">
+
+<!-- 估值水位 -->
+<section class="sec" style="border:1.5px solid var(--accent2)">
+  <div class="sec-hd" onclick="toggleSec(this)">
+    <div class="sec-ttl"><span style="font-size:14px">💰</span>估值水位 · GS 模型预测（欧元计价，12月结财年）</div>
+    <span class="sec-arrow">▼</span>
+  </div>
+  <div class="sec-body">
+    <div class="kpi-strip" style="grid-template-columns:repeat(6,1fr)">
+      <div class="kpi accent">
+        <div class="k-lbl">市值 Market Cap</div>
+        <div class="k-val">$730.4<span class="k-unit">bn</span></div>
+        <div class="k-sub">≈ €611.4bn（约 385M 股）</div>
+      </div>
+      <div class="kpi accent">
+        <div class="k-lbl">现价（NASDAQ ADR）</div>
+        <div class="k-val">$1,801.86</div>
+        <div class="k-sub">ASML.AS €1,589.60（1 ADR = 1 普通股）</div>
+      </div>
+      <div class="kpi">
+        <div class="k-lbl">TTM 市盈率</div>
+        <div class="k-val">57.4<span class="k-unit">×</span></div>
+        <div class="k-sub">Google Finance 滚动 P/E</div>
+      </div>
+      <div class="kpi accent">
+        <div class="k-lbl">前瞻 P/E · FY26E</div>
+        <div class="k-val">40.6<span class="k-unit">×</span></div>
+        <div class="k-sub">GS EPS €39.1；FY27E 27.8× / FY28E 20.2×</div>
+      </div>
+      <div class="kpi">
+        <div class="k-lbl">GS FY26E 营收</div>
+        <div class="k-val">€440<span class="k-unit">亿</span></div>
+        <div class="k-sub">YoY <b>+34.7%</b>；EUV+High-NA 双引擎</div>
+      </div>
+      <div class="kpi">
+        <div class="k-lbl">EV/EBITDA · FY26E</div>
+        <div class="k-val">31.8<span class="k-unit">×</span></div>
+        <div class="k-sub">FY27E 22.0× / FY28E 16.3×</div>
+      </div>
+    </div>
+
+    <div class="gs-cap" style="margin-top:4px">📊 GS 预测 & 隐含估值水位（单位：百万欧元，EPS 为欧元；估值倍数以现价 €1,589.60 / EV €601bn 静态计算）</div>
+    <table class="gsfc">
+      <thead><tr><th>指标</th><th>FY25(实际)</th><th>FY26E</th><th>FY27E</th><th>FY28E</th></tr></thead>
+      <tbody>
+        <tr class="rev"><td>营收</td><td>32,667</td><td>44,014</td><td>58,022</td><td>74,328</td></tr>
+        <tr class="yoy"><td>营收 YoY</td><td>+15.6%</td><td>+34.7%</td><td>+31.8%</td><td>+28.1%</td></tr>
+        <tr><td>EBITDA</td><td>12,328</td><td>18,904</td><td>27,389</td><td>36,981</td></tr>
+        <tr><td>营业利润(EBIT)</td><td>11,302</td><td>17,878</td><td>26,269</td><td>35,861</td></tr>
+        <tr><td>净利润</td><td>9,609</td><td>15,033</td><td>21,823</td><td>29,785</td></tr>
+        <tr><td>GS EPS（€）</td><td>24.7</td><td>39.1</td><td>57.2</td><td>78.5</td></tr>
+        <tr><td>净现金</td><td>10,207</td><td>23,119</td><td>41,302</td><td>66,928</td></tr>
+        <tr class="yoy"><td>前瞻 P/E</td><td>64.3×</td><td>40.6×</td><td>27.8×</td><td>20.2×</td></tr>
+        <tr class="yoy"><td>EV/营收</td><td>18.4×</td><td>13.7×</td><td>10.4×</td><td>8.1×</td></tr>
+        <tr class="yoy"><td>EV/EBITDA</td><td>48.8×</td><td>31.8×</td><td>22.0×</td><td>16.3×</td></tr>
+      </tbody>
+    </table>
+    <div class="note">📌 <b>估值水位解读</b>：以现价静态计算，前瞻 P/E 从 FY25 的 64.3 倍压缩至 FY28E 的 20.2 倍，EV/EBITDA 从 48.8 倍压缩至 16.3 倍——当前股价隐含市场预期未来 3 年 EPS 从 €24.7 升至 €78.5（复合增速约 +47%/年），几乎全部来自 EUV+High-NA 台数与 ASP 双升带来的营收翻倍（FY25 €327 亿 → FY28E €743 亿）叠加毛利率 52.8%→58.7% 的经营杠杆。估值消化的核心变量是 <b>AI 时代先进制程资本开支能否维持三年高增</b>，而非估值倍数本身。</div>
+    <div class="note">⚠️ <b>数据口径</b>：本模型（ASML Model.xlsx，GS 分析师 Alexander Duval，2026-07-16 发布）<b>未包含 GS 目标价 / 评级 / Key Data 页</b>，故本页不列 GS 目标价；估值倍数由模型财务预测 + 实时市值静态推算。市值/股价取自 Google Finance（2026-07-23）。Q3 2026 起为 GS 估计值。</div>
+  </div>
+</section>
+
+<!-- 定位说明 -->
+<div class="why-wrap">
+  <div class="why-hd">🧭 ASML 是什么角色？——全球唯一的 EUV 光刻机供应商，先进制程（7nm 以下）无法绕开的绝对咽喉</div>
+  <div style="font-size:11.5px;color:var(--text2);line-height:1.7">
+    芯片制造有上千道工序，光刻（把电路图案曝到晶圆上）是决定制程节点的最关键一步。<b style="color:var(--text)">EUV（极紫外光刻）是 7nm 以下量产的唯一手段，而全世界只有 ASML 一家能造 EUV 光刻机</b>——这是半导体产业链上垄断程度最高、护城河最深的单点。台积电、三星、Intel、SK 海力士要做先进逻辑或先进 DRAM/HBM，必须排队向 ASML 买机器。下一代 <b style="color:var(--text)">High-NA EUV（EXE:5000/5200）是 2nm 及以下的唯一路径</b>，单台 ASP 约 €3.5 亿，是常规 EUV 的近 2 倍。<br>
+    本页核心问题：<b style="color:var(--accent)">GS 模型把 ASML FY26-28E 营收增速给到 34.7% / 31.8% / 28.1%（三年营收翻 2.3 倍），EUV 台数 48→110、High-NA 5→16</b>——这是判断 AI 时代先进制程资本开支强度最上游、最垄断的单一信号；同时 <b style="color:var(--accent)">EUV 对华全面禁运 + DUV 浸没式收紧</b>，使 ASML 成为国产光刻替代最直接、政策确定性最高、但技术代差也最大的倒逼基准。
+  </div>
+</div>
+
+<!-- KPI -->
+<div class="kpi-ttl">关键指标 · Q2 2026 实际 + FY26E 模型预测（欧元，GS 模型口径）</div>
+<div class="kpi-strip">
+  <div class="kpi accent">
+    <div class="k-lbl">Q2'26 营收</div>
+    <div class="k-val">93.3<span class="k-unit">亿€</span></div>
+    <div class="k-sub">环比<b>+6%</b> · 同比<b>+21%</b></div>
+  </div>
+  <div class="kpi accent">
+    <div class="k-lbl">Q3'26E 营收</div>
+    <div class="k-val">115.1<span class="k-unit">亿€</span></div>
+    <div class="k-sub">同比 <b>+53%</b>（GS 模型）</div>
+  </div>
+  <div class="kpi">
+    <div class="k-lbl">Q2'26 毛利率</div>
+    <div class="k-val">54<span class="k-unit">%</span></div>
+    <div class="k-sub">FY26E 全年 55.4%，持续扩张</div>
+  </div>
+  <div class="kpi">
+    <div class="k-lbl">Q2'26 EPS</div>
+    <div class="k-val">€8.0</div>
+    <div class="k-sub">reported，环比+14%</div>
+  </div>
+  <div class="kpi">
+    <div class="k-lbl">FY26E 营收</div>
+    <div class="k-val">440<span class="k-unit">亿€</span></div>
+    <div class="k-sub">同比<b>+34.7%</b></div>
+  </div>
+  <div class="kpi">
+    <div class="k-lbl">FY26E EUV 出货</div>
+    <div class="k-val">65<span class="k-unit">台</span></div>
+    <div class="k-sub">FY25 48 台 → FY28E 110 台</div>
+  </div>
+  <div class="kpi">
+    <div class="k-lbl">FY26E High-NA</div>
+    <div class="k-val">7<span class="k-unit">台</span></div>
+    <div class="k-sub">FY25 5 台 → FY28E 16 台</div>
+  </div>
+</div>
+
+<!-- ① 业务拆解 -->
+<section class="sec">
+  <div class="sec-hd" onclick="toggleSec(this)">
+    <div class="sec-ttl"><span class="sec-num">1</span>业务拆解 · 光刻系统 / 装机服务 / 按技术代际</div>
+    <span class="sec-arrow">▼</span>
+  </div>
+  <div class="sec-body">
+
+    <div style="font-size:11px;font-weight:700;color:var(--text2);margin-bottom:12px;letter-spacing:.3px">收入结构：系统销售（周期性）+ 装机服务（经常性），单位百万欧元</div>
+    <table class="ctable">
+      <thead><tr><th>业务线</th><th class="num">FY25</th><th class="num">FY26E</th><th class="num">FY27E</th><th class="num">FY28E</th><th>说明</th></tr></thead>
+      <tbody>
+        <tr class="latest"><td><b>光刻系统（Litho Systems）</b></td><td class="num"><b>24,474</b></td><td class="num">32,708</td><td class="num">45,133</td><td class="num">59,892</td><td>系统销售主体，随 EUV/High-NA 台数与 ASP 放量</td></tr>
+        <tr><td><b>装机服务（Litho Service）</b></td><td class="num"><b>8,193</b></td><td class="num">11,306</td><td class="num">12,889</td><td class="num">14,436</td><td>随装机基数累积稳定增长，周期性远低于系统，估值压舱石</td></tr>
+        <tr><td><b>合计</b></td><td class="num"><b>32,667</b></td><td class="num">44,014</td><td class="num">58,022</td><td class="num">74,328</td><td>服务占比 ~25% → ~19%（系统超级周期期间被稀释）</td></tr>
+      </tbody>
+    </table>
+    <div class="note">📌 <b>系统 vs 服务</b>：系统销售决定短期弹性和周期性；装机服务（安装基数越大、服务收入越稳）提供高质量经常性现金流。AI 超级周期里系统收入高增，服务占比被动下降，但服务绝对额仍稳步增长（€82 亿 → €144 亿），是熊市里的缓冲垫。</div>
+
+    <div class="gs-cap" style="margin-top:16px">🔬 按技术代际拆解 · 台数 × ASP × 收入（GS 模型，台数为整机出货）</div>
+    <table class="ctable">
+      <thead><tr><th>技术代际</th><th class="num">FY24</th><th class="num">FY25</th><th class="num">FY26E</th><th class="num">FY27E</th><th class="num">FY28E</th><th>定位</th></tr></thead>
+      <tbody>
+        <tr><td>Dry DUV（台）</td><td class="num">245</td><td class="num">148</td><td class="num">260</td><td class="num">305</td><td class="num">305</td><td>成熟制程 / 中国需求为主</td></tr>
+        <tr><td>Immersion DUV（台）</td><td class="num">129</td><td class="num">131</td><td class="num">130</td><td class="num">170</td><td class="num">220</td><td>28-7nm 关键层，多重曝光受益</td></tr>
+        <tr class="latest"><td><b>EUV 0.33NA（台）</b></td><td class="num">44</td><td class="num"><b>48</b></td><td class="num"><b>65</b></td><td class="num"><b>88</b></td><td class="num"><b>110</b></td><td>7nm 以下主力，垄断核心</td></tr>
+        <tr class="latest"><td><b>High-NA EUV（台）</b></td><td class="num">2</td><td class="num"><b>5</b></td><td class="num"><b>7</b></td><td class="num"><b>8</b></td><td class="num"><b>16</b></td><td>2nm 以下唯一路径，2028 放量</td></tr>
+        <tr><td>合计出货（台）</td><td class="num">420</td><td class="num">332</td><td class="num">462</td><td class="num">571</td><td class="num">651</td><td>—</td></tr>
+        <tr><td>EUV ASP（百万€/台）</td><td class="num">196</td><td class="num">226</td><td class="num">238</td><td class="num">264</td><td class="num">272</td><td>垄断带来的持续提价能力</td></tr>
+        <tr><td>High-NA ASP（百万€/台）</td><td class="num">270</td><td class="num">310</td><td class="num">350</td><td class="num">375</td><td class="num">375</td><td>约常规 EUV 的 1.6-1.8 倍</td></tr>
+        <tr><td><b>EUV 收入（百万€）</b></td><td class="num">8,624</td><td class="num"><b>10,843</b></td><td class="num">15,470</td><td class="num">23,232</td><td class="num">29,920</td><td>系统收入增长的主引擎</td></tr>
+        <tr><td><b>High-NA 收入（百万€）</b></td><td class="num">540</td><td class="num"><b>1,550</b></td><td class="num">2,450</td><td class="num">3,000</td><td class="num">6,000</td><td>2028 翻倍，第二增长曲线</td></tr>
+      </tbody>
+    </table>
+    <div class="note">📌 <b>拐点信号</b>：EUV 台数 FY25 48 台 → FY28E 110 台（约 2.3 倍），ASP €226M → €272M；High-NA 台数 5→16 台、收入 €15.5 亿 → €60 亿。系统综合 ASP 从 FY25 €71M 升至 FY28E €90M——<b>量增 + 结构升级 + 提价三重驱动</b>，是营收翻倍和毛利率扩张的根源。Dry DUV 台数 FY25 触底 148 台后回升至 260+，主要对应成熟制程与中国需求。</div>
+  </div>
+</section>
+
+<!-- ② 技术路线与竞争地位 -->
+<section class="sec">
+  <div class="sec-hd" onclick="toggleSec(this)">
+    <div class="sec-ttl"><span class="sec-num">2</span>技术路线与垄断地位</div>
+    <span class="sec-arrow">▼</span>
+  </div>
+  <div class="sec-body">
+
+    <div class="gs-cap" style="margin-top:0">⚡ 三条核心价值线 × 景气信号 × A股映射逻辑</div>
+    <div class="eng3">
+      <div class="eng" style="border-top-color:var(--accent)">
+        <div class="eng-hd" style="color:var(--accent)">
+          🔬 EUV 0.33NA 主力放量
+          <span class="pct" style="background:var(--accent)">垄断核心</span>
+        </div>
+        <div class="eng-bd">
+          <b>地位</b>：全球唯一 EUV 供应商，7nm 以下逻辑与先进 DRAM/HBM 的必备设备，无可替代<br>
+          <b>景气</b>：EUV 台数 FY25 48 → FY28E 110 台，ASP €226M → €272M，EUV 收入 €108 亿 → €299 亿<br>
+          <b>驱动</b>：AI 算力芯片（GPU/ASIC）+ HBM 拉动先进逻辑与先进存储 capex，晶圆厂扩产直接转化为 EUV 订单<br>
+          <b style="color:var(--dn)">A股映射</b>：<span style="color:var(--dn)">EUV 对华全面禁运，国内先进制程被锁死在 DUV 路径——间接验证中芯国际先进产能扩张的设备瓶颈，也定义了国产光刻从 0 到 1 的攻坚起点</span>
+        </div>
+      </div>
+      <div class="eng" style="border-top-color:var(--warn)">
+        <div class="eng-hd" style="color:var(--warn)">
+          🚀 High-NA EUV 下一代唯一路径
+          <span class="pct" style="background:var(--warn)">2028 放量</span>
+        </div>
+        <div class="eng-bd">
+          <b>技术</b>：EXE:5000/5200，数值孔径 0.55（vs 0.33），单次曝光即可实现更小线宽，是 2nm 以下（Intel 18A/14A、台积电 A16、三星 2nm）量产必备<br>
+          <b>景气</b>：台数 FY25 5 → FY28E 16 台（翻 3 倍），ASP €310M → €375M，收入 €15.5 亿 → €60 亿<br>
+          <b>节奏</b>：2026-2027 客户导入验证，2028 起规模放量，构成第二增长曲线<br>
+          <b style="color:var(--dn)">A股映射</b>：<span style="color:var(--dn)">High-NA 是最尖端的卡脖子环节，国产差距最大；映射逻辑偏"技术代差确认"，短期对 A股无直接受益标的</span>
+        </div>
+      </div>
+      <div class="eng" style="border-top-color:var(--up)">
+        <div class="eng-hd" style="color:var(--up)">
+          🔧 装机服务复利
+          <span class="pct" style="background:var(--up)">经常性现金流</span>
+        </div>
+        <div class="eng-bd">
+          <b>模式</b>：全球数千台在役光刻机的服务、备件、升级——装机基数越大，服务收入越稳，周期性远低于系统销售<br>
+          <b>景气</b>：Litho Service 收入 €82 亿（FY25）→ €144 亿（FY28E），稳定增长<br>
+          <b>意义</b>：高毛利、可预测的经常性收入，是熊市里的估值压舱石<br>
+          <b style="color:var(--dn)">A股映射</b>：<span style="color:var(--dn)">装机基数模式国产设备尚在早期积累阶段，映射逻辑为"商业模式参照"，验证国产设备"从卖机器到卖服务"的长期路径</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 产业链层级图 -->
+    <div class="gs-cap">🗺 产业链层级 · ASML 在半导体制造价值链中的位置与对华映射</div>
+    <div class="spine">
+      <div class="lane">
+        <div class="lane-req" style="border-left-color:var(--accent)">
+          <div class="lr-t" style="color:var(--accent)">① EUV 光刻（ASML 独家）</div>
+          <div class="lr-d">7nm 以下唯一手段<br><em style="color:var(--accent)">全球唯一供应商</em></div>
+        </div>
+        <div class="lane-arrow">→</div>
+        <div class="lane-fill">
+          <span class="fchip" style="border-color:var(--accent2);color:var(--accent)">台积电（先进逻辑代工）</span>
+          <span class="fchip" style="border-color:var(--accent2);color:var(--accent)">三星 / Intel（逻辑 + 代工）</span>
+          <span class="fchip" style="border-color:var(--accent2);color:var(--accent)">SK 海力士 / 三星 / 美光（HBM/DRAM）</span>
+        </div>
+        <div class="lane-w">
+          <span style="font-size:9.5px;font-weight:700;color:var(--text2)">→ 全球先进晶圆厂</span>
+        </div>
+      </div>
+      <div class="lane">
+        <div class="lane-req" style="border-left-color:var(--warn)">
+          <div class="lr-t" style="color:var(--warn)">② 出口管制封锁</div>
+          <div class="lr-d">EUV 全面禁华 + DUV 浸没式收紧<br><em style="color:var(--warn)">中国锁死在 DUV 多重曝光</em></div>
+        </div>
+        <div class="lane-arrow">→</div>
+        <div class="lane-fill">
+          <span class="fchip" style="border-color:var(--neu-bd);color:var(--neu-ink)">国产光刻从 0 到 1 攻坚</span>
+          <span class="fchip" style="border-color:var(--neu-bd);color:var(--neu-ink)">DUV 多重曝光 → 刻蚀/薄膜步骤倍增</span>
+        </div>
+        <div class="lane-w">
+          <span style="font-size:9.5px;font-weight:700;color:var(--text2)">→ 双重倒逼</span>
+        </div>
+      </div>
+      <div class="lane">
+        <div class="lane-req" style="border-left-color:var(--up)">
+          <div class="lr-t" style="color:var(--up)">③ 国产光刻链承接</div>
+          <div class="lr-d">整机 + 核心部件 + 光刻材料<br><em style="color:var(--up)">卡脖子替代入口</em></div>
+        </div>
+        <div class="lane-arrow">→</div>
+        <div class="lane-fill">
+          <span class="fchip" style="border-color:#86efac;color:var(--up)">上海微电子 SMEE / 华卓精科（整机/部件）</span>
+          <span class="fchip" style="border-color:#86efac;color:var(--up)">南大光电/彤程新材（光刻胶）</span>
+          <span class="fchip" style="border-color:#86efac;color:var(--up)">芯源微/华特气体（涂胶显影/光刻气）</span>
+        </div>
+        <div class="lane-w">
+          <span style="font-size:9.5px;font-weight:700;color:var(--up)">→ A股映射标的</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="concl">
+      🎯 <b>为什么 ASML 是先进制程资本开支最上游的观察窗口？</b>——EUV 是 7nm 以下唯一手段，且全球独家，其台数/订单几乎等价于"全球先进制程扩产强度"。<br>
+      <b>景气方向</b>：GS 模型给出 FY26-28E 营收翻 2.3 倍、EUV 台数 48→110、High-NA 5→16，隐含 AI 驱动先进制程 capex 三年高增。<br>
+      <b>映射特殊性</b>：ASML 对华 EUV 全面禁运——它的景气对 A股光刻链是"倒逼替代"而非"景气传导"，与 AMAT（份额转移）、存储（价格传导）的映射逻辑本质不同。国产光刻是确定性最高（政策）、周期最长（技术代差最大）的攻坚方向。
+    </div>
+
+  </div>
+</section>
+
+<!-- ③ 财务模型详情 -->
+<section class="sec">
+  <div class="sec-hd" onclick="toggleSec(this)">
+    <div class="sec-ttl"><span style="font-size:14px">📊</span>财务模型详情 · GS ASML Model（FY23 → FY28E）</div>
+    <span class="sec-arrow">▼</span>
+  </div>
+  <div class="sec-body">
+
+    <div class="gs-cap" style="margin-top:0">📈 年度损益与现金流 · 单位百万欧元（FY26E 起为 GS 估计）</div>
+    <table class="ctable">
+      <thead><tr><th>指标</th><th class="num">FY23</th><th class="num">FY24</th><th class="num">FY25</th><th class="num">FY26E</th><th class="num">FY27E</th><th class="num">FY28E</th></tr></thead>
+      <tbody>
+        <tr><td><b>营收</b></td><td class="num">27,559</td><td class="num">28,263</td><td class="num">32,667</td><td class="num">44,014</td><td class="num">58,022</td><td class="num">74,328</td></tr>
+        <tr><td>营收 YoY</td><td class="num">+30.2%</td><td class="num">+2.6%</td><td class="num" style="color:var(--up)">+15.6%</td><td class="num" style="color:var(--up)">+34.7%</td><td class="num" style="color:var(--up)">+31.8%</td><td class="num" style="color:var(--up)">+28.1%</td></tr>
+        <tr><td>毛利率</td><td class="num">51.3%</td><td class="num">51.3%</td><td class="num">52.8%</td><td class="num">55.4%</td><td class="num">57.5%</td><td class="num">58.7%</td></tr>
+        <tr><td>营业利润</td><td class="num">9,042</td><td class="num">9,023</td><td class="num">11,302</td><td class="num">17,878</td><td class="num">26,269</td><td class="num">35,861</td></tr>
+        <tr><td>营业利润率</td><td class="num">32.8%</td><td class="num">31.9%</td><td class="num">34.6%</td><td class="num" style="color:var(--up)">40.6%</td><td class="num" style="color:var(--up)">45.3%</td><td class="num" style="color:var(--up)">48.2%</td></tr>
+        <tr><td>净利润</td><td class="num">7,839</td><td class="num">7,572</td><td class="num">9,609</td><td class="num">15,033</td><td class="num">21,823</td><td class="num">29,785</td></tr>
+        <tr><td>EPS（€）</td><td class="num">19.9</td><td class="num">19.2</td><td class="num">24.7</td><td class="num">39.1</td><td class="num">57.2</td><td class="num">78.5</td></tr>
+        <tr><td>EBITDA</td><td class="num">9,782</td><td class="num">9,941</td><td class="num">12,328</td><td class="num">18,904</td><td class="num">27,389</td><td class="num">36,981</td></tr>
+        <tr><td>自由现金流</td><td class="num">3,288</td><td class="num">9,099</td><td class="num">11,085</td><td class="num">20,796</td><td class="num">25,727</td><td class="num">33,146</td></tr>
+        <tr><td>净现金</td><td class="num">2,373</td><td class="num">9,059</td><td class="num">10,207</td><td class="num">23,119</td><td class="num">41,302</td><td class="num">66,928</td></tr>
+      </tbody>
+    </table>
+    <div class="note">📌 <b>经营杠杆</b>：营收 FY25 → FY28E 增长 2.3 倍，营业利润却增长 3.2 倍（€113 亿 → €359 亿），OpM 从 34.6% 扩张至 48.2%——垄断定价 + 规模效应带来极强的利润率放大。FCF 从 €111 亿升至 €331 亿，净现金三年累积至 €669 亿。<b>注意 FY24 营收仅 +2.6%</b>，说明 ASML 营收具明显周期性，当前模型的三年高增是 AI 驱动的乐观情景，需持续验证。</div>
+
+    <div class="gs-cap" style="margin-top:16px">📉 季度营收轨迹 · 25Q1 → 26Q4E（单位百万欧元；26Q3 起为 GS 估计）</div>
+    <table class="ctable">
+      <thead><tr><th>财季</th><th class="num">营收</th><th class="num">YoY</th><th class="num">毛利率</th><th class="num">营业利润率</th><th class="num">EPS(€)</th><th class="num">EUV 台数</th></tr></thead>
+      <tbody>
+        <tr><td>25Q1</td><td class="num">7,742</td><td class="num" style="color:var(--up)">+46%</td><td class="num">54%</td><td class="num">35%</td><td class="num">6</td><td class="num">14</td></tr>
+        <tr><td>25Q2</td><td class="num">7,692</td><td class="num" style="color:var(--up)">+23%</td><td class="num">54%</td><td class="num">35%</td><td class="num">6</td><td class="num">11</td></tr>
+        <tr><td>25Q3</td><td class="num">7,516</td><td class="num">+1%</td><td class="num">52%</td><td class="num">33%</td><td class="num">5</td><td class="num">9</td></tr>
+        <tr><td>25Q4</td><td class="num">9,718</td><td class="num" style="color:var(--up)">+5%</td><td class="num">52%</td><td class="num">35%</td><td class="num">7</td><td class="num">14</td></tr>
+        <tr><td>26Q1</td><td class="num">8,767</td><td class="num" style="color:var(--up)">+13%</td><td class="num">53%</td><td class="num">36%</td><td class="num">7</td><td class="num">14</td></tr>
+        <tr class="latest"><td><b>26Q2 ★</b></td><td class="num"><b>9,326</b></td><td class="num" style="color:var(--up)"><b>+21%</b></td><td class="num"><b>54%</b></td><td class="num"><b>37%</b></td><td class="num"><b>8</b></td><td class="num"><b>15</b></td></tr>
+        <tr><td>26Q3E</td><td class="num">11,511<span class="tag tag-est" style="margin-left:3px">估计</span></td><td class="num" style="color:var(--up)">+53%</td><td class="num">56%</td><td class="num">42%</td><td class="num">11</td><td class="num">17</td></tr>
+        <tr><td>26Q4E</td><td class="num">14,409<span class="tag tag-est" style="margin-left:3px">估计</span></td><td class="num" style="color:var(--up)">+48%</td><td class="num">57%</td><td class="num">44%</td><td class="num">14</td><td class="num">19</td></tr>
+      </tbody>
+    </table>
+    <div class="note">📌 <b>陡峭加速</b>：营收同比从 26Q2 的 +21% 跳升至 26Q3E 的 +53%、26Q4E 的 +48%，EUV 季度台数 15→17→19——GS 模型给出的下半年加速非常陡峭，主要由 EUV 交付节奏前置 + High-NA 起量驱动。<b>26Q3 起为估计值，实际以季度业绩/订单披露为准</b>；ASML 订单（bookings）与 backlog 是验证该加速能否兑现的最关键先行指标，本模型未提供该两项数据。</div>
+  </div>
+</section>
+
+<!-- ④ 认知沉淀 -->
+<section class="sec mid">
+  <div class="sec-hd" onclick="toggleSec(this)">
+    <div class="sec-ttl"><span style="font-size:14px">🧭</span>认知沉淀 · 为什么 ASML 是先进制程 capex 最上游、垄断程度最高的观察窗口</div>
+    <span class="sec-arrow">▼</span>
+  </div>
+  <div class="sec-body">
+
+    <div class="mid-thesis">
+      核心论点：ASML 是全球唯一的 EUV 光刻机供应商，High-NA EUV 是 2nm 以下量产的唯一路径——先进制程无法绕开的绝对咽喉。GS 模型给出 FY26-28E 营收 34.7%/31.8%/28.1% 的三年高增（营收翻 2.3 倍），EUV 台数 48→110、High-NA 5→16、ASP 持续上行，是判断 AI 时代先进制程资本开支强度最上游、最垄断的单一信号。<span class="em">而 EUV 对华全面禁运 + DUV 收紧，使 ASML 同时成为国产光刻替代最直接、政策确定性最高、但技术代差也最大的倒逼基准。</span>
+    </div>
+
+    <div class="cog-grid">
+
+      <div class="cog-card">
+        <div class="cog-no">1</div>
+        <div class="cog-tt">垄断定价权：<b>ASP 持续上行是利润率扩张的根源</b></div>
+        <div class="cog-body">
+          EUV ASP €176M（FY23）→ €272M（FY28E），High-NA €310M → €375M（约常规 EUV 的 1.6-1.8 倍），系统综合 ASP €47M → €90M。垄断带来的不只是量，更是持续提价能力——这是毛利率 52.8%→58.7%、OpM 34.6%→48.2% 大幅扩张的直接来源。
+        </div>
+        <div class="cog-tag"><span class="k">观察指标：</span> EUV/High-NA ASP 季度变化 + 新一代 EXE 机型定价</div>
+      </div>
+
+      <div class="cog-card">
+        <div class="cog-no">2</div>
+        <div class="cog-tt">装机服务复利：<b>周期里的估值压舱石</b></div>
+        <div class="cog-body">
+          Litho Service 收入 €82 亿（FY25）→ €144 亿（FY28E），随全球数千台在役光刻机的装机基数累积稳定增长，周期性远低于系统销售。这是高毛利、可预测的经常性现金流，在系统销售回落的年份（如 FY24 营收仅 +2.6%）提供缓冲。
+        </div>
+        <div class="cog-tag"><span class="k">跟踪重点：</span> Service 收入增速 + 装机基数（installed base）扩张</div>
+      </div>
+
+      <div class="cog-card">
+        <div class="cog-no">3</div>
+        <div class="cog-tt">High-NA 拐点：<b>2nm 以下唯一路径，2028 放量</b></div>
+        <div class="cog-body">
+          High-NA EUV（EXE:5000/5200）台数 FY25 5 → FY28E 16 台（翻 3 倍），收入 €15.5 亿 → €60 亿；是 Intel 18A/14A、台积电 A16、三星 2nm 量产的必备设备。2026-2027 客户导入验证，2028 起规模放量，构成第二增长曲线。
+        </div>
+        <div class="cog-tag"><span class="k">观察指标：</span> High-NA 台数 + 客户导入（Intel/TSMC/Samsung）节奏</div>
+      </div>
+
+      <div class="cog-card">
+        <div class="cog-no">4</div>
+        <div class="cog-tt">出口管制：<b>国产光刻最强倒逼，但技术代差最大</b></div>
+        <div class="cog-body">
+          EUV 对华全面禁运、DUV 浸没式（NXT:2000i 等）出口收紧，使中国先进制程被锁死在 DUV 多重曝光路径。一方面倒逼国产光刻（上海微电子/华卓精科）从 0 到 1 攻坚；另一方面 DUV 多重曝光使刻蚀/薄膜步骤成倍增加，间接放大国产设备（北方华创/中微）需求。
+        </div>
+        <div class="cog-tag"><span class="k">验证路径：</span> 上海微电子 28nm 设备交付 + 国产光刻胶先进制程认证进展</div>
+      </div>
+
+      <div class="cog-card">
+        <div class="cog-no">5</div>
+        <div class="cog-tt">周期性风险：<b>模型 FY26-28 极度乐观，需验证</b></div>
+        <div class="cog-body">
+          GS 给出 FY26E 营收 +34.7%、26Q3E 同比 +53% 的陡峭加速，隐含 AI 驱动先进制程 capex 三年翻 2.3 倍。这是卖方乐观情景——ASML 营收有明显周期性（FY24 仅 +2.6%），需以季度订单（bookings）/backlog 和晶圆厂 capex 指引持续验证。本模型未提供订单/backlog 数据，是使用时的关键盲区。
+        </div>
+        <div class="cog-tag"><span class="k">使用提示：</span> 26Q3 起为 GS 估计；订单/backlog 需另行获取交叉验证</div>
+      </div>
+
+      <div class="cog-card">
+        <div class="cog-no">6</div>
+        <div class="cog-tt">映射特殊性：<b>卡脖子替代 ≠ 景气传导</b></div>
+        <div class="cog-body">
+          ASML 景气好，对 A股光刻链是"倒逼替代"而非"直接受益"，与 AMAT（份额转移）、存储（价格传导）的映射逻辑本质不同。国产光刻是确定性最高（政策驱动）、周期最长（技术代差最大）的攻坚方向，映射强度中低但战略权重高。使用时须区分"景气传导型"与"卡脖子替代型"映射。
+        </div>
+        <div class="cog-tag"><span class="k">使用提示：</span> ASML 属"卡脖子替代型"映射，勿套用景气正相关逻辑</div>
+      </div>
+
+    </div>
+
+  </div>
+</section>
+
+<!-- A股映射结论 -->
+<section class="sec mid" style="border:1.5px solid var(--accent2);background:linear-gradient(180deg,var(--accent-bg) 0%,#fff 60%)">
+  <div class="sec-hd" onclick="toggleSec(this)" style="background:var(--accent-bg)">
+    <div class="sec-ttl"><span style="font-size:14px">🎯</span>A股映射 & 对应交易</div>
+    <span class="sec-arrow">▼</span>
+  </div>
+  <div class="sec-body">
+
+    <div class="concl">
+      💡 <b>核心判断</b>：ASML 是先进制程的绝对咽喉，EUV 对华全面禁运使国产光刻成为"确定性最高、周期最长"的卡脖子攻坚——<b>映射逻辑是"倒逼替代"而非"景气传导"</b>。ASML 财务超级周期本身对 A股光刻链是压力信号（差距被拉大），真正的 A股机会来自：① 国产光刻整机/核心部件从 0 到 1；② 光刻材料（光刻胶/特气）国产替代；③ EUV 禁运下 DUV 多重曝光间接放大的刻蚀/薄膜设备需求。
+    </div>
+
+    <div class="gs-cap" style="margin-top:14px">A股映射标的 & 传导路径</div>
+    <table class="ctable">
+      <thead><tr><th>映射方向</th><th>代表标的</th><th>传导路径</th></tr></thead>
+      <tbody>
+        <tr><td><b>光刻机整机</b></td><td>上海微电子 SMEE（未上市）</td><td>28nm DUV 浸没式国产攻坚，对标 ASML 被禁运的核心——国产从 0 到 1 的起点，政策确定性最高、技术周期最长</td></tr>
+        <tr><td><b>核心部件（双工件台）</b></td><td>华卓精科（拟科创板 IPO）</td><td>光刻机双工件台此前高度依赖 ASML，是国产整机的关键卡点部件</td></tr>
+        <tr><td><b>光刻胶（ArF/KrF）</b></td><td>南大光电（300346）/ 彤程新材（603650，北京科华）/ 华懋科技（603306，参股徐州博康）</td><td>先进制程光刻胶国产化率极低，ArF/EUV 胶是最硬的卡脖子材料，弹性最大</td></tr>
+        <tr><td><b>涂胶显影（track）</b></td><td>芯源微（688037）</td><td>前道涂胶显影国产唯一，与光刻机配套的 litho cell 环节</td></tr>
+        <tr><td><b>电子特气 / 光刻气</b></td><td>华特气体（688268）</td><td>光刻用特种气体国产替代，配套材料端</td></tr>
+        <tr><td><b>DUV 多重曝光间接受益</b></td><td>北方华创（002371）/ 中微公司（688012）</td><td>EUV 禁运 → 中芯 DUV 多重曝光 → 刻蚀/薄膜步骤成倍增加，间接放大设备需求（详见国产半导体看板）</td></tr>
+      </tbody>
+    </table>
+    <div class="note">📌 <b>映射强度</b>：中低——ASML 全球垄断且对华全面禁运，A股映射是"卡脖子攻坚"而非"景气受益"，实际替代需以国产整机/材料的认证突破逐一验证，技术代差决定了这是长周期主题。相关国产替代逻辑详见 <a href="../../industry-dashboards/domestic-semiconductor/domestic-semiconductor-dashboard.html">国产半导体行业看板</a>。</div>
+    <div class="note">📌 <b>对应交易</b>：买<b>光刻胶国产替代弹性标的（南大光电 / 彤程新材 / 华懋科技）</b> + DUV 多重曝光间接受益的<b>刻蚀/薄膜设备（北方华创 / 中微公司）</b>；催化 = 上海微电子 28nm 设备交付验证、美国光刻出口管制新规、国产光刻胶先进制程认证突破；风险 = 国产光刻进度长期低于预期（技术代差大）、EUV 禁运边际放松、AI capex 周期回落拖累全球 litho 景气。</div>
+  </div>
+</section>
+
+<div class="foot">数据来源：ASML Model.xlsx（高盛证券模型，分析师 Alexander Duval，2026-07-16 发布）· 市值/股价取自 Google Finance（2026-07-23）　·　模型未含 GS 目标价/评级/订单/backlog，本页估值倍数由财务预测 + 实时市值静态推算，FY26E 起为 GS 估计值，实际以季度业绩/订单披露为准　·　更新：2026-07-23</div>
+
+</div>
+
+<script>
+function toggleSec(hd){
+  hd.classList.toggle('collapsed');
+  hd.nextElementSibling.classList.toggle('collapsed');
+}
+</script>
+
+</body>
+</html>
