@@ -280,6 +280,47 @@ code{font-size:10px;background:var(--tag-bg);color:var(--tag);padding:1px 5px;bo
 @media(max-width:900px){.overseas-hero{grid-template-columns:1fr}.overseas-stamp{text-align:left}.overseas-kpis{grid-template-columns:repeat(2,1fr)}.overseas-toolbar{align-items:stretch;flex-direction:column}.overseas-search{min-width:0}.overseas-block-head{align-items:flex-start;flex-direction:column}.overseas-block-head p{text-align:left}}
 @media(max-width:560px){.overseas-hero,.overseas-body{padding:16px}.overseas-title{font-size:20px}.overseas-kpis{grid-template-columns:1fr 1fr}.market-filter button{padding:6px 9px}.overseas-source{display:block}}
 
+/* 首屏结论：AI设备增量与高盛A股映射 */
+.equipment-conclusion{--sum:#0d4d5d;--sum2:#17718a;position:relative;overflow:hidden;margin:0 0 18px;border:1px solid #b5d4dc;border-radius:16px;background:linear-gradient(135deg,#f7fcfd 0%,#eaf5f7 60%,#fffaf0 100%);box-shadow:0 14px 34px rgba(13,77,93,.12)}
+.equipment-conclusion:after{content:"";position:absolute;right:-110px;top:-150px;width:310px;height:310px;border-radius:50%;background:radial-gradient(circle,rgba(225,165,54,.16),rgba(225,165,54,0) 68%);pointer-events:none}
+.conclusion-head{position:relative;padding:19px 23px 14px;border-bottom:1px solid rgba(13,77,93,.14)}
+.conclusion-eyebrow{display:flex;align-items:center;gap:8px;color:var(--sum);font-size:9.5px;font-weight:800;letter-spacing:.13em;text-transform:uppercase}
+.conclusion-eyebrow:before{content:"";width:27px;height:2px;background:#d99a27}
+.conclusion-title{margin-top:5px;color:#102d3a;font-family:"Songti SC","STSong","Noto Serif SC",serif;font-size:24px;line-height:1.25}
+.conclusion-sub{margin-top:5px;color:#5a727c;font-size:11.5px}
+.conclusion-grid{position:relative;display:grid;grid-template-columns:minmax(0,1.08fr) minmax(0,.92fr);gap:11px;padding:13px 23px}
+.conclusion-panel{border:1px solid rgba(13,77,93,.14);border-radius:11px;background:rgba(255,255,255,.84);padding:13px 14px}
+.conclusion-panel h3{display:flex;align-items:center;gap:7px;margin-bottom:9px;color:var(--sum);font-size:12px}
+.conclusion-panel h3 span{display:grid;place-items:center;width:21px;height:21px;border-radius:7px;background:var(--sum);color:#fff;font-size:10px}
+.priority-list,.mapping-list{display:grid;gap:5px}
+.priority-row{display:grid;grid-template-columns:22px minmax(0,1fr) auto;gap:7px;align-items:center;padding:6px 8px;border-radius:7px;background:#f4f8f9}
+.priority-no{color:#c47b05;font-size:10px;font-weight:900}
+.priority-copy{color:#294d5a;font-size:10.5px;line-height:1.35}
+.priority-copy b{color:#123b4a}
+.priority-map{display:block;margin-top:2px;color:#397086;font-size:9px;font-weight:700}
+.priority-map:before{content:"A股：";color:#b87508}
+.priority-tag{color:#71878f;font-size:9px;white-space:nowrap}
+.phase-strip{display:flex;align-items:center;gap:5px;margin-top:8px;padding:7px 8px;border-radius:7px;background:#e8f2f5;color:#536f79;font-size:9.5px;font-weight:700}
+.phase-strip i{color:#d08a14;font-size:12px;font-style:normal}
+.mapping-row{display:grid;grid-template-columns:112px 18px minmax(0,1fr) auto;gap:6px;align-items:center;padding:6px 8px;border-bottom:1px solid #e7eef0;color:#385a66;font-size:10.5px}
+.mapping-row:last-child{border-bottom:0}
+.mapping-source{color:#6b7f87;font-weight:700}
+.mapping-arrow{color:#d28c17;text-align:center}
+.mapping-target{color:#123b4a;font-weight:800}
+.mapping-note{padding:1px 5px;border-radius:10px;background:#fff4d9;color:#9a650b;font-size:8.5px;white-space:nowrap}
+.core-picks{margin-top:8px;padding:8px 9px;border-left:3px solid #d89a2d;border-radius:7px;background:#fff8e9;color:#604d2f;font-size:10px;line-height:1.45}
+.core-picks b{color:#8e5b06}
+.capex-conversion{position:relative;margin:0 23px 9px;padding:10px 12px;border:1px solid #c9dfe5;border-radius:9px;background:rgba(255,255,255,.82)}
+.capex-conversion h3{margin-bottom:7px;color:var(--sum);font-size:11px}
+.capex-cycle-note{margin-left:6px;color:#7a8d95;font-size:9px;font-weight:500}
+.capex-conversion-list{display:grid;grid-template-columns:1fr;gap:5px}
+.capex-conversion-row{padding:7px 9px;border-left:3px solid #d99a27;border-radius:6px;background:#f3f8f9;color:#486772;font-size:9.5px;line-height:1.45}
+.capex-conversion-row b{color:#c62828;font-size:10.5px}
+.conclusion-warning{position:relative;margin:0 23px 18px;padding:9px 12px;border-radius:8px;background:#103f52;color:#dcecf0;font-size:10.5px;line-height:1.5}
+.conclusion-warning strong{color:#ffd174}
+@media(max-width:900px){.conclusion-grid{grid-template-columns:1fr}.conclusion-title{font-size:21px}.capex-conversion-list{grid-template-columns:1fr}}
+@media(max-width:560px){.conclusion-head,.conclusion-grid{padding-left:15px;padding-right:15px}.capex-conversion,.conclusion-warning{margin-left:15px;margin-right:15px}.priority-row{grid-template-columns:20px minmax(0,1fr)}.priority-tag{grid-column:2}.mapping-row{grid-template-columns:92px 15px minmax(0,1fr)}.mapping-note{grid-column:3;justify-self:start}}
+
 </style>
 </head>
 <body>
@@ -572,6 +613,46 @@ code{font-size:10px;background:var(--tag-bg);color:var(--tag);padding:1px 5px;bo
 </section>
 
 
+<!-- ── 首屏结论：AI设备增量与高盛A股映射 ── -->
+<section class="equipment-conclusion" id="equipment-conclusion" aria-labelledby="equipment-conclusion-title">
+  <div class="conclusion-head">
+    <div class="conclusion-eyebrow">AI Equipment · Investment Summary</div>
+    <h2 class="conclusion-title" id="equipment-conclusion-title">AI设备增量与高盛A股映射</h2>
+    <p class="conclusion-sub">先看工艺增量，再看股票赔率：存储率先兑现，先进逻辑接力。</p>
+  </div>
+  <div class="conclusion-grid">
+    <article class="conclusion-panel">
+      <h3><span>01</span>AI时代：设备类别优先级</h3>
+      <div class="priority-list">
+        <div class="priority-row"><span class="priority-no">01</span><div class="priority-copy"><b>薄膜沉积＋刻蚀</b>：存储与先进逻辑双主线<span class="priority-map">北方华创 · 中微公司 · 拓荆科技</span></div><span class="priority-tag">核心增量</span></div>
+        <div class="priority-row"><span class="priority-no">02</span><div class="priority-copy"><b>量测检测／过程控制</b>：制程复杂度持续征税<span class="priority-map">中科飞测 · 精测电子</span></div><span class="priority-tag">长周期</span></div>
+        <div class="priority-row"><span class="priority-no">03</span><div class="priority-copy"><b>先进封装／精密加工／测试</b>：HBM物理瓶颈<span class="priority-map">光力科技 · 华海清科 · 长川科技</span></div><span class="priority-tag">高弹性</span></div>
+        <div class="priority-row"><span class="priority-no">04</span><div class="priority-copy"><b>EUV光刻</b>：确定性锚，未必是弹性冠军<span class="priority-map">芯源微（非直接对标）</span></div><span class="priority-tag">高壁垒</span></div>
+      </div>
+      <div class="phase-strip"><span>2026–27 DRAM</span><i>→</i><span>2027–28 NAND</span><i>→</i><span>2028+ 先进逻辑</span></div>
+    </article>
+    <article class="conclusion-panel">
+      <h3><span>02</span>高盛推荐：A股映射</h3>
+      <div class="mapping-list">
+        <div class="mapping-row"><span class="mapping-source">Tokyo Electron</span><span class="mapping-arrow">→</span><span class="mapping-target">北方华创</span><span class="mapping-note">平台型</span></div>
+        <div class="mapping-row"><span class="mapping-source">Ebara</span><span class="mapping-arrow">→</span><span class="mapping-target">华海清科</span><span class="mapping-note">CMP</span></div>
+        <div class="mapping-row"><span class="mapping-source">Disco</span><span class="mapping-arrow">→</span><span class="mapping-target">光力科技／华海清科</span><span class="mapping-note">切磨抛</span></div>
+        <div class="mapping-row"><span class="mapping-source">Lasertec</span><span class="mapping-arrow">→</span><span class="mapping-target">中科飞测／精测电子</span><span class="mapping-note">非直接对标</span></div>
+      </div>
+      <div class="core-picks"><b>核心映射：</b>北方华创 · 华海清科 · 光力科技<br><b>扩展观察：</b>中微公司 · 拓荆科技 · 芯源微 · 盛美上海</div>
+    </article>
+  </div>
+  <div class="capex-conversion">
+    <h3>CapEx 换算：AI资本开支 → 半导体设备资本开支<span class="capex-cycle-note">（注：两个 CapEx 会有周期错位）</span></h3>
+    <div class="capex-conversion-list">
+      <div class="capex-conversion-row"><b>1GW = 500亿元 AI CapEx</b> ≈ <b>75亿元半导体设备 CapEx</b></div>
+      <div class="capex-conversion-row"><b>全球 2027E：12,000亿元 AI CapEx</b> ≈ <b>1,800亿元半导体设备 CapEx</b></div>
+      <div class="capex-conversion-row"><b>国内 2027E：6,000亿元 AI CapEx</b> ≈ <b>900亿元半导体设备 CapEx</b></div>
+    </div>
+  </div>
+  <div class="conclusion-warning"><strong>关键提醒：</strong>行业受益 ≠ 股票推荐。订单增长能否转化为毛利率、EPS与估值空间，才决定最终赔率。</div>
+</section>
+
 <!-- ── 海外半导体设备公司：财务、估值与A股映射 ── -->
 <section class="overseas-lens" id="overseas-equipment-companies" aria-labelledby="overseas-equipment-title">
   <div class="overseas-hero">
@@ -819,9 +900,14 @@ function toggleSec(st) {
   if (body && body.classList.contains('sec-body')) body.classList.toggle('collapsed');
 }
 
+const conclusionSection = document.getElementById('equipment-conclusion');
 const overseasSection = document.getElementById('overseas-equipment-companies');
 const dashboardWrap = document.querySelector('.wrap');
-if (overseasSection && dashboardWrap) dashboardWrap.insertBefore(overseasSection, dashboardWrap.firstElementChild);
+if (conclusionSection && dashboardWrap) dashboardWrap.prepend(conclusionSection);
+if (overseasSection && dashboardWrap) {
+  if (conclusionSection) conclusionSection.insertAdjacentElement('afterend', overseasSection);
+  else dashboardWrap.prepend(overseasSection);
+}
 
 const overseasEquipmentDataNode = document.getElementById('overseas-equipment-data');
 if (overseasEquipmentDataNode) {
