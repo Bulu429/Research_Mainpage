@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>半导体设备看板</title>
+<title>国产半导体设备看板</title>
 <style>
 :root {
   --bg:#f8f9fa; --card:#fff; --border:#e9ecef;
@@ -15,312 +15,114 @@
 }
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;background:var(--bg);color:var(--text);font-size:14px;line-height:1.6}
-.hdr{background:var(--card);border-bottom:1px solid var(--border);padding:14px 28px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:var(--sh)}
+.hdr{background:var(--card);border-bottom:1px solid var(--border);padding:14px 28px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:300;box-shadow:var(--sh)}
 .hdr-l{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
 .hdr-title{font-size:19px;font-weight:700}
 .hdr-sub{font-size:11px;color:var(--text2)}
 .back-link{display:inline-flex;align-items:center;gap:4px;font-size:11px;color:var(--text2);text-decoration:none;padding:4px 10px;border:1px solid var(--border);border-radius:6px;background:var(--bg);white-space:nowrap}.back-link:hover{color:var(--accent);border-color:var(--accent)}
 .badge-warn{display:inline-flex;align-items:center;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600;background:var(--warn-bg);color:var(--warn);border:1px solid #fcd34d}
-.badge-tag{display:inline-flex;align-items:center;padding:3px 10px;border-radius:12px;font-size:11px;background:var(--tag-bg);color:var(--tag);border:1px solid #c4b5fd}
 .hdr-meta{font-size:11px;color:var(--text2);text-align:right}
-.wrap{max-width:1360px;margin:0 auto;padding:20px 28px}
-.st{font-size:13px;font-weight:700;margin-bottom:11px;padding-bottom:6px;border-bottom:2px solid var(--accent);display:flex;align-items:center;gap:6px;cursor:pointer;user-select:none;justify-content:space-between}
-.st-arrow{font-size:13px;color:var(--text2);transition:transform 0.25s ease;display:inline-block;flex-shrink:0}
-.sec-body{overflow:hidden;transition:max-height 0.35s cubic-bezier(0.4,0,0.2,1),opacity 0.25s ease;max-height:9999px;opacity:1}
-.sec-body.collapsed{max-height:0 !important;opacity:0}
-.st.collapsed .st-arrow{transform:rotate(-90deg)}
+.wrap{max-width:1360px;margin:0 auto;padding:20px 28px 60px}
+.st{font-size:13px;font-weight:700;margin:22px 0 11px;padding-bottom:6px;border-bottom:2px solid var(--accent);display:flex;align-items:baseline;gap:10px;justify-content:space-between}
+.st .sub{font-weight:400;font-size:11px;color:var(--text2);text-align:right}
 .card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:16px 18px;box-shadow:var(--sh);margin-bottom:16px}
-.ctable{width:100%;border-collapse:collapse;margin-bottom:14px;font-size:12px}
-.ctable th{text-align:left;padding:6px 8px;font-size:10px;font-weight:600;color:var(--text2);background:var(--bg);border-bottom:1px solid var(--border);white-space:nowrap}
-.ctable td{padding:8px 8px;border-bottom:1px solid var(--border);vertical-align:middle}
-.ctable tr:last-child td{border-bottom:none}
-.ctable tr:hover td{background:#fafbfc}
-.ctable .num{text-align:right;font-variant-numeric:tabular-nums}
-code{font-size:10px;background:var(--tag-bg);color:var(--tag);padding:1px 5px;border-radius:3px}
-.seg-sum{font-size:12px;color:var(--text2);background:var(--bg);border-radius:6px;padding:10px 12px;border-left:3px solid var(--accent);margin-top:8px}
-.a-super{display:inline-block;padding:1px 7px;border-radius:3px;font-size:10px;font-weight:700;background:var(--up-bg);color:var(--up);border:1px solid #86efac}
-.a-meet{display:inline-block;padding:1px 7px;border-radius:3px;font-size:10px;font-weight:700;background:var(--tag-bg);color:var(--tag);border:1px solid #c4b5fd}
-.a-miss{display:inline-block;padding:1px 7px;border-radius:3px;font-size:10px;font-weight:700;background:var(--warn-bg);color:var(--warn);border:1px solid #fcd34d}
-.bar-wrap{display:flex;align-items:center;gap:8px;margin:5px 0}
-.bar-lbl{width:150px;font-size:11px;flex-shrink:0}
-.bar-track{flex:1;height:16px;background:var(--bg);border-radius:4px;overflow:hidden;display:flex}
-.bar-seg{height:100%;display:flex;align-items:center;justify-content:center;font-size:9px;color:#fff;font-weight:600;white-space:nowrap;overflow:hidden}
-.src-note{font-size:10px;color:var(--text2);margin-bottom:14px}
-.report-brief{position:relative;overflow:hidden;margin-bottom:22px;border:1px solid #cbdcf5;border-radius:16px;background:linear-gradient(145deg,#f9fcff 0%,#eef5ff 54%,#fff 100%);box-shadow:0 12px 32px rgba(30,78,136,.10)}
-.report-brief:before{content:"";position:absolute;width:340px;height:340px;border-radius:50%;right:-170px;top:-210px;background:radial-gradient(circle,rgba(37,99,235,.14),rgba(37,99,235,0) 68%);pointer-events:none}
-.report-hero{position:relative;padding:22px 24px 18px;border-bottom:1px solid rgba(30,78,136,.14);display:grid;grid-template-columns:minmax(0,1fr) auto;gap:22px;align-items:end}
-.report-kicker{display:flex;align-items:center;gap:8px;margin-bottom:7px;color:#1e5c9f;font-size:10px;font-weight:800;letter-spacing:.12em;text-transform:uppercase}
-.report-kicker:before{content:"";width:26px;height:2px;background:#1e5c9f}
-.report-title{max-width:950px;color:#10233f;font-family:"Songti SC","STSong","Noto Serif SC",serif;font-size:25px;line-height:1.3;letter-spacing:-.02em}
-.report-deck{max-width:900px;margin-top:8px;color:#49627f;font-size:12px}
-.report-stamp{min-width:172px;padding:11px 14px;border:1px solid rgba(30,92,159,.2);border-radius:10px;background:rgba(255,255,255,.66);color:#49627f;font-size:10px;text-align:right}
-.report-stamp strong{display:block;color:#1e5c9f;font-size:12px}
-.report-body{position:relative;padding:18px 24px 22px}
-.metric-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-bottom:14px}
-.metric{min-height:104px;padding:14px;border:1px solid rgba(30,92,159,.14);border-radius:11px;background:rgba(255,255,255,.78)}
-.metric-label{color:#647b95;font-size:10px;font-weight:700}
-.metric-value{margin:2px 0 3px;color:#123e70;font-size:24px;font-weight:800;font-variant-numeric:tabular-nums;letter-spacing:-.03em}
-.metric-value small{font-size:12px;letter-spacing:0}
-.metric-note{color:#64748b;font-size:10px;line-height:1.45}
-.logic-strip{display:grid;grid-template-columns:1fr 28px 1fr 28px 1fr 28px 1fr;align-items:stretch;margin-bottom:14px}
-.logic-node{padding:11px 12px;border:1px solid #dbe7f6;border-radius:9px;background:#fff}
-.logic-node b{display:block;color:#173c67;font-size:12px}
-.logic-node span{color:#718096;font-size:10px}
-.logic-arrow{display:flex;align-items:center;justify-content:center;color:#4d79aa;font-weight:800}
-.brief-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:12px}
-.brief-panel{padding:15px 16px;border:1px solid rgba(30,92,159,.13);border-radius:11px;background:rgba(255,255,255,.82)}
-.brief-panel h3{margin-bottom:9px;color:#163d68;font-size:12px}
-.mix-row{display:grid;grid-template-columns:90px 1fr 42px;gap:8px;align-items:center;margin:7px 0;color:#53677d;font-size:10px}
-.mix-track{height:9px;overflow:hidden;border-radius:20px;background:#e5edf7}
-.mix-fill{height:100%;border-radius:20px;background:linear-gradient(90deg,#164e87,#4a90d9)}
-.scenario-table{width:100%;border-collapse:collapse;font-size:10px}
-.scenario-table th{padding:6px;color:#647b95;text-align:right;border-bottom:1px solid #dce7f4}.scenario-table th:first-child,.scenario-table td:first-child{text-align:left}
-.scenario-table td{padding:7px 6px;text-align:right;border-bottom:1px solid #edf2f8;font-variant-numeric:tabular-nums}
-.scenario-table tr:last-child td{border-bottom:0}
-.scenario-table .base{color:#123e70;font-weight:800;background:#eef5ff}
-.wafer-table{width:100%;border-collapse:collapse;font-size:10.5px}
-.wafer-table th{padding:7px 6px;background:#1f5795;color:#fff;text-align:right;font-weight:600;white-space:nowrap}
-.wafer-table th:first-child,.wafer-table td:first-child{text-align:left}
-.wafer-table td{padding:7px 6px;text-align:right;border-bottom:1px solid #e6edf6;font-variant-numeric:tabular-nums}
-.wafer-table tbody tr:nth-child(even){background:#f7f9fc}
-.wafer-table .total{color:#123e70;font-weight:800;background:#eaf3ff}
-.elasticity-table{width:100%;border-collapse:collapse;font-size:10px}
-.elasticity-table th{padding:7px 8px;background:#1f5795;color:#fff;text-align:right;font-weight:600}
-.elasticity-table th:first-child,.elasticity-table td:first-child{text-align:left}
-.elasticity-table td{padding:8px;border-bottom:1px solid #e6edf6;text-align:right;font-variant-numeric:tabular-nums}
-.elasticity-table tbody tr:last-child td{border-bottom:0}
-.elasticity-table .eps{color:#166534;font-weight:800}
-.elasticity-table .pe{color:#8a4b08;font-weight:700}
-.outlook-grid{display:grid;grid-template-columns:1.35fr .65fr;gap:12px;margin-top:12px;align-items:stretch}
-.capex-table{width:100%;border-collapse:collapse;font-size:10.5px}
-.capex-table th{padding:7px 8px;background:#1f5795;color:#fff;text-align:left;font-weight:600}
-.capex-table td{padding:9px 8px;border-bottom:1px solid #e6edf6;vertical-align:top;color:#40566f;line-height:1.55}
-.capex-table tbody tr:last-child td{border-bottom:0}
-.capex-table td:first-child{width:78px;color:#173c67;font-weight:800;white-space:nowrap}
-.capex-table td:nth-child(2){width:160px;color:#223f60}
-.capex-table strong{color:#123e70}
-.capex-source{font-size:10.5px;line-height:1.55}.capex-source a{color:#1e5c9f;text-decoration:none;border-bottom:1px dotted #8bb2dc}
-.insight-points{display:grid;gap:7px;margin-top:11px}
-.insight-point{display:grid;grid-template-columns:22px 1fr;gap:8px;align-items:start;padding:10px 11px;border-radius:8px;background:#f3f7fc;color:#465d76;font-size:11.5px;line-height:1.55}
-.insight-point span{display:flex;width:20px;height:20px;align-items:center;justify-content:center;border-radius:50%;background:#1f5795;color:#fff;font-weight:800}
-.insight-point strong{color:#173c67}
-.jp-brief{--jp:#825a2c;--jp2:#c4975c;border-color:#dfd3bd;background:linear-gradient(145deg,#fffdf8 0%,#f5f0e6 54%,#fff 100%)}
-.jp-brief:before{background:radial-gradient(circle,rgba(180,125,62,.16),rgba(180,125,62,0) 68%)}
-.jp-brief .report-kicker{color:var(--jp)}
-.jp-brief .report-kicker:before{background:var(--jp)}
-.jp-brief .report-title{color:#332718}
-.jp-brief .report-deck{color:#6c5c48}
-.jp-brief .report-stamp{border-color:rgba(130,90,44,.22);color:#766550}
-.jp-brief .report-stamp strong,.jp-brief .metric-value,.jp-brief .brief-panel h3{color:var(--jp)}
-.jp-brief .metric{border-color:rgba(130,90,44,.16)}
-.jp-main-grid{display:grid;grid-template-columns:.78fr 1.22fr;gap:12px}
-.jp-quadrants{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
-.jp-quadrant{padding:10px;border:1px solid #eadfce;border-radius:9px;background:#fffdf9;min-height:90px}
-.jp-quadrant b{display:block;color:#5e4021;font-size:10px;margin-bottom:3px}
-.jp-quadrant strong{display:block;color:#2f4968;font-size:11px;margin-bottom:3px}
-.jp-quadrant span{display:block;color:#756957;font-size:9px;line-height:1.45}
-.jp-target-table{width:100%;border-collapse:collapse;font-size:9px}
-.jp-target-table th{padding:6px;background:#825a2c;color:#fff;text-align:right;font-weight:600;white-space:nowrap}
-.jp-target-table th:first-child,.jp-target-table td:first-child{text-align:left}
-.jp-target-table td{padding:5px 6px;border-bottom:1px solid #eee6da;text-align:right;font-variant-numeric:tabular-nums}
-.jp-target-table tbody tr:nth-child(even){background:#fbf8f2}
-.jp-target-table .buy{color:#166534;font-weight:800}.jp-target-table .neutral{color:#6b7280}.jp-target-table .sell{color:#b91c1c;font-weight:700}
-.jp-target-table .up{color:#166534;font-weight:800}.jp-target-table .down{color:#b91c1c;font-weight:800}
-.jp-company-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-top:12px}
-.jp-company{padding:11px 12px;border:1px solid #eadfce;border-radius:9px;background:rgba(255,255,255,.84)}
-.jp-company-top{display:flex;align-items:baseline;justify-content:space-between;gap:8px;margin-bottom:5px}
-.jp-company-top b{color:#5e4021;font-size:12px}.jp-company-top span{color:#166534;font-size:11px;font-weight:800}
-.jp-company p{color:#6c6255;font-size:9px;line-height:1.5}
-.jp-company em{display:block;margin-top:5px;color:#8b5e34;font-size:9px;font-style:normal}
-.jp-chain{display:grid;grid-template-columns:repeat(5,1fr);gap:0;margin-top:12px}
-.jp-chain-node{position:relative;padding:10px 13px;background:#fffdf9;border-top:1px solid #e7d8c1;border-bottom:1px solid #e7d8c1;color:#6d6254;font-size:9px;text-align:center}
-.jp-chain-node:first-child{border-left:1px solid #e7d8c1;border-radius:9px 0 0 9px}.jp-chain-node:last-child{border-right:1px solid #e7d8c1;border-radius:0 9px 9px 0}
-.jp-chain-node:not(:last-child):after{content:"→";position:absolute;right:-8px;top:50%;z-index:2;transform:translateY(-50%);color:#a4743d;font-weight:800}
-.jp-chain-node b{display:block;color:#5e4021;font-size:10px}
-.jp-monitor-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}
-.jp-checks{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
-.jp-check{padding:8px 9px;border-left:2px solid #b88951;background:#faf7f1;color:#695f52;font-size:9px;line-height:1.45}
-.jp-check b{display:block;color:#543b20}
-.jp-risk-list{display:grid;gap:6px}
-.jp-risk{padding:7px 9px;border-radius:7px;background:#fff5f3;color:#7f4b43;font-size:9px}
-.jp-verdict{margin-top:12px;padding:11px 13px;border-radius:9px;background:#5e4021;color:#f8eddd;font-size:11px}
-.jp-verdict strong{color:#fff}
-.watch-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;margin-top:10px}
-.watch{padding:9px 10px;border-left:2px solid #4a80b9;background:#f5f8fc;color:#53677d;font-size:10px}
-.watch b{display:block;color:#213f60;font-size:10px}
-.brief-callout{margin-top:12px;padding:11px 13px;border-radius:9px;background:#123e70;color:#dcecff;font-size:11px}
-.brief-callout strong{color:#fff}
-.brief-foot{display:flex;justify-content:space-between;gap:16px;margin-top:10px;color:#718096;font-size:9px}
-@media(max-width:900px){.report-hero{grid-template-columns:1fr}.report-stamp{text-align:left}.metric-grid{grid-template-columns:repeat(2,1fr)}.logic-strip{grid-template-columns:1fr}.logic-arrow{min-height:18px;transform:rotate(90deg)}.brief-grid,.outlook-grid,.jp-main-grid,.jp-monitor-grid{grid-template-columns:1fr}.jp-company-grid{grid-template-columns:repeat(2,1fr)}.jp-chain{grid-template-columns:1fr}.jp-chain-node{border:1px solid #e7d8c1;border-radius:0}.jp-chain-node:first-child{border-radius:9px 9px 0 0}.jp-chain-node:last-child{border-radius:0 0 9px 9px}.jp-chain-node:not(:last-child):after{content:"↓";right:50%;top:auto;bottom:-11px;transform:translateX(50%)}.watch-grid{grid-template-columns:1fr}}
-@media(max-width:560px){.wrap{padding:14px}.report-hero,.report-body{padding:16px}.report-title{font-size:20px}.metric-grid,.jp-company-grid,.jp-quadrants,.jp-checks{grid-template-columns:1fr}.brief-foot{display:block}.report-stamp{min-width:0}.jp-target-table{font-size:8px}}
+.alert{border:1px solid #fcd34d;background:var(--warn-bg);border-radius:10px;padding:12px 16px;font-size:12px;color:#8a5a08;margin-bottom:18px}
+.alert b{color:#7c4a06}
+.alert code{background:rgba(255,255,255,.6);padding:0 4px;border-radius:3px;font-size:11px}
+.alert-scope{border:1px solid #fca5a5;background:var(--dn-bg);border-radius:10px;padding:12px 16px;font-size:12.5px;color:#991b1b;margin-bottom:14px}
+.alert-scope b{color:#7f1d1d}
+.seg-sum{font-size:11.5px;color:var(--text2);background:var(--bg);border-radius:6px;padding:10px 12px;border-left:3px solid var(--accent);margin-top:10px}
 
-/* 第二篇报告：提高小字可读性 */
-.jp-brief .metric-label,.jp-brief .metric-note{font-size:11.5px;line-height:1.5}
-.jp-brief .jp-quadrant b{font-size:11px}
-.jp-brief .jp-quadrant strong{font-size:11.5px}
-.jp-brief .jp-quadrant span{font-size:10.5px;line-height:1.55}
-.jp-brief .jp-target-table{font-size:10.5px}
-.jp-brief .jp-target-table td{padding:6px}
-.jp-brief .jp-company p,.jp-brief .jp-company em{font-size:10.5px;line-height:1.55}
-.jp-brief .jp-chain-node,.jp-brief .jp-check,.jp-brief .jp-risk{font-size:10.5px;line-height:1.5}
-.jp-brief .src-note,.jp-brief .brief-foot{font-size:10px;line-height:1.5}
-@media(max-width:560px){.jp-brief .jp-target-table{font-size:9.5px}}
+/* 输入区 */
+.in-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px}
+.fab{border:1px solid var(--border);border-radius:10px;padding:13px 15px}
+.fab-h{display:flex;align-items:center;justify-content:space-between;margin-bottom:9px}
+.fab-h b{font-size:13px}
+.mode{display:flex;border:1px solid var(--border);border-radius:6px;overflow:hidden}
+.mode button{border:0;background:#fff;font-size:10px;padding:3px 9px;cursor:pointer;color:var(--text2);font-family:inherit}
+.mode button.on{background:var(--accent);color:#fff;font-weight:600}
+.row{display:flex;align-items:center;gap:8px;margin-bottom:6px;font-size:11.5px}
+.row label{width:120px;color:var(--text2);flex-shrink:0}
+.row input{width:92px;padding:3px 7px;border:1px solid var(--border);border-radius:5px;font-size:12px;font-family:inherit;text-align:right;font-variant-numeric:tabular-nums}
+.row input:focus{outline:2px solid #c4b5fd;border-color:var(--accent)}
+.row .u{color:var(--text2);font-size:10.5px}
+.wfe-out{margin-top:9px;padding-top:8px;border-top:1px dashed var(--border);font-size:11.5px;display:flex;justify-content:space-between}
+.wfe-out b{color:var(--accent);font-size:14px;font-variant-numeric:tabular-nums}
+.gparams{display:flex;flex-wrap:wrap;gap:18px;align-items:center;margin-top:14px;padding-top:13px;border-top:1px solid var(--border)}
+.gparams .row{margin:0}.gparams .row label{width:auto}
 
-/* 新增研究增量：WFE基准路径、存储领先指标、日本物理瓶颈外延 */
-.delta-grid{display:grid;grid-template-columns:1.08fr .92fr;gap:12px;margin-top:12px}
-.benchmark-strip{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:7px}
-.benchmark-year{position:relative;padding:10px 9px;border:1px solid #dce8f5;border-radius:8px;background:#f8fbff}
-.benchmark-year:not(:last-child):after{content:"→";position:absolute;right:-8px;top:50%;z-index:2;transform:translateY(-50%);color:#4f7fb3;font-weight:800}
-.benchmark-year span{display:block;color:#6a7e94;font-size:10px;font-weight:700}
-.benchmark-year b{display:block;margin-top:2px;color:#123e70;font-size:17px;font-variant-numeric:tabular-nums}
-.benchmark-year em{display:block;color:#718096;font-size:9.5px;font-style:normal}
-.scenario-bridge{display:grid;grid-template-columns:1fr auto 1fr;gap:9px;align-items:center;margin-top:9px;padding:9px 10px;border-radius:8px;background:#eef5ff;color:#53677d;font-size:10.5px;line-height:1.45}
-.scenario-bridge div{display:grid;gap:2px}
-.scenario-bridge div:last-child{text-align:right}
-.scenario-bridge b{color:#173e6b;font-size:12px}
-.scenario-bridge i{color:#3271b5;font-style:normal;font-weight:800}
-.china-track{margin-top:9px;padding-top:9px;border-top:1px dashed #cbd9e9}
-.china-track-head{display:flex;justify-content:space-between;gap:10px;color:#173e6b;font-size:10.5px;font-weight:800}
-.china-track-head span{color:#6b7f94;font-weight:500}
-.china-years{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;margin-top:7px}
-.china-year{padding:7px 5px;border-radius:6px;background:#f5f8fc;text-align:center;color:#53677d;font-size:9.5px}
-.china-year b{display:block;color:#1f5795;font-size:11px}
-.lead-kpis{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
-.lead-kpi{padding:9px 10px;border-left:3px solid #2f70b7;border-radius:7px;background:#f5f8fc}
-.lead-kpi b{display:block;color:#154579;font-size:16px;line-height:1.1}
-.lead-kpi span{display:block;margin-top:3px;color:#5f7185;font-size:10px;line-height:1.4}
-.evidence-chain{display:grid;grid-template-columns:repeat(6,1fr);margin-top:9px;border:1px solid #dbe6f2;border-radius:8px;background:#fff;overflow:hidden}
-.evidence-chain span{position:relative;padding:8px 4px;color:#53677d;font-size:9.5px;text-align:center}
-.evidence-chain span:not(:last-child){border-right:1px solid #e3ebf4}
-.evidence-chain span:not(:last-child):after{content:"›";position:absolute;right:-4px;top:50%;z-index:2;transform:translateY(-50%);color:#2f70b7;font-size:16px;font-weight:800}
-.delta-note{margin-top:8px;color:#687b90;font-size:10px;line-height:1.5}
-.jp-extension{margin-top:12px;padding:14px 15px;border:1px solid #e2d2bb;border-radius:11px;background:rgba(255,253,248,.88)}
-.jp-extension h3{margin-bottom:9px;color:#825a2c;font-size:13px}
-.jp-extension-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
-.jp-extension-card{padding:10px;border-top:3px solid #b88951;border-radius:7px;background:#fff;color:#6c6255}
-.jp-extension-card b{display:block;color:#5e4021;font-size:10.5px;margin-bottom:3px}
-.jp-extension-card strong{display:block;color:#304b68;font-size:11.5px;margin-bottom:4px}
-.jp-extension-card span{display:block;font-size:10.5px;line-height:1.5}
-.jp-extension-rule{margin-top:9px;padding:9px 11px;border-radius:8px;background:#f5eee3;color:#6a573f;font-size:10.5px;line-height:1.5}
-.jp-extension-rule strong{color:#5e4021}
-@media(max-width:900px){.delta-grid{grid-template-columns:1fr}.jp-extension-grid{grid-template-columns:repeat(2,1fr)}}
-@media(max-width:560px){.benchmark-strip,.china-years,.lead-kpis,.jp-extension-grid{grid-template-columns:1fr 1fr}.benchmark-year:not(:last-child):after{display:none}.evidence-chain{grid-template-columns:repeat(3,1fr)}.evidence-chain span{border-bottom:1px solid #e3ebf4}.scenario-bridge{grid-template-columns:1fr}.scenario-bridge div:last-child{text-align:left}.scenario-bridge i{display:none}}
+/* 矩阵表（大类口径） */
+.scroll{overflow-x:auto;border:1px solid var(--border);border-radius:8px;background:#fff}
+table.mx{border-collapse:separate;border-spacing:0;font-size:12px;width:100%}
+table.mx th,table.mx td{padding:5px 8px;border-bottom:1px solid var(--border);border-right:1px solid var(--border)}
+table.mx thead th{position:sticky;top:0;z-index:3;background:#f1f3f5;font-size:10.5px;font-weight:600;color:var(--text);text-align:center;white-space:nowrap}
+table.mx thead th.hasdetail{cursor:help;border-bottom:2px solid #c4b5fd}
+table.mx thead th.hasdetail:hover{background:var(--tag-bg);color:var(--tag)}
+table.mx thead th .cnt{display:block;font-size:9px;font-weight:400;color:var(--text2)}
+table.mx thead th.hasdetail:hover .cnt{color:var(--tag)}
+table.mx th.rowh{position:sticky;left:0;z-index:2;background:#fff;text-align:left;font-weight:600;font-size:12px;min-width:132px;box-shadow:1px 0 0 var(--border)}
+table.mx thead th.corner{position:sticky;left:0;z-index:4;background:#f1f3f5;text-align:left;min-width:132px}
+table.mx td{text-align:right;font-variant-numeric:tabular-nums}
+table.mx tbody tr:hover td{background:#fafbfc}
+table.mx tbody tr:hover th.rowh{background:#fafbfc}
+.cin{width:52px;border:0;background:transparent;text-align:right;font-size:12px;font-family:inherit;font-variant-numeric:tabular-nums;padding:1px 3px;border-radius:3px;color:var(--text)}
+.cin:focus{outline:1.5px solid var(--accent);background:#fff}
+.cin.z{color:#ced4da}
+td.hascell{cursor:help}
+td.hascell:hover{background:var(--tag-bg)!important;box-shadow:inset 0 0 0 1px #c4b5fd}
+tr.sumrow td,tr.sumrow th{background:#f8f9fa;font-weight:700;border-top:2px solid var(--border)}
+tr.sumrow td.bad{color:var(--dn)}
+tr.tamrow td,tr.tamrow th.rowh{background:var(--tag-bg);color:var(--tag);border-top:2px solid var(--accent)}
+tr.tamrow td{font-size:12.5px}
+tr.rate th.rowh{background:var(--tag-bg);color:var(--tag)}
+tr.rate td{background:var(--tag-bg);font-weight:600}
+.unl{color:var(--text2)}
+.unl:after{content:" ·未上市";font-size:9px;color:#adb5bd}
 
-.gw-status{font-size:11.5px;line-height:1.55;color:#465d76}
-.gw-status .evidence-red{color:#c62828;font-weight:800}
+/* 浮窗 */
+#pop{position:fixed;z-index:500;display:none;max-width:560px;background:#fff;border:1px solid #c4b5fd;border-radius:10px;box-shadow:0 12px 34px rgba(30,20,60,.18);padding:12px 14px;font-size:11.5px;pointer-events:none}
+#pop h4{font-size:12.5px;margin-bottom:2px;color:var(--tag)}
+#pop .pmeta{font-size:10px;color:var(--text2);margin-bottom:8px}
+#pop table{border-collapse:collapse;width:100%;font-size:11px}
+#pop th{text-align:left;padding:3px 6px;font-size:9.5px;font-weight:600;color:var(--text2);background:var(--bg);border-bottom:1px solid var(--border);white-space:nowrap}
+#pop td{padding:3px 6px;border-bottom:1px solid #f1f3f5;white-space:nowrap}
+#pop td.n{text-align:right;font-variant-numeric:tabular-nums}
+#pop tr:last-child td{border-bottom:0}
+#pop .pnote{margin-top:7px;font-size:10px;color:var(--warn);background:var(--warn-bg);border-radius:4px;padding:5px 7px}
 
-.capex-table .capex-num{color:#c62828;font-weight:800}
 
-/* 海外设备公司总览：盈利预测、估值与A股映射 */
-.overseas-lens{--ov:#0f4c5c;--ov2:#176b87;--ov-ink:#102a3a;position:relative;overflow:hidden;margin:0 0 22px;border:1px solid #b9d7df;border-radius:16px;background:linear-gradient(145deg,#f8fcfd 0%,#edf7f8 52%,#fff 100%);box-shadow:0 14px 36px rgba(15,76,92,.11)}
-.overseas-lens:before{content:"";position:absolute;right:-150px;top:-230px;width:390px;height:390px;border-radius:50%;background:radial-gradient(circle,rgba(23,107,135,.16),rgba(23,107,135,0) 68%);pointer-events:none}
-.overseas-hero{position:relative;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:20px;align-items:end;padding:22px 24px 17px;border-bottom:1px solid rgba(15,76,92,.14)}
-.overseas-kicker{display:flex;align-items:center;gap:8px;margin-bottom:7px;color:var(--ov);font-size:10px;font-weight:800;letter-spacing:.12em;text-transform:uppercase}
-.overseas-kicker:before{content:"";width:26px;height:2px;background:var(--ov)}
-.overseas-title{color:var(--ov-ink);font-family:"Songti SC","STSong","Noto Serif SC",serif;font-size:25px;line-height:1.28;letter-spacing:-.02em}
-.overseas-deck{max-width:940px;margin-top:8px;color:#526d78;font-size:12px}
-.overseas-stamp{min-width:190px;padding:11px 14px;border:1px solid rgba(15,76,92,.2);border-radius:10px;background:rgba(255,255,255,.7);color:#607984;font-size:10px;text-align:right}
-.overseas-stamp strong{display:block;color:var(--ov);font-size:12px}
-.overseas-body{position:relative;padding:18px 24px 22px}
-.overseas-kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px;margin-bottom:12px}
-.overseas-kpi{padding:12px 13px;border:1px solid rgba(15,76,92,.14);border-radius:10px;background:rgba(255,255,255,.82)}
-.overseas-kpi span{display:block;color:#68808b;font-size:10.5px;font-weight:700}
-.overseas-kpi b{display:block;margin-top:1px;color:var(--ov);font-size:21px;font-variant-numeric:tabular-nums}
-.overseas-kpi em{display:block;color:#758993;font-size:9.5px;font-style:normal}
-.overseas-toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px;padding:9px 10px;border:1px solid #d6e7eb;border-radius:10px;background:rgba(255,255,255,.78)}
-.market-filter{display:flex;gap:5px}
-.market-filter button{appearance:none;border:1px solid #c8dde3;border-radius:7px;background:#fff;color:#536e79;padding:6px 12px;font:inherit;font-size:11px;font-weight:700;cursor:pointer;transition:.18s ease}
-.market-filter button:hover{border-color:#71a8b7;color:var(--ov)}
-.market-filter button.active{border-color:var(--ov);background:var(--ov);color:#fff;box-shadow:0 4px 10px rgba(15,76,92,.18)}
-.overseas-search{display:flex;align-items:center;gap:8px;min-width:330px}
-.overseas-search label{color:#718791;font-size:10.5px;white-space:nowrap}
-.overseas-search input{width:100%;border:1px solid #c8dde3;border-radius:7px;background:#fff;padding:6px 10px;color:#24414d;font:inherit;font-size:11px;outline:none}
-.overseas-search input:focus{border-color:#4e95a8;box-shadow:0 0 0 3px rgba(23,107,135,.1)}
-.overseas-count{color:#718791;font-size:10px;white-space:nowrap}
-.overseas-block{margin-top:12px;padding:14px;border:1px solid rgba(15,76,92,.14);border-radius:11px;background:rgba(255,255,255,.86)}
-.overseas-block-head{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;margin-bottom:9px}
-.overseas-block-head h3{color:var(--ov);font-size:13px}
-.overseas-block-head p{color:#718791;font-size:10px;text-align:right}
-.overseas-table-shell{overflow:auto;max-height:500px;border:1px solid #d8e7eb;border-radius:9px;background:#fff;scrollbar-color:#9ec1ca #edf4f6;scrollbar-width:thin}
-.overseas-table-shell.mapping{max-height:610px}
-.overseas-table{width:100%;min-width:1080px;border-collapse:separate;border-spacing:0;font-size:10.5px}
-.overseas-table:not(.mapping-table){min-width:880px;table-layout:fixed}
-.overseas-table:not(.mapping-table) th:nth-child(1){width:58px}
-.overseas-table:not(.mapping-table) th:nth-child(2){width:180px}
-.overseas-table:not(.mapping-table) th:nth-child(3){width:88px}
-.overseas-table:not(.mapping-table) th:nth-child(10){width:76px}
-.overseas-table.mapping-table{min-width:0;table-layout:fixed}
-.overseas-table.mapping-table th:nth-child(1){width:58px}
-.overseas-table.mapping-table th:nth-child(2){width:130px}
-.overseas-table.mapping-table th:nth-child(3){width:92px}
-.overseas-table.mapping-table th:nth-child(4){width:84px}
-.overseas-table.mapping-table th:nth-child(5),.overseas-table.mapping-table th:nth-child(6){width:31%}
-.overseas-table th{position:sticky;top:0;z-index:4;padding:8px 7px;border-right:1px solid rgba(255,255,255,.18);background:#145f75;color:#fff;text-align:right;font-weight:700;white-space:nowrap}
-.overseas-table th:first-child,.overseas-table th:nth-child(2),.overseas-table th:nth-child(3){text-align:left}
-.overseas-table td{padding:8px 7px;border-bottom:1px solid #e5eef1;color:#405965;text-align:right;vertical-align:middle;font-variant-numeric:tabular-nums}
-.overseas-table td:first-child,.overseas-table td:nth-child(2),.overseas-table td:nth-child(3){text-align:left}
-.overseas-table tbody tr:nth-child(even) td{background:#f7fafb}
-.overseas-table tbody tr:hover td{background:#eef7f8}
-.overseas-table .company-cell b{display:block;color:#183d4b;font-size:11px}
-.overseas-table .company-cell span{display:block;color:#7a8d95;font-size:9.5px}
-.overseas-table .company-cell .gs-tag{display:inline-block;margin-left:5px;padding:1px 5px;border:1px solid #d8a51d;border-radius:999px;background:#fff7d6;color:#8b5b00;font-size:8px;font-weight:800;letter-spacing:.05em;vertical-align:1px}
-.overseas-table .company-cell b a.company-link{color:var(--accent);text-decoration:none;border-bottom:1px dashed var(--accent)}
-.overseas-table .company-cell b a.company-link:hover{border-bottom-style:solid}
-.overseas-table .company-cell b a.company-link::after{content:"↗";font-size:9px;margin-left:2px;vertical-align:1px}
-.overseas-table .ticker{color:#23596b;font-weight:700;white-space:nowrap}
-.overseas-table .market-pill{display:inline-block;min-width:34px;padding:1px 6px;border-radius:10px;background:#e4f1f4;color:#15596e;text-align:center;font-size:9px;font-weight:800}
-.overseas-table .market-pill.jp{background:#f5ede2;color:#805b31}
-.overseas-table .ret-pos{color:#b42318;font-weight:800}.overseas-table .ret-neg{color:#027a48;font-weight:800}
-.overseas-table .pe-cell{color:#8a4b08;font-weight:700}.overseas-table .empty{color:#a3b0b6}
-.overseas-table.mapping-table td{padding:10px 8px;line-height:1.5;vertical-align:top;overflow-wrap:anywhere}
-.overseas-table.mapping-table td:nth-child(5),.overseas-table.mapping-table td:nth-child(6){min-width:0;text-align:left}
-.overseas-table.mapping-table td:nth-child(6){color:#2f5361}
-.overseas-source{display:flex;justify-content:space-between;gap:14px;margin-top:10px;color:#6f848d;font-size:9.5px;line-height:1.5}
-.overseas-source strong{color:#365e6d}
-@media(max-width:900px){.overseas-hero{grid-template-columns:1fr}.overseas-stamp{text-align:left}.overseas-kpis{grid-template-columns:repeat(2,1fr)}.overseas-toolbar{align-items:stretch;flex-direction:column}.overseas-search{min-width:0}.overseas-block-head{align-items:flex-start;flex-direction:column}.overseas-block-head p{text-align:left}}
-@media(max-width:560px){.overseas-hero,.overseas-body{padding:16px}.overseas-title{font-size:20px}.overseas-kpis{grid-template-columns:1fr 1fr}.market-filter button{padding:6px 9px}.overseas-source{display:block}}
+/* ⑥ 交叉验证 */
+.cc-warn{border:1px solid #fcd34d;background:var(--warn-bg);border-radius:7px;padding:9px 12px;font-size:11px;color:#8a5a08;margin-bottom:11px}
+.cc-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:9px;flex-wrap:wrap}
+.cc-head b{font-size:12px}
+.cc-head input{padding:4px 9px;border:1px solid var(--border);border-radius:6px;font-size:11.5px;font-family:inherit;width:230px}
+.cc-head input:focus{outline:2px solid #c4b5fd;border-color:var(--accent)}
+table.res td.dev{font-weight:700}
+.dev-ok{color:var(--up)}.dev-mid{color:var(--warn)}.dev-bad{color:var(--dn)}.dev-na{color:#adb5bd}
+.cc-note{font-size:10px;color:var(--text2);line-height:1.45;white-space:normal;max-width:330px}
+table.res tr.grp-h td{background:var(--bg);font-weight:700;font-size:11px;color:var(--text2)}
+.flag{display:inline-block;padding:0 4px;border-radius:3px;font-size:9px;font-weight:700;background:var(--dn-bg);color:var(--dn);border:1px solid #fecaca}
+#cc-all td{white-space:normal}
+#cc-all td.sp{font-size:10.5px;color:var(--text2);line-height:1.45;min-width:300px}
+.cc-scroll{max-height:520px;overflow-y:auto;border:1px solid var(--border);border-radius:8px}
+.cc-scroll table.res thead th{position:sticky;top:0;z-index:2}
 
-/* 首屏结论：AI设备增量与高盛A股映射 */
-.equipment-conclusion{--sum:#0d4d5d;--sum2:#17718a;position:relative;overflow:hidden;margin:0 0 18px;border:1px solid #b5d4dc;border-radius:16px;background:linear-gradient(135deg,#f7fcfd 0%,#eaf5f7 60%,#fffaf0 100%);box-shadow:0 14px 34px rgba(13,77,93,.12)}
-.equipment-conclusion:after{content:"";position:absolute;right:-110px;top:-150px;width:310px;height:310px;border-radius:50%;background:radial-gradient(circle,rgba(225,165,54,.16),rgba(225,165,54,0) 68%);pointer-events:none}
-.conclusion-head{position:relative;padding:19px 23px 14px;border-bottom:1px solid rgba(13,77,93,.14)}
-.conclusion-eyebrow{display:flex;align-items:center;gap:8px;color:var(--sum);font-size:9.5px;font-weight:800;letter-spacing:.13em;text-transform:uppercase}
-.conclusion-eyebrow:before{content:"";width:27px;height:2px;background:#d99a27}
-.conclusion-title{margin-top:5px;color:#102d3a;font-family:"Songti SC","STSong","Noto Serif SC",serif;font-size:24px;line-height:1.25}
-.conclusion-sub{margin-top:5px;color:#5a727c;font-size:11.5px}
-.conclusion-grid{position:relative;display:grid;grid-template-columns:minmax(0,1.08fr) minmax(0,.92fr);gap:11px;padding:13px 23px}
-.conclusion-panel{border:1px solid rgba(13,77,93,.14);border-radius:11px;background:rgba(255,255,255,.84);padding:13px 14px}
-.conclusion-panel h3{display:flex;align-items:center;gap:7px;margin-bottom:9px;color:var(--sum);font-size:12px}
-.conclusion-panel h3 span{display:grid;place-items:center;width:21px;height:21px;border-radius:7px;background:var(--sum);color:#fff;font-size:10px}
-.priority-list,.mapping-list{display:grid;gap:5px}
-.priority-row{display:grid;grid-template-columns:22px minmax(0,1fr) auto;gap:7px;align-items:center;padding:6px 8px;border-radius:7px;background:#f4f8f9}
-.priority-no{color:#c47b05;font-size:10px;font-weight:900}
-.priority-copy{color:#294d5a;font-size:10.5px;line-height:1.35}
-.priority-copy b{color:#123b4a}
-.priority-map{display:block;margin-top:2px;color:#397086;font-size:9px;font-weight:700}
-.priority-map:before{content:"A股：";color:#b87508}
-.priority-tag{color:#71878f;font-size:9px;white-space:nowrap}
-.phase-strip{display:flex;align-items:center;gap:5px;margin-top:8px;padding:7px 8px;border-radius:7px;background:#e8f2f5;color:#536f79;font-size:9.5px;font-weight:700}
-.phase-strip i{color:#d08a14;font-size:12px;font-style:normal}
-.mapping-row{display:grid;grid-template-columns:112px 18px minmax(0,1fr) auto;gap:6px;align-items:center;padding:6px 8px;border-bottom:1px solid #e7eef0;color:#385a66;font-size:10.5px}
-.mapping-row:last-child{border-bottom:0}
-.mapping-source{color:#6b7f87;font-weight:700}
-.mapping-arrow{color:#d28c17;text-align:center}
-.mapping-target{color:#123b4a;font-weight:800}
-.mapping-note{padding:1px 5px;border-radius:10px;background:#fff4d9;color:#9a650b;font-size:8.5px;white-space:nowrap}
-.core-picks{margin-top:8px;padding:8px 9px;border-left:3px solid #d89a2d;border-radius:7px;background:#fff8e9;color:#604d2f;font-size:10px;line-height:1.45}
-.core-picks b{color:#8e5b06}
-.capex-conversion{position:relative;margin:0 23px 9px;padding:10px 12px;border:1px solid #c9dfe5;border-radius:9px;background:rgba(255,255,255,.82)}
-.capex-conversion h3{margin-bottom:7px;color:var(--sum);font-size:11px}
-.capex-cycle-note{margin-left:6px;color:#7a8d95;font-size:9px;font-weight:500}
-.capex-conversion-list{display:grid;grid-template-columns:1fr;gap:5px}
-.capex-conversion-row{padding:7px 9px;border-left:3px solid #d99a27;border-radius:6px;background:#f3f8f9;color:#486772;font-size:9.5px;line-height:1.45}
-.capex-conversion-row b{color:#c62828;font-size:10.5px}
-.conclusion-warning{position:relative;margin:0 23px 18px;padding:9px 12px;border-radius:8px;background:#103f52;color:#dcecf0;font-size:10.5px;line-height:1.5}
-.conclusion-warning strong{color:#ffd174}
-@media(max-width:900px){.conclusion-grid{grid-template-columns:1fr}.conclusion-title{font-size:21px}.capex-conversion-list{grid-template-columns:1fr}}
-@media(max-width:560px){.conclusion-head,.conclusion-grid{padding-left:15px;padding-right:15px}.capex-conversion,.conclusion-warning{margin-left:15px;margin-right:15px}.priority-row{grid-template-columns:20px minmax(0,1fr)}.priority-tag{grid-column:2}.mapping-row{grid-template-columns:92px 15px minmax(0,1fr)}.mapping-note{grid-column:3;justify-self:start}}
-
+/* 结果 */
+.res-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:16px}
+@media(max-width:1100px){.res-grid{grid-template-columns:1fr}}
+table.res{width:100%;border-collapse:collapse;font-size:12px}
+table.res th{text-align:left;padding:6px 8px;font-size:10px;font-weight:600;color:var(--text2);background:var(--bg);border-bottom:1px solid var(--border)}
+table.res td{padding:6px 8px;border-bottom:1px solid var(--border)}
+table.res td.num{text-align:right;font-variant-numeric:tabular-nums}
+.bar{position:relative;height:16px;background:var(--bg);border-radius:3px;overflow:hidden;min-width:70px}
+.bar>i{position:absolute;left:0;top:0;bottom:0;background:linear-gradient(90deg,#a78bfa,#7c3aed);border-radius:3px}
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;margin-bottom:16px}
+.kpi{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:11px 14px;box-shadow:var(--sh)}
+.kpi span{display:block;font-size:10px;color:var(--text2)}
+.kpi b{display:block;font-size:20px;font-weight:700;font-variant-numeric:tabular-nums;margin:1px 0}
+.kpi em{display:block;font-size:10px;color:var(--text2);font-style:normal}
+.tag-est{display:inline-block;padding:0 5px;border-radius:3px;font-size:9px;font-weight:700;background:var(--warn-bg);color:var(--warn);border:1px solid #fcd34d;vertical-align:middle}
+.tag-src{display:inline-block;padding:0 5px;border-radius:3px;font-size:9px;font-weight:700;background:var(--up-bg);color:var(--up);border:1px solid #86efac;vertical-align:middle}
 </style>
 </head>
 <body>
@@ -328,712 +130,785 @@ code{font-size:10px;background:var(--tag-bg);color:var(--tag);padding:1px 5px;bo
 <header class="hdr">
   <div class="hdr-l">
     <a class="back-link" href="../industry-fundamentals-entry.html">← 行业基本面入口</a>
-    <span class="hdr-title">半导体设备看板</span>
-    <span class="hdr-sub">前道WFE · 逻辑 vs 存储CapEx结构 · 国产替代映射</span>
+    <span class="hdr-title">国产半导体设备看板</span>
+    <span class="hdr-sub">CapEx / 产能 → 设备 TAM → 国产公司收入测算器</span>
     <span class="badge-warn">🟡 建设中</span>
-    <span class="badge-tag">国产替代主线</span>
+    <a class="back-link" href="../global-semiconductor-equipment/global-semiconductor-equipment-dashboard.html">全球半导体设备看板 →</a>
   </div>
   <div class="hdr-meta">研究看板 · TMT 产业链<br>数据截至 2026-07</div>
 </header>
 
 <div class="wrap">
 
-<!-- ── 报告前置：AI数据中心扩张如何映射到WFE ── -->
-<section class="report-brief" aria-labelledby="ai-wfe-title">
-  <div class="report-hero">
-    <div>
-      <div class="report-kicker">404K Semi-AI · Report Lens</div>
-      <h1 class="report-title" id="ai-wfe-title">每新增 1GW 需要约 5 万片月产能（≈75亿美元设备CapEx）：AI 如何把 WFE 推向 3,000 亿美元</h1>
-      <p class="report-deck">把数据中心电力扩张换算成服务器、芯片与晶圆需求，再映射到设备资本开支。核心不是单一目标价，而是一条可以逐季验证的“电力 → 晶圆 → WFE → 设备商收入”路径。</p>
-    </div>
-    <div class="report-stamp"><strong>情景模型 · 非行业预测</strong>依据用户提供的报告截图整理<br>报告日期：2026-07-23</div>
-  </div>
-
-  <div class="report-body">
-    <div class="metric-grid">
-      <div class="metric">
-        <div class="metric-label">每新增 1GW AI 算力</div>
-        <div class="metric-value">4.62<small> 万片/月</small></div>
-        <div class="metric-note">先进逻辑、HBM、DRAM 与 NAND 合计晶圆月产能</div>
-      </div>
-      <div class="metric">
-        <div class="metric-label">对应新增 WFE</div>
-        <div class="metric-value">75–80<small> 亿美元</small></div>
-        <div class="metric-note">按各类晶圆资本强度加权；设备交付存在时滞</div>
-      </div>
-      <div class="metric">
-        <div class="metric-label">新增晶圆中的内存占比</div>
-        <div class="metric-value">89<small>%</small></div>
-        <div class="metric-note">DRAM 53% · NAND 20% · HBM 16%；先进逻辑仅 11%</div>
-      </div>
-      <div class="metric">
-        <div class="metric-label">50GW 情景下 2029E WFE</div>
-        <div class="metric-value">2,910<small> 亿美元</small></div>
-        <div class="metric-note">模型路径接近 3,000 亿美元，不代表三年平均市场规模</div>
-      </div>
-    </div>
-
-    <div class="logic-strip" aria-label="从算力到设备的传导链">
-      <div class="logic-node"><b>① 电力容量</b><span>AI 数据中心 GW 扩张</span></div>
-      <div class="logic-arrow">→</div>
-      <div class="logic-node"><b>② 服务器与芯片</b><span>VR200 单机功率 220kW · 每 GW 约 4,545 台机架</span></div>
-      <div class="logic-arrow">→</div>
-      <div class="logic-node"><b>③ 晶圆月产能</b><span>约 4.62 万片，内存主导</span></div>
-      <div class="logic-arrow">→</div>
-      <div class="logic-node"><b>④ WFE 与收入</b><span>订单、发货、安装、确认收入</span></div>
-    </div>
-
-    <div class="brief-grid">
-      <div class="brief-panel">
-        <h3>每新增 1GW 的晶圆与设备账</h3>
-        <table class="wafer-table">
-          <thead><tr><th>环节</th><th>新增月产能</th><th>占比</th><th>每1万片/月设备成本</th><th>折算WFE</th></tr></thead>
-          <tbody>
-            <tr><td>先进逻辑</td><td>5,300片</td><td>11%</td><td>34亿美元</td><td>约18亿美元</td></tr>
-            <tr><td>HBM</td><td>7,300片</td><td>16%</td><td>14亿美元</td><td>约10.2亿美元</td></tr>
-            <tr><td>DRAM</td><td>2.44万片</td><td>53%</td><td>14亿美元</td><td>约34.2亿美元</td></tr>
-            <tr><td>NAND</td><td>9,200片</td><td>20%</td><td>13亿美元</td><td>约12亿美元</td></tr>
-            <tr class="total"><td>合计</td><td>4.62万片</td><td>100%</td><td>加权计算</td><td>约74.4亿美元</td></tr>
-          </tbody>
-        </table>
-        <div class="insight-points">
-          <div class="insight-point"><span>1</span><div><strong>先进逻辑资本强度最高，但需求占比最低。</strong>每1万片/月设备成本约34亿美元，显著高于内存；但1GW仅需约5,300片/月，占总晶圆需求11%。</div></div>
-          <div class="insight-point"><span>2</span><div><strong>DRAM是最大的设备增量来源。</strong>月产能需求约2.44万片，占比53%；折算WFE约34.2亿美元，占1GW所需约74.4亿美元设备CapEx的46%，接近一半。</div></div>
-        </div>
-      </div>
-
-      <div class="brief-panel">
-        <h3>2030 电力容量情景：WFE 路径的敏感性</h3>
-        <table class="scenario-table">
-          <thead><tr><th>2030 情景</th><th>2027E</th><th>2028E</th><th>2029E</th></tr></thead>
-          <tbody>
-            <tr><td>20GW</td><td>2,000</td><td>1,700</td><td>1,400</td></tr>
-            <tr class="base"><td>50GW 基准</td><td>2,000</td><td>2,450</td><td>2,910</td></tr>
-            <tr><td>70GW</td><td>2,000</td><td>2,960</td><td>3,910</td></tr>
-            <tr><td>100GW</td><td>2,000</td><td>3,710</td><td>5,420</td></tr>
-          </tbody>
-        </table>
-        <div class="src-note" style="margin:7px 0 0">单位：亿美元。报告定义中的 50GW 是相对基线的新增速度情景；并非截至 2030 年的累计数据中心容量。</div>
-        <div class="seg-sum gw-status" style="margin-top:9px"><strong>GW 数现状：</strong>美国在运容量 <strong class="evidence-red">50.7GW</strong>（同比增加 <strong class="evidence-red">11.4GW</strong> / <strong class="evidence-red">+29%</strong>）；项目管线 <strong class="evidence-red">338GW</strong>（同比增加 <strong class="evidence-red">216.6GW</strong> / <strong class="evidence-red">+179%</strong>）。</div>
-      </div>
-    </div>
-
-    <div class="outlook-grid">
-      <div class="brief-panel">
-        <h3>四大晶圆厂：2026—2030 CapEx与产能路线</h3>
-        <table class="capex-table">
-          <thead><tr><th>公司</th><th>2026投资锚点</th><th>2027—2030公开规划 / 市场关注点</th></tr></thead>
-          <tbody>
-            <tr><td>台积电</td><td><strong>2026：<span class="capex-num">600–640亿美元</span></strong><br>先进制程占<span class="capex-num">70%–80%</span></td><td>2027–30：N2、A14、A13/A12依次放量；台湾扩建，亚利桑那追加<span class="capex-num">1,000亿美元</span>。</td></tr>
-            <tr><td>三星电子</td><td><strong>2025 DS：约<span class="capex-num">317亿美元</span></strong><br>2026重点扩充HBM4</td><td>2027–30：平泽P5转为HBM核心基地；2026–40长期半导体投资约<span class="capex-num">1.4万亿美元</span>。</td></tr>
-            <tr><td>SK海力士</td><td><strong>2026投资显著高于2025</strong><br>M15X、EUV、龙仁为重点</td><td>2027–30：龙仁首座Fab提前；新增设施约<span class="capex-num">144亿美元</span>，累计约<span class="capex-num">207亿美元</span>（不含设备）。</td></tr>
-            <tr><td>美光</td><td><strong>FY2026：约<span class="capex-num">270亿美元</span></strong><br>设备与洁净室同步投入</td><td>2027–30：设备支出续增；美国晶圆厂/技术投资至2035年超<span class="capex-num">2,500亿美元</span>。</td></tr>
-          </tbody>
-        </table>
-        <div class="src-note capex-source" style="margin:8px 0 0">官方口径截至2026-07-23：
-          <a href="https://investor.tsmc.com/english/quarterly-results/2026/q2" target="_blank">TSMC IR</a> ·
-          <a href="https://www.samsung.com/global/ir/reports-disclosures/public-disclosure-view.84685/" target="_blank">Samsung IR</a> ·
-          <a href="https://news.skhynix.com/en/new-facility-investment-for-yongin-semiconductor-cluster/" target="_blank">SK hynix Newsroom</a> ·
-          <a href="https://investors.micron.com/node/50671" target="_blank">Micron IR</a>。韩元按 <strong>1美元≈1,500韩元</strong>近似换算并取整；不同公司口径含R&amp;D、厂房或设备的范围不同，不宜直接横向相加。
-        </div>
-      </div>
-
-      <div class="brief-panel">
-        <h3>50GW情景：2029E设备商弹性</h3>
-        <table class="elasticity-table">
-          <thead><tr><th>公司</th><th>收入</th><th>EPS</th><th>PE</th></tr></thead>
-          <tbody>
-            <tr><td><strong>AMAT</strong></td><td>+52.3%</td><td class="eps">+59.5%</td><td class="pe">14.9x</td></tr>
-            <tr><td><strong>LRCX</strong></td><td>+52.3%</td><td class="eps">+54.4%</td><td class="pe">18.4x</td></tr>
-            <tr><td><strong>KLAC</strong></td><td>+33.1%</td><td class="eps">+37.1%</td><td class="pe">21.2x</td></tr>
-          </tbody>
-        </table>
-        <div class="src-note" style="margin:8px 0 0">相对2029E一致预期的报告情景测算；不是公司指引。收入需经过订单、发货、安装和确认，EPS还受毛利率、服务收入及回购影响。</div>
-      </div>
-    </div>
-
-    <div class="delta-grid">
-      <div class="brief-panel">
-        <h3>机构基准路径：WFE从年度高点变成新平台</h3>
-        <div class="benchmark-strip">
-          <div class="benchmark-year"><span>2025A</span><b>1,160</b><em>亿美元</em></div>
-          <div class="benchmark-year"><span>2026E</span><b>1,470</b><em>同比约+27%</em></div>
-          <div class="benchmark-year"><span>2027E</span><b>1,980</b><em>同比约+35%</em></div>
-          <div class="benchmark-year"><span>2028E</span><b>2,475</b><em>同比约+25%</em></div>
-        </div>
-        <div class="scenario-bridge">
-          <div><span>UBS行业基准</span><b>2028E · 2,475亿美元</b></div>
-          <i>≠</i>
-          <div><span>50GW模型情景</span><b>2029E · 2,910亿美元</b></div>
-        </div>
-        <div class="china-track">
-          <div class="china-track-head">中国WFE：绝对额上升、全球占比回落<span>国产设备更应看份额而非全球占比</span></div>
-          <div class="china-years">
-            <div class="china-year"><b>445 / 38.4%</b>2025E</div>
-            <div class="china-year"><b>475 / 32.3%</b>2026E</div>
-            <div class="china-year"><b>560 / 28.3%</b>2027E</div>
-            <div class="china-year"><b>640 / 25.9%</b>2028E</div>
-          </div>
-        </div>
-        <div class="delta-note">单位：亿美元。基准预测与AI电力情景不是同一口径；前者用于判断行业水位，后者用于评估需求上限。</div>
-      </div>
-
-      <div class="brief-panel">
-        <h3>存储领先指标：价格先动，设备订单后确认</h3>
-        <div class="lead-kpis">
-          <div class="lead-kpi"><b>+20%</b><span>DDR5现货较5月初上涨</span></div>
-          <div class="lead-kpi"><b>+25%</b><span>DDR5现货较5月合约价溢价</span></div>
-          <div class="lead-kpi"><b>14%→44%</b><span>高盛上调三星2027年HBM价格增速假设</span></div>
-          <div class="lead-kpi"><b>520→740</b><span>UBS预计DRAM WFE：2026E→2027E，亿美元</span></div>
-        </div>
-        <div class="evidence-chain" aria-label="存储价格到设备订单的验证链">
-          <span>现货价格</span><span>合约价格</span><span>出口收入</span><span>利润现金流</span><span>晶圆厂CapEx</span><span>WFE订单</span>
-        </div>
-        <div class="delta-note"><strong>阶段判断：</strong>2026–27年先看DRAM、沉积与刻蚀；2028年若非存储WFE加速，再提高先进逻辑、EUV、量测与过程控制权重。若价格上涨但库存和现金流恶化，应下调设备需求权重。</div>
-      </div>
-    </div>
-
-  </div>
-</section>
-
-<!-- ── 报告二：日本半导体设备盈利兑现框架 ── -->
-<section class="report-brief jp-brief" aria-labelledby="jp-wfe-title">
-  <div class="report-hero">
-    <div>
-      <div class="report-kicker">404K Semi-AI · Japan Equipment Lens</div>
-      <h2 class="report-title" id="jp-wfe-title">日本半导体设备：目标价平均上调16%，AI WFE进入盈利兑现阶段</h2>
-      <p class="report-deck">这篇报告不是简单“看多日本设备”，而是把选股标准从WFE总量切换到两条斜率：收入能否跑赢行业，以及订单能否转化为利润率改善。</p>
-    </div>
-    <div class="report-stamp"><strong>高盛日本设备链框架</strong>10家公司 · 4家Buy<br>依据用户提供的报告截图整理</div>
-  </div>
-
-  <div class="report-body">
-    <div class="metric-grid">
-      <div class="metric">
-        <div class="metric-label">10家公司目标价平均上调</div>
-        <div class="metric-value">+16<small>%</small></div>
-        <div class="metric-note">但上行空间分化显著，不能用平均值替代选股</div>
-      </div>
-      <div class="metric">
-        <div class="metric-label">明确Buy评级</div>
-        <div class="metric-value">4<small> / 10家</small></div>
-        <div class="metric-note">Lasertec、Ebara、Disco、东京电子</div>
-      </div>
-      <div class="metric">
-        <div class="metric-label">高盛CY27 WFE预测</div>
-        <div class="metric-value">+32<small>% YoY</small></div>
-        <div class="metric-note">行业总量上修已不稀缺，盈利兑现才是下一阶段</div>
-      </div>
-      <div class="metric">
-        <div class="metric-label">核心选股变量</div>
-        <div class="metric-value">2<small> 条斜率</small></div>
-        <div class="metric-note">收入增速高于行业 · 利润率显著改善</div>
-      </div>
-    </div>
-
-    <div class="jp-main-grid">
-      <div class="brief-panel">
-        <h3>四类资产：从“有订单”转向“谁能把订单变成利润”</h3>
-        <div class="jp-quadrants">
-          <div class="jp-quadrant"><b>① 技术瓶颈型</b><strong>Lasertec · Disco</strong><span>前沿节点检测、先进封装切磨；技术稀缺带来高收入斜率。</span></div>
-          <div class="jp-quadrant"><b>② 盈利兑现型</b><strong>Ebara · 东京电子</strong><span>精密机械/CMP改善、宽产品线与设备涨价；利润率斜率更清晰。</span></div>
-          <div class="jp-quadrant"><b>③ 等待确认型</b><strong>Advantest · Ulvac · JEOL · Kokusai</strong><span>基本面不差，但估值、预期或利润率证据仍不充分。</span></div>
-          <div class="jp-quadrant"><b>④ 反弹受限型</b><strong>SCREEN · 东京精密</strong><span>行业景气存在，但利润率、客户集中或订单质量限制弹性。</span></div>
-        </div>
-        <div class="seg-sum" style="margin-top:9px">报告最重要的变化：设备股交易已经从“AI资本开支上修”进入“谁能把订单变成利润”。WFE上涨是第一层，收入斜率和利润率斜率才决定第二阶段的估值扩张。</div>
-      </div>
-
-      <div class="brief-panel">
-        <h3>高盛10家公司目标价与评级：平均上调不等于全面看多</h3>
-        <table class="jp-target-table">
-          <thead><tr><th>公司</th><th>评级</th><th>新目标价</th><th>旧目标价</th><th>报告股价</th><th>空间</th></tr></thead>
-          <tbody>
-            <tr><td>Lasertec</td><td class="buy">Buy / CL</td><td>¥67,000</td><td>¥55,000</td><td>¥48,910</td><td class="up">+37%</td></tr>
-            <tr><td>Ebara</td><td class="buy">Buy</td><td>¥7,800</td><td>¥7,100</td><td>¥6,134</td><td class="up">+27%</td></tr>
-            <tr><td>Disco</td><td class="buy">Buy</td><td>¥95,000</td><td>¥87,000</td><td>¥79,080</td><td class="up">+20%</td></tr>
-            <tr><td>东京电子</td><td class="buy">Buy</td><td>¥83,000</td><td>¥62,000</td><td>¥74,270</td><td class="up">+12%</td></tr>
-            <tr><td>爱德万测试</td><td class="neutral">Neutral</td><td>¥34,000</td><td>¥30,000</td><td>¥31,880</td><td>+7%</td></tr>
-            <tr><td>JEOL</td><td class="neutral">Neutral</td><td>¥7,700</td><td>¥6,800</td><td>¥7,325</td><td>+5%</td></tr>
-            <tr><td>Ulvac</td><td class="neutral">Neutral</td><td>¥10,300</td><td>¥9,400</td><td>¥10,200</td><td>+1%</td></tr>
-            <tr><td>国际电气</td><td class="neutral">Neutral</td><td>¥9,500</td><td>—</td><td>¥9,980</td><td class="down">−5%</td></tr>
-            <tr><td>东京精密</td><td class="sell">Sell</td><td>¥15,000</td><td>¥14,000</td><td>¥19,070</td><td class="down">−21%</td></tr>
-            <tr><td>SCREEN HD</td><td class="sell">Sell</td><td>¥12,500</td><td>¥9,500</td><td>¥16,720</td><td class="down">−25%</td></tr>
-          </tbody>
-        </table>
-        <div class="src-note" style="margin:7px 0 0">目标价、报告股价及评级均为报告截图口径，不代表当前市场价格。CL = Conviction List。</div>
-      </div>
-    </div>
-
-    <div class="jp-company-grid">
-      <div class="jp-company">
-        <div class="jp-company-top"><b>Lasertec</b><span>+37%</span></div>
-        <p>前沿节点检测是最直接的瓶颈资产，受益AI芯片、EUV相关检测及A200HI投资。</p>
-        <em>风险：份额下滑、新技术路线替代、客户CapEx放缓。</em>
-      </div>
-      <div class="jp-company">
-        <div class="jp-company-top"><b>Ebara</b><span>+27%</span></div>
-        <p>CMP与精密机械受益存储扩产，投资逻辑更偏“利润率兑现”而非单纯估值上调。</p>
-        <em>风险：存储订单转弱、竞争与原料价格扰动。</em>
-      </div>
-      <div class="jp-company">
-        <div class="jp-company-top"><b>Disco</b><span>+20%</span></div>
-        <p>先进封装切割/研磨从周期设备转向AI工艺瓶颈，受益HBM、CoWoS与hybrid bonding。</p>
-        <em>风险：封装投资波动、订单节奏及市场预期过满。</em>
-      </div>
-      <div class="jp-company">
-        <div class="jp-company-top"><b>东京电子</b><span>+12%</span></div>
-        <p>宽产品线覆盖涂胶显影、沉积、清洗等环节，叠加设备涨价与产品组合改善。</p>
-        <em>风险：估值已高、价格兑现和客户结构变化。</em>
-      </div>
-    </div>
-
-    <div class="jp-chain" aria-label="AI WFE到日本设备利润的传导链">
-      <div class="jp-chain-node"><b>存储CapEx</b>HBM扩产向DRAM/NAND扩散</div>
-      <div class="jp-chain-node"><b>WFE订单</b>前道与先进封装设备需求</div>
-      <div class="jp-chain-node"><b>收入确认</b>出货、安装、验收与服务</div>
-      <div class="jp-chain-node"><b>OPM改善</b>涨价、规模效应和产品组合</div>
-      <div class="jp-chain-node"><b>EPS兑现</b>盈利上修支撑目标价</div>
-    </div>
-
-
-    <div class="jp-extension">
-      <h3>日本AI物理瓶颈外延：设备之外的四条增量线</h3>
-      <div class="jp-extension-grid">
-        <div class="jp-extension-card"><b>推理存储</b><strong>铠侠 · eSSD / NAND</strong><span>RAG、向量数据库与低延迟访问提高企业级SSD需求；验证点是NAND供给纪律与利润峰值持续性。</span></div>
-        <div class="jp-extension-card"><b>先进材料与光掩模</b><strong>Tri Chemical · TOPPAN / DNP</strong><span>高k、金属材料和光掩模受益先进节点；需区分结构性需求与地缘备货造成的短期库存。</span></div>
-        <div class="jp-extension-card"><b>高规格电子元件</b><strong>村田制作所 · AI MLCC</strong><span>价值来自平台升级带来的BOM、规格和单机价值量提升，而不是普通元件的短期涨价。</span></div>
-        <div class="jp-extension-card"><b>数据中心电力与FA</b><strong>三菱电机 · Keyence · THK · SMC</strong><span>供电、冷却、光器件与工厂自动化承接AI资本开支后半程，但订单到利润的传导时间更长。</span></div>
-      </div>
-      <div class="jp-extension-rule"><strong>外延资产排序标准：</strong>瓶颈纯度 × 订单能见度 × 价格/利润率弹性 × 资本配置质量 × 证伪速度。设备股看OPM，材料看规格升级，电力与FA看订单结构和ROIC。</div>
-      <div class="delta-note">增量参考：《日本半导体设备材料重估》《高盛DRAM深度更新》。本模块用于扩展观察边界，不把所有日本工业公司等同为AI纯受益资产。</div>
-    </div>
-    <div class="jp-verdict"><strong>投资结论：</strong>日本设备股仍可关注，但不能再用“行业景气”普涨逻辑。优先选择技术瓶颈和利润兑现型资产；对预期已经打满、利润率证据不足或客户结构脆弱的公司保持谨慎。</div>
-    <div class="brief-foot"><span>来源：404K Semi-AI《日本半导体设备深度：高盛上调10家公司目标价16%，AI WFE进入盈利兑现阶段》截图整理</span><span>⚠ 仅作研究框架，不构成投资建议；目标价和上行空间为报告时点口径。</span></div>
-  </div>
-</section>
-
-
-<!-- ── 首屏结论：AI设备增量与高盛A股映射 ── -->
-<section class="equipment-conclusion" id="equipment-conclusion" aria-labelledby="equipment-conclusion-title">
-  <div class="conclusion-head">
-    <div class="conclusion-eyebrow">AI Equipment · Investment Summary</div>
-    <h2 class="conclusion-title" id="equipment-conclusion-title">AI设备增量与高盛A股映射</h2>
-    <p class="conclusion-sub">先看工艺增量，再看股票赔率：存储率先兑现，先进逻辑接力。</p>
-  </div>
-  <div class="conclusion-grid">
-    <article class="conclusion-panel">
-      <h3><span>01</span>AI时代：设备类别优先级</h3>
-      <div class="priority-list">
-        <div class="priority-row"><span class="priority-no">01</span><div class="priority-copy"><b>薄膜沉积＋刻蚀</b>：存储与先进逻辑双主线<span class="priority-map">北方华创 · 中微公司 · 拓荆科技</span></div><span class="priority-tag">核心增量</span></div>
-        <div class="priority-row"><span class="priority-no">02</span><div class="priority-copy"><b>量测检测／过程控制</b>：制程复杂度持续征税<span class="priority-map">中科飞测 · 精测电子</span></div><span class="priority-tag">长周期</span></div>
-        <div class="priority-row"><span class="priority-no">03</span><div class="priority-copy"><b>先进封装／精密加工／测试</b>：HBM物理瓶颈<span class="priority-map">光力科技 · 华海清科 · 长川科技</span></div><span class="priority-tag">高弹性</span></div>
-        <div class="priority-row"><span class="priority-no">04</span><div class="priority-copy"><b>EUV光刻</b>：确定性锚，未必是弹性冠军<span class="priority-map">芯源微（非直接对标）</span></div><span class="priority-tag">高壁垒</span></div>
-      </div>
-      <div class="phase-strip"><span>2026–27 DRAM</span><i>→</i><span>2027–28 NAND</span><i>→</i><span>2028+ 先进逻辑</span></div>
-    </article>
-    <article class="conclusion-panel">
-      <h3><span>02</span>高盛推荐：A股映射</h3>
-      <div class="mapping-list">
-        <div class="mapping-row"><span class="mapping-source">Tokyo Electron</span><span class="mapping-arrow">→</span><span class="mapping-target">北方华创</span><span class="mapping-note">平台型</span></div>
-        <div class="mapping-row"><span class="mapping-source">Ebara</span><span class="mapping-arrow">→</span><span class="mapping-target">华海清科</span><span class="mapping-note">CMP</span></div>
-        <div class="mapping-row"><span class="mapping-source">Disco</span><span class="mapping-arrow">→</span><span class="mapping-target">光力科技／华海清科</span><span class="mapping-note">切磨抛</span></div>
-        <div class="mapping-row"><span class="mapping-source">Lasertec</span><span class="mapping-arrow">→</span><span class="mapping-target">中科飞测／精测电子</span><span class="mapping-note">非直接对标</span></div>
-      </div>
-      <div class="core-picks"><b>核心映射：</b>北方华创 · 华海清科 · 光力科技<br><b>扩展观察：</b>中微公司 · 拓荆科技 · 芯源微 · 盛美上海</div>
-    </article>
-  </div>
-  <div class="capex-conversion">
-    <h3>CapEx 换算：AI资本开支 → 半导体设备资本开支<span class="capex-cycle-note">（注：两个 CapEx 会有周期错位）</span></h3>
-    <div class="capex-conversion-list">
-      <div class="capex-conversion-row"><b>1GW = 500亿元 AI CapEx</b> ≈ <b>75亿元半导体设备 CapEx</b></div>
-      <div class="capex-conversion-row"><b>全球 2027E：12,000亿元 AI CapEx</b> ≈ <b>1,800亿元半导体设备 CapEx</b></div>
-      <div class="capex-conversion-row"><b>国内 2027E：6,000亿元 AI CapEx</b> ≈ <b>900亿元半导体设备 CapEx</b></div>
-    </div>
-  </div>
-  <div class="conclusion-warning"><strong>关键提醒：</strong>行业受益 ≠ 股票推荐。订单增长能否转化为毛利率、EPS与估值空间，才决定最终赔率。</div>
-</section>
-
-<!-- ── 海外半导体设备公司：财务、估值与A股映射 ── -->
-<section class="overseas-lens" id="overseas-equipment-companies" aria-labelledby="overseas-equipment-title">
-  <div class="overseas-hero">
-    <div>
-      <div class="overseas-kicker">Global Equipment · Comp Sheet</div>
-      <h2 class="overseas-title" id="overseas-equipment-title">海外半导体设备公司：盈利预测、估值与A股映射</h2>
-      <p class="overseas-deck">把海外设备公司拆成两层：上层回答“盈利增长与估值处在什么位置”，下层回答“具体产品对应哪些A股公司”。13家公司已切换为高盛预测；每行按自身财年与原报告币种展示。</p>
-    </div>
-    <div class="overseas-stamp"><strong>36家公司 · 美股 + 日股</strong>行情截至 2026-07-22<br>GS预测覆盖：美股5家 · 日股8家</div>
-  </div>
-  <div class="overseas-body">
-    <div class="overseas-kpis">
-      <div class="overseas-kpi"><span>覆盖公司</span><b>36</b><em>美股21家 · 日股15家</em></div>
-      <div class="overseas-kpi"><span>已切换高盛预测</span><b>13</b><em>美股5家 · 日股8家</em></div>
-      <div class="overseas-kpi"><span>2025/10/1以来中位涨幅</span><b>+103%</b><em>未按市值加权</em></div>
-      <div class="overseas-kpi"><span>28E PE中位数</span><b id="overseas-pe-median">—</b><em id="overseas-pe-coverage">仅统计GS预测公司</em></div>
-    </div>
-
-    <div class="overseas-toolbar" aria-label="海外设备公司筛选">
-      <div class="market-filter">
-        <button type="button" class="active" data-overseas-market="全部">全部</button>
-        <button type="button" data-overseas-market="美股">美股</button>
-        <button type="button" data-overseas-market="日股">日股</button>
-      </div>
-      <div class="overseas-search">
-        <label for="overseas-company-search">搜索公司 / 代码 / 产品</label>
-        <input id="overseas-company-search" type="search" placeholder="例如：AMAT、刻蚀、中科飞测">
-        <span class="overseas-count" id="overseas-company-count">36家公司</span>
-      </div>
-    </div>
-
-    <div class="overseas-block">
-      <div class="overseas-block-head">
-        <h3>上层｜盈利预测与PE倍数</h3>
-        <p>单位与原始财年标注在公司名称下方；日本3月财年FY3/27对应26E，PE统一取28E口径。</p>
-      </div>
-      <div class="overseas-table-shell">
-        <table class="overseas-table" aria-label="海外半导体设备公司盈利预测与估值">
-          <thead><tr><th>市场</th><th>公司</th><th>25/10/1至今</th><th>26E Rev</th><th>27E Rev</th><th>28E Rev</th><th>26E NI</th><th>27E NI</th><th>28E NI</th><th>28E PE</th></tr></thead>
-          <tbody id="overseas-financial-body"></tbody>
-        </table>
-      </div>
-    </div>
-
-    <div class="overseas-block">
-      <div class="overseas-block-head">
-        <h3>下层｜主要产品与A股映射</h3>
-        <p>市值来自Excel截至2026-07-22的缓存，单位亿美元；映射仅表示产业链相似性。</p>
-      </div>
-      <div class="overseas-table-shell mapping">
-        <table class="overseas-table mapping-table" aria-label="海外设备公司产品与A股映射">
-          <thead><tr><th>市场</th><th>公司</th><th>市值</th><th>25/10/1至今</th><th>主要产品 / 设备领域</th><th>A股对标 / 相关公司</th></tr></thead>
-          <tbody id="overseas-mapping-body"></tbody>
-        </table>
-      </div>
-    </div>
-    <div class="overseas-source">
-      <span><strong>数据源：</strong>《海外半导体设备公司.xlsx》及用户提供的高盛预测截图；GS标签代表已使用高盛口径。</span>
-      <span>25/10/1至今口径截至2026-07-22；GS行按原报告币种与公司财年展示，其他行沿用原表亿美元口径。</span>
-    </div>
-  </div>
-  <script type="application/json" id="overseas-equipment-data">[{"market":"美股","cn":"应用材料","en":"Applied Materials","ticker":"AMAT.O","report":"GS Forecasts","returnPct":172,"revenue":[337.416,437.159,506.651],"netIncome":[106.571,137.867,163.889],"pe":[44.1,31.7,26.5],"product":"覆盖最广的设备平台：PVD（全球市占约85%）、CVD等薄膜沉积、刻蚀、离子注入（2024年全球份额62.65%）、CMP、外延及电子束量测等","aShare":"北方华创（平台型：PVD/刻蚀/炉管/离子注入）、中微公司、拓荆科技、华海清科（CMP）、万业企业-凯世通（离子注入）","eps":[12.57,17.45,20.93],"forecastSource":"GS","fiscalYearEnd":"10月","forecastRange":"FY10/26E–FY10/28E","valueUnit":"亿美元"},{"market":"美股","cn":"泛林集团","en":"Lam Research","ticker":"LRCX.O","report":"GS Forecasts","returnPct":139,"revenue":[234.544,315.44,373.108],"netIncome":[72.356,101.132,121.657],"pe":[55.1,39.6,33],"product":"刻蚀设备全球龙头；薄膜沉积（ALTUS钨沉积、SPEED HDP-CVD、Striker ALD、VECTOR PECVD）、SABRE电镀及清洗设备","aShare":"中微公司、北方华创（刻蚀）；拓荆科技、微导纳米（沉积）；盛美上海（清洗/电镀）","eps":[5.79,8.05,9.69],"forecastSource":"GS","fiscalYearEnd":"6月","forecastRange":"FY6/26E–FY6/28E","valueUnit":"亿美元"},{"market":"美股","cn":"科磊","en":"KLA","ticker":"KLAC.O","report":"GS Forecasts","returnPct":100,"revenue":[135.418,170.271,196.991],"netIncome":[47.887,63.904,75.698],"pe":[null,null,null],"product":"量测/检测（过程控制）设备绝对龙头，全球市占率约52%：缺陷检测、套刻量测（份额超66%）、OCD、膜厚量测等","aShare":"中科飞测、精测电子（另有上海睿励，未上市）","eps":[3.71,4.91,5.89],"forecastSource":"GS","fiscalYearEnd":"6月","forecastRange":"FY6/26E–FY6/28E","valueUnit":"亿美元"},{"market":"美股","cn":"泰瑞达","en":"Teradyne","ticker":"TER.O","report":"GS Forecasts","returnPct":169,"revenue":[46.994,55.611,59.919],"netIncome":[11.74,15.61,17.112],"pe":[49,36.9,33.6],"product":"半导体自动测试设备（ATE）：SoC/存储后道测试机，与爱德万并列全球测试机双雄","aShare":"华峰测控、长川科技、联动科技、金海通、精智达","forecastSource":"GS","eps":[7.55,10,11],"forecastRange":"FY12/26E–FY12/28E","valueUnit":"亿美元"},{"market":"美股","cn":"阿斯麦","en":"ASML Holding","ticker":"ASML.O","report":"GS Forecasts","returnPct":87,"revenue":[440.139,580.219,743.28],"netIncome":[148.877,218.233,297.85],"pe":[null,null,null],"product":"光刻机全球龙头，独家供应EUV光刻机，并提供DUV光刻机","aShare":"整机无A股上市对标（上海微电子，未上市）；产业链配套：福晶科技、茂莱光学、奥普光电、苏大维格、美埃科技","forecastSource":"GS","eps":[38.73,57.15,78.52],"evSales":[13.4,9.7,7.2],"forecastRange":"FY12/26E–FY12/28E","valueUnit":"亿欧元"},{"market":"美股","cn":"MKS","en":"MKS Inc (MKS Instruments)","ticker":"MKSI.O","report":"Q1 FY2026","returnPct":180,"revenue":[48,58,63],"netIncome":[6,10,12],"pe":[38.8,23.3,20],"product":"设备关键零部件/子系统：射频电源、真空产品、仪器仪表（气体流量计、真空压力计）等，供货应用材料、泛林等设备OEM","aShare":"英杰电气、北方华创（射频电源）；万业企业、新莱应材（气体/真空/仪器仪表类零部件）"},{"market":"美股","cn":"恩特格里斯","en":"Entegris","ticker":"ENTG.O","report":"Q1 FY2026","returnPct":49,"revenue":[43,null,null],"netIncome":[8,null,null],"pe":[26.3,null,null],"product":"半导体材料与污染控制（过滤、材料输送系统等，偏材料属性，行业归类于设备与材料板块）","aShare":"新莱应材（高纯管阀件/洁净应用材料）等"},{"market":"美股","cn":"Onto Innovation","en":"Onto Innovation","ticker":"ONTO.N","report":"Q1 FY2026","returnPct":128,"revenue":[13,18,22],"netIncome":[3,5,7],"pe":[49,29.4,22],"product":"量测与检测设备：OCD光学关键尺寸量测、膜厚量测、无图形/图形晶圆缺陷检测，并向先进封装量检测延伸","aShare":"中科飞测、精测电子"},{"market":"美股","cn":"Nova","en":"Nova Ltd.","ticker":"NVMI.O","report":"Q1 FY2026","returnPct":42,"revenue":[null,null,null],"netIncome":[null,null,null],"pe":[null,null,null],"product":"量测设备：尺寸计量（OCD等光学量测）、材料计量、化学分析三大产品线","aShare":"中科飞测、精测电子"},{"market":"美股","cn":"FormFactor","en":"FormFactor","ticker":"FORM.O","report":"Q1 FY2026","returnPct":211,"revenue":[null,null,null],"netIncome":[null,null,null],"pe":[null,null,null],"product":"探针卡全球第一（2023年市占23.52%），另有探针台（Triton等）、工程探针与计量设备；HBM/AI探针卡核心供应商","aShare":"国产探针卡厂商强一股份等（A股直接对标少）；长川科技（探针台）"},{"market":"美股","cn":"康特科技","en":"Camtek","ticker":"CAMT.O","report":"Q1 FY2026","returnPct":49,"revenue":[6,7,8],"netIncome":[2,2,2],"pe":[36,36,29],"product":"检测与量测设备，聚焦先进封装、存储/HBM、CIS、功率、RF与MEMS等细分市场","aShare":"中科飞测（先进封装量检测）、精测电子"},{"market":"美股","cn":"盛美半导体","en":"ACM Research","ticker":"ACMR.O","report":"Q1 FY2026","returnPct":129,"revenue":[12,16,null],"netIncome":[2,2,null],"pe":[29.5,29.5,null],"product":"清洗设备（中国市场市占约30%）、电镀ECP、立式炉管、PECVD、涂胶显影及先进封装湿法设备","aShare":"其A股上市主体即盛美上海（688082）；同类：至纯科技、北方华创、芯源微（清洗）"},{"market":"美股","cn":"库力索法","en":"Kulicke & Soffa","ticker":"KLIC.O","report":"H1 FY2026","returnPct":162,"revenue":[null,null,null],"netIncome":[null,null,null],"pe":[null,null,null],"product":"封装设备：引线键合机为主的键合设备","aShare":"新益昌（固晶/键合设备，对标Besi、ASMPT）、骄成超声（超声键合）"},{"market":"美股","cn":"亚舍立","en":"Axcelis Technologies","ticker":"ACLS.O","report":"Q1 FY2026","returnPct":45,"revenue":[null,null,null],"netIncome":[null,null,null],"pe":[null,null,null],"product":"离子注入机（全球第二，2024年份额21.19%，以高能离子注入机见长）","aShare":"万业企业-凯世通（低能大束流）、北方华创（Sirius MC 313）；烁科中科信（未上市）"},{"market":"美股","cn":"维易科","en":"Veeco Instruments","ticker":"VECO.O","report":"Q1 FY2026","returnPct":79,"revenue":[null,null,null],"netIncome":[null,null,null],"pe":[null,null,null],"product":"激光退火、离子束沉积（IBD）等设备，强于先进逻辑与先进封装；2025年10月宣布与Axcelis全股票合并","aShare":"中微公司、北方华创（沉积/退火类设备，暂无激光退火直接对标）"},{"market":"美股","cn":"超科林","en":"Ultra Clean Holdings","ticker":"UCTT.O","report":"Q1 FY2026","returnPct":272,"revenue":[null,null,null],"netIncome":[null,null,null],"pe":[null,null,null],"product":"设备关键子系统与模块集成制造（气体输送系统、腔体模块等），服务半导体设备OEM","aShare":"富创精密（模块/机械类）、新莱应材（气体管路）"},{"market":"美股","cn":"Ichor","en":"Ichor Holdings","ticker":"ICHR.O","report":"Q1 FY2026","returnPct":444,"revenue":[null,null,null],"netIncome":[null,null,null],"pe":[null,null,null],"product":"气体/化学品（流体）输送子系统，供货半导体设备OEM","aShare":"万业企业、新莱应材（气体/液体输送系统）"},{"market":"美股","cn":"Advanced Energy","en":"Advanced Energy Industries","ticker":"AEIS.O","report":"Q1 FY2026","returnPct":87,"revenue":[null,null,null],"netIncome":[null,null,null],"pe":[null,null,null],"product":"射频电源、供电系统等设备电气类核心零部件（主要用于刻蚀与沉积设备）","aShare":"英杰电气、北方华创（射频电源/供电系统）"},{"market":"美股","cn":"Cohu","en":"Cohu","ticker":"COHU.O","report":"Q1 FY2026","returnPct":171,"revenue":[8,null,null],"netIncome":[1,null,null],"pe":[26,null,null],"product":"后道测试分选机与测试接口产品（行业归类于半导体设备板块）","aShare":"长川科技、金海通（分选机）、华峰测控"},{"market":"美股","cn":"Aehr测试系统","en":"Aehr Test Systems","ticker":"AEHR.O","report":"9M FY2026","returnPct":211,"revenue":[null,null,null],"netIncome":[null,null,null],"pe":[null,null,null],"product":"晶圆级老化/测试（burn-in）系统（行业归类于半导体设备板块）","aShare":"无直接对标；测试设备相关：华峰测控、长川科技"},{"market":"美股","cn":"福尼克斯","en":"Photronics","ticker":"PLAB.O","report":"H1 FY2026","returnPct":36,"revenue":[null,null,null],"netIncome":[null,null,null],"pe":[null,null,null],"product":"光掩膜版（掩膜材料属性，行业归类于半导体设备与材料板块）","aShare":"清溢光电、路维光电、冠石科技、龙图光罩"},{"market":"日股","cn":"东京电子","en":"Tokyo Electron","ticker":"8035.T","report":"GS Forecasts","returnPct":152,"revenue":[3188,4049,4588.5],"netIncome":[713.5,1057.5,1265.3],"pe":[41.4,27.5,22.6],"product":"日本最大、全球第四大设备商：涂胶显影（全球市占92%、EUV配套100%）、刻蚀（27%）、薄膜沉积（28%）、清洗（21%）、晶圆探针台（38%）、键合/解键合（32%）","aShare":"北方华创（平台型）、中微公司（刻蚀）、拓荆科技（沉积）、芯源微（涂胶显影）、盛美上海（清洗）","forecastSource":"GS","eps":[1594.9,2404.2,2926.6],"forecastRange":"FY3/27E–FY3/29E","valueUnit":"十亿日元"},{"market":"日股","cn":"爱德万测试","en":"Advantest","ticker":"6857.T","report":"GS Forecasts","returnPct":102,"revenue":[1555.1,1887,2028.8],"netIncome":[542.7,681.3,711.7],"pe":[40.6,31.8,30.4],"product":"半导体测试机龙头：SoC测试机（V93000，AI ASIC测试份额约90%）、存储测试机（T5801）、CD-SEM/缺陷复查SEM等","aShare":"华峰测控、长川科技、联动科技、精智达（存储测试）、金海通","forecastSource":"GS","eps":[757.9,967.6,1010.8],"forecastRange":"FY3/27E–FY3/29E","valueUnit":"十亿日元"},{"market":"日股","cn":"迪思科","en":"DISCO","ticker":"6146.T","report":"GS Forecasts","returnPct":48,"revenue":[587.6,698.5,755.7],"netIncome":[217.6,270.3,294.1],"pe":[34.6,27.9,25.6],"product":"后道精密加工龙头：切割（Kiru）、研磨（Kezuru）、抛光（Migaku）设备及配套耗材","aShare":"光力科技（划片机/减薄机/刀片耗材，全面对标DISCO）","forecastSource":"GS","eps":[2006.1,2492,2711.4],"forecastRange":"FY3/27E–FY3/29E","valueUnit":"十亿日元"},{"market":"日股","cn":"SCREEN控股","en":"SCREEN Holdings","ticker":"7735.T","report":"GS Forecasts","returnPct":147,"revenue":[740.4,853.2,931.8],"netIncome":[114.2,132.6,146],"pe":[27.6,23.7,21.6],"product":"单片式湿法清洗设备全球第一（市占约50%）、涂胶显影（与东京电子双寡头）、闪灯退火、膜厚量测/晶圆检测、先进封装直写光刻","aShare":"盛美上海、至纯科技、北方华创（清洗）；芯源微（涂胶显影）","forecastSource":"GS","eps":[604,701.3,772.1],"forecastRange":"FY3/27E–FY3/29E","valueUnit":"十亿日元"},{"market":"日股","cn":"国际电气","en":"Kokusai Electric","ticker":"6525.T","report":"GS Forecasts","returnPct":109,"revenue":[315,400.9,446.8],"netIncome":[51.1,74.1,85.6],"pe":[41.4,28.5,24.7],"product":"批式成膜设备（批式ALD全球领先、LP-CVD、氧化/扩散/退火）及膜质改善（Treatment）处理设备","aShare":"北方华创、微导纳米（批式ALD/炉管）、盛美上海（立式炉管）","forecastSource":"GS","eps":[219.7,318.6,368],"forecastRange":"FY3/27E–FY3/29E","valueUnit":"十亿日元"},{"market":"日股","cn":"Lasertec","en":"Lasertec","ticker":"6920.T","report":"GS Forecasts","returnPct":113,"revenue":[229.3,288.4,410.1],"netIncome":[79.3,100.2,150.9],"pe":[50.6,40,26.6],"product":"掩膜检测设备龙头，EUV掩膜检测独占鳌头（ACTIS系列）","aShare":"无直接对标（EUV掩膜检测独家）；量检测相关：中科飞测、精测电子","forecastSource":"GS","eps":[884.7,1117.9,1683.6],"forecastRange":"FY6/26E–FY6/28E","valueUnit":"十亿日元"},{"market":"日股","cn":"东京精密","en":"Tokyo Seimitsu (Accretech)","ticker":"7729.T","report":"GS Forecasts","returnPct":83,"revenue":[185.2,201.8,216.9],"netIncome":[28.7,32.7,35.9],"pe":[26,22.9,20.8],"product":"晶圆探针机、切割/研磨等后道加工设备及精密量测仪器","aShare":"长川科技（探针台）、光力科技（切割/减薄）","forecastSource":"GS","eps":[707.1,805.7,884.5],"forecastRange":"FY3/27E–FY3/29E","valueUnit":"十亿日元"},{"market":"日股","cn":"TOWA","en":"TOWA","ticker":"6315.T","report":"FY2026","returnPct":35,"revenue":[3,4,4],"netIncome":[0,1,1],"pe":[null,13,21],"product":"半导体封装模塑（molding）设备龙头","aShare":"耐科装备（封装塑封设备，先进封装模塑机台国内进度最快）"},{"market":"日股","cn":"荏原制作所","en":"Ebara","ticker":"6361.T","report":"GS Forecasts","returnPct":67,"revenue":[1043.1,1193.2,1330.8],"netIncome":[112.8,135.5,168.5],"pe":[23.1,19,14.9],"product":"CMP设备（全球第二）、斜边抛光、电镀设备、干式真空泵及尾气处理装置","aShare":"华海清科（CMP）","forecastSource":"GS","eps":[248.1,302.1,384.2],"forecastRange":"FY12/26E–FY12/28E","valueUnit":"十亿日元"},{"market":"日股","cn":"爱发科","en":"ULVAC","ticker":"6728.T","report":"9M FY2026","returnPct":54,"revenue":[15,16,17],"netIncome":[1,2,2],"pe":[30,15,16],"product":"真空技术设备平台：溅射/蒸镀成膜、灰化、干法刻蚀、离子注入设备；PLP面板级封装及成膜系统对华出货增长","aShare":"北方华创（PVD/溅射）、屹唐半导体（去胶/灰化）、万业企业-凯世通（离子注入）"},{"market":"日股","cn":"佳能","en":"Canon","ticker":"7751.T","report":"Q1 FY2026","returnPct":8,"revenue":[287,291,297],"netIncome":[19,21,22],"pe":[19.5,17.6,17],"product":"光刻机（i线/KrF成熟制程光刻机及纳米压印NIL；半导体设备为其业务板块之一）","aShare":"整机无A股对标（上海微电子，未上市）"},{"market":"日股","cn":"尼康","en":"Nikon","ticker":"7731.T","report":"FY2026","returnPct":29,"revenue":[41,44,45],"netIncome":[-2,1,2],"pe":[-22.5,45,25],"product":"光刻机（ArF等；封装用光刻市场扩张亦带来机会；半导体设备为其业务板块之一）","aShare":"整机无A股对标（上海微电子，未上市）"},{"market":"日股","cn":"牛尾电机","en":"Ushio","ticker":"6925.T","report":"FY2026","returnPct":80,"revenue":[10,12,13],"netIncome":[1,1,1],"pe":[21,21,23],"product":"曝光光源/特种灯源，受益封装光刻市场长期扩张","aShare":"无直接对标（国内光刻光源代表科益虹源，未上市）"},{"market":"日股","cn":"日本麦克隆尼","en":"Micronics Japan","ticker":"6871.T","report":"Q1 FY2026","returnPct":168,"revenue":[null,null,null],"netIncome":[null,null,null],"pe":[null,null,null],"product":"探针卡（2023年全球市占12.13%、居第三）及测试设备","aShare":"国产探针卡厂商强一股份等（A股直接对标少）"},{"market":"日股","cn":"Rorze","en":"Rorze","ticker":"6323.T","report":"Q1 FY2027","returnPct":103,"revenue":[null,null,null],"netIncome":[null,null,null],"pe":[null,null,null],"product":"晶圆传送/自动化设备（EFEM、真空机械手等机电一体类部件与设备）","aShare":"富创精密、机器人-新松（机电一体/机械手；华卓精科、京仪自动化未上市）"}]</script>
-</section>
-
-
-<!-- ── 一、晶圆厂CapEx总体结构 ── -->
-<div class="st" onclick="toggleSec(this)">🏭 晶圆厂CapEx总体结构：厂房 vs 设备<span class="st-arrow">▾</span></div>
-<div class="sec-body">
+<!-- ① 反推：市值 → CapEx -->
+<div class="st"><span>① 反推：给定市值，倒算隐含 CapEx 情景</span><span class="sub">市值÷PE→净利润÷净利率→所需营收，与该公司当前模型营收比较，等比缩放②输入区的三条产线</span></div>
 <div class="card">
-  <div class="src-note">数据来源：SEMI、Gartner、Yole、ASML、摩根士丹利、瑞银、美银美林、安信证券、兴业证券、广发证券等机构研报及行业纪要，经《晶圆厂CapEx设备分配结构分析：逻辑 vs 存储》纪要整理，2026-07同步</div>
-  <div style="font-weight:700;font-size:12px;margin-bottom:8px">单条新建晶圆产线CapEx分配</div>
-  <table class="ctable">
-    <thead><tr><th>类别</th><th class="num">占比</th></tr></thead>
-    <tbody>
-      <tr><td><strong>前道晶圆制造设备</strong></td><td class="num" style="color:var(--accent);font-weight:700">65%–70%</td></tr>
-      <tr><td>厂房建设（土建+洁净室）</td><td class="num">20%</td></tr>
-      <tr><td>封装设备</td><td class="num">5%</td></tr>
-      <tr><td>测试设备</td><td class="num">7%</td></tr>
-      <tr><td>其他</td><td class="num">3%</td></tr>
-    </tbody>
+  <div class="alert-scope" style="margin-bottom:14px">
+    <b>方法论：假设 CapEx 增量在先进逻辑/DRAM/3D NAND 三条产线间按当前②输入区的比例同步等比放大（乘以同一个倍数 k）。</b>
+    这是因为该公司的营收通常横跨好几个设备大类、又同时来自三条产线，"整体等比缩放"是唯一能给出确定倍数 k 的假设；如果你想测试"只放大某一条产线"的情景，直接去②输入区手动改那一条产线，再看⑤/⑦ 的结果即可，不必依赖这个反推器。
+  </div>
+  <div class="in-grid" style="grid-template-columns:repeat(auto-fit,minmax(230px,1fr))">
+    <div class="fab">
+      <div class="row"><label style="width:90px">选择公司</label><select id="rv-co" style="flex:1;padding:3px 7px;border:1px solid var(--border);border-radius:5px;font-size:12px;font-family:inherit"></select></div>
+      <div class="row"><label style="width:90px">目标市值</label><input id="rv-mc" type="number" step="10"><span class="u">亿元 · 默认=实际市值</span></div>
+      <div class="row"><label style="width:90px">净利率假设</label><input id="rv-margin" type="number" step="0.1"><span class="u">%</span></div>
+      <div class="row"><label style="width:90px">PE倍数假设</label><input id="rv-pe" type="number" step="1"><span class="u">x</span></div>
+    </div>
+  </div>
+  <div class="seg-sum" id="rv-result">—</div>
+  <table class="res" id="rv-capex-table">
+    <thead><tr>
+      <th>产线</th>
+      <th style="text-align:right">当前假设</th>
+      <th style="text-align:right">倍数 k</th>
+      <th style="text-align:right">隐含假设</th>
+      <th style="text-align:right">折算CapEx(亿元)<br>当前</th>
+      <th style="text-align:right">折算CapEx(亿元)<br>隐含</th>
+    </tr></thead>
+    <tbody id="rv-capex-body"></tbody>
+    <tfoot id="rv-capex-foot"></tfoot>
   </table>
-  <div class="seg-sum">💡 从更宏观的统计口径看，设备整体（含前道+后道）占晶圆厂资本开支的<strong>70%–80%</strong>，厂房及其他占20%–30%。前道晶圆制造设备占全部半导体设备投资量的约<strong>80%–87%</strong>，封装和测试设备分别约占10%和8%。</div>
-</div>
+  <div class="seg-sum">DRAM/3D NAND 当前是「产能模式」，强度参数代表的是<b>设备采购额</b>（不含厂房），折算CapEx时按 ② 输入区「CapEx中设备占比」反向还原成含厂房的全口径CapEx，才能和先进逻辑的CapEx口径相加。</div>
+  <div style="margin-top:10px"><button class="btn" id="rv-apply">把这套 CapEx 情景应用到②输入区</button> <span class="u" id="rv-apply-msg" style="font-size:11px;color:var(--up)"></span></div>
 </div>
 
-<!-- ── 二、WFE品类分布 ── -->
-<div class="st" onclick="toggleSec(this)">📊 前道设备（WFE）品类分布与主要供应商<span class="st-arrow">▾</span></div>
-<div class="sec-body">
+<!-- ② 输入 -->
+<div class="st"><span>② 输入：国内晶圆厂 CapEx / 产能规划</span><span class="sub">每种厂型可切换「直接输入CapEx」或「产能×设备强度」</span></div>
 <div class="card">
-  <table class="ctable">
-    <thead><tr><th>设备品类</th><th class="num">占WFE比重</th><th>主要供应商</th></tr></thead>
-    <tbody>
-      <tr style="background:#f5f3ff"><td><strong>光刻设备（Lithography）</strong></td><td class="num" style="color:var(--accent);font-weight:700">25%–30%</td><td style="font-size:11px">ASML（EUV垄断）、Nikon、Canon</td></tr>
-      <tr style="background:#f5f3ff"><td><strong>刻蚀设备（Etch）</strong></td><td class="num" style="color:var(--accent);font-weight:700">22%–25%</td><td style="font-size:11px">Lam Research（~45%）、TEL（~27%）、AMAT（~15%）</td></tr>
-      <tr style="background:#f5f3ff"><td><strong>薄膜沉积（CVD/PVD/ALD）</strong></td><td class="num" style="color:var(--accent);font-weight:700">20%–23%</td><td style="font-size:11px">AMAT（PVD~85%）、Lam（ALD领先）、TEL、ASM</td></tr>
-      <tr><td>量测/检测（Metrology &amp; Inspection）</td><td class="num">12%–14%</td><td style="font-size:11px">KLA（~63%）、Hitachi、Lasertec</td></tr>
-      <tr><td>清洗设备（Clean）</td><td class="num">6%–8%</td><td style="font-size:11px">Screen、DNS、盛美</td></tr>
-      <tr><td>CMP（化学机械抛光）</td><td class="num">5%–6%</td><td style="font-size:11px">AMAT（~65%）、华海清科</td></tr>
-      <tr><td>离子注入（Ion Implant）</td><td class="num">4%–5%</td><td style="font-size:11px">AMAT（~70%）、Axcelis</td></tr>
-      <tr><td>热处理/扩散（Thermal）</td><td class="num">4%–5%</td><td style="font-size:11px">TEL、Kokusai Electric</td></tr>
-      <tr><td>涂胶显影（Coater/Developer）</td><td class="num">3%–4%</td><td style="font-size:11px">TEL</td></tr>
-    </tbody>
-  </table>
-  <div class="seg-sum">💡 <strong>三大核心设备（光刻+刻蚀+薄膜沉积）合计占WFE总投资的约60%–70%</strong>，是国产替代弹性最大、也是壁垒最高的三个环节。</div>
-</div>
+  <div class="in-grid" id="fab-inputs"></div>
+  <div class="gparams">
+    <div class="row"><label>USD/CNY</label><input id="p-fx" type="number" step="0.01" value="7.20"></div>
+    <div class="row"><label>CapEx中设备占比</label><input id="p-eq" type="number" step="1" value="75"><span class="u">%</span></div>
+    <div class="row"><label>设备中WFE占比</label><input id="p-wfe" type="number" step="1" value="80"><span class="u">%</span></div>
+    <span class="u" style="font-size:10.5px">来源：Excel「一、晶圆厂CapEx顶层结构」设备75%/厂房25%；「二、设备投资内部结构」WFE 80%</span>
+  </div>
+  <div class="seg-sum" id="wfe-total">—</div>
 </div>
 
-<!-- ── 三、逻辑 vs 存储 设备结构对比 ── -->
-<div class="st" onclick="toggleSec(this)">⚖️ 逻辑晶圆厂 vs 存储晶圆厂：设备结构对比<span class="st-arrow">▾</span></div>
-<div class="sec-body">
-<div class="card">
-  <table class="ctable">
-    <thead><tr><th>设备品类</th><th class="num">先进逻辑</th><th class="num">3D NAND</th><th class="num">DRAM（当前2D）</th></tr></thead>
-    <tbody>
-      <tr><td><strong>光刻</strong></td><td class="num" style="color:var(--dn);font-weight:700">30%–35% ⬆最高</td><td class="num" style="color:var(--up)">10%–15% ⬇最低</td><td class="num">25%–30%</td></tr>
-      <tr><td><strong>刻蚀</strong></td><td class="num">16%–20%</td><td class="num" style="color:var(--dn);font-weight:700">40%–50% ⬆最高</td><td class="num">20%–22%</td></tr>
-      <tr><td><strong>薄膜沉积</strong></td><td class="num">15%–20%</td><td class="num">23%–26%</td><td class="num">20%–22%</td></tr>
-      <tr><td>量测/检测</td><td class="num">10%–12%</td><td class="num">8%–12%</td><td class="num">9%–12%</td></tr>
-      <tr><td>其他（CMP/离子注入/热处理/清洗等）</td><td class="num">18%–25%</td><td class="num">10%–15%</td><td class="num">18%–22%</td></tr>
-      <tr style="background:var(--bg);font-weight:700"><td>每万片CapEx</td><td class="num">~$25亿+</td><td class="num">~$10–13亿</td><td class="num">~$12–15亿</td></tr>
-      <tr><td>光刻类型</td><td class="num">EUV + DUV</td><td class="num">仅DUV</td><td class="num">DUV + EUV（快速增加）</td></tr>
-      <tr><td>供应瓶颈</td><td class="num" style="font-size:11px">EUV光刻机</td><td class="num" style="font-size:11px">HAR刻蚀设备</td><td class="num" style="font-size:11px">EUV光刻机</td></tr>
-    </tbody>
-  </table>
-  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px">
-    <div class="seg-sum" style="margin-top:0">1️⃣ <strong>逻辑厂 = 光刻主导型</strong>：先进制程的核心驱动力是图形化精度，光刻占比最大且持续提升；先进逻辑产线每万片月产能CapEx约<strong>$25亿</strong>，是三类中最高。</div>
-    <div class="seg-sum" style="margin-top:0">2️⃣ <strong>NAND厂 = 刻蚀/沉积主导型</strong>：垂直堆叠本质是反复沉积和穿透刻蚀，光刻退居次要；32层→128层刻蚀占比从34.9%升至48.4%，400+层预计超过50%。</div>
-    <div class="seg-sum" style="margin-top:0">3️⃣ <strong>DRAM厂 = 介于两者之间</strong>：当前结构类似逻辑（光刻重要，1c节点EUV占光刻投资~60%），未来向3D DRAM演进后将趋近NAND结构。</div>
+<div class="kpi-grid" id="kpis"></div>
+
+<!-- ③ 表1 -->
+<div class="st"><span>③ 表1：各厂型 WFE 中各类设备价值量占比（%）</span><span class="sub"><span class="tag-src">Excel 实数</span> 单元格可编辑 · 行合计应≈100<br>末行紫色 = 各赛道设备 TAM（本表 × 上方各厂型 WFE 投入）</span></div>
+<div class="scroll"><table class="mx" id="t1"></table></div>
+<div class="seg-sum">「未分配/其他」列含制造自动化、扩散辅助等不对应国产标的的环节，计入 TAM 分母但不产生公司收入。行合计偏离 100% 会标红。</div>
+
+<!-- ④ 表2 -->
+<div class="st">
+  <span>④ 表2：各大类的国产化率 + 国产阵营内部厂商份额（%）
+    <span class="mode" id="rate-scen" style="margin-left:10px;vertical-align:middle">
+      <button data-s="2023">2023 实际</button><button data-s="2026" class="on">2026E</button>
+    </span>
+  </span>
+  <span class="sub"><span class="tag-src">照片读数</span> 紫色行=国产化率（可切情景）· 下方=国产阵营内部份额，列合计应≈100<br>悬停表头或单元格看细类明细与存疑标记</span>
+</div>
+<div class="scroll"><table class="mx" id="t2"></table></div>
+<div class="seg-sum">计算链条：<b>公司收入 = 该大类TAM × 该大类国产化率 × 该公司在国产阵营内的份额</b>。国产化率单独成行，方便直接跑情景。未上市厂商（新凯来、SMEE、上海睿励、中科信）单独列出——不计入的话，上市公司收入会被系统性高估。</div>
+
+<!-- ⑤ 输出 -->
+<div class="st"><span>⑤ 输出：各公司设备收入测算</span><span class="sub">单位：亿元人民币</span></div>
+<div class="res-grid">
+  <div class="card" style="margin:0">
+    <div style="font-weight:700;font-size:12px;margin-bottom:8px">各公司收入排序</div>
+    <table class="res"><thead><tr><th>公司</th><th style="text-align:right">收入(亿元)</th><th style="width:110px">相对规模</th><th style="text-align:right">主要来源</th></tr></thead><tbody id="res-co"></tbody></table>
+  </div>
+  <div class="card" style="margin:0">
+    <div style="font-weight:700;font-size:12px;margin-bottom:8px">各设备大类 TAM 与国产化拆分</div>
+    <table class="res"><thead><tr><th>设备大类</th><th style="text-align:right">TAM</th><th style="text-align:right">国产化率</th><th style="text-align:right">国产TAM</th></tr></thead><tbody id="res-cat"></tbody></table>
   </div>
 </div>
-</div>
 
-<!-- ── 四、逻辑厂设备分配细节 ── -->
-<div class="st collapsed" onclick="toggleSec(this)">🔬 逻辑晶圆厂设备CapEx分配细节<span class="st-arrow">▾</span></div>
-<div class="sec-body collapsed">
+
+<!-- ⑥ 交叉验证 -->
+<div class="st"><span>⑥ 交叉验证：测算收入 vs 实际收入</span><span class="sub">数据源：<code>半导体设备材料零部件 (1).xlsx / Sheet1</code><br>单位亿元 · 2025A 实际 · 2026E 一致预期</span></div>
+
 <div class="card">
-  <table class="ctable">
-    <thead><tr><th>设备品类</th><th class="num">逻辑厂占比</th><th>备注</th></tr></thead>
-    <tbody>
-      <tr style="background:#f5f3ff"><td><strong>光刻设备</strong></td><td class="num" style="color:var(--accent);font-weight:700">30%–35%</td><td style="font-size:11px">先进制程（≤5nm）中EUV占光刻投资50%–60%以上</td></tr>
-      <tr><td>刻蚀设备</td><td class="num">16%–20%</td><td style="font-size:11px">GAA结构下占比提升至25%–35%</td></tr>
-      <tr><td>薄膜沉积</td><td class="num">15%–20%</td><td style="font-size:11px">GAA带动ALD需求增30%+</td></tr>
-      <tr><td>量测/检测</td><td class="num">10%–12%</td><td style="font-size:11px">先进制程对overlay精度要求极高</td></tr>
-      <tr><td>CMP</td><td class="num">5%–7%</td><td style="font-size:11px">多层互连驱动</td></tr>
-      <tr><td>离子注入</td><td class="num">5%</td><td>—</td></tr>
-      <tr><td>热处理/扩散</td><td class="num">5%</td><td>—</td></tr>
-      <tr><td>其他（清洗/涂胶显影等）</td><td class="num">8%–10%</td><td>—</td></tr>
-    </tbody>
+  <div class="cc-head"><b>A. 模型覆盖的 12 家公司：测算值 vs 实际值</b></div>
+  <div class="cc-warn">
+    <b>口径必须先对齐，否则这张表会误导。</b>模型算的是「<b>国内前道 WFE 设备</b>收入」，而财报口径的营业收入还包含：海外收入、后道/封测设备、光伏及其他泛半导体、系统集成工程、耗材与服务。
+    所以「可比口径收入」一列是我从 Excel 的业务拆解文本里挑出的最接近前道设备的部分，<b>属于人工判断，逐条注明了依据</b>，请自行复核。偏离率以可比口径为分母。
+  </div>
+  <table class="res" id="cc-model">
+    <thead><tr>
+      <th>公司</th>
+      <th style="text-align:right">模型测算</th>
+      <th style="text-align:right">可比口径<br>2025A</th>
+      <th style="text-align:right">偏离</th>
+      <th style="text-align:right">营业收入<br>2025A</th>
+      <th style="text-align:right">营业收入<br>2026E</th>
+      <th>可比口径取数依据</th>
+    </tr></thead>
+    <tbody id="cc-model-body"></tbody>
   </table>
-  <div class="seg-sum">🔍 <strong>GAA架构（2nm及以下）对设备结构的影响</strong>：光刻层数持续增加（30%+每节点），但光刻相对WFE占比短期趋缓，因GAA新增步骤主要在刻蚀和沉积端；外延层从1层增至7层（+600%），ALD需求增加约30%；刻蚀步骤从FinFET约5道增至GAA约9道，占比从~20%升至~35%；多重图案化（SAQP）下1次EUV曝光=1次刻蚀，4重图案化=2次光刻+4次刻蚀，刻蚀用量翻4倍。</div>
-</div>
 </div>
 
-<!-- ── 五、存储晶圆厂设备分配细节 ── -->
-<div class="st collapsed" onclick="toggleSec(this)">💾 存储晶圆厂设备CapEx分配细节（3D NAND / DRAM）<span class="st-arrow">▾</span></div>
-<div class="sec-body collapsed">
 <div class="card">
-  <div style="font-weight:700;font-size:12px;margin-bottom:8px">3D NAND：垂直堆叠驱动，刻蚀主导</div>
-  <table class="ctable">
-    <thead><tr><th>设备品类</th><th class="num">NAND厂占比</th><th>备注</th></tr></thead>
-    <tbody>
-      <tr style="background:#fef2f2"><td><strong>刻蚀设备</strong></td><td class="num" style="color:var(--dn);font-weight:700">40%–50%</td><td style="font-size:11px">HAR刻蚀是核心瓶颈；从32层→128层，占比从35%升至48%</td></tr>
-      <tr><td><strong>薄膜沉积</strong></td><td class="num" style="font-weight:700">23%–26%</td><td style="font-size:11px">ON堆栈沉积、硬掩模沉积、字线填充</td></tr>
-      <tr><td>光刻设备</td><td class="num" style="color:var(--up)">10%–15%</td><td style="font-size:11px">仅需DUV（ArFi/ArF/KrF/I-line），无需EUV</td></tr>
-      <tr><td>量测/检测</td><td class="num">8%–12%</td><td>—</td></tr>
-      <tr><td>清洗</td><td class="num">5%–8%</td><td>—</td></tr>
-      <tr><td>其他</td><td class="num">5%–8%</td><td>—</td></tr>
-    </tbody>
+  <div class="cc-head">
+    <b>B. A/H 股半导体设备标的全清单（48 家）</b>
+    <input id="cc-search" type="search" placeholder="搜索公司 / 代码 / 业务 / 拆解关键词">
+    <span class="u" style="font-size:10.5px;color:var(--text2)" id="cc-count"></span>
+  </div>
+  <div class="cc-scroll">
+  <table class="res" id="cc-all">
+    <thead><tr>
+      <th>公司</th><th style="text-align:right">市值</th>
+      <th style="text-align:right">收入<br>24A</th><th style="text-align:right">收入<br>25A</th><th style="text-align:right">收入<br>26E</th>
+      <th style="text-align:right">扣非净利<br>24A</th><th style="text-align:right">扣非净利<br>25A</th><th style="text-align:right">归母净利<br>26E</th>
+      <th>2025A 营收业务拆解</th>
+    </tr></thead>
+    <tbody id="cc-all-body"></tbody>
   </table>
-  <div class="seg-sum">💡 Yole测算：2019–2025年3D NAND三大核心工艺设备（光刻+刻蚀+沉积）内部占比中，<strong>刻蚀设备约占69%–73%，沉积设备占23%–24%</strong>。NAND光刻强度是所有芯片类型中最低（仅10%–15%），层数增加时光刻投资增速约10%/节点，远低于逻辑的30%和DRAM的20%——这是国内存储产业（如长江存储）在光刻机受限环境下仍能推进的原因之一。Lam Research是3D NAND刻蚀绝对霸主（NAND channel etch市占率接近100%）。深宽比正从50:1向100:1甚至更高演进。</div>
-
-  <div style="font-weight:700;font-size:12px;margin:16px 0 8px">DRAM：2D微缩为主，EUV加速导入</div>
-  <table class="ctable">
-    <thead><tr><th>设备品类</th><th class="num">DRAM厂占比</th><th>备注</th></tr></thead>
-    <tbody>
-      <tr style="background:#f5f3ff"><td><strong>光刻设备</strong></td><td class="num" style="color:var(--accent);font-weight:700">25%–30%</td><td style="font-size:11px">EUV快速导入中；1c节点EUV占光刻投资~60%</td></tr>
-      <tr><td>刻蚀设备</td><td class="num">20%–22%</td><td style="font-size:11px">深沟槽刻蚀（电容器）为主</td></tr>
-      <tr><td>薄膜沉积</td><td class="num">20%–22%</td><td style="font-size:11px">High-k/Metal Gate ALD需求强劲</td></tr>
-      <tr><td>量测/检测</td><td class="num">9%–12%</td><td style="font-size:11px">EUV导入提升process control intensity至9%–10%</td></tr>
-      <tr><td>清洗</td><td class="num">5%–7%</td><td>—</td></tr>
-      <tr><td>CMP</td><td class="num">5%</td><td>—</td></tr>
-      <tr><td>其他</td><td class="num">8%–10%</td><td>—</td></tr>
-    </tbody>
-  </table>
-  <div class="seg-sum">📈 DRAM光刻强度趋势：1x节点~24%→1y~25%→1z~25%→1a~27%→1b/1c节点25%–30%（瑞银口径整体25%–30%，高于NAND的10%–15%，低于先进逻辑的30%–35%）。<strong>HBM对DRAM设备需求的额外拉动</strong>：HBM前道设备与标准DRAM相同，但需额外的TSV刻蚀、TSV沉积/电镀、临时键合、光学检测（bump检测）等中后道设备；每颗HBM消耗约3倍于DDR5的硅面积。</div>
-</div>
+  </div>
+  <div class="seg-sum">「模型」标记 = 该公司在上方测算器的公司清单内。市值截至 2026-06-26；2026E 为一致预期。</div>
 </div>
 
-<!-- ── 六、全球WFE按应用领域支出分布 ── -->
-<div class="st collapsed" onclick="toggleSec(this)">🌐 全球WFE按应用领域支出分布（摩根士丹利口径）<span class="st-arrow">▾</span></div>
-<div class="sec-body collapsed">
+<!-- ⑦ 市值测算 -->
+<div class="st"><span>⑦ 市值测算：模型净利润 × 估值倍数</span><span class="sub">净利率/PE倍数默认取自 2026E 一致预期（<code>净利率=归母净利26E÷营收26E</code>，<code>PE=市值÷归母净利26E</code>），均可编辑</span></div>
 <div class="card">
-  <table class="ctable">
-    <thead><tr><th>年份</th><th class="num">Foundry/Logic占比</th><th class="num">Memory占比</th><th class="num">其中DRAM</th><th class="num">其中NAND</th></tr></thead>
-    <tbody>
-      <tr><td>2022</td><td class="num">62%</td><td class="num">37%</td><td class="num">19%</td><td class="num">18%</td></tr>
-      <tr><td>2023</td><td class="num">73%</td><td class="num">26%</td><td class="num">20%</td><td class="num">5%</td></tr>
-      <tr><td>2024</td><td class="num">66%</td><td class="num">33%</td><td class="num">29%</td><td class="num">5%</td></tr>
-      <tr><td>2025E</td><td class="num">64%</td><td class="num">36%</td><td class="num">29%</td><td class="num">7%</td></tr>
-      <tr style="background:var(--bg);font-weight:700"><td>2026E</td><td class="num">63%</td><td class="num">36%</td><td class="num">27%</td><td class="num">10%</td></tr>
-    </tbody>
+  <div class="alert-scope" style="margin-bottom:14px">
+    <b>这是"如果模型的营收测算是对的，市场应该给多少市值"的反推，不是独立的估值判断。</b>
+    净利率用的是公司<b>整体</b>净利率（设备业务之外的部分也混在里面），不是分部净利率，会有偏差。
+    PE 倍数默认取「当前市值 ÷ 2026E一致预期净利润」，即市场现在对这家公司未来利润愿意付多少倍——把它套在模型净利润上，本质是"同一把尺子量两个不同的利润数字"，尺子（PE）本身对不对、该不该变，这张表不回答。
+  </div>
+  <div class="cc-head" style="margin-bottom:12px;flex-wrap:wrap">
+    <b>统一设置</b>
+    <span style="display:inline-flex;align-items:center;gap:5px;font-size:11.5px;color:var(--text2)">净利率<input id="mk-margin-all" type="number" step="0.1" placeholder="%" style="width:64px;padding:4px 7px;border:1px solid var(--border);border-radius:6px;font-size:11.5px;font-family:inherit;text-align:right">%</span>
+    <span style="display:inline-flex;align-items:center;gap:5px;font-size:11.5px;color:var(--text2)">PE倍数<input id="mk-pe-all" type="number" step="1" placeholder="x" style="width:64px;padding:4px 7px;border:1px solid var(--border);border-radius:6px;font-size:11.5px;font-family:inherit;text-align:right">x</span>
+    <button class="btn" id="mk-apply-all">应用到全部公司</button>
+    <button class="btn" id="mk-reset-all">恢复各家默认值</button>
+    <span class="u" style="font-size:10px;color:var(--text2)">留空的一栏不会被覆盖，例如只填PE、净利率留空，就只统一PE</span>
+  </div>
+  <div class="kpi-grid" id="mktcap-kpis"></div>
+  <div style="overflow-x:auto">
+  <table class="res" id="mktcap-table">
+    <thead><tr>
+      <th>公司</th>
+      <th style="text-align:right">模型营收<br>(亿元)</th>
+      <th style="text-align:right">市场预期营收<br>26E→27E→28E</th>
+      <th style="text-align:right">净利率假设<br>(%)</th>
+      <th style="text-align:right">模型净利润<br>(亿元)</th>
+      <th style="text-align:right">市场预期净利润<br>26E→27E→28E</th>
+      <th style="text-align:right">PE倍数<br>(x)</th>
+      <th style="text-align:right">隐含市值<br>(亿元)</th>
+      <th style="text-align:right">实际市值<br>(亿元)</th>
+      <th style="text-align:right">隐含/实际</th>
+    </tr></thead>
+    <tbody id="mktcap-body"></tbody>
   </table>
-  <div class="seg-sum">💡 2023–2024年NAND支出极度萎缩（周期下行），而DRAM因HBM需求大增而逆势扩张；2026E口径下NAND占比回升至10%，跟踪存储周期拐点的关键先行指标。</div>
-</div>
-</div>
-
-<!-- ── 七、设备商受益格局 + 国产映射 ── -->
-<div class="st" onclick="toggleSec(this)">🇨🇳 设备商受益格局与国产对标（初版，待补充标的数据）<span class="st-arrow">▾</span></div>
-<div class="sec-body">
-<div class="card">
-  <div style="font-weight:700;font-size:12px;margin-bottom:8px">全球场景 · 最大受益者</div>
-  <table class="ctable">
-    <thead><tr><th>场景</th><th>最大受益者</th><th>原因</th></tr></thead>
-    <tbody>
-      <tr><td>先进逻辑扩产</td><td><strong style="color:var(--accent)">ASML</strong></td><td style="font-size:11px">EUV/High-NA垄断，占光刻100%</td></tr>
-      <tr><td>3D NAND扩产</td><td><strong style="color:var(--accent)">Lam Research</strong></td><td style="font-size:11px">HAR刻蚀垄断（NAND channel etch ~100%）</td></tr>
-      <tr><td>DRAM/HBM扩产</td><td><strong style="color:var(--accent)">ASML + AMAT</strong></td><td style="font-size:11px">EUV导入 + PVD/CMP/沉积全线受益</td></tr>
-      <tr><td>存储技术升级</td><td><strong style="color:var(--accent)">ASM International</strong></td><td style="font-size:11px">ALD需求因DRAM高k金属栅+NAND间隙填充爆发</td></tr>
-      <tr><td>全品类均衡受益</td><td><strong style="color:var(--accent)">Applied Materials</strong></td><td style="font-size:11px">产品线最广（PVD/CMP/离子注入/CVD/刻蚀均有布局）</td></tr>
-    </tbody>
-  </table>
-
-  <div style="font-weight:700;font-size:12px;margin:16px 0 8px">国内设备商 · 按品类归属对标（公开信息，非财务/份额数据，待补充）</div>
-  <table class="ctable">
-    <thead><tr><th>公司</th><th>代码</th><th>对标设备品类</th><th>对标海外龙头</th></tr></thead>
-    <tbody>
-      <tr><td><strong>北方华创</strong></td><td><code>002371</code></td><td style="font-size:11px">刻蚀 + 薄膜沉积（PVD/CVD/ALD）+ 清洗，平台型布局</td><td style="font-size:11px">Lam Research / AMAT / TEL</td></tr>
-      <tr><td><strong>中微公司</strong></td><td><code>688012</code></td><td style="font-size:11px">刻蚀设备（CCP/ICP）</td><td style="font-size:11px">Lam Research / TEL</td></tr>
-      <tr><td><strong>拓荆科技</strong></td><td><code>688072</code></td><td style="font-size:11px">薄膜沉积（PECVD/ALD）+ 混合键合设备</td><td style="font-size:11px">AMAT / Lam / ASM</td></tr>
-      <tr><td>华海清科</td><td><code>688120</code></td><td style="font-size:11px">CMP（化学机械抛光）</td><td style="font-size:11px">AMAT</td></tr>
-      <tr><td>盛美上海</td><td><code>688082</code></td><td style="font-size:11px">清洗设备</td><td style="font-size:11px">Screen / DNS</td></tr>
-      <tr><td>芯源微</td><td><code>688037</code></td><td style="font-size:11px">涂胶显影（Coater/Developer）</td><td style="font-size:11px">TEL</td></tr>
-    </tbody>
-  </table>
-  <div class="seg-sum">⚠️ <strong>本节为初版框架</strong>：上表"国内设备商对标"仅为品类归属常识性映射，不含产能、订单、国产化率、财务数据——这些需要后续按公司逐一核实补充，避免直接用于投资判断。上方全球CapEx结构、WFE分布、逻辑vs存储对比数据已按源文件同步，未做修改。</div>
-</div>
+  </div>
+  <div class="seg-sum">「市场预期营收/净利润」来源：<code>半导体上游数据库.xlsx / 市场盈利预测</code>（分析师一致预期，2026-07-27口径），单位亿元。<b>该口径与净利率/PE默认值所用的 2026E 一致预期（来自 <code>半导体设备材料零部件 (1).xlsx / Sheet1</code>）是两份不同时点/不同来源的数据，数字不完全一致</b>——例如北方华创 2026E 净利润，本表默认口径为 64.78 亿，市场盈利预测口径为 72.5 亿，两者相差约12%，这里不做取舍统一，仅并列展示供交叉核对。屹唐股份、至纯科技、先导基电（原万业企业）不在该数据源覆盖范围内，显示"无数据"。微导纳米虽无实际市值/PE可比，但新数据源提供了其营收净利预测，已并入本表作参考行。</div>
 </div>
 
 </div>
+
+<div id="pop"></div>
 
 <script>
-function toggleSec(st) {
-  st.classList.toggle('collapsed');
-  const body = st.nextElementSibling;
-  if (body && body.classList.contains('sec-body')) body.classList.toggle('collapsed');
-}
+/* ══════════ 数据定义 ══════════ */
 
-const conclusionSection = document.getElementById('equipment-conclusion');
-const overseasSection = document.getElementById('overseas-equipment-companies');
-const dashboardWrap = document.querySelector('.wrap');
-if (conclusionSection && dashboardWrap) dashboardWrap.prepend(conclusionSection);
-if (overseasSection && dashboardWrap) {
-  if (conclusionSection) conclusionSection.insertAdjacentElement('afterend', overseasSection);
-  else dashboardWrap.prepend(overseasSection);
-}
+// 计算口径：11个大类（末位不参与公司分配）
+const CATS = ['光刻','涂胶显影','刻蚀','薄膜沉积','离子注入','热处理','CMP','去胶','清洗','量测检测','未分配/其他'];
+const ALLOC = CATS.slice(0,10);
 
-const overseasEquipmentDataNode = document.getElementById('overseas-equipment-data');
-if (overseasEquipmentDataNode) {
-  const overseasEquipmentData = JSON.parse(overseasEquipmentDataNode.textContent);
-  const marketCap100mUsd = {
-    "AMAT.O":4397.90007466,"LRCX.O":3992.9481459,"KLAC.O":2804.44224835,"TER.O":578.36067173,
-    "ASML.O":7096.27770687,"MKSI.O":232.91917444,"ENTG.O":209.657,"ONTO.N":146.86788157,
-    "NVMI.O":144.41518041,"FORM.O":88.39291597,"CAMT.O":72.19313549,"ACMR.O":59.27788293,
-    "KLIC.O":55.26351811,"ACLS.O":43.62676679,"VECO.O":33.32428281,"UCTT.O":45.48284594,
-    "ICHR.O":33.23876162,"AEIS.O":120.67507773,"COHU.O":25.95115838,"AEHR.O":29.42137379,
-    "PLAB.O":18.42025926,"8035.T":1890.1047999419,"6857.T":1325.9027309849,"6146.T":455.5692668482,
-    "7735.T":192.708204355,"6525.T":127.4318550063,"6920.T":248.1678450811,"7729.T":47.2603558692,
-    "6315.T":13.1603245781,"6361.T":156.641630118,"6728.T":29.6138243538,"7751.T":370.4084392209,
-    "7731.T":45.1876438149,"6925.T":20.9808383672,"6871.T":38.3021151726,"6323.T":48.5572288649
-  };
-  const financialBody = document.getElementById('overseas-financial-body');
-  const mappingBody = document.getElementById('overseas-mapping-body');
-  const searchInput = document.getElementById('overseas-company-search');
-  const countNode = document.getElementById('overseas-company-count');
-  const peMedianNode = document.getElementById('overseas-pe-median');
-  const peCoverageNode = document.getElementById('overseas-pe-coverage');
-  let activeMarket = '全部';
+// 厂型 + 产能强度（设备采购额，亿美元/万片·月）
+const FABS = [
+  {k:'logic', name:'先进逻辑 (≤14nm)', mode:'capex', capex:1200, cap:10, inten:13.0, intenNote:'估算，Excel 无此口径'},
+  {k:'dram',  name:'DRAM',             mode:'cap',   capex:900,  cap:10, inten:9,    intenNote:'Excel：8~9 亿美元/万片'},
+  {k:'nand',  name:'3D NAND',          mode:'cap',   capex:700,  cap:10, inten:9,    intenNote:'Excel：9~10 亿美元/万片'}
+];
 
-  const escapeHtml = (value) => String(value ?? '').replace(/[&<>"']/g, (char) => ({
-    '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
-  }[char]));
-  const numberCell = (value, digits = 0) => value === null
-    ? '<span class="empty">—</span>'
-    : Number(value).toLocaleString('zh-CN', { minimumFractionDigits: digits, maximumFractionDigits: digits });
-  const forecastCell = (value) => value === null
-    ? '<span class="empty">—</span>'
-    : Number(value).toLocaleString('zh-CN', { minimumFractionDigits: 0, maximumFractionDigits: 1 });
-  const peCell = (value) => value === null
-    ? '<span class="empty">—</span>'
-    : '<span class="pe-cell">' + Number(value).toFixed(1).replace('.0','') + 'x</span>';
-  const returnCell = (value) => {
-    if (value === null) return '<span class="empty">—</span>';
-    const cls = value >= 0 ? 'ret-pos' : 'ret-neg';
-    return '<span class="' + cls + '">' + (value > 0 ? '+' : '') + value + '%</span>';
-  };
-  const marketPill = (market) => '<span class="market-pill ' + (market === '日股' ? 'jp' : '') + '">' + market + '</span>';
-  const companyPageUrl = {
-    "AMAT.O": "../../us-mapping/companies/AMAT_AppliedMaterials.html",
-    "LRCX.O": "../../us-mapping/companies/LRCX_LamResearch.html",
-    "ASML.O": "../../us-mapping/companies/ASML_ASML.html"
-  };
-  const companyName = (item) => {
-    const name = escapeHtml(item.cn);
-    const url = companyPageUrl[item.ticker];
-    return url
-      ? '<a class="company-link" href="' + url + '" target="_blank" rel="noopener" title="查看公司页">' + name + '</a>'
-      : name;
-  };
-  const companyCell = (item) => {
-    const forecastMeta = [item.forecastRange, item.valueUnit].filter(Boolean).join(' · ');
-    return '<div class="company-cell"><b>' + companyName(item) +
-      (item.forecastSource === 'GS' ? '<i class="gs-tag">GS</i>' : '') +
-      '</b><span>' + escapeHtml(item.en) +
-      (forecastMeta ? ' · ' + escapeHtml(forecastMeta) : '') + '</span></div>';
-  };
-  const mappingCompanyCell = (item) => '<div class="company-cell"><b>' + companyName(item) +
-    (item.forecastSource === 'GS' ? '<i class="gs-tag">GS</i>' : '') +
-    '</b><span>' + escapeHtml(item.en) + '</span></div>';
-  const marketCapCell = (item) => {
-    const value = marketCap100mUsd[item.ticker];
-    return value === undefined
-      ? '<span class="empty">—</span>'
-      : '<span class="ticker">' + Number(value).toLocaleString('zh-CN', {
-          minimumFractionDigits: 0,
-          maximumFractionDigits: 1
-        }) + '亿美元</span>';
-  };
+// 表1：各厂型 WFE 内大类价值量占比（%）—— Excel 实数
+const T1 = {
+  logic:{'光刻':17,'涂胶显影':4,'刻蚀':22,'薄膜沉积':22,'离子注入':2,'热处理':1,'CMP':5,'去胶':1.5,'清洗':4,'量测检测':12,'未分配/其他':9.5},
+  dram: {'光刻':20,'涂胶显影':4,'刻蚀':22,'薄膜沉积':20,'离子注入':4,'热处理':5,'CMP':8,'去胶':1,'清洗':2,'量测检测':7,'未分配/其他':7},
+  nand: {'光刻':18,'涂胶显影':2,'刻蚀':40,'薄膜沉积':25,'离子注入':0.3,'热处理':1,'CMP':6,'去胶':0.2,'清洗':3.5,'量测检测':4,'未分配/其他':0}
+};
+const T1SRC = {
+  logic:'Excel 主流口径：光刻17% 薄膜22% 刻蚀22% 量测12% 清洗6% 涂胶显影4% CMP3% 离子注入2% 热处理1% 其他11%（去胶1.5%自「其他」拆出）',
+  dram :'Excel 兴证口径：光刻20% 刻蚀22% CVD12%+ALD4%+PVD4%=薄膜20% 量测7% 清洗6% 热处理5% 涂胶显影4% CMP4% 离子注入4% 其他8%（去胶1%自「其他」拆出）',
+  nand :'Excel 产业口径：刻蚀40% 薄膜25% 光刻18% 清洗8%；「量测/涂胶显影/CMP/热处理/离子注入/去胶合计9%」按估算拆分'
+};
 
-  const farPeValues = overseasEquipmentData
-    .filter((item) => item.forecastSource === 'GS')
-    .map((item) => item.pe?.[2])
-    .filter((value) => value !== null && value !== undefined)
-    .sort((a,b) => a - b);
-  if (farPeValues.length) {
-    const middle = Math.floor(farPeValues.length / 2);
-    const median = farPeValues.length % 2
-      ? farPeValues[middle]
-      : (farPeValues[middle - 1] + farPeValues[middle]) / 2;
-    peMedianNode.textContent = Number(median).toFixed(1).replace('.0','') + 'x';
-    peCoverageNode.textContent = '统计' + farPeValues.length + '家GS预测公司';
-  }
+// ── 细类明细（浮窗用，不进入计算）──
+// w  = 该细类占所属大类价值量比重(%)，估算
+// r23/r26 = 国产化率(%)，来源：会议照片《14nm(FinFET) 设备国产化率》，行序经三锚点(CMP/清洗/AOI)锁定
+// v  = 国产阵营厂商格局，同一照片；?? 标记为透视变形导致读数存疑
+const DETAIL = {
+  '光刻':      [{c:'DUV dry',w:25,r23:0,r26:10,v:'SMEE'},{c:'DUV immersion',w:75,r23:0,r26:0,v:'SMEE（尚未突破）'}],
+  '涂胶显影':  [{c:'inline（与光刻机联机）',w:70,r23:0,r26:0,v:'芯源微'},{c:'offline',w:30,r23:0,r26:40,v:'芯源微'}],
+  '刻蚀':      [{c:'CCP（介质刻蚀）',w:45,r23:13,r26:60,v:'中微 70% / 北方华创 25% / 屹唐 5%'},{c:'ICP（硅·金属刻蚀）',w:55,r23:5,r26:50,v:'北方华创 60% / 中微 30% / 屹唐 5%'}],
+  '薄膜沉积':  [{c:'PVD',w:20,r23:10,r26:60,v:'北方华创 80% / 新凯来 15% / 陛通?? 5%'},{c:'PECVD',w:25,r23:10,r26:60,v:'拓荆 70% / 北方华创 20% / 新凯来·盛美等 10%'},{c:'SA/HDP CVD',w:10,r23:0,r26:0,v:'北方华创·拓荆·盛美 均认证中（故国产化率 0%）'},{c:'LPCVD',w:10,r23:10,r26:25,v:'北方华创 60% / 中微 35%'},{c:'ALD',w:25,r23:0,r26:35,v:'拓荆 70% / 微导 20% / 芯崙?? 10%'},{c:'EPI（外延）',w:10,r23:10,r26:50,v:'北方华创 80% / 新凯来 10% / 思锐智能等 10%'}],
+  '离子注入':  [{c:'低能大束流',w:45,r23:0,r26:40,v:'凯世通(先导基电) 60% / 中科信 30%'},{c:'中低束流',w:35,r23:35,r26:60,v:'中科信 70% / 凯世通 20% / 新凯来 10%'},{c:'高能',w:20,r23:0,r26:20,v:'凯世通(先导基电) 70% / 中科信 10%'}],
+  '热处理':    [{c:'氧化扩散',w:55,r23:15,r26:55,v:'北方华创 60% / 屹唐 30%'},{c:'退火',w:45,r23:20,r26:60,v:'屹唐 60% / 北方华创 40%'}],
+  'CMP':       [{c:'CMP',w:100,r23:8,r26:40,v:'华海清科 90% / 盛美 5%（第三家读数存疑）'}],
+  '去胶':      [{c:'去胶机',w:100,r23:45,r26:75,v:'屹唐 60% / 北方华创 20%（第三家读数存疑）'}],
+  '清洗':      [{c:'清洗（单片式+槽式）',w:100,r23:30,r26:75,v:'盛美 60% / 芯源微 10% / 至纯 10%'}],
+  '量测检测':  [{c:'OCD',w:20,r23:0,r26:5,v:'新凯来主导，精测认证中'},{c:'膜厚',w:15,r23:35,r26:60,v:'精测 60% / 上海睿励 40%'},{c:'明场',w:30,r23:0,r26:5,v:'新凯来 / 中科飞测 / 精测·御微??等'},{c:'暗场',w:20,r23:0,r26:0,v:'新凯来 / 中安?? / 中科飞测（国产化率 0%）'},{c:'AOI',w:15,r23:40,r26:80,v:'中科飞测主导'}],
+  '未分配/其他':[{c:'制造自动化 / 扩散辅助等',w:100,r23:'—',r26:'—',v:'不对应国产标的，不参与分配'}]
+};
 
-  function renderOverseasTables() {
-    const query = searchInput.value.trim().toLowerCase();
-    const filtered = overseasEquipmentData.filter((item) => {
-      const marketOk = activeMarket === '全部' || item.market === activeMarket;
-      const haystack = [item.cn,item.en,item.ticker,item.product,item.aShare].join(' ').toLowerCase();
-      return marketOk && (!query || haystack.includes(query));
-    });
-    const financialFiltered = filtered.filter((item) => item.forecastSource === 'GS');
-    financialBody.innerHTML = financialFiltered.map((item) => '<tr>' +
-      '<td>' + marketPill(item.market) + '</td>' +
-      '<td>' + companyCell(item) + '</td>' +
-      '<td>' + returnCell(item.returnPct) + '</td>' +
-      item.revenue.map((value) => '<td>' + forecastCell(value) + '</td>').join('') +
-      item.netIncome.map((value) => '<td>' + forecastCell(value) + '</td>').join('') +
-      '<td>' + peCell(item.pe?.[2] ?? null) + '</td>' +
-      '</tr>').join('');
-    mappingBody.innerHTML = filtered.map((item) => '<tr>' +
-      '<td>' + marketPill(item.market) + '</td>' +
-      '<td>' + mappingCompanyCell(item) + '</td>' +
-      '<td>' + marketCapCell(item) + '</td>' +
-      '<td>' + returnCell(item.returnPct) + '</td>' +
-      '<td>' + escapeHtml(item.product) + '</td>' +
-      '<td>' + escapeHtml(item.aShare) + '</td>' +
-      '</tr>').join('');
-    countNode.textContent = '上层' + financialFiltered.length + '家 · 下层' + filtered.length + '家';
-  }
+// 公司清单
+const COS = [
+  {n:'北方华创', c:'002371', listed:true},{n:'中微公司', c:'688012', listed:true},
+  {n:'拓荆科技', c:'688072', listed:true},{n:'盛美上海', c:'688082', listed:true},
+  {n:'芯源微',   c:'688037', listed:true},{n:'华海清科', c:'688120', listed:true},
+  {n:'屹唐股份', c:'688729', listed:true},{n:'中科飞测', c:'688361', listed:true},
+  {n:'精测电子', c:'300567', listed:true},{n:'至纯科技', c:'603690', listed:true},
+  {n:'微导纳米', c:'688147', listed:true},{n:'先导基电', c:'600641', listed:true},
+  {n:'新凯来',   c:'—', listed:false},{n:'SMEE',    c:'—', listed:false},
+  {n:'上海睿励', c:'—', listed:false},{n:'中科信',  c:'—', listed:false},
+  {n:'其他国产', c:'—', listed:false}
+];
 
-  document.querySelectorAll('[data-overseas-market]').forEach((button) => {
-    button.addEventListener('click', () => {
-      document.querySelectorAll('[data-overseas-market]').forEach((item) => item.classList.remove('active'));
-      button.classList.add('active');
-      activeMarket = button.dataset.overseasMarket;
-      renderOverseasTables();
-    });
+// 表2 国产化率（大类口径，%）—— 由照片细类读数按「细类价值量权重」加权聚合
+const RATE_SCEN = {
+  '2023': {'光刻':0.0,'涂胶显影':0.0,'刻蚀':8.6,'薄膜沉积':6.5,'离子注入':12.3,'热处理':17.3,'CMP':8.0,'去胶':45.0,'清洗':30.0,'量测检测':11.3},
+  '2026': {'光刻':2,'涂胶显影':12,'刻蚀':60,'薄膜沉积':65,'离子注入':35,'热处理':60,'CMP':50,'去胶':80,'清洗':75,'量测检测':15}
+};
+let RATE_MODE = '2026';
+const RATE = Object.assign({}, RATE_SCEN['2026']);
+
+// 表2 厂商份额（大类口径，国产阵营内部 %）—— 占位值，列合计=100
+const SHARE = {};
+COS.forEach(co=>{ SHARE[co.n]={}; ALLOC.forEach(c=>SHARE[co.n][c]=0); });
+function set(cat, pairs){ pairs.forEach(([co,v])=>SHARE[co][cat]=v); }
+// 由照片的细类厂商份额，按「细类价值量权重 × 细类2026国产化率」加权聚合到大类
+set('光刻',     [['SMEE',100]]);
+set('涂胶显影', [['芯源微',100]]);
+set('刻蚀',     [['中微公司',45],['北方华创',48],['屹唐股份',3],['其他国产',4]]);
+set('薄膜沉积', [['北方华创',62],['拓荆科技',24],['新凯来',5],['微导纳米',3],['中微公司',2],['盛美上海',2],['其他国产',2]]);
+set('离子注入', [['中科信',48],['先导基电',41],['新凯来',5],['其他国产',6]]);
+set('热处理',   [['北方华创',51],['屹唐股份',44],['其他国产',5]]);
+set('CMP',      [['华海清科',90],['盛美上海',5],['其他国产',5]]);
+set('去胶',     [['屹唐股份',60],['北方华创',20],['其他国产',20]]);
+set('清洗',     [['盛美上海',60],['芯源微',10],['至纯科技',10],['北方华创',10],['其他国产',10]]);
+set('量测检测', [['中科飞测',53],['精测电子',24],['上海睿励',15],['新凯来',8]]);
+
+// 公司在细类上的份额（浮窗用）—— 直接取自照片的「主导/第二/第三厂家份额」三列
+const SHARE_D = {
+  '光刻':{'DUV dry':'SMEE','DUV immersion':'SMEE（尚未突破）'},
+  '涂胶显影':{'inline':'芯源微（2026E 国产化率仍为 0%）','offline':'芯源微'},
+  '刻蚀':{'CCP':'中微 70% / 北方华创 25% / 屹唐 5%','ICP':'北方华创 60% / 中微 30% / 屹唐 5%'},
+  '薄膜沉积':{'PVD':'北方华创 80% / 新凯来 15% / 陛通?? 5%','PECVD':'拓荆 70% / 北方华创 20% / 新凯来·盛美等 10%','SA/HDP CVD':'北方华创·拓荆·盛美 均认证中','LPCVD':'北方华创 60% / 中微 35%','ALD':'拓荆 70% / 微导 20% / 芯崙?? 10%','EPI':'北方华创 80% / 新凯来 10% / 思锐智能等 10%'},
+  '离子注入':{'低能大束流':'凯世通 60% / 中科信 30%','中低束流':'中科信 70% / 凯世通 20% / 新凯来 10%','高能':'凯世通 70% / 中科信 10%'},
+  '热处理':{'氧化扩散':'北方华创 60% / 屹唐 30%','退火':'屹唐 60% / 北方华创 40%'},
+  'CMP':{'CMP':'华海清科 90% / 盛美 5%（第三家读数存疑）'},
+  '去胶':{'去胶机':'屹唐 60% / 北方华创 20%（第三家读数存疑）'},
+  '清洗':{'清洗':'盛美 60% / 芯源微 10% / 至纯 10%'},
+  '量测检测':{'OCD':'新凯来主导，精测认证中','膜厚':'精测 60% / 上海睿励 40%','明场':'新凯来 / 中科飞测 / 精测·御微??等','暗场':'新凯来 / 中安?? / 中科飞测','AOI':'中科飞测主导'}
+};
+
+/* ══════════ 渲染 ══════════ */
+const $ = s=>document.querySelector(s);
+const fmt = (v,d=1)=>Number(v).toLocaleString('zh-CN',{minimumFractionDigits:d,maximumFractionDigits:d});
+
+function renderInputs(){
+  $('#fab-inputs').innerHTML = FABS.map(f=>`
+    <div class="fab" data-k="${f.k}">
+      <div class="fab-h"><b>${f.name}</b>
+        <div class="mode">
+          <button data-m="capex" class="${f.mode==='capex'?'on':''}">CapEx</button>
+          <button data-m="cap" class="${f.mode==='cap'?'on':''}">产能</button>
+        </div>
+      </div>
+      <div class="m-capex" style="display:${f.mode==='capex'?'block':'none'}">
+        <div class="row"><label>年度 CapEx</label><input type="number" step="10" data-f="capex" value="${f.capex}"><span class="u">亿元</span></div>
+      </div>
+      <div class="m-cap" style="display:${f.mode==='cap'?'block':'none'}">
+        <div class="row"><label>新增产能</label><input type="number" step="1" data-f="cap" value="${f.cap}"><span class="u">万片/月</span></div>
+        <div class="row"><label>设备强度</label><input type="number" step="0.1" data-f="inten" value="${f.inten}"><span class="u">亿美元/万片</span></div>
+        <div class="row"><label></label><span class="u" style="font-size:10px">${f.intenNote}</span></div>
+      </div>
+      <div class="wfe-out"><span>该厂型 WFE 投入</span><b data-o="wfe">—</b></div>
+    </div>`).join('');
+
+  $('#fab-inputs').addEventListener('click', e=>{
+    const b = e.target.closest('.mode button'); if(!b) return;
+    const box = b.closest('.fab'), f = FABS.find(x=>x.k===box.dataset.k);
+    f.mode = b.dataset.m;
+    box.querySelectorAll('.mode button').forEach(x=>x.classList.toggle('on', x.dataset.m===f.mode));
+    box.querySelector('.m-capex').style.display = f.mode==='capex'?'block':'none';
+    box.querySelector('.m-cap').style.display   = f.mode==='cap'?'block':'none';
+    calc();
   });
-  searchInput.addEventListener('input', renderOverseasTables);
-  renderOverseasTables();
+  $('#fab-inputs').addEventListener('input', e=>{
+    const inp = e.target.closest('input[data-f]'); if(!inp) return;
+    FABS.find(x=>x.k===inp.closest('.fab').dataset.k)[inp.dataset.f] = parseFloat(inp.value)||0;
+    calc();
+  });
 }
 
+function headHTML(corner){
+  let h = `<thead><tr><th class="corner">${corner}</th>`;
+  CATS.forEach(c=>{
+    const n = (DETAIL[c]||[]).length;
+    h += `<th class="hasdetail" data-grp="${c}">${c}<span class="cnt">${n} 细类</span></th>`;
+  });
+  h += '<th>合计</th></tr></thead>';
+  return h;
+}
+
+function renderT1(){
+  let h = headHTML('晶圆厂类型') + '<tbody>';
+  FABS.forEach(f=>{
+    h += `<tr><th class="rowh" title="${T1SRC[f.k]}">${f.name}</th>`;
+    CATS.forEach(c=>{
+      h += `<td class="hascell" data-grp="${c}" data-kind="t1" data-fab="${f.k}"><input class="cin" data-t="1" data-fab="${f.k}" data-cat="${c}" type="number" step="0.1" value="${T1[f.k][c]}"></td>`;
+    });
+    h += `<td data-sum1="${f.k}">—</td></tr>`;
+  });
+  // 末行：各赛道设备 TAM = Σ(各厂型 WFE 投入 × 该厂型该大类占比)
+  h += '<tr class="sumrow tamrow"><th class="rowh">设备 TAM（亿元）</th>';
+  CATS.forEach(c=>{ h += `<td data-tam="${c}">—</td>`; });
+  h += '<td data-tam-total>—</td></tr>';
+  $('#t1').innerHTML = h + '</tbody>';
+}
+
+function renderT2(){
+  let h = headHTML('国产设备公司') + '<tbody>';
+  h += '<tr class="rate"><th class="rowh">国产化率 %</th>';
+  CATS.forEach(c=>{
+    h += c==='未分配/其他' ? '<td>—</td>'
+      : `<td class="hascell" data-grp="${c}" data-kind="rate"><input class="cin" data-t="r" data-cat="${c}" type="number" step="1" value="${RATE[c]}"></td>`;
+  });
+  h += '<td>—</td></tr>';
+  COS.forEach(co=>{
+    h += `<tr><th class="rowh"><span class="${co.listed?'':'unl'}">${co.n}</span></th>`;
+    CATS.forEach(c=>{
+      if(c==='未分配/其他'){ h += '<td>—</td>'; return; }
+      h += `<td class="hascell" data-grp="${c}" data-kind="co" data-co="${co.n}"><input class="cin" data-t="2" data-co="${co.n}" data-cat="${c}" type="number" step="1" value="${SHARE[co.n][c]}"></td>`;
+    });
+    h += `<td data-sum2="${co.n}">—</td></tr>`;
+  });
+  h += '<tr class="sumrow"><th class="rowh">列合计</th>';
+  CATS.forEach(c=>{ h += c==='未分配/其他' ? '<td>—</td>' : `<td data-col="${c}">—</td>`; });
+  $('#t2').innerHTML = h + '<td>—</td></tr></tbody>';
+}
+
+/* ══════════ 浮窗 ══════════ */
+const pop = $('#pop');
+// 已按公司财报交叉验证重新校准、不再是纯照片/纯加权口径的大类
+const RECALIBRATED = {
+  '薄膜沉积': '国产化率(65%)与北方华创/拓荆份额(62%/24%)已按二者2025A财报交叉验证重新校准，不再是细类加权或纯照片读数——原因：北方华创披露薄膜沉积>158亿，按原份额(42%)测算仅82亿，缺口过大；同时拓荆份额38%在原口径下测算74亿already超过其自身65.19亿总营收。下方细类明细仍是照片原始读数，与此处大类数字不再一一对应，仅供参考。'
+};
+
+function popHTML(grp, kind, ctx){
+  const rows = DETAIL[grp]||[];
+  let head, body, note;
+  if(kind==='t1'){
+    head = `<tr><th>细类</th><th style="text-align:right">占本大类</th><th style="text-align:right">折算占WFE</th></tr>`;
+    const big = T1[ctx.fab][grp]||0;
+    body = rows.map(r=>`<tr><td>${r.c}</td><td class="n">${r.w}%</td><td class="n"><b>${fmt(big*r.w/100,2)}%</b></td></tr>`).join('');
+    note = '「占本大类」为估算拆分，仅供参考；计算只用大类数值。';
+  } else if(kind==='rate'){
+    head = `<tr><th>细类</th><th style="text-align:right">占本大类</th><th style="text-align:right">2023</th><th style="text-align:right">2026E</th><th>国产厂商</th></tr>`;
+    body = rows.map(r=>`<tr><td>${r.c}</td><td class="n">${r.w}%</td><td class="n">${r.r23}${typeof r.r23==='number'?'%':''}</td><td class="n"><b>${r.r26}${typeof r.r26==='number'?'%':''}</b></td><td>${r.v}</td></tr>`).join('');
+    note = RECALIBRATED[grp] || '来源：《14nm(FinFET) 设备国产化率》照片，行序经 CMP / 清洗 / AOI 三锚点锁定，全表满足 2023 ≤ 2026。';
+  } else {
+    head = `<tr><th>细类</th><th style="text-align:right">占本大类</th><th>国产阵营内部份额（照片读数）</th></tr>`;
+    const d = SHARE_D[grp]||{};
+    // 照片里用的简称/别名 → 表中公司名
+    const ALIAS = {'先导基电':['凯世通','凯士通'],'中科飞测':['飞测'],'精测电子':['精测'],'微导纳米':['微导'],'屹唐股份':['屹唐'],'盛美上海':['盛美'],'至纯科技':['至纯'],'华海清科':['华海清科'],'拓荆科技':['拓荆'],'中微公司':['中微'],'北方华创':['北方华创'],'芯源微':['芯源微'],'新凯来':['新凯来'],'SMEE':['SMEE'],'上海睿励':['睿励'],'中科信':['中科信']};
+    body = rows.map(r=>{
+      const key = Object.keys(d).find(k=>r.c.startsWith(k)) || r.c;
+      const txt = d[key]||'—';
+      const keys = ctx.co ? (ALIAS[ctx.co]||[ctx.co]) : [];
+      const hit = keys.some(k=>txt.includes(k));
+      return `<tr><td>${r.c}</td><td class="n">${r.w}%</td><td style="${hit?'color:var(--tag);font-weight:600':''}">${txt}</td></tr>`;
+    }).join('');
+    note = (RECALIBRATED[grp] ? '大类份额已按财报重新校准，与下方细类占比不再一一对应。' : '') +
+      (ctx.co ? `紫色 = 含「${ctx.co}」的细类（已匹配照片中的简称）。<code>??</code> 为读数存疑。` : '数据取自会议照片；<code>??</code> 为读数存疑。');
+  }
+  return `<h4>${grp}${kind==='co'&&ctx.co?' · '+ctx.co:''}</h4>
+    <div class="pmeta">${kind==='t1'?('厂型：'+FABS.find(f=>f.k===ctx.fab).name+'　·　本大类占WFE '+fmt(T1[ctx.fab][grp],1)+'%'):(kind==='rate'?('大类国产化率 '+fmt(RATE[grp]||0,0)+'%'+(RECALIBRATED[grp]?'（财报交叉验证校准）':'（按细类2026口径加权）')):'国产阵营内部份额分解')}</div>
+    <table><thead>${head}</thead><tbody>${body}</tbody></table>
+    <div class="pnote">⚠️ ${note}</div>`;
+}
+function showPop(el, grp, kind, ctx){
+  pop.innerHTML = popHTML(grp, kind, ctx);
+  pop.style.display='block';
+  const r = el.getBoundingClientRect(), pr = pop.getBoundingClientRect();
+  let left = r.left, top = r.bottom + 8;
+  if(left + pr.width > innerWidth - 12) left = innerWidth - pr.width - 12;
+  if(top + pr.height > innerHeight - 12) top = r.top - pr.height - 8;   // 翻到锚点上方
+  // 双向钳制在视口内
+  left = Math.min(Math.max(12, left), Math.max(12, innerWidth - pr.width - 12));
+  top  = Math.min(Math.max(12, top),  Math.max(12, innerHeight - pr.height - 12));
+  pop.style.left = left+'px'; pop.style.top = top+'px';
+}
+addEventListener('scroll', ()=>{ pop.style.display='none'; }, true);
+document.addEventListener('mouseover', e=>{
+  const th = e.target.closest('th.hasdetail');
+  if(th){ const g=th.dataset.grp; const kind = th.closest('table').id==='t1'?'t1':'rate';
+    showPop(th, g, kind, {fab:'logic'}); return; }
+  const td = e.target.closest('td.hascell');
+  if(td){ showPop(td, td.dataset.grp, td.dataset.kind, {fab:td.dataset.fab, co:td.dataset.co}); return; }
+  if(!e.target.closest('#pop')) pop.style.display='none';
+});
+
+/* ══════════ 编辑 + 计算 ══════════ */
+document.addEventListener('input', e=>{
+  const i = e.target.closest('.cin'); if(!i) return;
+  const v = parseFloat(i.value)||0;
+  if(i.dataset.t==='1') T1[i.dataset.fab][i.dataset.cat]=v;
+  if(i.dataset.t==='r') RATE[i.dataset.cat]=v;
+  if(i.dataset.t==='2') SHARE[i.dataset.co][i.dataset.cat]=v;
+  calc();
+});
+
+function calc(){
+  const fx  = parseFloat($('#p-fx').value)||7.2;
+  const eqR = (parseFloat($('#p-eq').value)||75)/100;
+  const wfeR= (parseFloat($('#p-wfe').value)||80)/100;
+
+  const wfe = {};
+  FABS.forEach(f=>{
+    wfe[f.k] = f.mode==='capex' ? f.capex*eqR*wfeR : f.cap*f.inten*fx*wfeR;
+    const el = document.querySelector(`.fab[data-k="${f.k}"] [data-o="wfe"]`);
+    if(el) el.textContent = fmt(wfe[f.k],0)+' 亿元';
+  });
+  const wfeTotal = Object.values(wfe).reduce((a,b)=>a+b,0);
+  $('#wfe-total').innerHTML = `合计 WFE 投入 <b style="color:var(--accent);font-size:14px">${fmt(wfeTotal,0)} 亿元</b>　·　` +
+    FABS.map(f=>`${f.name} ${fmt(wfe[f.k],0)}`).join('　|　') +
+    `　·　CapEx模式：CapEx×${(eqR*100).toFixed(0)}%×${(wfeR*100).toFixed(0)}%；产能模式：产能×强度×汇率×${(wfeR*100).toFixed(0)}%`;
+
+  FABS.forEach(f=>{
+    const s = CATS.reduce((a,c)=>a+(T1[f.k][c]||0),0);
+    const td = document.querySelector(`[data-sum1="${f.k}"]`);
+    if(td){ td.textContent = fmt(s,1); td.style.color = Math.abs(s-100)>0.6?'var(--dn)':'var(--text2)'; }
+  });
+
+  const tam = {};
+  CATS.forEach(c=>{ tam[c] = FABS.reduce((a,f)=>a + wfe[f.k]*(T1[f.k][c]||0)/100, 0); });
+
+  // 表1 末行：各赛道设备 TAM
+  CATS.forEach(c=>{
+    const td = document.querySelector(`[data-tam="${c}"]`);
+    if(td) td.textContent = fmt(tam[c],0);
+  });
+  const tdTamTotal = document.querySelector('[data-tam-total]');
+  if(tdTamTotal) tdTamTotal.textContent = fmt(CATS.reduce((a,c)=>a+tam[c],0),0);
+
+  ALLOC.forEach(c=>{
+    const s = COS.reduce((a,co)=>a+(SHARE[co.n][c]||0),0);
+    const td = document.querySelector(`[data-col="${c}"]`);
+    if(td){ td.textContent = fmt(s,0); td.classList.toggle('bad', Math.abs(s-100)>0.5 && s>0); }
+  });
+
+  const rev={}, top={};
+  COS.forEach(co=>{
+    rev[co.n]=0; let best=null,bv=0;
+    ALLOC.forEach(c=>{
+      const v = tam[c]*(RATE[c]||0)/100*(SHARE[co.n][c]||0)/100;
+      rev[co.n]+=v; if(v>bv){bv=v;best=c;}
+    });
+    top[co.n] = best ? `${best} ${fmt(bv,0)}亿` : '—';
+    const td = document.querySelector(`[data-sum2="${co.n}"]`);
+    if(td) td.textContent = fmt(rev[co.n],0);
+  });
+
+  const tamTotal = ALLOC.reduce((a,c)=>a+tam[c],0);
+  const domTotal = ALLOC.reduce((a,c)=>a+tam[c]*(RATE[c]||0)/100,0);
+  const listedRev= COS.filter(c=>c.listed).reduce((a,c)=>a+rev[c.n],0);
+
+  $('#kpis').innerHTML = `
+    <div class="kpi"><span>国内 WFE 总投入</span><b>${fmt(wfeTotal,0)}</b><em>亿元</em></div>
+    <div class="kpi"><span>可分配设备 TAM</span><b>${fmt(tamTotal,0)}</b><em>亿元 · 剔除未分配环节</em></div>
+    <div class="kpi"><span>国产设备 TAM</span><b style="color:var(--accent)">${fmt(domTotal,0)}</b><em>亿元 · 综合国产化率 ${fmt(tamTotal?domTotal/tamTotal*100:0,1)}%</em></div>
+    <div class="kpi"><span>其中上市公司</span><b style="color:var(--up)">${fmt(listedRev,0)}</b><em>亿元 · 占国产 ${fmt(domTotal?listedRev/domTotal*100:0,1)}%</em></div>
+    <div class="kpi"><span>未上市厂商</span><b>${fmt(domTotal-listedRev,0)}</b><em>亿元 · 新凯来/SMEE/睿励等</em></div>`;
+
+  const sorted = COS.slice().sort((a,b)=>rev[b.n]-rev[a.n]);
+  const maxRev = rev[sorted[0].n]||1;
+  $('#res-co').innerHTML = sorted.map(co=>`<tr>
+      <td><strong>${co.n}</strong>${co.listed?` <code style="font-size:9px;color:var(--text2)">${co.c}</code>`:' <span style="font-size:9px;color:#adb5bd">未上市</span>'}</td>
+      <td class="num"><strong>${fmt(rev[co.n],1)}</strong></td>
+      <td><div class="bar"><i style="width:${Math.max(0,rev[co.n]/maxRev*100)}%"></i></div></td>
+      <td class="num" style="font-size:10.5px;color:var(--text2)">${top[co.n]}</td></tr>`).join('');
+
+  $('#res-cat').innerHTML = ALLOC.slice().sort((a,b)=>tam[b]-tam[a]).map(c=>`<tr>
+      <td>${c}</td><td class="num">${fmt(tam[c],1)}</td>
+      <td class="num" style="color:var(--tag)">${fmt(RATE[c]||0,0)}%</td>
+      <td class="num"><strong>${fmt(tam[c]*(RATE[c]||0)/100,1)}</strong></td></tr>`).join('');
+
+  document.querySelectorAll('.cin').forEach(i=>i.classList.toggle('z', (parseFloat(i.value)||0)===0));
+
+  LASTREV = rev;
+  if(typeof renderCCModel==='function') renderCCModel();
+}
+
+
+/* ══════════ ⑤ 交叉验证 ══════════ */
+const CC = [{"code":"002371.SZ","name":"北方华创","biz":"刻蚀/薄膜PVD-CVD/氧化扩散/清洗等泛半导体装备龙头","mc":5902.5,"rev24":298.38,"rev25":393.53,"rev26":504.88,"np24":55.7,"np25":53.36,"np26":64.78,"split":"电子工艺装备367.3亿(同比+32.6%;其中刻蚀>107亿、薄膜沉积>158亿、热处理>27亿、湿法>18亿、离子注入>3亿)+电子元器件25.8亿[东吴证券/2025年报]"},{"code":"688012.SH","name":"中微公司","biz":"刻蚀设备/MOCVD/薄膜沉积","mc":3913,"rev24":90.65,"rev25":123.85,"rev26":163.57,"np24":13.88,"np25":15.5,"np26":31.21,"split":"刻蚀设备98.32亿(占79.4%,同比+35.1%)+LPCVD薄膜5.06亿(同比+224%)+MOCVD/量检测等[华泰/爱建2026]"},{"code":"688072.SH","name":"拓荆科技","biz":"薄膜沉积PECVD/ALD/SACVD/键合","mc":2352,"rev24":41.03,"rev25":65.19,"rev26":89.04,"np24":3.56,"np25":7.23,"np26":17.03,"split":"PECVD 51.42亿(同比+75.3%)+ALD 3.01亿(同比+192%)+混合键合1.36亿(同比+42%)+其他;全部为半导体薄膜/三维集成设备[东吴/招商2026]"},{"code":"688082.SH","name":"盛美上海","biz":"清洗设备/电镀/前道涂胶显影","mc":1998,"rev24":56.18,"rev25":67.86,"rev26":83.82,"np24":11.09,"np25":12.2,"np26":18.2,"split":"清洗设备为主(全球市占约8%)+其他半导体设备(电镀/立式炉管/无应力抛铜等)16.61亿、同比+46%;基本为半导体设备[中银证券/2025年报]"},{"code":"300604.SZ","name":"长川科技","biz":"测试机/分选机/探针台","mc":1997.8,"rev24":36.42,"rev25":52.92,"rev26":81.84,"np24":4.14,"np25":12.5,"np26":21.28,"split":"测试机32.03亿(占60.5%,同比+55.3%)+分选机15.68亿(占29.6%,同比+31.8%)+其他5.20亿(占9.8%);均为半导体测试设备[天风/国金2026]"},{"code":"002008.SZ","name":"大族激光","biz":"激光及半导体封装设备","mc":1557.5,"rev24":147.71,"rev25":187.59,"rev26":287.22,"np24":4.45,"np25":8.1,"np26":29.76,"split":"信息产业设备82.45亿(消费电子24.72+PCB57.73)+新能源设备23.61亿(锂电22.56)+半导体设备20.41亿(大族半导体13.78)+通用工业激光61.12亿;半导体占比约11%[国泰海通/2025年报]"},{"code":"688120.SH","name":"华海清科","biz":"CMP抛光设备/减薄","mc":1304.1,"rev24":34.06,"rev25":46.48,"rev26":59.92,"np24":8.56,"np25":9.65,"np26":15.51,"split":"CMP抛光设备为主(国产CMP出货占比超90%)+减薄+晶圆再生+离子注入+关键耗材维保;基本为半导体设备[方正证券2026.6]"},{"code":"688361.SH","name":"中科飞测","biz":"量测检测设备","mc":1243.1,"rev24":13.8,"rev25":20.53,"rev26":30.49,"np24":-1.24,"np25":-1.23,"np26":3.6,"split":"量测检测设备(无图形/图形晶圆缺陷检测、三维形貌量测等),单一半导体前道量检测业务,年报未进一步细分金额"},{"code":"688729.SH","name":"屹唐股份","biz":"干法去胶/快速热处理/刻蚀","mc":1067,"rev24":46.33,"rev25":50.76,"rev26":61.03,"np24":4.84,"np25":5.41,"np26":8.56,"split":"干法去胶+快速热处理(RTP)+刻蚀设备三大主力,均为半导体前道设备,年报分产品金额未细分披露"},{"code":"300757.SZ","name":"罗博特科","biz":"光伏/半导体自动化及光模块设备","mc":985.4,"rev24":11.06,"rev25":9.5,"rev26":12.04,"np24":0.63,"np25":-1.01,"np26":0.5,"split":"光伏自动化设备为主+子公司ficonTEC光模块/CPO封装测试设备(半导体光电占比提升中),年报分产品金额未细分披露"},{"code":"688200.SH","name":"华峰测控","biz":"半导体测试机(模拟/混合信号)","mc":940.9,"rev24":9.05,"rev25":13.46,"rev26":19.34,"np24":3.4,"np25":4.92,"np26":7.42,"split":"半导体测试系统(模拟/混合信号/功率)为主,2025年测试系统约11.87亿+配件约1.53亿,单一半导体测试主业[2025年报]"},{"code":"00522.HK","name":"ASMPT","biz":"半导体封装/SMT设备龙头,TCB全球第一/HB量产","mc":891.6,"rev24":122.51,"rev25":131.16,"rev26":null,"np24":3.2,"np25":8.15,"np26":null,"split":"半导体封装设备(后工序)73.80亿港币+表面贴装(SMT)设备63.56亿港币;合计营业额137.36亿港币,均为半导体/电子封装设备[财报2025]"},{"code":"300567.SZ","name":"精测电子","biz":"半导体量测/检测设备","mc":769.3,"rev24":25.65,"rev25":33.48,"rev26":44.54,"np24":-1.59,"np25":0.24,"np26":3.16,"split":"消费电子(显示)检测设备15.48亿+半导体检测设备3.43亿+其他3.47亿;半导体相关约3.43亿、非半导体(显示等)约18.95亿[2025年报]"},{"code":"300751.SZ","name":"迈为股份","biz":"光伏丝网印刷/HJT/半导体封装","mc":730.5,"rev24":98.3,"rev25":81.52,"rev26":85.58,"np24":8.37,"np25":6.97,"np26":8.43,"split":"太阳能电池成套设备为主(2024年占比91.6%);2025年半导体及显示收入6.62亿、同比+887%(激光磨划/键合等),光伏及非半导体仍占绝大部分[2025年报]"},{"code":"688037.SH","name":"芯源微","biz":"涂胶显影/物理清洗","mc":715.6,"rev24":17.54,"rev25":19.48,"rev26":25.33,"np24":0.73,"np25":-0.18,"np26":2.01,"split":"涂胶显影设备为主+物理清洗+键合设备;北方华创控股后聚焦前道track,单一半导体设备主业,年报分产品金额未细分披露"},{"code":"688630.SH","name":"芯碁微装","biz":"直写光刻设备","mc":695.6,"rev24":9.54,"rev25":14.08,"rev26":24.83,"np24":1.49,"np25":2.76,"np26":5.82,"split":"PCB系列(直写光刻)占76.7%+泛半导体系列占16.6%+产品维护租赁6.2%+其他0.5%(非半导体主要为PCB)[东北证券/2025年报]"},{"code":"301269.SZ","name":"华大九天","biz":"EDA工具软件","mc":620.5,"rev24":12.22,"rev25":13.25,"rev26":16.94,"np24":-0.57,"np25":-0.1,"np26":1.07,"split":"EDA工具软件(模拟电路设计全流程/数字设计/晶圆制造EDA等),纯EDA软件业务,年报按产品线未细分金额"},{"code":"688627.SH","name":"精智达","biz":"半导体测试设备/显示检测设备","mc":615.3,"rev24":8.03,"rev25":11.28,"rev26":15.34,"np24":0.69,"np25":0.59,"np26":2.28,"split":"半导体存储测试设备+新型显示检测设备两大板块,年报分产品金额未细分披露"},{"code":"300776.SZ","name":"帝尔激光","biz":"光伏/半导体激光设备","mc":554.8,"rev24":20.14,"rev25":20.33,"rev26":24.17,"np24":4.92,"np25":4.75,"np26":6.39,"split":"太阳能电池激光加工设备占98.55%(非半导体/光伏为主)+半导体先进封装及下一代显示激光设备占1.44%+备件维修0.02%[东北证券/2025年报]"},{"code":"688001.SH","name":"华兴源创","biz":"检测设备(显示/半导体)","mc":413.4,"rev24":18.23,"rev25":22.4,"rev26":23.3,"np24":-5.34,"np25":0.48,"np26":1.14,"split":"检测设备11.05亿+治具及配件9.62亿+组装设备1.04亿+其他0.67亿(显示/半导体检测,半导体占比较小)[2025年报]"},{"code":"600641.SH","name":"先导基电(原万业企业)","biz":"离子注入机(凯世通)","mc":362.3,"rev24":5.81,"rev25":18.52,"rev26":24.98,"np24":-0.55,"np25":-1.74,"np26":1.41,"split":"离子注入机(凯世通)为半导体主业,另含集成电路材料等;处业务转型期,年报分产品金额未细分披露"},{"code":"603061.SH","name":"金海通","biz":"半导体测试分选设备","mc":361.1,"rev24":4.07,"rev25":6.98,"rev26":17.66,"np24":0.68,"np25":1.71,"np26":5.32,"split":"半导体测试分选设备(测试分选机)为主,单一后道封测设备主业,年报分产品金额未细分披露"},{"code":"688400.SH","name":"凌云光","biz":"机器视觉/检测","mc":315.7,"rev24":22.34,"rev25":29.12,"rev26":35.49,"np24":0.66,"np25":1.23,"np26":3.16,"split":"机器视觉23.46亿+光通信5.66亿;主要为机器视觉/检测(消费电子等),半导体量检测占比较小[2025年报]"},{"code":"002975.SZ","name":"博杰股份","biz":"自动化测试设备","mc":300.6,"rev24":12.33,"rev25":18.36,"rev26":24.08,"np24":0.09,"np25":0.99,"np26":2.05,"split":"自动化测试设备为主(消费电子/AI服务器测试)+MLCC设备+半导体切割;半导体占比提升中,年报分产品金额未细分披露"},{"code":"688652.SH","name":"京仪装备","biz":"温控/晶圆传片/废气处理设备","mc":286.2,"rev24":10.26,"rev25":14.26,"rev26":21.38,"np24":1.16,"np25":1.15,"np26":3.44,"split":"3C智能制造装备为主+半导体检测设备(子公司ISMECA,后道测试分选);半导体占比提升中,年报分产品金额未细分披露"},{"code":"603283.SH","name":"赛腾股份","biz":"半导体检测/3C智能装备","mc":252.3,"rev24":40.53,"rev25":33.86,"rev26":40.19,"np24":5.22,"np25":4.59,"np26":6.41,"split":"3C智能制造装备为主+半导体检测设备(子公司ISMECA后道测试分选);半导体占比提升中,年报分产品金额未细分披露"},{"code":"603203.SH","name":"快克智能","biz":"精密焊接/半导体封装设备","mc":250.8,"rev24":9.45,"rev25":10.81,"rev26":13.31,"np24":1.74,"np25":1.28,"np26":3.06,"split":"精密焊接设备为主+半导体封装设备(固晶/键合);半导体为第二成长曲线,年报分产品金额未细分披露"},{"code":"688003.SH","name":"天准科技","biz":"机器视觉检测装备","mc":248.6,"rev24":16.09,"rev25":17.9,"rev26":23.91,"np24":1.03,"np25":0.57,"np26":1.68,"split":"工业视觉装备(消费电子/PCB/光通信AOI检测)为主+半导体量检测(参股矽行)+机器人域控;半导体占比小,年报分产品金额未细分披露"},{"code":"300724.SZ","name":"捷佳伟创","biz":"光伏及半导体设备","mc":232.5,"rev24":188.87,"rev25":154.72,"rev26":45.54,"np24":25.66,"np25":23.6,"np26":7.16,"split":"光伏工艺设备126.63亿(81.9%)+自动化20.81亿(13.5%)+配件7.28亿(4.7%);均为光伏电池设备,半导体(创微湿法)体量尚小[东吴/2025年报]"},{"code":"301369.SZ","name":"联动科技","biz":"半导体测试设备(分选/测试机)","mc":229.7,"rev24":3.11,"rev25":3.54,"rev26":7.21,"np24":0.15,"np25":0.24,"np26":1.07,"split":"半导体自动化测试系统3.00亿(84.8%)+激光打标及机电0.41亿(11.5%)+配件维修0.13亿(3.8%);功率/模拟/SoC测试为主[华鑫2026.6]"},{"code":"301095.SZ","name":"广立微","biz":"EDA/良率检测","mc":213.9,"rev24":5.47,"rev25":7.35,"rev26":9.74,"np24":0.58,"np25":0.44,"np26":1.61,"split":"EDA软件(良率EDA/DFT/DFM/大数据)+WAT测试机硬件(2025销109台);软硬件结合半导体良率方案,年报分产品金额未细分披露"},{"code":"301021.SZ","name":"英诺激光","biz":"激光器/激光微加工","mc":201.4,"rev24":4.47,"rev25":5.13,"rev26":5.96,"np24":0.1,"np25":0.36,"np26":0.7,"split":"激光器及激光微加工设备(常州英诺约4.79亿),泛半导体/工业激光,半导体占比有限,年报分产品金额未细分披露"},{"code":"688383.SH","name":"新益昌","biz":"固晶机/LED及半导体封装设备","mc":193.3,"rev24":9.34,"rev25":7.27,"rev26":9.94,"np24":0.31,"np25":-1.31,"np26":1.41,"split":"LED固晶机为主+半导体封装设备+电容器设备+锂电设备;向光模块/先进封装迁移,年报分产品金额未细分披露"},{"code":"300820.SZ","name":"英杰电气","biz":"工业电源/半导体射频电源","mc":185.4,"rev24":17.8,"rev25":15.02,"rev26":16.95,"np24":3.07,"np25":2.02,"np26":3.32,"split":"工业电源为主,含半导体射频/直流电源(2025约4亿)+光伏电源+充电桩储能;半导体占比约20%+[2026.4业绩会]"},{"code":"688516.SH","name":"奥特维","biz":"光伏/半导体键合/串焊设备","mc":180.4,"rev24":91.98,"rev25":63.97,"rev26":66.29,"np24":12.38,"np25":4.07,"np26":6.38,"split":"光伏串焊机/单晶炉为主+半导体键合/封装设备(第二曲线);光伏占比高,半导体占比小,年报分产品金额未细分披露"},{"code":"301629.SZ","name":"矽电股份","biz":"探针台","mc":180.4,"rev24":5.08,"rev25":4.19,"rev26":6.13,"np24":0.87,"np25":0.49,"np26":0.94,"split":"探针台为主(晶粒/晶圆探针台)+分选机;聚焦Mini/Micro LED与光通信/存储探针台,年报分产品金额未细分披露"},{"code":"688206.SH","name":"概伦电子","biz":"EDA工具软件","mc":176.3,"rev24":4.19,"rev25":4.84,"rev26":6.16,"np24":-0.89,"np25":-0.6,"np26":0.57,"split":"EDA工具软件(器件建模/电路仿真/良率优化),纯EDA软件业务,年报按产品线未细分金额"},{"code":"301013.SZ","name":"利和兴","biz":"自动化设备","mc":170.8,"rev24":5.77,"rev25":4.7,"rev26":5.44,"np24":0.04,"np25":-1.65,"np26":-1.6,"split":"自动化设备(利和兴江门约0.83亿+利和兴电子0.39亿),消费电子/半导体自动化,半导体占比有限,年报分产品金额未细分披露"},{"code":"300480.SZ","name":"光力科技","biz":"半导体封测切割/划片设备","mc":147.1,"rev24":5.73,"rev25":6.7,"rev26":9.38,"np24":-1.23,"np25":0.24,"np26":1.08,"split":"泛半导体26.44亿(系统集成22.93亿+设备2.86亿+电子材料2.69亿)+生物制药2.04亿;湿法清洗设备与高纯工艺系统为主[2025年报]"},{"code":"603690.SH","name":"至纯科技","biz":"湿法清洗设备/高纯工艺系统","mc":135.9,"rev24":36.05,"rev25":28.55,"rev26":27.53,"np24":-0.57,"np25":-8.11,"np26":-8.33,"split":"泛半导体26.44亿(系统集成22.93亿+设备2.86亿+电子材料2.69亿)+生物制药2.04亿;湿法清洗设备与高纯工艺系统为主[至纯科技2025年报]"},{"code":"688478.SH","name":"晶升股份","biz":"半导体级单晶炉/碳化硅长晶炉","mc":113.4,"rev24":4.25,"rev25":1.16,"rev26":3.36,"np24":0.3,"np25":-0.57,"np26":0.56,"split":"半导体级单晶硅炉+光伏级单晶硅炉+碳化硅长晶炉;长晶炉设备为主,年报分产品金额未细分披露"},{"code":"688170.SH","name":"德龙激光","biz":"激光加工/晶圆激光设备","mc":91,"rev24":7.15,"rev25":7.87,"rev26":9.85,"np24":-0.51,"np25":0.06,"np26":0.61,"split":"激光加工设备+激光器(晶圆激光切割/微加工等);泛半导体激光设备,年报分产品金额未细分披露"},{"code":"688135.SH","name":"利扬芯片","biz":"集成电路测试服务(弱相关)","mc":90.9,"rev24":4.88,"rev25":6.18,"rev26":7.91,"np24":-0.66,"np25":-0.11,"np26":0.19,"split":"集成电路测试服务(晶圆测试CP+成品测试FT),为封测服务商而非设备,与设备主题弱相关"},{"code":"688419.SH","name":"耐科装备","biz":"封装设备/挤出装备","mc":81.7,"rev24":2.68,"rev25":2.95,"rev26":2.92,"np24":0.51,"np25":0.69,"np26":0.72,"split":"半导体封装设备(塑封系统等)+精密挤出装备;半导体封装为核心,年报分产品金额未细分披露"},{"code":"300545.SZ","name":"联得装备","biz":"显示/半导体模组设备","mc":72.8,"rev24":13.96,"rev25":11.71,"rev26":11,"np24":2.29,"np25":1.04,"np26":0.95,"split":"显示模组设备为主(子公司联鹏智能约7.86亿)+半导体先进封装设备(固晶/倒装小批量);半导体占比小[联得装备2025年报]"},{"code":"688007.SH","name":"光峰科技","biz":"激光显示(非核心,弱相关)","mc":56.4,"rev24":24.19,"rev25":17.09,"rev26":16.36,"np24":0.32,"np25":-1.41,"np26":0.15,"split":"激光显示行业17.09亿(核心器件及整机15.55亿+其他1.54亿);ALPD激光显示为主,与半导体设备弱相关[光峰科技2025年报]"},{"code":"688216.SH","name":"气派科技","biz":"封装测试","mc":46.8,"rev24":6.67,"rev25":7.69,"rev26":8.62,"np24":-1.21,"np25":-0.87,"np26":-0.47,"split":"集成电路封装测试(封测服务/QFN/DFN等),为封测厂而非设备,与设备主题弱相关"},{"code":"00650.HK","name":"普达特科技","biz":"半导体清洗设备+LPCVD设备","mc":24.1,"rev24":null,"rev25":null,"rev26":null,"np24":null,"np25":null,"np26":null,"split":"半导体清洗设备+LPCVD设备;港股上市,2025年报分业务金额未取得"}];
+const CC_BY_CODE = Object.fromEntries(CC.map(c=>[c.code,c]));
+
+// 模型公司 → Excel 代码 + 前道设备可比口径（人工判断，注明依据）
+const CC_MAP = [
+  {n:'北方华创', code:'002371.SZ', v:313, note:'刻蚀&gt;107 + 薄膜沉积&gt;158 + 热处理&gt;27 + 湿法&gt;18 + 离子注入&gt;3 = 313亿（&gt;号为披露下限）'},
+  {n:'中微公司', code:'688012.SH', v:103.38,note:'刻蚀 98.32 + LPCVD 5.06；剔除 MOCVD / 量检测'},
+  {n:'拓荆科技', code:'688072.SH', v:65.19, note:'全部为半导体薄膜 / 三维集成设备，直接取营业收入'},
+  {n:'盛美上海', code:'688082.SH', v:67.86, note:'基本全部为半导体设备（清洗+电镀+炉管等），直接取营业收入'},
+  {n:'芯源微',   code:'688037.SH', v:19.48, note:'单一半导体设备主业（涂胶显影+物理清洗），直接取营业收入'},
+  {n:'华海清科', code:'688120.SH', v:46.48, note:'基本全部为半导体设备；含减薄、晶圆再生、耗材维保'},
+  {n:'屹唐股份', code:'688729.SH', v:50.76, note:'全部为半导体前道设备（去胶+RTP+刻蚀），直接取营业收入'},
+  {n:'中科飞测', code:'688361.SH', v:20.53, note:'单一前道量检测业务，直接取营业收入'},
+  {n:'精测电子', code:'300567.SZ', v:3.43,  note:'仅半导体检测设备 3.43亿；总收入 33.48亿中显示检测占 15.48亿'},
+  {n:'至纯科技', code:'603690.SH', v:2.86,  note:'仅「设备」2.86亿；泛半导体 26.44亿里系统集成 22.93亿属工程业务'},
+  {n:'先导基电', code:'600641.SH', v:18.52, note:'离子注入(凯世通)为主业但处转型期，含集成电路材料，未细分披露'},
+  {n:'微导纳米', code:'688147.SH', v:null,  note:'Excel 48 家设备清单未收录该公司，无实际数据可比'}
+];
+
+// Excel 中疑似有误的行
+const CC_FLAG = {'300480.SZ':'业务拆解文本与至纯科技(603690)完全相同，且金额 26.44亿远超其自身营业收入 6.7亿，疑为源表复制错误'};
+
+let LASTREV = {};
+
+function devClass(d){
+  if(d===null) return 'dev-na';
+  const a=Math.abs(d);
+  return a<=25?'dev-ok':(a<=60?'dev-mid':'dev-bad');
+}
+
+function renderCCModel(){
+  $('#cc-model-body').innerHTML = CC_MAP.map(m=>{
+    const e = CC_BY_CODE[m.code];
+    const model = LASTREV[m.n];
+    const dev = (m.v && model!=null) ? (model/m.v-1)*100 : null;
+    return `<tr>
+      <td><strong>${m.n}</strong> <code style="font-size:9px;color:var(--text2)">${m.code.split('.')[0]}</code></td>
+      <td class="num">${model!=null?fmt(model,1):'—'}</td>
+      <td class="num">${m.v!=null?fmt(m.v,1):'<span class="dev-na">无数据</span>'}</td>
+      <td class="num dev ${devClass(dev)}">${dev!=null?(dev>0?'+':'')+fmt(dev,0)+'%':'—'}</td>
+      <td class="num">${e&&e.rev25!=null?fmt(e.rev25,1):'—'}</td>
+      <td class="num">${e&&e.rev26!=null?fmt(e.rev26,1):'—'}</td>
+      <td class="cc-note">${m.note}</td>
+    </tr>`;
+  }).join('');
+}
+
+function renderCCAll(q){
+  q = (q||'').trim().toLowerCase();
+  const modelNames = new Set(COS.map(c=>c.n));
+  const list = CC.filter(c=> !q || (c.name+c.code+c.biz+c.split).toLowerCase().includes(q));
+  $('#cc-count').textContent = `${list.length} / ${CC.length} 家`;
+  const num = v => v==null ? '<span class="dev-na">—</span>' : `<span${v<0?' style="color:var(--dn)"':''}>${fmt(v,2)}</span>`;
+  $('#cc-all-body').innerHTML = list.map(c=>{
+    const inModel = modelNames.has(c.name) || (c.name.startsWith('先导基电') && modelNames.has('先导基电'));
+    const flag = CC_FLAG[c.code];
+    return `<tr>
+      <td style="min-width:120px"><strong>${c.name}</strong>${inModel?' <span class="tag-src">模型</span>':''}<br>
+        <code style="font-size:9px;color:var(--text2)">${c.code}</code>
+        <span style="font-size:9.5px;color:var(--text2)"> ${c.biz}</span></td>
+      <td class="num">${c.mc!=null?fmt(c.mc,0):'—'}</td>
+      <td class="num">${num(c.rev24)}</td><td class="num">${num(c.rev25)}</td><td class="num">${num(c.rev26)}</td>
+      <td class="num">${num(c.np24)}</td><td class="num">${num(c.np25)}</td><td class="num">${num(c.np26)}</td>
+      <td class="sp">${c.split||'—'}${flag?`<br><span class="flag">源表存疑</span> ${flag}`:''}</td>
+    </tr>`;
+  }).join('');
+}
+
+$('#cc-search').addEventListener('input', e=>renderCCAll(e.target.value));
+renderCCAll('');
+
+/* 国产化率情景切换 */
+$('#rate-scen').addEventListener('click', e=>{
+  const b = e.target.closest('button[data-s]'); if(!b) return;
+  RATE_MODE = b.dataset.s;
+  $('#rate-scen').querySelectorAll('button').forEach(x=>x.classList.toggle('on', x.dataset.s===RATE_MODE));
+  Object.assign(RATE, RATE_SCEN[RATE_MODE]);
+  document.querySelectorAll('input[data-t="r"]').forEach(i=>{ i.value = RATE[i.dataset.cat]; });
+  calc();
+});
+
+/* ══════════ ⑦ 市值测算 ══════════ */
+// 只覆盖有实际市值/净利可比的上市公司；新凯来/SMEE/上海睿励/中科信(未上市)、其他国产(非实体) 不纳入
+// 微导纳米无实际市值/PE可比，但市场盈利预测数据源有其营收净利预测，作为参考行保留
+const MKTCAP_CO = ['北方华创','中微公司','拓荆科技','盛美上海','芯源微','华海清科','屹唐股份','中科飞测','精测电子','至纯科技','先导基电','微导纳米'];
+
+// 市场一致预期营收/净利润 26E-28E，来源：半导体上游数据库.xlsx / 市场盈利预测（2026-07-27口径）
+// 注：与下方 initMktcapState 默认取用的 2026E 数据（来自另一份 Excel）是不同时点/来源，两者不完全一致，仅并列对比不做取舍
+const MARKET_FORECAST = {
+  '北方华创': {rev:[502.7,645.9,805.2], np:[72.5,106.9,145.0]},
+  '中微公司': {rev:[166.8,221.5,284.7], np:[33.4,46.1,62.3]},
+  '拓荆科技': {rev:[88.0,117.0,154.7], np:[17.4,24.9,32.8]},
+  '盛美上海': {rev:[85.7,116.3,148.5], np:[14.0,24.0,33.7]},
+  '芯源微':   {rev:[24.9,33.8,45.4],   np:[2.1,4.3,7.1]},
+  '华海清科': {rev:[60.2,78.6,99.5],   np:[14.4,19.3,25.2]},
+  '中科飞测': {rev:[30.6,45.5,63.6],   np:[3.5,6.8,10.7]},
+  '精测电子': {rev:[43.2,55.2,69.4],   np:[3.3,5.7,8.9]},
+  '微导纳米': {rev:[29.3,37.6,48.7],   np:[3.5,5.1,7.3]}
+  // 屹唐股份、至纯科技、先导基电 不在该数据源覆盖范围内
+};
+function mfTrend(arr){ return arr==null ? '<span class="dev-na">—</span>' : arr.map(v=>fmt(v,1)).join('→'); }
+
+const MKTCAP_STATE = {};
+function initMktcapState(){
+  MKTCAP_CO.forEach(n=>{
+    const m = CC_MAP.find(x=>x.n===n);
+    const e = m && CC_BY_CODE[m.code];
+    const hasNP = e && typeof e.np26==='number' && e.np26>0 && e.rev26;
+    const margin = hasNP ? Math.round(e.np26/e.rev26*1000)/10 : 0;   // %
+    const pe     = hasNP ? Math.round(e.mc/e.np26*10)/10 : 0;         // x
+    MKTCAP_STATE[n] = {margin, pe, hasData: !!hasNP, mc: e ? e.mc : null};
+  });
+}
+initMktcapState();
+
+function renderMktcap(){
+  const rows = MKTCAP_CO.map(n=>{
+    const st = MKTCAP_STATE[n];
+    const modelRev = LASTREV[n] || 0;
+    const modelNP  = modelRev * st.margin/100;
+    const impliedMC = modelNP * st.pe;
+    const actualMC = st.mc;
+    const ratio = (actualMC && st.pe) ? (impliedMC/actualMC-1)*100 : null;
+    return {n, modelRev, modelNP, impliedMC, actualMC, ratio, hasData:st.hasData};
+  });
+
+  $('#mktcap-body').innerHTML = rows.map(r=>{
+    const co = COS.find(c=>c.n===r.n);
+    const st = MKTCAP_STATE[r.n];
+    const mf = MARKET_FORECAST[r.n];
+    const ratioTxt = r.ratio==null ? '<span class="dev-na">—</span>' :
+      `<span class="${Math.abs(r.ratio)<=15?'dev-ok':(Math.abs(r.ratio)<=40?'dev-mid':'dev-bad')}" style="font-weight:700">${r.ratio>0?'+':''}${fmt(r.ratio,0)}%</span>`;
+    return `<tr>
+      <td><strong>${r.n}</strong> <code style="font-size:9px;color:var(--text2)">${co?co.c:''}</code>${!r.hasData?' <span class="tag-est" style="margin-left:4px">2026E净利为负/无数据</span>':''}</td>
+      <td class="num">${fmt(r.modelRev,1)}</td>
+      <td class="num" style="font-size:11px;color:var(--text2)">${mfTrend(mf&&mf.rev)}</td>
+      <td class="num"><input class="cin" data-mk="margin" data-co="${r.n}" type="number" step="0.1" value="${st.margin}"></td>
+      <td class="num">${fmt(r.modelNP,2)}</td>
+      <td class="num" style="font-size:11px;color:var(--text2)">${mfTrend(mf&&mf.np)}</td>
+      <td class="num"><input class="cin" data-mk="pe" data-co="${r.n}" type="number" step="1" value="${st.pe}"></td>
+      <td class="num"><strong>${fmt(r.impliedMC,0)}</strong></td>
+      <td class="num">${r.actualMC!=null?fmt(r.actualMC,0):'—'}</td>
+      <td class="num">${ratioTxt}</td>
+    </tr>`;
+  }).join('');
+
+  const validRows = rows.filter(r=>r.actualMC!=null && r.hasData);
+  const sumImplied = validRows.reduce((a,r)=>a+r.impliedMC,0);
+  const sumActual  = validRows.reduce((a,r)=>a+r.actualMC,0);
+  $('#mktcap-kpis').innerHTML = `
+    <div class="kpi"><span>覆盖上市公司</span><b>${validRows.length}</b><em>家 · 有实际净利可比</em></div>
+    <div class="kpi"><span>隐含市值合计</span><b style="color:var(--accent)">${fmt(sumImplied,0)}</b><em>亿元</em></div>
+    <div class="kpi"><span>实际市值合计</span><b>${fmt(sumActual,0)}</b><em>亿元</em></div>
+    <div class="kpi"><span>隐含/实际</span><b style="color:${sumImplied>=sumActual?'var(--up)':'var(--dn)'}">${sumActual?(sumImplied/sumActual*100).toFixed(0):0}%</b><em>整体溢价/折价</em></div>`;
+}
+
+document.addEventListener('input', e=>{
+  const i = e.target.closest('input[data-mk]'); if(!i) return;
+  MKTCAP_STATE[i.dataset.co][i.dataset.mk] = parseFloat(i.value)||0;
+  renderMktcap();
+});
+
+$('#mk-apply-all').addEventListener('click', ()=>{
+  const m = parseFloat($('#mk-margin-all').value);
+  const p = parseFloat($('#mk-pe-all').value);
+  if(isNaN(m) && isNaN(p)) return;
+  MKTCAP_CO.forEach(n=>{
+    if(!isNaN(m)) MKTCAP_STATE[n].margin = m;
+    if(!isNaN(p)) MKTCAP_STATE[n].pe = p;
+  });
+  renderMktcap();
+});
+$('#mk-reset-all').addEventListener('click', ()=>{
+  initMktcapState();
+  $('#mk-margin-all').value=''; $('#mk-pe-all').value='';
+  renderMktcap();
+});
+
+/* ══════════ ① 反推：市值 → CapEx ══════════ */
+let RV_LAST_K = null;
+
+function rvFillDefaults(){
+  const n = $('#rv-co').value;
+  const st = MKTCAP_STATE[n];
+  if(!st) return;
+  $('#rv-mc').value = st.mc!=null ? st.mc : '';
+  $('#rv-margin').value = st.margin || '';
+  $('#rv-pe').value = st.pe || '';
+  rvCalc();
+}
+
+function rvCalc(){
+  const n = $('#rv-co').value;
+  const targetMC = parseFloat($('#rv-mc').value)||0;
+  const margin = parseFloat($('#rv-margin').value)||0;
+  const pe = parseFloat($('#rv-pe').value)||0;
+  const modelRev = LASTREV[n] || 0;
+
+  if(!margin || !pe || !modelRev){
+    $('#rv-result').innerHTML = `⚠️ 净利率、PE 倍数或「${n}」当前模型营收（${fmt(modelRev,1)}亿）有一项为 0，除数不能为0，无法反推。请检查上方三个输入框，或先去⑤确认该公司在当前情景下有测算营收。`;
+    $('#rv-capex-body').innerHTML = '';
+    $('#rv-capex-foot').innerHTML = '';
+    $('#rv-apply').disabled = true;
+    RV_LAST_K = null;
+    return;
+  }
+  $('#rv-apply').disabled = false;
+
+  const requiredNP  = targetMC/pe;
+  const requiredRev = requiredNP/(margin/100);
+  const k = requiredRev/modelRev;
+  RV_LAST_K = k;
+
+  $('#rv-result').innerHTML = `目标市值 <b>${fmt(targetMC,0)}</b>亿 ÷ PE ${fmt(pe,1)}x = 需要净利润 <b>${fmt(requiredNP,1)}</b>亿 ÷ 净利率${fmt(margin,1)}% = 需要营收 <b>${fmt(requiredRev,1)}</b>亿；「${n}」当前模型营收 ${fmt(modelRev,1)}亿 → 三条产线需同步放大 <b style="color:var(--accent);font-size:16px">${fmt(k,2)}×</b>`;
+
+  const fx  = parseFloat($('#p-fx').value)||7.2;
+  const eqR = (parseFloat($('#p-eq').value)||75)/100;
+
+  let capexCurTotal = 0, capexImpliedTotal = 0;
+  $('#rv-capex-body').innerHTML = FABS.map(f=>{
+    const cur = f.mode==='capex' ? f.capex : f.cap;
+    const unit = f.mode==='capex' ? '亿元' : '万片/月';
+    const implied = cur*k;
+    // 折算CapEx(含厂房)：capex模式直接就是；产能模式先算设备采购额(cap*inten*fx)，再除以设备占比还原成全口径CapEx
+    const capexCur = f.mode==='capex' ? f.capex : (f.cap*f.inten*fx)/eqR;
+    const capexImplied = capexCur*k;
+    capexCurTotal += capexCur; capexImpliedTotal += capexImplied;
+    return `<tr>
+      <td>${f.name}<span style="font-size:10px;color:var(--text2)">（${f.mode==='capex'?'CapEx模式':'产能模式'}）</span></td>
+      <td class="num">${fmt(cur,1)} ${unit}</td>
+      <td class="num">${fmt(k,2)}×</td>
+      <td class="num"><strong>${fmt(implied,1)}</strong> ${unit}</td>
+      <td class="num">${fmt(capexCur,0)}</td>
+      <td class="num"><strong>${fmt(capexImplied,0)}</strong></td>
+    </tr>`;
+  }).join('');
+
+  $('#rv-capex-foot').innerHTML = `<tr class="sumrow">
+    <td colspan="4"><strong>三条产线合计CapEx（含厂房，亿元）</strong></td>
+    <td class="num"><strong>${fmt(capexCurTotal,0)}</strong></td>
+    <td class="num"><strong style="color:var(--accent)">${fmt(capexImpliedTotal,0)}</strong></td>
+  </tr>`;
+}
+
+(function initRvSelector(){
+  $('#rv-co').innerHTML = MKTCAP_CO.map(n=>`<option value="${n}">${n}</option>`).join('');
+  $('#rv-co').addEventListener('change', rvFillDefaults);
+  ['#rv-mc','#rv-margin','#rv-pe'].forEach(sel=>$(sel).addEventListener('input', rvCalc));
+  rvFillDefaults();
+})();
+
+$('#rv-apply').addEventListener('click', ()=>{
+  if(RV_LAST_K==null) return;
+  const k = RV_LAST_K;
+  FABS.forEach(f=>{
+    if(f.mode==='capex') f.capex = Math.round(f.capex*k*10)/10;
+    else f.cap = Math.round(f.cap*k*100)/100;
+  });
+  renderInputs();
+  calc();
+  const msg = $('#rv-apply-msg');
+  msg.textContent = `已按 ${fmt(k,2)}× 更新②输入区，可下滑查看⑤/⑦的最新结果`;
+  setTimeout(()=>{ msg.textContent=''; }, 6000);
+});
+
+const _calc = calc;
+calc = function(){ _calc(); if(typeof renderMktcap==='function') renderMktcap(); if(typeof rvCalc==='function' && $('#rv-co').options.length) rvCalc(); };
+
+renderInputs(); renderT1(); renderT2(); calc();
+document.querySelectorAll('#p-fx,#p-eq,#p-wfe').forEach(i=>i.addEventListener('input',calc));
 </script>
+
 </body>
 </html>
