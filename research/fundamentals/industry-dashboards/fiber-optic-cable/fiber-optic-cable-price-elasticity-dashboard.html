@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>光纤光缆 · 涨价弹性测算看板</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+  :root {
+    --bg:#f8f9fa; --card:#fff; --border:#e9ecef;
+    --text:#212529; --text2:#6c757d;
+    --accent:#0891b2; --accent-d:#0e7490;
+    --up:#16a34a; --dn:#dc2626; --warn:#d97706;
+    --up-bg:#f0fdf4; --dn-bg:#fef2f2; --warn-bg:#fffbeb;
+    --tag-bg:#ecfeff; --tag:#0e7490;
+    --sh:0 1px 3px rgba(0,0,0,.08),0 1px 2px rgba(0,0,0,.04);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;background:var(--bg);color:var(--text);font-size:14px;line-height:1.6}
+
+  /* Header */
+  .hdr{background:var(--card);border-bottom:1px solid var(--border);padding:16px 32px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:var(--sh)}
+  .hdr-l{display:flex;align-items:center;gap:14px}
+  .hdr-title{font-size:20px;font-weight:700}
+  .hdr-sub{font-size:12px;color:var(--text2)}
+  .badge-up{display:inline-flex;align-items:center;gap:5px;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:600;background:var(--up-bg);color:var(--up);border:1px solid #86efac}
+  .badge-warn{display:inline-flex;align-items:center;gap:5px;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:600;background:var(--warn-bg);color:var(--warn);border:1px solid #fcd34d}
+  .back-link{display:inline-flex;align-items:center;gap:5px;font-size:12px;color:var(--text2);text-decoration:none;padding:5px 11px;border:1px solid var(--border);border-radius:6px;background:var(--bg)}
+  .back-link:hover{color:var(--accent);border-color:#a5f3fc}
+  .hdr-meta{font-size:12px;color:var(--text2);text-align:right}
+
+  .wrap{max-width:1320px;margin:0 auto;padding:24px 32px}
+
+  /* Notice */
+  .notice{background:var(--warn-bg);border:1px solid #fcd34d;border-radius:8px;padding:11px 16px;margin-bottom:22px;font-size:12px;color:#92400e;display:flex;align-items:flex-start;gap:8px;line-height:1.7}
+  .notice b{color:#78350f}
+
+  /* Section */
+  .st{font-size:14px;font-weight:700;color:var(--text);margin:0 0 14px;padding-bottom:7px;border-bottom:2px solid var(--accent);display:flex;align-items:center;gap:7px}
+  .st .num{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;background:var(--accent);color:#fff;font-size:11px;font-weight:700}
+  .st-en{margin-left:auto;font-size:11px;font-weight:400;color:var(--text2)}
+
+  /* KPI */
+  .kpi-g{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:30px}
+  .kpi{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:16px 18px;box-shadow:var(--sh)}
+  .kpi .lbl{font-size:11px;color:var(--text2);margin-bottom:6px;text-transform:uppercase;letter-spacing:.3px}
+  .kpi .val{font-size:24px;font-weight:700;margin-bottom:5px;line-height:1.1}
+  .kpi .val-sm{font-size:18px}
+  .kpi .note{font-size:11px;color:var(--text2);line-height:1.5}
+  .c-up{color:var(--up)} .c-warn{color:var(--warn)} .c-dn{color:var(--dn)} .c-acc{color:var(--accent)}
+
+  /* Charts grid */
+  .grid-2{display:grid;grid-template-columns:1.3fr 1fr;gap:14px;margin-bottom:30px}
+  .grid-2-eq{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:30px}
+  .ccard{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:18px 20px;box-shadow:var(--sh)}
+  .ccard h3{font-size:12px;font-weight:600;color:var(--text2);margin-bottom:13px;text-transform:uppercase;letter-spacing:.4px}
+  .cwrap{position:relative;height:230px}
+
+  /* Table */
+  .tcard{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:18px 20px;box-shadow:var(--sh);margin-bottom:18px;overflow-x:auto}
+  .tcard h3{font-size:12px;font-weight:600;color:var(--text2);margin-bottom:13px;text-transform:uppercase;letter-spacing:.4px}
+  table{width:100%;border-collapse:collapse}
+  th{text-align:right;padding:8px 11px;font-size:11px;font-weight:600;color:var(--text2);background:var(--bg);border-bottom:1px solid var(--border);white-space:nowrap}
+  th:first-child,td:first-child{text-align:left}
+  td{padding:10px 11px;font-size:13px;border-bottom:1px solid var(--border);vertical-align:middle;text-align:right;white-space:nowrap}
+  tr:last-child td{border-bottom:none}
+  tr:hover td{background:#fafbfc}
+  .row-h{background:#f0fdfa!important;font-weight:600}
+  .row-h td{font-weight:600}
+  .row-h td:first-child{color:var(--accent-d)}
+  .pos{color:var(--up);font-weight:600}
+  .neg{color:var(--dn);font-weight:600}
+  .sub{color:var(--text2);font-size:11px}
+  code{font-size:11px;background:var(--tag-bg);color:var(--tag);padding:2px 6px;border-radius:4px;font-family:monospace}
+
+  /* Heatmap */
+  .hm-tabs{display:flex;gap:0;border-bottom:2px solid var(--border);margin-bottom:14px}
+  .hm-tab{padding:8px 18px;font-size:13px;font-weight:600;color:var(--text2);background:none;border:none;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;transition:color .15s,border-color .15s}
+  .hm-tab:hover{color:var(--accent)}
+  .hm-tab.active{color:var(--accent);border-bottom-color:var(--accent)}
+  .hm-pane{display:none}
+  .hm-pane.active{display:block}
+  .hm{display:grid;grid-template-columns:90px repeat(5,1fr);gap:3px;font-size:12px}
+  .hm-h{padding:7px 6px;font-size:11px;font-weight:600;color:var(--text2);text-align:center;background:var(--bg);border-radius:4px}
+  .hm-rh{padding:7px 8px;font-size:11px;font-weight:600;color:var(--text2);text-align:right;background:var(--bg);border-radius:4px}
+  .hm-cell{padding:9px 6px;text-align:center;font-weight:600;border-radius:4px;color:#fff;font-size:12px}
+  .hm-legend{display:flex;align-items:center;gap:10px;margin-top:14px;font-size:11px;color:var(--text2);justify-content:flex-end}
+  .hm-legend .bar{width:140px;height:10px;border-radius:5px;background:linear-gradient(to right,#a7f3d0,#10b981,#047857)}
+
+  /* Judgment */
+  .grid-j{display:grid;grid-template-columns:1.4fr 1fr;gap:14px;margin-bottom:30px}
+  .logic{font-size:13px;line-height:1.85;background:var(--bg);border-radius:6px;padding:14px 16px;border-left:3px solid var(--accent)}
+  .logic p{margin-bottom:8px} .logic p:last-child{margin-bottom:0}
+  .risk{display:flex;gap:8px;margin-bottom:8px;font-size:13px;align-items:flex-start}
+  .risk-n{background:var(--dn-bg);color:var(--dn);font-size:11px;font-weight:700;padding:1px 6px;border-radius:3px;margin-top:1px;flex-shrink:0}
+  .risk-flag{background:#fee2e2;color:#991b1b}
+
+  /* Assumption notes */
+  .assume{font-size:12px;color:var(--text2);line-height:1.8;background:var(--bg);border-radius:6px;padding:12px 14px;border-left:3px solid var(--text2)}
+  .assume li{margin-bottom:4px;list-style:none;padding-left:14px;position:relative}
+  .assume li:before{content:"▸";position:absolute;left:0;color:var(--accent)}
+
+  /* Footer */
+  .foot{margin-top:30px;padding-top:16px;border-top:1px solid var(--border);font-size:11px;color:var(--text2);line-height:1.7}
+  .foot code{font-size:10px}
+
+  @media (max-width:900px){
+    .kpi-g{grid-template-columns:repeat(2,1fr)}
+    .grid-2,.grid-2-eq,.grid-j{grid-template-columns:1fr}
+    .hm{grid-template-columns:70px repeat(5,1fr)}
+  }
+</style>
+</head>
+<body>
+
+<header class="hdr">
+  <div class="hdr-l">
+    <span class="hdr-title">光纤光缆 · 涨价弹性测算看板</span>
+    <span class="hdr-sub">2025 基准 → 2026 涨价情景</span>
+    <span class="badge-up">🟢 上行</span>
+  </div>
+  <div style="display:flex;align-items:center;gap:16px;">
+    <a class="back-link" href="光纤光缆_看板.html">← 光纤光缆框架看板</a>
+    <div class="hdr-meta">
+      三家龙头涨价弹性模型<br>
+      更新：2026-06-16 ｜ 测算底稿：260429
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <div class="notice">
+    ⚠️ <b>使用须知：</b>本看板数据源自卖方测算模型（Shiwen Li, RS），核心情景为「2026 年光纤国内单价从 ~23 元/芯公里大涨至 70 元/芯公里」的<b>极端涨价假设</b>。
+    upside 为弹性测算口径，<b>非基础情景目标价</b>。复杂版模型 2026 净利润/毛利率存在跳升异常（见文末风险 R2），请结合基本面交叉验证后使用。
+  </div>
+
+  <!-- ① KPI -->
+  <div class="st"><span class="num">1</span>核心结论<span class="st-en">KEY TAKEAWAYS</span></div>
+  <div class="kpi-g">
+    <div class="kpi">
+      <div class="lbl">最高 upside（复杂版）</div>
+      <div class="val c-up">+112.0%</div>
+      <div class="note">中天科技 600522.SH<br>目标市值 1,950 亿 / 现市值 920 亿</div>
+    </div>
+    <div class="kpi">
+      <div class="lbl">涨价后国内单价</div>
+      <div class="val c-acc">70 <span style="font-size:13px;font-weight:400;color:var(--text2)">元/芯公里</span></div>
+      <div class="note">基准 22.7 → 涨价 70<br>涨幅 ≈ <span class="c-up" style="font-weight:600">+208%</span></div>
+    </div>
+    <div class="kpi">
+      <div class="lbl">总利润弹性区间</div>
+      <div class="val val-sm c-up">+156.6% ~ +433.6%</div>
+      <div class="note">中天最低 / 长飞最高<br>光纤涨价驱动净利润跳升</div>
+    </div>
+    <div class="kpi">
+      <div class="lbl">情景假设来源</div>
+      <div class="val val-sm">集采价格暴涨</div>
+      <div class="note">运营商框采 + 散纤需求共振<br>需 4 月后电信框采验证</div>
+    </div>
+  </div>
+
+  <!-- ② upside 对比 + 弹性 -->
+  <div class="st"><span class="num">2</span>三家 upside 与利润弹性对比<span class="st-en">UPSIDE & EARNINGS LEVERAGE</span></div>
+  <div class="grid-2">
+    <div class="ccard">
+      <h3>现市值 → 目标市值 → upside（复杂版口径，按 upside 排序）</h3>
+      <div class="cwrap"><canvas id="upsideChart"></canvas></div>
+    </div>
+    <div class="ccard">
+      <h3>2026 总利润弹性 %（光纤涨价驱动）</h3>
+      <div class="cwrap"><canvas id="leverageChart"></canvas></div>
+    </div>
+  </div>
+
+  <!-- ③ 2025 vs 2026 -->
+  <div class="st"><span class="num">3</span>2025 基准 vs 2026 涨价情景<span class="st-en">BASELINE vs SURGE SCENARIO</span></div>
+  <div class="ccard" style="margin-bottom:18px">
+    <h3>核心指标三年对比（复杂版测算，单位见行标）</h3>
+    <div style="overflow-x:auto">
+      <table>
+        <thead>
+          <tr>
+            <th>指标</th><th>亨通 <code>600487.SH</code></th><th>中天 <code>600522.SH</code></th><th>长飞 <code>6869.HK</code></th>
+          </tr>
+        </thead>
+        <tbody id="baseTbody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="grid-2-eq">
+    <div class="ccard">
+      <h3>光纤缆总收入：2025 → 2026（亿元）</h3>
+      <div class="cwrap"><canvas id="revChart"></canvas></div>
+    </div>
+    <div class="ccard">
+      <h3>净利润：2025 → 2026（亿元，⚠ 含模型跳升异常）</h3>
+      <div class="cwrap"><canvas id="profitChart"></canvas></div>
+    </div>
+  </div>
+
+  <!-- ④ 产能产量明细 -->
+  <div class="st"><span class="num">4</span>产能 → 产量 → 收入 测算明细<span class="st-en">CAPACITY TO REVENUE BRIDGE</span></div>
+  <div class="tcard">
+    <h3>自下而上拆解（数据全部来自 Excel 测算模型）</h3>
+    <div style="overflow-x:auto">
+      <table>
+        <thead>
+          <tr>
+            <th>环节 / 指标</th><th>亨通</th><th>中天</th><th>长飞</th><th>单位</th>
+          </tr>
+        </thead>
+        <tbody id="bridgeTbody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ⑤ 敏感性热力图 -->
+  <div class="st"><span class="num">5</span>涨价敏感性矩阵<span class="st-en">SENSITIVITY HEATMAP · 简单版口径</span></div>
+  <div class="ccard" style="margin-bottom:18px">
+    <h3>upside 对「净利率变动 × 出货量/涨价变动」的敏感性（%）</h3>
+    <div class="hm-tabs">
+      <button class="hm-tab active" data-co="亨通">亨通光电 600487</button>
+      <button class="hm-tab" data-co="中天">中天科技 600522</button>
+      <button class="hm-tab" data-co="长飞">长飞光纤 6869.HK</button>
+    </div>
+    <div id="hmPanes"></div>
+    <div class="hm-legend">
+      <span>低</span><div class="bar"></div><span>高</span>
+    </div>
+    <div style="margin-top:10px;font-size:11px;color:var(--text2);line-height:1.6">
+      行 = 净利率变动假设（0.025 ~ 0.10）｜列 = 出货量/涨价变动（0.05 ~ 0.25）｜单元格 = 对应 upside %。<br>
+      ⚠ 简单版假设整体涨价，与复杂版分品种/分区域口径不同，两版 upside 不可直接比较。
+    </div>
+  </div>
+
+  <!-- ⑥ 估值 + 假设 + 风险 -->
+  <div class="st"><span class="num">6</span>估值输出 · 假设 · 风险<span class="st-en">VALUATION / ASSUMPTIONS / RISKS</span></div>
+
+  <div class="tcard" style="margin-bottom:18px">
+    <h3>两版估值口径并列（单位：亿元 / %）</h3>
+    <div style="overflow-x:auto">
+      <table>
+        <thead>
+          <tr>
+            <th>口径 / 指标</th><th>亨通</th><th>中天</th><th>长飞</th>
+          </tr>
+        </thead>
+        <tbody id="valTbody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="grid-j">
+    <div class="ccard">
+      <h3>关键业务假设（引自 Excel 单元格批注）</h3>
+      <ul class="assume">
+        <li><b>2025 国内单价 22.7 元</b>：散纤占比 10%（单价 18~20）+ 运营商占比 90%（单价 ~23，加权后 22.7）；中国移动 1H25 高基数 24。</li>
+        <li><b>其他光纤生产效率</b>：657A/654E 等品种综合效率较 G652D 低 35~40%，年产值转换效率按七折计。</li>
+        <li><b>2026 国内单价 70 元</b>：散纤占比升至 25%（单价 90）+ 运营商占比 75%（单价 ~70），待 4 月后电信框采更新验证。</li>
+        <li><b>长飞定价特殊性</b>：A2 散单少，单价主要考虑数据中心用纤价格；其他品种国内/海外单价 100 元（亨通/中天为 140 元）。</li>
+        <li><b>成缆加成</b>：假设（光缆−光纤）部分不涨价，仅看光纤涨价带来的收入增量；总产量增长另行计入。</li>
+        <li><b>期间费用</b>：2026 同比 +10%。</li>
+        <li><b>长飞市值口径</b>：取<b>港股市值</b>（6869.HK），含汇率/折扣调整。</li>
+      </ul>
+    </div>
+    <div class="ccard">
+      <h3>主要风险与模型提示</h3>
+      <div class="risk"><span class="risk-n risk-flag">R1</span><span><b>涨价不及预期</b>：70 元/芯公里为极端假设，若集采价格仅温和回升，upside 大幅缩水。</span></div>
+      <div class="risk"><span class="risk-n risk-flag">R2</span><span><b>复杂版成本结构待复核</b>：2026 营业成本公式 <code>=B23*B40/B17</code> 按产量线性放大，未反映涨价后成本结构，导致毛利率从 27.5% 跳升至 66.5%、净利润从 4.4 亿跳至 69.8 亿，<b>数值虚高疑点需建模者复核</b>。</span></div>
+      <div class="risk"><span class="risk-n">R3</span><span><b>两版口径差异大</b>：简单版 upside（+30.9%/+26.9%/+31.4%）与复杂版（+70.6%/+112.0%/+38.7%）假设激进程度不同，结论对假设高度敏感。</span></div>
+      <div class="risk"><span class="risk-n">R4</span><span><b>静态测算</b>：敏感性矩阵为单期 What-If，未考虑竞争反制、产能投放节奏、海外价格联动。</span></div>
+      <div style="margin-top:14px;padding-top:12px;border-top:1px solid var(--border)">
+        <div style="font-size:11px;color:var(--text2);font-weight:600;margin-bottom:6px;">下次更新关注点</div>
+        <div style="font-size:12px;">① 4 月后电信框采实际中标价 ② 复杂版 R46~R50 成本公式修正 ③ 杭电/永鼎数据补录（Excel 预留空列）</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="foot">
+    <b>数据源</b>：<code>workwork/knowledge/database/光纤数据/副本【请勿转发】个股测算 260429(1).xlsx</code>（Shiwen Li, RS 测算模型）<br>
+    <b>代码口径</b>：本看板以 Excel 为准 — 亨通 <code>600487.SH</code>、中天 <code>600522.SH</code>（已修正框架看板的 002512）、长飞 <code>6869.HK</code>（港股）。<br>
+    <b>配套</b>：<a href="光纤光缆_看板.html" style="color:var(--accent)">光纤光缆框架看板</a>（行业格局/催化剂/标的映射）｜<b>货币</b>：人民币亿元，长飞市值为港股市值折算。
+  </div>
+
+</div>
+
+<script>
+/* ═══ DATA — 全部数值来自 Excel 测算模型（data_only 实读） ═══ */
+const COMPANIES = ["亨通", "中天", "长飞"];
+const CODES = { "亨通":"600487.SH", "中天":"600522.SH", "长飞":"6869.HK" };
+
+// 复杂版 upside / 目标市值 / 现市值（亿元，%）
+const VAL_COMPLEX = {
+  "亨通": { target:2047.26, current:1200, upside:0.706,   pe:20, newNP:102.36, oldNP:37,   leverage:1.7666 },
+  "中天": { target:1950.10, current:920,  upside:1.1197,  pe:20, newNP:97.50,  oldNP:38,   leverage:1.5659 },
+  "长飞": { target:1734.26, current:1250, upside:0.3874,  pe:25, newNP:69.37,  oldNP:13,   leverage:4.3362 },
+};
+// 简单版 upside
+const VAL_SIMPLE = {
+  "亨通": { target:836.42, current:639, upside:0.309,  },
+  "中天": { target:851.17, current:671, upside:0.2685, },
+  "长飞": { target:573.18, current:436.36, upside:0.3135, },
+};
+
+// 2025 vs 2026 核心指标（复杂版）
+const BASE = {
+  "亨通": { prod25:8302.8, rev25:55, np25:4.4,  prod26:8580.5, rev26:122.77, np26:69.76 },
+  "中天": { prod25:7548,   rev25:50, np25:4.0,  prod26:7800.5, rev26:111.61, np26:63.50 },
+  "长飞": { prod25:10567.2,rev25:83.5,np25:5.01, prod26:11327.6,rev26:146.22,np26:61.38 },
+};
+
+// 产能→产量→收入明细（复杂版）
+const BRIDGE = [
+  ["光棒产能（按 G652D）",      [3300,3000,4200],   "吨"],
+  ["2025 产能利用率",            [0.80,0.80,0.80],   "%"],
+  ["2025 G652D 占比",            [0.75,0.75,0.75],   "%"],
+  ["2025 G652D 产量",            [6732,6120,8568],   "万芯公里"],
+  ["2025 光纤总产量",            [8302.8,7548,10567.2], "万芯公里"],
+  ["2025 国内单价",              [22.7,22.7,22.7],   "元/芯公里"],
+  ["2025 海外单价",              [28,28,28],         "元/芯公里"],
+  ["2025 光纤收入",              [23.56,21.42,29.99],"亿元"],
+  ["2025 光纤缆总收入",          [55,50,83.5],       "亿元"],
+  ["2026 产能利用率",            [0.95,0.95,0.95],   "%"],
+  ["2026 G652D 占比",            [0.35,0.35,0.45],   "%"],
+  ["2026 光纤总产量",            [8580.5,7800.5,11327.6], "万芯公里"],
+  ["2026 国内单价",              [70,70,70],         "元/芯公里"],
+  ["2026 海外单价",              [50,50,50],         "元/芯公里"],
+  ["2026 光纤收入",              [90.28,82.07,88.86],"亿元"],
+  ["2026 光纤缆总收入",          [122.77,111.61,146.22], "亿元"],
+];
+
+// 敏感性矩阵（简单版 upside %），行=净利率变动, 列=出货量变动
+const SENS_ROWS = [0.025, 0.05, 0.075, 0.10];
+const SENS_COLS = [0.05, 0.10, 0.15, 0.20, 0.25];
+const SENS = {
+  "亨通": [
+    [0.0494,0.0955,0.1416,0.1877,0.2337],
+    [0.0539,0.1011,0.1483,0.1955,0.2427],
+    [0.0583,0.1067,0.1550,0.2033,0.2517],
+    [0.0628,0.1122,0.1617,0.2111,0.2606],
+  ],
+  "中天": [
+    [0.0365,0.0701,0.1037,0.1373,0.1709],
+    [0.0403,0.0747,0.1091,0.1435,0.1779],
+    [0.0441,0.0793,0.1145,0.1498,0.1850],
+    [0.0479,0.0839,0.1200,0.1560,0.1920],
+  ],
+  "长飞": [
+    [0.1612,0.3105,0.4597,0.6090,0.7582],
+    [0.1769,0.3298,0.4826,0.6355,0.7884],
+    [0.1925,0.3490,0.5056,0.6621,0.8186],
+    [0.2082,0.3683,0.5285,0.6886,0.8488],
+  ],
+};
+
+/* ═══ Helpers ═══ */
+const fmtPct = v => (v>=0?"+":"") + (v*100).toFixed(1) + "%";
+const fmtNum = (v,d=2) => v==null?"—":Number(v).toLocaleString("zh-CN",{maximumFractionDigits:d,minimumFractionDigits:d});
+const fmtPctRaw = v => (v*100).toFixed(0)+"%";
+
+const COLORS = { "亨通":"#0891b2", "中天":"#0e7490", "长飞":"#22d3ee" };
+
+/* ═══ ② upside chart（横向柱，按 upside 降序）═══ */
+const sortedUp = [...COMPANIES].sort((a,b)=>VAL_COMPLEX[b].upside-VAL_COMPLEX[a].upside);
+new Chart(document.getElementById("upsideChart"), {
+  type:"bar",
+  data:{
+    labels: sortedUp.map(c=>`${c} ${CODES[c]}`),
+    datasets:[
+      { label:"现市值", data:sortedUp.map(c=>VAL_COMPLEX[c].current), backgroundColor:"rgba(107,114,128,.45)", borderRadius:4, barPercentage:.7 },
+      { label:"目标市值", data:sortedUp.map(c=>VAL_COMPLEX[c].target), backgroundColor:sortedUp.map(c=>COLORS[c]), borderRadius:4, barPercentage:.7 },
+    ],
+  },
+  options:{
+    indexAxis:"y", responsive:true, maintainAspectRatio:false,
+    plugins:{
+      legend:{position:"top",labels:{font:{size:11},padding:8}},
+      tooltip:{callbacks:{afterLabel:ctx=>{
+        if(ctx.datasetIndex===1){ const c=sortedUp[ctx.dataIndex]; return `upside：${fmtPct(VAL_COMPLEX[c].upside)}`;}
+        return null;
+      }}},
+    },
+    scales:{ x:{grid:{color:"#f1f5f9"},ticks:{font:{size:10}},title:{display:true,text:"亿元",font:{size:10},color:"#94a3b8"}},
+             y:{grid:{display:false},ticks:{font:{size:11}}} },
+  },
+});
+
+/* ═══ ② leverage chart（利润弹性柱）═══ */
+new Chart(document.getElementById("leverageChart"), {
+  type:"bar",
+  data:{
+    labels: COMPANIES.map(c=>c),
+    datasets:[{
+      label:"2026 总利润弹性 %（vs 原净利润）",
+      data: COMPANIES.map(c=>VAL_COMPLEX[c].leverage*100),
+      backgroundColor: COMPANIES.map(c=>COLORS[c]),
+      borderRadius:6, barPercentage:.55,
+    }],
+  },
+  options:{
+    responsive:true, maintainAspectRatio:false,
+    plugins:{ legend:{display:false}, tooltip:{callbacks:{label:ctx=>` +${ctx.parsed.y.toFixed(1)}%`}} },
+    scales:{ x:{grid:{display:false},ticks:{font:{size:12}}},
+             y:{grid:{color:"#f1f5f9"},ticks:{font:{size:10},callback:v=>v+"%"},title:{display:true,text:"% vs 原净利润",font:{size:10},color:"#94a3b8"}} },
+  },
+});
+
+/* ═══ ③ base vs surge 表格 ═══ */
+const baseRows = [
+  ["光纤总产量（万芯公里）", "prod25", "prod26", v=>fmtNum(v,0)],
+  ["光纤缆总收入（亿元）",   "rev25",  "rev26",  v=>fmtNum(v,2)],
+  ["净利润（亿元）⚠ 跳升",   "np25",   "np26",   v=>fmtNum(v,2)],
+];
+const baseTb = document.getElementById("baseTbody");
+baseRows.forEach(r=>{
+  const [label, k25, k26, fmt] = r;
+  // 2025 row
+  let tr1 = `<tr><td>${label} <span class="sub">· 2025基准</span></td>`;
+  COMPANIES.forEach(c=> tr1 += `<td>${fmt(BASE[c][k25])}</td>`);
+  tr1 += `</tr>`;
+  // 2026 row (highlighted)
+  let tr2 = `<tr class="row-h"><td>${label} <span class="sub">· 2026涨价</span></td>`;
+  COMPANIES.forEach(c=>{
+    const v26=BASE[c][k26], v25=BASE[c][k25];
+    const chg = v26/v25-1;
+    tr2 += `<td>${fmt(v26)} <span class="pos" style="font-size:11px">(${fmtPct(chg)})</span></td>`;
+  });
+  tr2 += `</tr>`;
+  baseTb.insertAdjacentHTML("beforeend", tr1+tr2);
+});
+
+/* ═══ ③ rev / profit charts ═══ */
+new Chart(document.getElementById("revChart"),{
+  type:"bar",
+  data:{
+    labels:COMPANIES,
+    datasets:[
+      {label:"2025 光纤缆总收入",data:COMPANIES.map(c=>BASE[c].rev25),backgroundColor:"rgba(148,163,184,.55)",borderRadius:5},
+      {label:"2026 光纤缆总收入",data:COMPANIES.map(c=>BASE[c].rev26),backgroundColor:COMPANIES.map(c=>COLORS[c]),borderRadius:5},
+    ],
+  },
+  options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{position:"top",labels:{font:{size:11},padding:8}}},
+    scales:{x:{grid:{display:false},ticks:{font:{size:12}}},y:{grid:{color:"#f1f5f9"},ticks:{font:{size:10}},title:{display:true,text:"亿元",font:{size:10},color:"#94a3b8"}}}}
+});
+new Chart(document.getElementById("profitChart"),{
+  type:"bar",
+  data:{
+    labels:COMPANIES,
+    datasets:[
+      {label:"2025 净利润",data:COMPANIES.map(c=>BASE[c].np25),backgroundColor:"rgba(148,163,184,.55)",borderRadius:5},
+      {label:"2026 净利润（⚠模型）",data:COMPANIES.map(c=>BASE[c].np26),backgroundColor:"#f87171",borderRadius:5},
+    ],
+  },
+  options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{position:"top",labels:{font:{size:11},padding:8}}},
+    scales:{x:{grid:{display:false},ticks:{font:{size:12}}},y:{grid:{color:"#f1f5f9"},ticks:{font:{size:10}},title:{display:true,text:"亿元",font:{size:10},color:"#94a3b8"}}}}
+});
+
+/* ═══ ④ bridge 表 ═══ */
+const bridgeTb = document.getElementById("bridgeTbody");
+BRIDGE.forEach((row,i)=>{
+  const [label, vals, unit] = row;
+  const isHeader = label.includes("光纤缆总收入") || label.includes("光纤收入") && !label.includes("单价");
+  let cls = (label==="2025 光纤缆总收入"||label==="2026 光纤缆总收入")?"row-h":"";
+  let tr = `<tr class="${cls}"><td>${label}</td>`;
+  vals.forEach(v=>{
+    let disp;
+    if(unit==="%") disp = fmtPctRaw(v);
+    else if(unit==="亿元") disp = fmtNum(v,2);
+    else disp = fmtNum(v, unit==="吨"?0:1);
+    tr += `<td>${disp}</td>`;
+  });
+  tr += `<td><span class="sub">${unit}</span></td></tr>`;
+  bridgeTb.insertAdjacentHTML("beforeend", tr);
+});
+
+/* ═══ ⑤ 敏感性热力图 ═══ */
+// value → 颜色（绿系，0% 浅 → 85%+ 深）
+function hmColor(v){
+  const pct = Math.min(Math.max(v,0),0.85)/0.85;
+  // light #a7f3d0 (167,243,208) → deep #047857 (4,120,87)
+  const r = Math.round(167 + (4-167)*pct);
+  const g = Math.round(243 + (120-243)*pct);
+  const b = Math.round(208 + (87-208)*pct);
+  const txt = pct>0.45?"#fff":"#0f172a";
+  return {bg:`rgb(${r},${g},${b})`, txt};
+}
+const hmPanes = document.getElementById("hmPanes");
+COMPANIES.forEach((co,idx)=>{
+  const pane = document.createElement("div");
+  pane.className = "hm-pane" + (idx===0?" active":"");
+  pane.dataset.co = co;
+  let html = `<div class="hm">`;
+  html += `<div class="hm-h"></div>`;
+  SENS_COLS.forEach(c=> html += `<div class="hm-h">出货量 +${(c*100).toFixed(0)}%</div>`);
+  SENS.forEach((rowVal,r)=>{
+    html += `<div class="hm-rh">净利率 +${(SENS_ROWS[r]*100).toFixed(1)}%</div>`;
+    rowVal.forEach(v=>{
+      const {bg,txt} = hmColor(v);
+      html += `<div class="hm-cell" style="background:${bg};color:${txt}">${fmtPct(v).replace("+","")}</div>`;
+    });
+  });
+  html += `</div>`;
+  pane.innerHTML = html;
+  hmPanes.appendChild(pane);
+});
+document.querySelectorAll(".hm-tab").forEach(btn=>{
+  btn.addEventListener("click",()=>{
+    document.querySelectorAll(".hm-tab").forEach(b=>b.classList.remove("active"));
+    document.querySelectorAll(".hm-pane").forEach(p=>p.classList.remove("active"));
+    btn.classList.add("active");
+    const co = btn.dataset.co;
+    document.querySelector(`.hm-pane[data-co="${co}"]`).classList.add("active");
+  });
+});
+
+/* ═══ ⑥ 估值表（两版并列）═══ */
+const valTb = document.getElementById("valTbody");
+const valRows = [
+  ["复杂版 · 原净利润（亿元）", c=>VAL_COMPLEX[c].oldNP, v=>fmtNum(v,1)],
+  ["复杂版 · 新测算净利润（亿元）", c=>VAL_COMPLEX[c].newNP, v=>fmtNum(v,1)],
+  ["复杂版 · 总利润弹性", c=>VAL_COMPLEX[c].leverage, v=>`<span class="pos">${fmtPct(v)}</span>`],
+  ["复杂版 · P/E（倍）", c=>VAL_COMPLEX[c].pe, v=>fmtNum(v,0)],
+  ["复杂版 · 目标市值（亿元）", c=>VAL_COMPLEX[c].target, v=>fmtNum(v,0)],
+  ["复杂版 · 现市值（亿元）", c=>VAL_COMPLEX[c].current, v=>fmtNum(v,0)],
+  ["复杂版 · upside", c=>VAL_COMPLEX[c].upside, v=>`<span class="pos">${fmtPct(v)}</span>`],
+  ["简单版 · 目标市值（亿元）", c=>VAL_SIMPLE[c].target, v=>fmtNum(v,1)],
+  ["简单版 · 现市值（亿元）", c=>VAL_SIMPLE[c].current, v=>fmtNum(v,1)],
+  ["简单版 · upside", c=>VAL_SIMPLE[c].upside, v=>`<span class="pos">${fmtPct(v)}</span>`],
+];
+valRows.forEach((r,i)=>{
+  const [label, getter, fmt] = r;
+  const isHeader = label.includes("复杂版 · upside") || label.includes("简单版 · upside");
+  let tr = `<tr class="${isHeader?"row-h":""}"><td>${label}</td>`;
+  COMPANIES.forEach(c=> tr += `<td>${fmt(getter(c))}</td>`);
+  tr += `</tr>`;
+  valTb.insertAdjacentHTML("beforeend", tr);
+});
+</script>
+</body>
+</html>

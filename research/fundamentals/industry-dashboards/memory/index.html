@@ -144,20 +144,41 @@ code{font-size:10px;background:var(--tag-bg);color:var(--tag);padding:1px 5px;bo
 .calc-sum{justify-content:center;gap:24px;margin-top:14px;padding-top:12px;border-top:2px solid var(--accent);font-size:12px;font-weight:700;color:var(--text2)}
 .calc-sum b{font-size:15px;color:var(--up);margin-left:6px;margin-right:18px}
 @media(max-width:900px){.calc-grid{grid-template-columns:1fr}}
+.rev-tip{cursor:help;border-bottom:1px dashed var(--text2);position:relative}
+.note-fold{cursor:pointer;user-select:none}
+.note-fold .note-head{display:flex;align-items:center;gap:6px;font-weight:700;color:var(--accent)}
+.note-fold .note-head::before{content:'▸';font-size:10px;transition:transform .15s}
+.note-fold.open .note-head::before{transform:rotate(90deg)}
+.note-fold .note-body{display:none;margin-top:8px;font-weight:400;color:var(--text2)}
+.note-fold.open .note-body{display:block}
+.techflow{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:10px 0}
+.techflow .tf-col{border:1px solid var(--border);border-radius:8px;padding:10px 12px;background:#fff}
+.techflow .tf-col h5{margin:0 0 8px;font-size:12px;color:var(--accent)}
+.techflow .tf-chip{display:inline-block;font-size:11px;padding:4px 9px;border-radius:999px;background:var(--bg);border:1px solid var(--border);margin:0 5px 5px 0;color:#334155}
+.tech-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px}
+.tech-card{border:1px solid var(--border);border-radius:8px;padding:12px 14px;background:#fff}
+.tech-card h5{margin:0 0 6px;font-size:13px;color:#1e3a8a}
+.tech-card p{margin:0 0 6px;font-size:12px;line-height:1.7;color:#334155}
+.tech-card .tf-chip{margin-top:2px}
+@media(max-width:900px){.techflow,.tech-grid{grid-template-columns:1fr}}
+.gtip{position:fixed;z-index:999;background:#1e293b;color:#fff;padding:8px 12px;border-radius:7px;font-size:11.5px;line-height:1.7;max-width:260px;box-shadow:0 8px 24px rgba(0,0,0,.28);display:none;pointer-events:none}
+.gtip b{color:#fff}
+.gtip .tip-up{color:#4ade80;font-weight:700}
+.gtip .tip-down{color:#f87171;font-weight:700}
 </style>
 </head>
 <body>
 
 <header class="hdr">
   <div class="hdr-l">
-    <a class="back-link" href="../industry-fundamentals-entry.html">← 行业基本面入口</a>
+    <a class="back-link" href="../行业基本面入口.html">← 行业基本面入口</a>
     <span class="hdr-title">存储 / HBM</span>
     <span class="hdr-sub">HBM · DRAM · NAND · 三大原厂</span>
     <span class="badge-up">🟢 景气上行</span>
     <span class="badge-tag">超级周期</span>
     <span class="badge-tag">量价齐升</span>
   </div>
-  <div class="hdr-meta">研究看板 · TMT 产业链<br>数据源：全球存储模型 ｜ 更新：2026-06-24</div>
+  <div class="hdr-meta">研究看板 · TMT 产业链<br>数据源：全球存储模型 ｜ 更新：2026-08-04（新增第五部分 AI存储技术路线）</div>
 </header>
 
 <div class="wrap">
@@ -202,12 +223,12 @@ code{font-size:10px;background:var(--tag-bg);color:var(--tag);padding:1px 5px;bo
 <div id="sec-list-top" class="st" onclick="toggleSec(this)">📋 标的汇总与 A 股映射<span class="st-arrow">▾</span></div>
 <div class="sec-body" style="margin-bottom:16px">
   <div class="card">
-    <div class="note-box">海外原厂数据来自全球存储模型；A 股映射按<strong>两条独立逻辑链</strong>组织——① HBM 链：HBM 放量所需的核心设备/材料弹性；② 存储大周期链：commodity DRAM/NAND 涨价潮下利基存储与模组厂的传导弹性。两条链驱动因素不同（HBM 链跟良率/产能爬坡，大周期链跟合约价）。<strong>逻辑链一</strong>明细来源：<span class="src">优先级设备材料判断第一层T_20260625212250.xlsx</span>（按"题材纯度"★评级映射关注度：★★★★及以上=🟢核心，★★★=🟡观察，★★及以下=⚪边缘）；<strong>逻辑链二</strong>具体代码/关注度待用户确认补充（<span class="todo">TODO: A 股名单</span>）。</div>
+    <div class="note-box note-fold" onclick="toggleNote(this)"><div class="note-head">数据来源与口径 ▾</div><div class="note-body">A股映射按<strong>两条逻辑链</strong>组织：①HBM链（设备/材料弹性，来源 <span class="src">优先级设备材料判断T_20260625212250.xlsx</span>，按★评级映射关注度）；②存储大周期链（利基/模组传导弹性，<span class="todo">TODO: 具体代码待补</span>）。</div></div>
     <table class="ctable">
       <thead><tr><th style="width:90px">代码</th><th style="width:130px">名称</th><th>产业链位置</th><th>对标 / 备注</th><th style="width:80px">关注度</th></tr></thead>
       <tbody>
         <tr class="grp"><td colspan="5">三大原厂（海外，两条逻辑链的源头）</td></tr>
-        <tr><td>000660.KS</td><td><a href="sk-hynix.html" target="_blank">SK 海力士</a></td><td>DRAM/HBM 龙头，HBM3E 供应英伟达</td><td>DRAM 份额 38.2%（第一） · <a href="sk-hynix.html" target="_blank">公司页</a></td><td><span class="dot d-na">海外</span></td></tr>
+        <tr><td>000660.KS</td><td><a href="SK海力士_公司看板.html" target="_blank">SK 海力士</a></td><td>DRAM/HBM 龙头，HBM3E 供应英伟达</td><td>DRAM 份额 38.2%（第一） · <a href="SK海力士_公司看板.html" target="_blank">公司页</a></td><td><span class="dot d-na">海外</span></td></tr>
         <tr><td>005930.KS</td><td>三星电子</td><td>DRAM/HBM/NAND 全覆盖，产能最大</td><td>份额 33.5%，HBM4 认证领先</td><td><span class="dot d-na">海外</span></td></tr>
         <tr><td>MU</td><td>美光 Micron</td><td>DRAM/HBM/NAND，美系唯一</td><td>份额 22.0%，FY26Q2 毛利率 74.4%</td><td><span class="dot d-na">海外</span></td></tr>
         <tr class="grp"><td colspan="5">🔗 逻辑链一·HBM 相关 · 第一层：HBM 制造核心设备</td></tr>
@@ -233,22 +254,24 @@ code{font-size:10px;background:var(--tag-bg);color:var(--tag);padding:1px 5px;bo
         <tr><td>688525</td><td>佰维存储</td><td>存储模组 / 封测</td><td>涨价弹性</td><td><span class="dot d-na">待定</span></td></tr>
       </tbody>
     </table>
-    <div class="seg-sum">两条逻辑链的核心区别：<strong>逻辑链一（HBM）</strong>赚的是"HBM 渗透率提升+先进封装良率爬坡"的钱，跟随海力士/三星/美光的 HBM bit 出货与资本开支节奏，弹性大但收入体量小（HBM 仅占三大厂总营收 10%-20%，见"当前判断速览"）；<strong>逻辑链二（存储大周期）</strong>赚的是"commodity DRAM/NAND 合约价上涨"的钱，跟随 DDR5/DDR4/NAND 价格曲线，体量更大、覆盖三大厂绝大部分收入，1Q26 后是业绩兑现的主战场。A 股标的为产业链常见方向占位，具体代码/关注度（🟢核心/🟡观察）与最终名单需结合海外映射、业绩相关性与估值水位由用户确认。</div>
+    <div class="seg-sum note-fold" onclick="toggleNote(this)"><div class="note-head">两条逻辑链的收益结构区别 ▾</div><div class="note-body"><strong>逻辑链一（HBM）</strong>赚渗透率+封装良率爬坡的钱，跟海力士/三星/美光HBM bit出货走，弹性大但仅占营收10%-20%；<strong>逻辑链二（大周期）</strong>赚commodity涨价的钱，跟DDR5/DDR4/NAND价格曲线走，覆盖绝大部分营收，1Q26后是兑现主战场。具体代码/关注度需结合估值由用户确认。</div></div>
   </div>
 </div>
 
 <!-- ════════ 第一部分 · 三大原厂（业务拆 HBM / DRAM / NAND） ════════ -->
-<div class="part part-co"><span class="pn">第一部分</span> 三大原厂 · 业务拆分 <span class="pd">海力士 · 三星 · 美光，各拆 HBM / DRAM / NAND</span></div>
+<div class="part part-co"><span class="pn">第一部分</span> 五强 · 业务拆分 <span class="pd">海力士 · 三星 · 美光（HBM/DRAM/NAND）+ Sandisk · 铠侠（纯 NAND）</span></div>
 
 <!-- 业务拆分 -->
-<div id="sec-co-split" class="st" onclick="toggleSec(this)">🧩 三家公司业务拆分（HBM / DRAM / NAND，按公司自有模型测算）<span class="st-arrow">▾</span></div>
+<div id="sec-co-split" class="st" onclick="toggleSec(this)">🧩 五家公司业务拆分（按公司自有模型测算，2026-08-04 新增 Sandisk/铠侠）<span class="st-arrow">▾</span></div>
 <div class="sec-body" style="margin-bottom:16px">
   <div class="card">
-    <div class="note-box">数据来源：三家公司自有研究模型（<span class="src">MU model.xlsx / SAMSUNG model.xlsx / SK Hynix model.xlsx</span>），按 DRAM Revenue / NAND Revenue 分部 worksheet 测算。<strong>2023–2025 为实际值，已与公司整体财报营收交叉核对一致</strong>；<strong style="color:var(--warn)">2026E–2027E 为各公司模型自身的 ASP/bit 假设外推，隐含涨价幅度高于本看板"全球存储模型"给出的行业总规模($210bn/2026E)，请视为该模型自身的乐观情景，不与第三部分行业总量直接加总</strong>。</div>
+    <div class="note-box note-fold" onclick="toggleNote(this)"><div class="note-head">数据来源与口径 ▾</div><div class="note-body">五家公司自有研究模型（<span class="src">MU/SAMSUNG/SK Hynix/Sandisk/Kioxia model.xlsx，均高盛GS模型</span>），按DRAM/NAND Revenue分部worksheet测算。<strong>2023-2025为实际值，已与财报交叉核对</strong>；<strong style="color:var(--warn)">2026E-2027E为各公司模型自身外推，隐含涨价幅度高于第三部分"全球存储模型"总规模，视为乐观情景，不直接加总</strong>。Sandisk、铠侠仅覆盖NAND，tab结构与另三家不同。</div></div>
     <div class="tab-nav">
       <button class="tab-btn active" onclick="switchTab(this,'t-co-skh')">海力士 SK Hynix</button>
       <button class="tab-btn" onclick="switchTab(this,'t-co-sam')">三星 Samsung</button>
       <button class="tab-btn" onclick="switchTab(this,'t-co-mu')">美光 Micron</button>
+      <button class="tab-btn" onclick="switchTab(this,'t-co-sndk')">Sandisk（新增）</button>
+      <button class="tab-btn" onclick="switchTab(this,'t-co-kx')">铠侠 Kioxia（新增）</button>
     </div>
     <div id="t-co-skh" class="tab-pane active">
       <div class="model-wrap">
@@ -273,7 +296,7 @@ code{font-size:10px;background:var(--tag-bg);color:var(--tag);padding:1px 5px;bo
           </tbody>
         </table>
       </div>
-      <div class="seg-sum">2025 HBM 占 DRAM 营收比冲高至 39%（接近自身 DRAM 营收的四成），但模型 2026E 因 commodity DRAM 合约价暴涨（ASP 假设近乎翻倍）拉低 HBM 收入占比至 13.2%，2027E 随 HBM4/4E 放量回升至 16.7%——<strong>不是 HBM 需求转弱，而是普通 DRAM 涨价速度阶段性更快</strong>。①模型对 DRAM/NAND 两个分部只给出营业利润率（Sales − 全部经营成本，含 D&A/人工/研发），未单独拆出 COGS，故无法给出与美光口径一致的"毛利率"，已明确标注为营业利润率。②"营业总收入"与上方 DRAM+NAND 营收合计存在小幅差额（System IC 等其他业务），按 IFRS IS sheet 公司整体口径计算；该口径下 2023-2025 营收（25,000/48,415/68,319）与公司官方披露营收（25,108/48,529/66,998）存在 &lt;3% 的小幅差异，系两个数据源的汇率假设/汇总口径略有不同，均为公司模型原始数据，未做人为调整。</div>
+      <div class="seg-sum note-fold" onclick="toggleNote(this)"><div class="note-head">HBM占比走势解读 ▾</div><div class="note-body">2025 HBM占DRAM营收比冲高至39%，模型2026E因commodity DRAM合约价暴涨拉低占比至13.2%，2027E随HBM4/4E放量回升至16.7%——<strong>不是HBM需求转弱，而是普通DRAM涨价速度阶段性更快</strong>。①模型DRAM/NAND分部只给营业利润率，未拆COGS，不等同美光口径的毛利率。②"营业总收入"与DRAM+NAND营收合计有小幅差额（System IC等其他业务），2023-2025口径与官方披露差&lt;3%，系汇率/汇总口径差异，未人为调整。</div></div>
 
       <div class="chart-row" style="margin-top:14px">
         <div class="chart-box"><h4>营收构成（$mn，按季度堆叠）</h4><div class="chart-wrap"><canvas id="c-skh-rev-q"></canvas></div></div>
@@ -283,8 +306,8 @@ code{font-size:10px;background:var(--tag-bg);color:var(--tag);padding:1px 5px;bo
         <div class="chart-box"><h4>NAND ASP 走势（$/GB）</h4><div class="chart-wrap"><canvas id="c-skh-nandasp-q"></canvas></div></div>
         <div class="chart-box"><h4>出货量：传统 DRAM vs HBM（bn Gb）</h4><div class="chart-wrap"><canvas id="c-skh-bits-q"></canvas></div></div>
       </div>
-      <div class="seg-sum">关键读数：<br>①海力士 1Q26 是转折点——传统 DRAM ASP 单季 +102%（$0.375→$0.531→1Q26 进一步到 $1.073，两个季度翻了近 3 倍），涨价节奏比美光更陡。<br>②海力士 HBM ASP 同期反而<strong>从 $1.575 回落到 $1.266</strong>（4Q25→1Q26），是三家中唯一出现 HBM 单价下行的。可能成因：<br>　(a) <strong>产品代际混线降价</strong>——HBM3E 进入量产末期、厂商以价换量清库存，而 HBM4 尚未放量到能拉高混合 ASP 的规模，两代之间出现"旧代降价快于新代放量"的真空期；<br>　(b) <strong>客户结构切换</strong>——若 1Q26 新增订单里低毛利/低容量 SKU 或新客户议价权更强的合约占比上升，会拉低季度混合 ASP，即使主力客户合约价不变；<br>　(c) <strong>HBM3E 与 HBM3 之间本身存在常规的逐代降价条款</strong>（类似传统 DRAM 的 long-term agreement 降价节奏），叠加在涨价周期里更显眼。<br>三者都指向"价格走弱是结构性的（产品组合切换），不是 HBM 需求转弱"，与 bits 出货持续创新高（见④）互相印证。<br>③模型预测 HBM ASP 在 2027E 强力反弹至 $2.225（较 1Q26 低点 +76%），<strong>反弹幅度和时点与传统 DRAM ASP 2026E 见顶（$2.003，4Q26E）后小幅回落（4Q27E $2.064，较 3Q27E 的 $2.155 降）正好交错</strong>——模型隐含的假设是"传统 DRAM 先涨、HBM4 放量后接棒涨价"，这是三家公司模型里唯一能看到完整 2027E 路径的一组，置信度参考价值高于美光/三星模型里同期数据缺失的部分。<br>④HBM bits 出货 1Q23→4Q27E 增长 45 倍（0.16→7.21 bn Gb），是三家里绝对量最大、增长最连续的一条曲线。</div>
-      <div class="note-box" style="margin-top:14px">📊 季度量价拆解（1Q23–4Q27E，日历季）：来源 <span class="src">SK Hynix model.xlsx · DRAM Revenue（行6-156，含 137-150 HBM 与 152-156 Conventional 两组明细）/ NAND Revenue（行6-29）/ Revenue and OP（行6-21）</span>，原始单位为 KRW(W bn)，按各季度 F/X 假设逐季换算为 USD。<strong style="color:var(--warn)">2Q26E 起的营收为模型假设值（标黄）</strong>。<strong>海力士 worksheet 对传统 DRAM 和 HBM 都单独给出了 bits/ASP 的逐季假设（直到 4Q27E），不需要反推</strong>——这点与美光不同（美光模型 2Q26E 起只给 HBM 营收目标，传统 DRAM 需要拿总量减出来）；海力士的"传统 DRAM"和"HBM"两段在全部 20 个季度都是 worksheet 原始值。已与上方年度合计表交叉核对，DRAM、NAND 年度营收与已有数字基本一致（误差&lt;1%），验证拆分有效。</div>
+      <div class="seg-sum note-fold" onclick="toggleNote(this)"><div class="note-head">海力士关键读数（4点）▾</div><div class="note-body">①1Q26传统DRAM ASP单季+102%（$0.375→$0.531→$1.073，两季近3倍），涨价节奏三家最陡。<br>②HBM ASP同期反而从$1.575降至$1.266（唯一下行），成因是产品代际混线降价+客户结构切换，与bits仍创新高互相印证，不代表需求转弱。<br>③模型预测HBM ASP 2027E反弹至$2.225，反弹节点与传统DRAM 2026E见顶后小幅回落（4Q27E $2.064）正好交错，隐含"传统DRAM先涨、HBM4接棒"路径，是三家里唯一给出完整2027E路径的一组。<br>④HBM bits 1Q23→4Q27E增45倍(0.16→7.21 bn Gb)，三家最大最连续。</div></div>
+      <div class="note-box note-fold" style="margin-top:14px" onclick="toggleNote(this)"><div class="note-head">数据来源与口径 ▾</div><div class="note-body">来源：<span class="src">SK Hynix model.xlsx</span> DRAM/NAND/OP三表（行6-156等），KRW按各季F/X假设换算USD。<strong style="color:var(--warn)">2Q26E起为模型假设值（标黄）</strong>。海力士对传统DRAM/HBM均给出完整到4Q27E的bits/ASP假设，不需反推（与美光不同，美光2Q26E起只给HBM营收目标）。已与年度表交叉核对，DRAM/NAND营收误差&lt;1%。</div></div>
       <div class="model-wrap">
         <table class="model-table">
           <thead><tr><th>海力士季度（$mn / bn Gb / $·Gb⁻¹）</th><th>1Q23</th><th>2Q23</th><th>3Q23</th><th>4Q23</th><th>1Q24</th><th>2Q24</th><th>3Q24</th><th>4Q24</th><th>1Q25</th><th>2Q25</th><th>3Q25</th><th>4Q25</th><th>1Q26</th><th>2Q26E</th><th>3Q26E</th><th>4Q26E</th><th>1Q27E</th><th>2Q27E</th><th>3Q27E</th><th>4Q27E</th></tr></thead>
@@ -317,13 +340,13 @@ code{font-size:10px;background:var(--tag-bg);color:var(--tag);padding:1px 5px;bo
         <table class="model-table">
           <thead><tr><th>Samsung（USD mn）</th><th>2023</th><th>2024</th><th>2025</th><th>2026E</th><th>2027E</th></tr></thead>
           <tbody>
-            <tr><td>DRAM 营收（含 HBM）</td><td>20,859</td><td>38,307</td><td>51,080</td><td class="warn">238,309</td><td class="warn">344,841</td></tr>
-            <tr class="subtle"><td>　其中 HBM 营收</td><td>1,603</td><td>6,853</td><td>5,792</td><td class="warn">18,356</td><td class="warn">43,847</td></tr>
-            <tr class="subtle"><td>　HBM 占 DRAM 营收比</td><td>7.7%</td><td class="hl">17.9%</td><td>11.3%</td><td>7.7%</td><td>12.7%</td></tr>
-            <tr><td>NAND 营收</td><td>12,691</td><td>23,125</td><td>22,018</td><td class="warn">93,722</td><td class="warn">137,835</td></tr>
+            <tr><td>DRAM 营收（含 HBM）</td><td>20,859</td><td>38,307</td><td>51,080</td><td class="warn rev-tip" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="原1Q26版：238,309<br><span class=&quot;tip-up&quot;>↑ +3.2%</span>">245,932</td><td class="warn rev-tip" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="原1Q26版：344,841<br><span class=&quot;tip-up&quot;>↑ +9.6%</span>">377,818</td></tr>
+            <tr class="subtle"><td>　其中 HBM 营收</td><td>1,603</td><td>6,853</td><td>5,792</td><td class="warn rev-tip" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="原1Q26版：18,356<br><span class=&quot;tip-up&quot;>↑ +5.3%</span>">19,327</td><td class="warn rev-tip" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="原1Q26版：43,847<br><span class=&quot;tip-up&quot;>↑ +38.8%</span>">60,876</td></tr>
+            <tr class="subtle"><td>　HBM 占 DRAM 营收比</td><td>7.7%</td><td class="hl">17.9%</td><td>11.3%</td><td class="rev-tip" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="原1Q26版：7.7%<br><span class=&quot;tip-up&quot;>↑ +2.1%</span>">7.9%</td><td class="rev-tip" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="原1Q26版：12.7%<br><span class=&quot;tip-up&quot;>↑ +26.9%</span>">16.1%</td></tr>
+            <tr><td>NAND 营收</td><td>12,691</td><td>23,125</td><td>22,018</td><td class="warn rev-tip" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="原1Q26版：93,722<br><span class=&quot;tip-up&quot;>↑ +0.6%</span>">94,250</td><td class="warn rev-tip" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="原1Q26版：137,835<br><span class=&quot;tip-down&quot;>↓ -1.5%</span>">135,807</td></tr>
             <tr class="section-row"><td colspan="6">分部盈利能力</td></tr>
-            <tr class="subtle"><td>DRAM 营业利润率 <span class="hist" data-tip="Semiconductor Cost sheet 仅给出营业利润率，未单列 COGS，不等于毛利率">①</span></td><td class="yn">-4.2%</td><td>30.8%</td><td>40.2%</td><td class="warn">81.2%</td><td class="warn">83.0%</td></tr>
-            <tr class="subtle"><td>NAND 营业利润率 <span class="hist" data-tip="同上">①</span></td><td class="yn">-68.2%</td><td>12.7%</td><td>8.4%</td><td class="warn">66.9%</td><td class="warn">67.5%</td></tr>
+            <tr class="subtle"><td>DRAM 营业利润率①<br><span style="font-size:10px;color:var(--warn)">⚠ FY26E/27E 未随2Q26模型重新核对，仍为1Q26版旧值</span></td><td class="yn">-4.2%</td><td>30.8%</td><td>40.2%</td><td class="warn">81.2%</td><td class="warn">83.0%</td></tr>
+            <tr class="subtle"><td>NAND 营业利润率①<br><span style="font-size:10px;color:var(--warn)">⚠ 同上，未核对</span></td><td class="yn">-68.2%</td><td>12.7%</td><td>8.4%</td><td class="warn">66.9%</td><td class="warn">67.5%</td></tr>
             <tr class="section-row"><td colspan="6">公司整体财务（集团口径，含非存储分部）</td></tr>
             <tr><td>营业总收入</td><td>198,418</td><td>220,580</td><td>230,073</td><td class="na">—</td><td class="na">—</td></tr>
             <tr><td>毛利</td><td>60,228</td><td>83,818</td><td>90,600</td><td class="na">—</td><td class="na">—</td></tr>
@@ -335,7 +358,7 @@ code{font-size:10px;background:var(--tag-bg);color:var(--tag);padding:1px 5px;bo
           </tbody>
         </table>
       </div>
-      <div class="seg-sum">三星 HBM 占比明显低于海力士（2025 仅 11.3% vs 海力士 39.0%），印证三星 HBM 仍处认证追赶阶段，营收贡献远不及其 DRAM 产能体量；2026E 同样出现"commodity 涨价稀释 HBM 占比"的现象，2027E 随 HBM4 客户认证落地回升至 12.7%。<strong>三星 DRAM/NAND 营业利润率 2025 起明显跑赢海力士同期水平的拐点更晚</strong>（三星 NAND 2025 仅 8.4%，海力士同期 12.8%），与三星整体存储业务认证/良率追赶节奏一致。①两家公司模型均未单列分部 COGS，故只能给出营业利润率，不能等同毛利率。②公司整体口径为三星电子集团合并报表（含 SDC Display、DX Mobile/TV、Harman 等非存储业务），<strong>2026E/2027E 因模型该 sheet 存在断链（数值异常偏高，疑似 #REF! 残留），不采用、标记为"—"</strong>，避免给出不可靠数字；存储分部本身的 2026E/2027E 收入预测仍完整可信，见上方与下方季度拆解。</div>
+      <div class="seg-sum note-fold" onclick="toggleNote(this)"><div class="note-head">三星 vs 海力士对比解读 ▾</div><div class="note-body">三星HBM占比明显低于海力士（2025仅11.3% vs 39.0%），认证追赶阶段；2026E同样现涨价稀释HBM占比，2027E随HBM4认证回升至12.7%。三星DRAM/NAND营业利润率跑赢海力士的拐点更晚（NAND 2025仅8.4% vs 12.8%）。两家模型均未单列COGS，故为营业利润率非毛利率。三星集团整体口径2026E/27E因sheet断链标记"—"，存储分部预测仍可信。</div></div>
 
       <div class="chart-row">
         <div class="chart-box"><h4>营收构成（$mn，按季度堆叠）</h4><div class="chart-wrap"><canvas id="c-sam-rev-q"></canvas></div></div>
@@ -345,61 +368,61 @@ code{font-size:10px;background:var(--tag-bg);color:var(--tag);padding:1px 5px;bo
         <div class="chart-box"><h4>NAND ASP 走势（$/GB）</h4><div class="chart-wrap"><canvas id="c-sam-nandasp-q"></canvas></div></div>
         <div class="chart-box"><h4>出货量：传统 DRAM vs HBM（bn Gb）</h4><div class="chart-wrap"><canvas id="c-sam-bits-q"></canvas></div></div>
       </div>
-      <div class="seg-sum">关键读数：<br>①传统 DRAM ASP 1Q26 单季 <strong>+105%</strong>（$0.557→$1.139），三家中涨价斜率最大（海力士同期 +102%，美光 +80%）。<br>②三星 HBM ASP 在 1Q26 仅小幅波动 $1.250→$1.238（<strong>-1.0%</strong>），降幅远小于海力士同期 -19.6%——三星 HBM ASP 在涨价周期前本身就处于较窄区间（$1.19-1.45/Gb 之间反复），没有出现海力士那种"旧代产品清库存"式的单季陡降。<br>③HBM bits 占 DRAM 总 bits 比重三星明显低于海力士：1Q26 仅 <strong>4.7%</strong>（1.54/32.75 bn Gb），与三星 HBM 市场份额 33.5% 略低于海力士 38.2%（见标的汇总/MarketShare 数据）互相印证——三星 HBM 放量节奏落后于其 DRAM 产能体量。<br>④NAND ASP 同步跳涨：4Q25 $0.077→1Q26 $0.146（+90%），峰值出现在 2Q27E（$0.350），随后小幅回落至 4Q27E 的 $0.309（-11.7%），节奏与 DRAM 端"先涨、后小幅滑落"基本同步。</div>
-      <div class="note-box" style="margin-top:14px">📊 季度量价拆解（1Q23–4Q27E，日历季）：来源 <span class="src">SAMSUNG model.xlsx · DRAM sheet 第6/9/12/98/99/106/108/112/113/115行 / NAND sheet 第6/9/12行 / Earnings Summaries sheet 第10-12行</span>。逻辑同上 <strong>营收 = 出货量(bits) × 单价(ASP)</strong>。三星与海力士一样，DRAM sheet 对 Conventional DRAM 与 HBM 均给出了完整到 4Q27E 的独立 bits/ASP 假设，<strong>不存在美光模型那种 2Q26E 起的数据缺口</strong>，故全表无需"推算值"标注。<strong style="color:var(--warn)">2Q26E 起为模型假设值（标黄）</strong>，1Q26 为最新已披露实际值。HBM ASP 在 worksheet 中原始单位标注为"US$/GB"，但用 HBM 营收 ÷ HBM bits 反推核验后发现实际是按每 8Gb 一组报价，<strong>除以 8 后与海力士/美光的 $/Gb 口径完全吻合</strong>，本表已按此口径统一换算。Bridge 校验口径为 <strong>DS Memory 分部小计（DRAM+NAND+SRAM/NOR）</strong>，不含 Mobile/Display/Harman 等非存储分部，不能与三星集团整体营收对比。已将本表 DRAM/HBM/NAND 分项营收按年汇总，与本节上方既有年度表逐项核对，<strong>除四舍五入误差（±1）外完全一致</strong>。</div>
+      <div class="seg-sum note-fold" onclick="toggleNote(this)"><div class="note-head">三星关键读数（4点）▾</div><div class="note-body">①传统DRAM ASP 1Q26单季+105%（三家最陡，海力士+102%/美光+80%）。<br>②HBM ASP 1Q26仅-1.0%（远小于海力士-19.6%），因涨价前本身在$1.19-1.45窄区间反复，未现清库存式陡降。<br>③HBM占DRAM bits比重仅4.7%，明显低于海力士，与HBM市场份额33.5%&lt;38.2%互相印证。<br>④NAND ASP同步跳涨，4Q25→1Q26 +90%，峰值2Q27E $0.350后小幅回落至4Q27E $0.309。</div></div>
+      <div class="note-box note-fold" style="margin-top:14px" onclick="toggleNote(this)"><div class="note-head">数据来源与口径 ▾</div><div class="note-body">来源：<span class="src">SAMSUNG model.xlsx</span> DRAM/NAND/Earnings Summaries三表。营收=出货量(bits)×ASP。三星对Conventional/HBM均给出完整到4Q27E的bits/ASP假设，无美光式数据缺口。<strong style="color:var(--warn)">2Q26E起为模型假设值（标黄）</strong>。HBM ASP原标注US$/GB，反推核验实为每8Gb一组报价，已÷8统一为$/Gb口径。Bridge口径为DS Memory分部小计，不含Mobile/Display/Harman，不能与集团整体营收对比；年度汇总核对误差±1内一致。</div></div>
       <div class="model-wrap">
         <table class="model-table">
           <thead><tr><th>三星季度（$mn / bn Gb / $·Gb⁻¹）</th><th>1Q23</th><th>2Q23</th><th>3Q23</th><th>4Q23</th><th>1Q24</th><th>2Q24</th><th>3Q24</th><th>4Q24</th><th>1Q25</th><th>2Q25</th><th>3Q25</th><th>4Q25</th><th>1Q26</th><th>2Q26E</th><th>3Q26E</th><th>4Q26E</th><th>1Q27E</th><th>2Q27E</th><th>3Q27E</th><th>4Q27E</th></tr></thead>
           <tbody>
             <tr class="section-row"><td colspan="21">DRAM（总量）</td></tr>
-            <tr><td>出货量（bn Gb 当量）</td><td>18.32</td><td>20.90</td><td>23.07</td><td>31.14</td><td>26.50</td><td>27.80</td><td>27.80</td><td>24.48</td><td>25.00</td><td>27.65</td><td>31.70</td><td>32.10</td><td>32.75</td><td class="warn">34.72</td><td class="warn">35.76</td><td class="warn">36.47</td><td class="warn">35.27</td><td class="warn">37.31</td><td class="warn">40.97</td><td class="warn">43.84</td></tr>
-            <tr><td>综合 ASP（$/Gb）</td><td>0.219</td><td>0.204</td><td>0.217</td><td>0.243</td><td>0.291</td><td>0.344</td><td>0.369</td><td>0.441</td><td>0.353</td><td>0.362</td><td>0.419</td><td>0.591</td><td>1.144</td><td class="warn">1.664</td><td class="warn">1.913</td><td class="warn">2.047</td><td class="warn">2.170</td><td class="warn">2.214</td><td class="warn">2.236</td><td class="warn">2.146</td></tr>
-            <tr><td>DRAM 营收（$mn）</td><td>4,017</td><td>4,272</td><td>5,003</td><td>7,567</td><td>7,709</td><td>9,557</td><td>10,251</td><td>10,790</td><td>8,830</td><td>10,004</td><td>13,268</td><td>18,979</td><td>37,453</td><td class="warn">57,763</td><td class="warn">68,420</td><td class="warn">74,674</td><td class="warn">76,542</td><td class="warn">82,601</td><td class="warn">91,603</td><td class="warn">94,095</td></tr>
+            <tr><td>出货量（bn Gb 当量）</td><td>18.32</td><td>20.90</td><td>23.07</td><td>31.14</td><td>26.50</td><td>27.80</td><td>27.80</td><td>24.48</td><td>25.00</td><td>27.65</td><td>31.70</td><td>32.10</td><td>32.75</td><td class="warn rev-tip" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="原1Q26版：34.72<br><span class=&quot;tip-up&quot;>↑ +4.3%</span>">36.20</td><td class="warn rev-tip" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="原1Q26版：35.76<br><span class=&quot;tip-up&quot;>↑ +6.3%</span>">38.01</td><td class="warn rev-tip" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="原1Q26版：36.47<br><span class=&quot;tip-up&quot;>↑ +7.3%</span>">39.15</td><td class="warn rev-tip" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="原1Q26版：35.27<br><span class=&quot;tip-up&quot;>↑ +7.3%</span>">37.86</td><td class="warn rev-tip" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="原1Q26版：37.31<br><span class=&quot;tip-up&quot;>↑ +8.6%</span>">40.51</td><td class="warn rev-tip" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="原1Q26版：40.97<br><span class=&quot;tip-up&quot;>↑ +8.6%</span>">44.48</td><td class="warn rev-tip" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="原1Q26版：43.84<br><span class=&quot;tip-up&quot;>↑ +8.6%</span>">47.59</td></tr>
+            <tr><td>综合 ASP（$/Gb）</td><td>0.219</td><td>0.204</td><td>0.217</td><td>0.243</td><td>0.291</td><td>0.344</td><td>0.369</td><td>0.441</td><td>0.353</td><td>0.362</td><td>0.419</td><td>0.591</td><td>1.144</td><td class="warn rev-tip" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="原1Q26版：1.664<br><span class=&quot;tip-down&quot;>↓ -1.0%</span>">1.647</td><td class="warn rev-tip" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="原1Q26版：1.913<br><span class=&quot;tip-down&quot;>↓ -1.9%</span>">1.877</td><td class="warn rev-tip" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="原1Q26版：2.047<br><span class=&quot;tip-down&quot;>↓ -2.8%</span>">1.990</td><td class="warn rev-tip" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="原1Q26版：2.170<br><span class=&quot;tip-up&quot;>↑ +0.3%</span>">2.177</td><td class="warn rev-tip" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="原1Q26版：2.214<br><span class=&quot;tip-up&quot;>↑ +1.3%</span>">2.242</td><td class="warn rev-tip" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="原1Q26版：2.236<br><span class=&quot;tip-up&quot;>↑ +1.5%</span>">2.269</td><td class="warn rev-tip" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="原1Q26版：2.146<br><span class=&quot;tip-up&quot;>↑ +1.5%</span>">2.178</td></tr>
+            <tr><td>DRAM 营收（$mn）</td><td>4,017</td><td>4,272</td><td>5,003</td><td>7,567</td><td>7,709</td><td>9,557</td><td>10,251</td><td>10,790</td><td>8,830</td><td>10,004</td><td>13,268</td><td>18,979</td><td>37,453</td><td class="warn rev-tip" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="原1Q26版：57,763<br><span class=&quot;tip-up&quot;>↑ +3.2%</span>">59,607</td><td class="warn rev-tip" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="原1Q26版：68,420<br><span class=&quot;tip-up&quot;>↑ +4.3%</span>">71,349</td><td class="warn rev-tip" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="原1Q26版：74,674<br><span class=&quot;tip-up&quot;>↑ +4.3%</span>">77,899</td><td class="warn rev-tip" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="原1Q26版：76,542<br><span class=&quot;tip-up&quot;>↑ +7.7%</span>">82,409</td><td class="warn rev-tip" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="原1Q26版：82,601<br><span class=&quot;tip-up&quot;>↑ +10.0%</span>">90,823</td><td class="warn rev-tip" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="原1Q26版：91,603<br><span class=&quot;tip-up&quot;>↑ +10.2%</span>">100,920</td><td class="warn rev-tip" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="原1Q26版：94,095<br><span class=&quot;tip-up&quot;>↑ +10.2%</span>">103,665</td></tr>
             <tr class="section-row"><td colspan="21">其中：传统 DRAM（Conventional）</td></tr>
-            <tr class="subtle"><td>出货量（bn Gb）</td><td>18.17</td><td>20.68</td><td>22.75</td><td>30.68</td><td>26.01</td><td>27.06</td><td>26.54</td><td>22.14</td><td>24.37</td><td>26.84</td><td>30.20</td><td>30.52</td><td>31.21</td><td class="warn">32.40</td><td class="warn">32.29</td><td class="warn">31.77</td><td class="warn">31.21</td><td class="warn">32.83</td><td class="warn">35.72</td><td class="warn">37.62</td></tr>
-            <tr class="subtle"><td>ASP（$/Gb）</td><td>0.210</td><td>0.192</td><td>0.200</td><td>0.226</td><td>0.270</td><td>0.315</td><td>0.319</td><td>0.337</td><td>0.325</td><td>0.331</td><td>0.380</td><td class="hl">0.557</td><td class="hl">1.139</td><td class="warn">1.686</td><td class="warn">1.954</td><td class="warn">2.099</td><td class="warn">2.173</td><td class="warn">2.219</td><td class="warn">2.241</td><td class="warn">2.133</td></tr>
-            <tr><td>营收（$mn）</td><td>3,816</td><td>3,973</td><td>4,543</td><td>6,924</td><td>7,016</td><td>8,515</td><td>8,468</td><td>7,456</td><td>7,920</td><td>8,873</td><td>11,490</td><td>17,005</td><td>35,542</td><td class="warn">54,644</td><td class="warn">63,083</td><td class="warn">66,684</td><td class="warn">67,816</td><td class="warn">72,854</td><td class="warn">80,061</td><td class="warn">80,263</td></tr>
+            <tr class="subtle"><td>出货量（bn Gb）</td><td>18.17</td><td>20.68</td><td>22.75</td><td>30.68</td><td>26.01</td><td>27.06</td><td>26.54</td><td>22.14</td><td>24.37</td><td>26.84</td><td>30.20</td><td>30.52</td><td>31.21</td><td class="warn rev-tip" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="原1Q26版：32.40<br><span class=&quot;tip-up&quot;>↑ +4.4%</span>">33.81</td><td class="warn rev-tip" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="原1Q26版：32.29<br><span class=&quot;tip-up&quot;>↑ +6.5%</span>">34.39</td><td class="warn rev-tip" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="原1Q26版：31.77<br><span class=&quot;tip-up&quot;>↑ +7.8%</span>">34.25</td><td class="warn rev-tip" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="原1Q26版：31.21<br><span class=&quot;tip-up&quot;>↑ +7.9%</span>">33.66</td><td class="warn rev-tip" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="原1Q26版：32.83<br><span class=&quot;tip-up&quot;>↑ +7.9%</span>">35.41</td><td class="warn rev-tip" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="原1Q26版：35.72<br><span class=&quot;tip-up&quot;>↑ +9.1%</span>">38.98</td><td class="warn rev-tip" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="原1Q26版：37.62<br><span class=&quot;tip-up&quot;>↑ +10.0%</span>">41.37</td></tr>
+            <tr class="subtle"><td>ASP（$/Gb）</td><td>0.210</td><td>0.192</td><td>0.200</td><td>0.226</td><td>0.270</td><td>0.315</td><td>0.319</td><td>0.337</td><td>0.325</td><td>0.331</td><td>0.380</td><td class="hl">0.557</td><td class="hl">1.139</td><td class="warn rev-tip" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="原1Q26版：1.686<br><span class=&quot;tip-down&quot;>↓ -1.6%</span>">1.659</td><td class="warn rev-tip" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="原1Q26版：1.954<br><span class=&quot;tip-down&quot;>↓ -2.1%</span>">1.913</td><td class="warn rev-tip" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="原1Q26版：2.099<br><span class=&quot;tip-down&quot;>↓ -3.2%</span>">2.031</td><td class="warn rev-tip" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="原1Q26版：2.173<br><span class=&quot;tip-down&quot;>↓ -3.1%</span>">2.105</td><td class="warn rev-tip" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="原1Q26版：2.219<br><span class=&quot;tip-down&quot;>↓ -2.9%</span>">2.155</td><td class="warn rev-tip" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="原1Q26版：2.241<br><span class=&quot;tip-down&quot;>↓ -2.9%</span>">2.175</td><td class="warn rev-tip" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="原1Q26版：2.133<br><span class=&quot;tip-down&quot;>↓ -3.7%</span>">2.055</td></tr>
+            <tr><td>营收（$mn）</td><td>3,816</td><td>3,973</td><td>4,543</td><td>6,924</td><td>7,016</td><td>8,515</td><td>8,468</td><td>7,456</td><td>7,920</td><td>8,873</td><td>11,490</td><td>17,005</td><td>35,542</td><td class="warn rev-tip" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="原1Q26版：54,644<br><span class=&quot;tip-up&quot;>↑ +2.6%</span>">56,090</td><td class="warn rev-tip" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="原1Q26版：63,083<br><span class=&quot;tip-up&quot;>↑ +4.3%</span>">65,784</td><td class="warn rev-tip" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="原1Q26版：66,684<br><span class=&quot;tip-up&quot;>↑ +4.3%</span>">69,564</td><td class="warn rev-tip" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="原1Q26版：67,816<br><span class=&quot;tip-up&quot;>↑ +4.5%</span>">70,872</td><td class="warn rev-tip" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="原1Q26版：72,854<br><span class=&quot;tip-up&quot;>↑ +4.7%</span>">76,291</td><td class="warn rev-tip" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="原1Q26版：80,061<br><span class=&quot;tip-up&quot;>↑ +5.9%</span>">84,773</td><td class="warn rev-tip" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="原1Q26版：80,263<br><span class=&quot;tip-up&quot;>↑ +5.9%</span>">85,006</td></tr>
             <tr class="section-row"><td colspan="21">其中：HBM</td></tr>
-            <tr class="subtle"><td>出货量（bn Gb）</td><td>0.15</td><td>0.22</td><td>0.32</td><td>0.46</td><td>0.49</td><td>0.74</td><td>1.26</td><td>2.34</td><td>0.63</td><td>0.81</td><td>1.50</td><td>1.58</td><td>1.54</td><td class="warn">2.31</td><td class="warn">3.47</td><td class="warn">4.70</td><td class="warn">4.06</td><td class="warn">4.48</td><td class="warn">5.25</td><td class="warn">6.22</td></tr>
-            <tr class="subtle"><td>ASP（$/Gb）</td><td>1.375</td><td>1.387</td><td>1.425</td><td>1.413</td><td>1.413</td><td>1.413</td><td>1.413</td><td>1.425</td><td>1.454</td><td>1.395</td><td class="hl">1.188</td><td class="hl">1.250</td><td class="hl">1.238</td><td class="warn">1.350</td><td class="warn">1.538</td><td class="warn">1.700</td><td class="warn">2.150</td><td class="warn">2.175</td><td class="warn">2.200</td><td class="warn">2.225</td></tr>
-            <tr><td>营收（$mn）</td><td>201</td><td>299</td><td>460</td><td>643</td><td>694</td><td>1,042</td><td>1,784</td><td>3,334</td><td>910</td><td>1,130</td><td>1,778</td><td>1,974</td><td>1,910</td><td class="warn">3,119</td><td class="warn">5,337</td><td class="warn">7,990</td><td class="warn">8,726</td><td class="warn">9,747</td><td class="warn">11,542</td><td class="warn">13,832</td></tr>
+            <tr class="subtle"><td>出货量（bn Gb）</td><td>0.15</td><td>0.22</td><td>0.32</td><td>0.46</td><td>0.49</td><td>0.74</td><td>1.26</td><td>2.34</td><td>0.63</td><td>0.81</td><td>1.50</td><td>1.58</td><td>1.54</td><td class="warn rev-tip" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="原1Q26版：2.31<br><span class=&quot;tip-up&quot;>↑ +3.5%</span>">2.39</td><td class="warn rev-tip" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="原1Q26版：3.47<br><span class=&quot;tip-up&quot;>↑ +4.3%</span>">3.62</td><td class="warn rev-tip" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="原1Q26版：4.70<br><span class=&quot;tip-up&quot;>↑ +4.3%</span>">4.90</td><td class="warn rev-tip" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="原1Q26版：4.06<br><span class=&quot;tip-up&quot;>↑ +3.4%</span>">4.20</td><td class="warn rev-tip" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="原1Q26版：4.48<br><span class=&quot;tip-up&quot;>↑ +13.8%</span>">5.10</td><td class="warn rev-tip" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="原1Q26版：5.25<br><span class=&quot;tip-up&quot;>↑ +4.8%</span>">5.50</td><td class="warn rev-tip" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="原1Q26版：6.22<br><span class=&quot;tip-up&quot;>↑ +0.0%</span>">6.22</td></tr>
+            <tr class="subtle"><td>ASP（$/Gb）</td><td>1.375</td><td>1.387</td><td>1.425</td><td>1.413</td><td>1.413</td><td>1.413</td><td>1.413</td><td>1.425</td><td>1.454</td><td>1.395</td><td class="hl">1.188</td><td class="hl">1.250</td><td class="hl">1.238</td><td class="warn rev-tip" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="原1Q26版：1.350<br><span class=&quot;tip-up&quot;>↑ +8.8%</span>">1.469</td><td class="warn rev-tip" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="原1Q26版：1.538（未变）">1.538</td><td class="warn rev-tip" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="原1Q26版：1.700（未变）">1.700</td><td class="warn rev-tip" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="原1Q26版：2.150<br><span class=&quot;tip-up&quot;>↑ +27.9%</span>">2.750</td><td class="warn rev-tip" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="原1Q26版：2.175<br><span class=&quot;tip-up&quot;>↑ +31.0%</span>">2.850</td><td class="warn rev-tip" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="原1Q26版：2.200<br><span class=&quot;tip-up&quot;>↑ +33.5%</span>">2.938</td><td class="warn rev-tip" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="原1Q26版：2.225<br><span class=&quot;tip-up&quot;>↑ +34.8%</span>">3.000</td></tr>
+            <tr><td>营收（$mn）</td><td>201</td><td>299</td><td>460</td><td>643</td><td>694</td><td>1,042</td><td>1,784</td><td>3,334</td><td>910</td><td>1,130</td><td>1,778</td><td>1,974</td><td>1,910</td><td class="warn rev-tip" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="原1Q26版：3,119<br><span class=&quot;tip-up&quot;>↑ +12.8%</span>">3,517</td><td class="warn rev-tip" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="原1Q26版：5,337<br><span class=&quot;tip-up&quot;>↑ +4.3%</span>">5,565</td><td class="warn rev-tip" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="原1Q26版：7,990<br><span class=&quot;tip-up&quot;>↑ +4.3%</span>">8,335</td><td class="warn rev-tip" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="原1Q26版：8,726<br><span class=&quot;tip-up&quot;>↑ +32.2%</span>">11,537</td><td class="warn rev-tip" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="原1Q26版：9,747<br><span class=&quot;tip-up&quot;>↑ +49.1%</span>">14,532</td><td class="warn rev-tip" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="原1Q26版：11,542<br><span class=&quot;tip-up&quot;>↑ +39.9%</span>">16,147</td><td class="warn rev-tip" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="原1Q26版：13,832<br><span class=&quot;tip-up&quot;>↑ +34.9%</span>">18,660</td></tr>
             <tr class="section-row"><td colspan="21">NAND</td></tr>
-            <tr><td>出货量（bn GB）</td><td>65.20</td><td>68.00</td><td>67.30</td><td>90.84</td><td>88.20</td><td>83.80</td><td>78.20</td><td>75.80</td><td>68.40</td><td>86.80</td><td>95.40</td><td>85.40</td><td>92.40</td><td class="warn">93.32</td><td class="warn">94.26</td><td class="warn">92.37</td><td class="warn">93.30</td><td class="warn">98.89</td><td class="warn">107.79</td><td class="warn">114.26</td></tr>
-            <tr><td>ASP（$/GB）</td><td>0.044</td><td>0.041</td><td>0.042</td><td>0.046</td><td>0.060</td><td>0.073</td><td>0.078</td><td>0.074</td><td>0.062</td><td>0.060</td><td>0.063</td><td>0.077</td><td class="hl">0.146</td><td class="warn">0.241</td><td class="warn">0.292</td><td class="warn">0.327</td><td class="warn">0.343</td><td class="warn">0.350</td><td class="warn">0.333</td><td class="warn">0.309</td></tr>
-            <tr><td>NAND 营收（$mn）</td><td>2,876</td><td>2,797</td><td>2,856</td><td>4,162</td><td>5,303</td><td>6,128</td><td>6,121</td><td>5,574</td><td>4,270</td><td>5,166</td><td>5,964</td><td>6,618</td><td>13,507</td><td class="warn">22,510</td><td class="warn">27,510</td><td class="warn">30,195</td><td class="warn">32,021</td><td class="warn">34,622</td><td class="warn">35,851</td><td class="warn">35,342</td></tr>
+            <tr><td>出货量（bn GB）</td><td>65.20</td><td>68.00</td><td>67.30</td><td>90.84</td><td>88.20</td><td>83.80</td><td>78.20</td><td>75.80</td><td>68.40</td><td>86.80</td><td>95.40</td><td>85.40</td><td>92.40</td><td class="warn rev-tip" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="原1Q26版：93.32<br><span class=&quot;tip-down&quot;>↓ -0.1%</span>">93.20</td><td class="warn rev-tip" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="原1Q26版：94.26<br><span class=&quot;tip-up&quot;>↑ +5.8%</span>">99.72</td><td class="warn rev-tip" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="原1Q26版：92.37<br><span class=&quot;tip-up&quot;>↑ +3.6%</span>">95.74</td><td class="warn rev-tip" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="原1Q26版：93.30<br><span class=&quot;tip-up&quot;>↑ +3.6%</span>">96.69</td><td class="warn rev-tip" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="原1Q26版：98.89<br><span class=&quot;tip-up&quot;>↑ +3.6%</span>">102.49</td><td class="warn rev-tip" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="原1Q26版：107.79<br><span class=&quot;tip-up&quot;>↑ +3.6%</span>">111.72</td><td class="warn rev-tip" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="原1Q26版：114.26<br><span class=&quot;tip-up&quot;>↑ +3.6%</span>">118.42</td></tr>
+            <tr><td>ASP（$/GB）</td><td>0.044</td><td>0.041</td><td>0.042</td><td>0.046</td><td>0.060</td><td>0.073</td><td>0.078</td><td>0.074</td><td>0.062</td><td>0.060</td><td>0.063</td><td>0.077</td><td class="hl">0.146</td><td class="warn rev-tip" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="原1Q26版：0.241<br><span class=&quot;tip-up&quot;>↑ +1.1%</span>">0.244</td><td class="warn rev-tip" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="原1Q26版：0.292<br><span class=&quot;tip-down&quot;>↓ -2.4%</span>">0.285</td><td class="warn rev-tip" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="原1Q26版：0.327<br><span class=&quot;tip-down&quot;>↓ -5.0%</span>">0.311</td><td class="warn rev-tip" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="原1Q26版：0.343<br><span class=&quot;tip-down&quot;>↓ -4.9%</span>">0.326</td><td class="warn rev-tip" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="原1Q26版：0.350<br><span class=&quot;tip-down&quot;>↓ -4.9%</span>">0.333</td><td class="warn rev-tip" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="原1Q26版：0.333<br><span class=&quot;tip-down&quot;>↓ -5.0%</span>">0.316</td><td class="warn rev-tip" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="原1Q26版：0.309<br><span class=&quot;tip-down&quot;>↓ -4.9%</span>">0.294</td></tr>
+            <tr><td>NAND 营收（$mn）</td><td>2,876</td><td>2,797</td><td>2,856</td><td>4,162</td><td>5,303</td><td>6,128</td><td>6,121</td><td>5,574</td><td>4,270</td><td>5,166</td><td>5,964</td><td>6,618</td><td>13,507</td><td class="warn rev-tip" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="原1Q26版：22,510<br><span class=&quot;tip-up&quot;>↑ +0.9%</span>">22,710</td><td class="warn rev-tip" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="原1Q26版：27,510<br><span class=&quot;tip-up&quot;>↑ +3.3%</span>">28,431</td><td class="warn rev-tip" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="原1Q26版：30,195<br><span class=&quot;tip-down&quot;>↓ -1.5%</span>">29,750</td><td class="warn rev-tip" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="原1Q26版：32,021<br><span class=&quot;tip-down&quot;>↓ -1.5%</span>">31,550</td><td class="warn rev-tip" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="原1Q26版：34,622<br><span class=&quot;tip-down&quot;>↓ -1.5%</span>">34,112</td><td class="warn rev-tip" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="原1Q26版：35,851<br><span class=&quot;tip-down&quot;>↓ -1.5%</span>">35,323</td><td class="warn rev-tip" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="原1Q26版：35,342<br><span class=&quot;tip-down&quot;>↓ -1.5%</span>">34,822</td></tr>
             <tr class="section-row"><td colspan="21">收入构成验证（Bridge to Memory 分部总营收）</td></tr>
             <tr class="subtle"><td>SRAM/NOR 等其他存储（$mn）</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
-            <tr><td>Memory 分部合计营收（$mn）</td><td class="hl">6,893</td><td class="hl">7,069</td><td class="hl">7,859</td><td class="hl">11,729</td><td class="hl">13,012</td><td class="hl">15,685</td><td class="hl">16,373</td><td class="hl">16,363</td><td class="hl">13,100</td><td class="hl">15,170</td><td class="hl">19,232</td><td class="hl">25,597</td><td class="hl">50,960</td><td class="warn">80,273</td><td class="warn">95,930</td><td class="warn">104,869</td><td class="warn">108,564</td><td class="warn">117,223</td><td class="warn">127,454</td><td class="warn">129,436</td></tr>
+            <tr><td>Memory 分部合计营收（$mn）</td><td class="hl">6,893</td><td class="hl">7,069</td><td class="hl">7,859</td><td class="hl">11,729</td><td class="hl">13,012</td><td class="hl">15,685</td><td class="hl">16,373</td><td class="hl">16,363</td><td class="hl">13,100</td><td class="hl">15,170</td><td class="hl">19,232</td><td class="hl">25,597</td><td class="hl">50,960</td><td class="warn rev-tip" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="原1Q26版：80,273<br><span class=&quot;tip-up&quot;>↑ +2.5%</span>">82,317</td><td class="warn rev-tip" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="原1Q26版：95,930<br><span class=&quot;tip-up&quot;>↑ +4.0%</span>">99,780</td><td class="warn rev-tip" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="原1Q26版：104,869<br><span class=&quot;tip-up&quot;>↑ +2.7%</span>">107,649</td><td class="warn rev-tip" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="原1Q26版：108,564<br><span class=&quot;tip-up&quot;>↑ +5.0%</span>">113,959</td><td class="warn rev-tip" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="原1Q26版：117,223<br><span class=&quot;tip-up&quot;>↑ +6.6%</span>">124,935</td><td class="warn rev-tip" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="原1Q26版：127,454<br><span class=&quot;tip-up&quot;>↑ +6.9%</span>">136,243</td><td class="warn rev-tip" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="原1Q26版：129,436<br><span class=&quot;tip-up&quot;>↑ +7.0%</span>">138,487</td></tr>
           </tbody>
         </table>
       </div>
-      <div class="seg-sum" style="margin-bottom:10px">Bridge 校验：DRAM 营收 + NAND 营收 + SRAM/NOR（单季 ±0.3 $mn 量级，已四舍五入为 0）= Memory 分部合计营收，与 Earnings Summaries sheet 第10-12行的独立小计逐季核对一致（误差&lt;0.1%）。注意此处"Memory 分部合计"<strong>不等于三星电子整体营收</strong>，三星整体营收另含 SDC Display、DX Mobile/TV、Harman 等非存储分部，详见上方"公司整体财务"小节。</div>
+      <div class="seg-sum" style="margin-bottom:10px">Bridge校验：DRAM+NAND+SRAM/NOR=Memory分部合计营收，与Earnings Summaries小计逐季核对一致（误差&lt;0.1%）。<strong>"Memory分部合计"不等于三星整体营收</strong>（另含Display/Mobile/Harman等分部，详见上方"公司整体财务"）。</div>
     </div>
     <div id="t-co-mu" class="tab-pane">
       <div class="model-wrap">
         <table class="model-table">
           <thead><tr><th>Micron（USD mn，FY 截至 8 月）</th><th>FY23</th><th>FY24</th><th>FY25</th><th>FY26E</th><th>FY27E</th></tr></thead>
           <tbody>
-            <tr><td>DRAM 营收（含 HBM）</td><td>10,977</td><td>17,604</td><td>28,577</td><td class="warn">93,880</td><td class="warn">167,881</td></tr>
-            <tr class="subtle"><td>　其中 HBM 营收</td><td>0</td><td>400</td><td>5,400</td><td class="warn">12,700</td><td class="warn">21,000</td></tr>
-            <tr class="subtle"><td>　HBM 占 DRAM 营收比</td><td>0%</td><td>2.3%</td><td class="hl">18.9%</td><td>13.5%</td><td>12.5%</td></tr>
-            <tr><td>NAND 营收</td><td>4,207</td><td>7,226</td><td>8,504</td><td class="warn">29,596</td><td class="warn">58,853</td></tr>
-            <tr><td>合计营收（含 NOR/其他）</td><td>15,540</td><td>25,111</td><td>37,378</td><td class="warn">123,849</td><td class="warn">227,114</td></tr>
+            <tr><td>DRAM 营收（含 HBM）</td><td>10,977</td><td>17,604</td><td>28,577</td><td class="warn rev-tip" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="原1Q26版：93,880<br><span class=&quot;tip-up&quot;>↑ +6.5%</span>">100,006</td><td class="warn rev-tip" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="原1Q26版：167,881<br><span class=&quot;tip-up&quot;>↑ +10.2%</span>">185,052</td></tr>
+            <tr class="subtle"><td>　其中 HBM 营收</td><td>0</td><td>400</td><td>5,400</td><td class="warn rev-tip" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="原1Q26版：12,700<br><span class=&quot;tip-down&quot;>↓ -5.5%</span>">12,000</td><td class="warn rev-tip" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="原1Q26版：21,000（未变）">21,000</td></tr>
+            <tr class="subtle"><td>　HBM 占 DRAM 营收比</td><td>0%</td><td>2.3%</td><td class="hl">18.9%</td><td class="rev-tip" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="原1Q26版：13.5%<br><span class=&quot;tip-down&quot;>↓ -11.1%</span>">12.0%</td><td class="rev-tip" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="原1Q26版：12.5%<br><span class=&quot;tip-down&quot;>↓ -8.8%</span>">11.4%</td></tr>
+            <tr><td>NAND 营收</td><td>4,207</td><td>7,226</td><td>8,504</td><td class="warn rev-tip" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="原1Q26版：29,596<br><span class=&quot;tip-up&quot;>↑ +2.1%</span>">30,212</td><td class="warn rev-tip" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="原1Q26版：58,853<br><span class=&quot;tip-down&quot;>↓ -2.0%</span>">57,701</td></tr>
+            <tr><td>合计营收（含 NOR/其他）</td><td>15,540</td><td>25,111</td><td>37,378</td><td class="warn rev-tip" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="原1Q26版：123,849<br><span class=&quot;tip-up&quot;>↑ +5.6%</span>">130,770</td><td class="warn rev-tip" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="原1Q26版：227,114<br><span class=&quot;tip-up&quot;>↑ +7.2%</span>">243,494</td></tr>
             <tr class="section-row"><td colspan="6">分部盈利能力（真实毛利率，MU model 单列 COGS）</td></tr>
-            <tr class="subtle"><td>DRAM 毛利率</td><td>3.7%</td><td>35.5%</td><td>53.7%</td><td class="warn">85.1%</td><td class="warn">86.4%</td></tr>
-            <tr class="subtle"><td>NAND 毛利率</td><td class="yn">-57.1%</td><td>15.6%</td><td>16.0%</td><td class="warn">80.4%</td><td class="warn">85.2%</td></tr>
+            <tr class="subtle"><td>DRAM 毛利率<br><span style="font-size:10px;color:var(--warn)">⚠ FY26E/27E 未随2Q26模型重新核对，仍为1Q26版旧值</span></td><td>3.7%</td><td>35.5%</td><td>53.7%</td><td class="warn">85.1%</td><td class="warn">86.4%</td></tr>
+            <tr class="subtle"><td>NAND 毛利率<br><span style="font-size:10px;color:var(--warn)">⚠ 同上，未核对</span></td><td class="yn">-57.1%</td><td>15.6%</td><td>16.0%</td><td class="warn">80.4%</td><td class="warn">85.2%</td></tr>
             <tr class="section-row"><td colspan="6">公司整体财务（MU sheet，GAAP 口径）</td></tr>
-            <tr><td>营业总收入</td><td>15,540</td><td>25,111</td><td>37,378</td><td class="warn">123,849</td><td class="warn">227,114</td></tr>
-            <tr><td>毛利</td><td class="yn">-1,397</td><td>5,631</td><td>14,877</td><td class="warn">98,438</td><td class="warn">195,880</td></tr>
-            <tr class="subtle"><td>毛利率</td><td class="yn">-9.0%</td><td>22.4%</td><td>39.8%</td><td class="warn">79.5%</td><td class="warn">86.2%</td></tr>
-            <tr><td>营业利润</td><td class="yn">-5,383</td><td>1,114</td><td>9,871</td><td class="warn">91,700</td><td class="warn">187,691</td></tr>
-            <tr class="subtle"><td>营业利润率</td><td class="yn">-34.6%</td><td>4.4%</td><td>26.4%</td><td class="warn">74.0%</td><td class="warn">82.6%</td></tr>
-            <tr><td>归母净利润</td><td class="yn">-5,833</td><td>778</td><td>8,539</td><td class="warn">78,476</td><td class="warn">160,331</td></tr>
-            <tr class="subtle"><td>净利率</td><td class="yn">-37.5%</td><td>3.1%</td><td>22.8%</td><td class="warn">63.4%</td><td class="warn">70.6%</td></tr>
+            <tr><td>营业总收入</td><td>15,540</td><td>25,111</td><td>37,378</td><td class="warn rev-tip" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="原1Q26版：123,849<br><span class=&quot;tip-up&quot;>↑ +5.6%</span>">130,770</td><td class="warn rev-tip" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="原1Q26版：227,114<br><span class=&quot;tip-up&quot;>↑ +7.2%</span>">243,494</td></tr>
+            <tr><td>毛利</td><td class="yn">-1,397</td><td>5,631</td><td>14,877</td><td class="warn rev-tip" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="原1Q26版：98,438<br><span class=&quot;tip-up&quot;>↑ +7.2%</span>">105,573</td><td class="warn rev-tip" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="原1Q26版：195,880<br><span class=&quot;tip-up&quot;>↑ +8.8%</span>">213,084</td></tr>
+            <tr class="subtle"><td>毛利率</td><td class="yn">-9.0%</td><td>22.4%</td><td>39.8%</td><td class="warn rev-tip" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="原1Q26版：79.5%<br><span class=&quot;tip-up&quot;>↑ +1.5%</span>">80.7%</td><td class="warn rev-tip" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="原1Q26版：86.2%<br><span class=&quot;tip-up&quot;>↑ +1.5%</span>">87.5%</td></tr>
+            <tr><td>营业利润</td><td class="yn">-5,383</td><td>1,114</td><td>9,871</td><td class="warn rev-tip" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="原1Q26版：91,700<br><span class=&quot;tip-up&quot;>↑ +7.8%</span>">98,837</td><td class="warn rev-tip" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="原1Q26版：187,691<br><span class=&quot;tip-up&quot;>↑ +9.2%</span>">204,887</td></tr>
+            <tr class="subtle"><td>营业利润率</td><td class="yn">-34.6%</td><td>4.4%</td><td>26.4%</td><td class="warn rev-tip" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="原1Q26版：74.0%<br><span class=&quot;tip-up&quot;>↑ +2.2%</span>">75.6%</td><td class="warn rev-tip" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="原1Q26版：82.6%<br><span class=&quot;tip-up&quot;>↑ +1.8%</span>">84.1%</td></tr>
+            <tr><td>归母净利润</td><td class="yn">-5,833</td><td>778</td><td>8,539</td><td class="warn rev-tip" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="原1Q26版：78,476<br><span class=&quot;tip-up&quot;>↑ +7.5%</span>">84,336</td><td class="warn rev-tip" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="原1Q26版：160,331<br><span class=&quot;tip-up&quot;>↑ +9.0%</span>">174,711</td></tr>
+            <tr class="subtle"><td>净利率</td><td class="yn">-37.5%</td><td>3.1%</td><td>22.8%</td><td class="warn rev-tip" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="原1Q26版：63.4%<br><span class=&quot;tip-up&quot;>↑ +1.7%</span>">64.5%</td><td class="warn rev-tip" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="原1Q26版：70.6%<br><span class=&quot;tip-up&quot;>↑ +1.7%</span>">71.8%</td></tr>
           </tbody>
         </table>
       </div>
-      <div class="seg-sum">美光 FY23 几乎无 HBM 收入（HBM2E 起步晚于海力士），FY25 快速放量至 18.9% 占比，验证"美光从落后到追赶"叙事；同样在 FY26E 出现占比阶段性回落，与海力士/三星模式一致——<strong>三家公司模型口径一致地显示：2026 commodity DRAM 涨价幅度阶段性跑赢 HBM，HBM 收入占比集体下移后于 2027 回升</strong>。合计营收与公司官方披露的 FY23-25 实际数完全一致（交叉核对通过）。<strong>美光是三家中唯一在模型里单独拆出 COGS 的公司</strong>，因此 DRAM/NAND 毛利率是三表里唯一真正的"毛利率"口径，海力士/三星两表给的是营业利润率，三者不能直接横比（营业利润率天然低于毛利率，因为多扣了 SG&A/研发）。归母净利润 FY23-25 与"美光是三家中唯一公布少数股东权益为 0"的事实一致（MU sheet Minority Interest 全为 0），即净利润=归母净利润，无需额外调整。</div>
+      <div class="seg-sum note-fold" onclick="toggleNote(this)"><div class="note-head">美光HBM放量解读 ▾</div><div class="note-body">美光FY23几乎无HBM收入，FY25快速放量至18.9%占比，验证追赶叙事；FY26E同样现占比回落，与另两家一致——<strong>三家均显示2026 commodity涨价阶段性跑赢HBM</strong>。合计营收与官方FY23-25实际数一致。<strong>美光是唯一单列COGS的公司</strong>，DRAM/NAND毛利率为真实毛利率口径（另两家是营业利润率，天然更低，不可直接横比）。归母净利润=净利润（少数股东权益全为0）。</div></div>
 
       <div class="chart-row">
         <div class="chart-box"><h4>营收构成（$mn，按季度堆叠）</h4><div class="chart-wrap"><canvas id="c-mu-rev-q"></canvas></div></div>
@@ -409,38 +432,80 @@ code{font-size:10px;background:var(--tag-bg);color:var(--tag);padding:1px 5px;bo
         <div class="chart-box"><h4>NAND ASP 走势（$/GB）</h4><div class="chart-wrap"><canvas id="c-mu-nandasp-q"></canvas></div></div>
         <div class="chart-box"><h4>出货量：传统 DRAM vs HBM（bn Gb）</h4><div class="chart-wrap"><canvas id="c-mu-bits-q"></canvas></div></div>
       </div>
-      <div class="seg-sum">关键读数：<br>①1Q26 是转折点——传统 DRAM ASP 单季 +80%（$0.471→$0.850）、NAND ASP +79%（$0.079→$0.141），<strong>涨价斜率远超 HBM 同期 ASP 涨幅（+11%）</strong>，这正是三家公司"2026E HBM 占比回落"现象的微观来源。<br>②HBM bits 出货持续爬坡（0.07→1.36 bn Gb，1Q26 较 2Q24 增长 18 倍），放量节奏没有变化，被稀释的只是收入占比。<br>③2Q26E 起营收预测不再逐季拆 bits/ASP，而是直接给 HBM 总量假设、传统 DRAM 做差值兜底，<strong>这部分预测的"建模方式"本身就比 2025 年以前更粗糙，是阅读 FY26E-27E 数字时需要打的折扣</strong>。<br>④<strong>混合 DRAM 价格判断</strong>：DRAM 综合 ASP（出货量加权后的整体单价）在 4Q26E-2Q27E 维持 $1.702 的平台，3Q27E 起转头回落，到 4Q27E 降至 $1.536，<strong>较平台期回撤近 10%</strong>——同一时段出货量增速（+21.5%）明显跑赢营收增速（+9.6%），说明模型隐含"2027 下半年新增出货的边际定价走低"，即<strong>涨价行情在综合口径上已过峰值、转入量增价稳/价滑阶段</strong>；但由于美光 worksheet 在该区间未单列传统 DRAM/HBM 各自的 ASP（见上），无法判断这是传统 DRAM 让价、还是 HBM 占比下降拉低混合均价导致，只能基于总量数据下此判断，分项归因留白。</div>
-      <div class="note-box" style="margin-top:14px">📊 季度量价拆解（1Q23–4Q27E，日历季）：来源同上 <span class="src">MU model.xlsx · Worksheet 第84-187行</span>。逻辑是 <strong>营收 = 出货量(bits) × 单价(ASP)</strong>，按此拆开能看出模型怎么把"涨价"和"放量"两个假设叠加成对 2026E-2027E 的乐观预期。<strong style="color:var(--warn)">2Q26E 起的营收为模型假设值（标黄）</strong>；传统 DRAM 在 2Q26E 起的营收为<strong>推算值</strong>（= DRAM 总营收 − HBM 营收，因模型未对该区间单独给出 bits/ASP 假设），其余为 worksheet 原始值。1Q23–1Q24 无法拆分传统/HBM（模型从 2Q24 起才单列 HBM，此前 HBM 收入按年度表已知约为 0）。已逐行核查 Worksheet 第186-288 行，确认 2Q26E 起确实没有补充的传统 DRAM/HBM bits·ASP 明细（与海力士模型不同，海力士在第152-156行另有一组完整到 4Q27E 的 Conventional 假设，美光没有这组数据，不是漏看）。</div>
+      <div class="seg-sum note-fold" onclick="toggleNote(this)"><div class="note-head">美光关键读数（4点）▾</div><div class="note-body">①1Q26转折点：传统DRAM ASP+80%、NAND ASP+79%，涨幅远超HBM同期+11%，是"2026E HBM占比回落"的微观来源。<br>②HBM bits持续爬坡(0.07→1.36 bn Gb，18倍)，放量未变，只是收入占比被稀释。<br>③2Q26E起建模方式从"量价拆解"切换为"总量目标+HBM单列反推"，置信度打折。<br>④DRAM综合ASP 4Q26E-2Q27E维持$1.702平台后于3Q27E转跌，4Q27E降至$1.536(-10%)，同期出货增速(+21.5%)跑赢营收增速(+9.6%)，隐含2027下半年边际定价走低——但分项ASP该区间缺失，无法归因是传统DRAM让价还是HBM占比下降所致。</div></div>
+      <div class="note-box note-fold" style="margin-top:14px" onclick="toggleNote(this)"><div class="note-head">数据来源与口径 ▾</div><div class="note-body">来源：<span class="src">MU model.xlsx</span> Worksheet第84-187行。营收=出货量(bits)×ASP。<strong style="color:var(--warn)">2Q26E起营收为模型假设值（标黄）</strong>；传统DRAM 2Q26E起为<strong>推算值</strong>（=DRAM总营收−HBM营收，模型该区间未单列bits/ASP）。1Q23-1Q24无法拆分传统/HBM（模型2Q24起才单列HBM）。已核查确认美光模型确实没有海力士式的Conventional完整假设（非漏看）。</div></div>
       <div class="model-wrap">
         <table class="model-table">
           <thead><tr><th>美光季度（$mn / bn Gb / $·Gb⁻¹）</th><th>1Q23</th><th>2Q23</th><th>3Q23</th><th>4Q23</th><th>1Q24</th><th>2Q24</th><th>3Q24</th><th>4Q24</th><th>1Q25</th><th>2Q25</th><th>3Q25</th><th>4Q25</th><th>1Q26</th><th>2Q26E</th><th>3Q26E</th><th>4Q26E</th><th>1Q27E</th><th>2Q27E</th><th>3Q27E</th><th>4Q27E</th></tr></thead>
           <tbody>
             <tr class="section-row"><td colspan="21">DRAM（总量）</td></tr>
-            <tr><td>出货量（bn Gb 当量）</td><td>9.42</td><td>10.31</td><td>11.68</td><td>14.14</td><td>14.66</td><td>13.78</td><td>13.78</td><td>15.34</td><td>13.97</td><td>16.80</td><td>19.10</td><td>19.15</td><td>20.15</td><td class="warn">20.96</td><td class="warn">22.21</td><td class="warn">23.55</td><td class="warn">24.02</td><td class="warn">25.46</td><td class="warn">26.99</td><td class="warn">28.61</td></tr>
-            <tr><td>综合 ASP（$/Gb）</td><td>0.289</td><td>0.259</td><td>0.236</td><td>0.242</td><td>0.284</td><td>0.340</td><td>0.386</td><td>0.417</td><td>0.438</td><td>0.421</td><td>0.470</td><td>0.564</td><td>0.931</td><td class="warn">1.350</td><td class="warn">1.621</td><td class="warn">1.702</td><td class="warn">1.702</td><td class="warn">1.702</td><td class="warn">1.617</td><td class="warn">1.536</td></tr>
-            <tr><td>DRAM 营收（$mn）</td><td>2,722</td><td>2,672</td><td>2,755</td><td>3,427</td><td>4,158</td><td>4,692</td><td>5,326</td><td>6,400</td><td>6,123</td><td>7,071</td><td>8,984</td><td>10,812</td><td>18,768</td><td class="warn">28,302</td><td class="warn">36,000</td><td class="warn">40,067</td><td class="warn">40,869</td><td class="warn">43,321</td><td class="warn">43,624</td><td class="warn">43,930</td></tr>
+            <tr><td>出货量（bn Gb 当量）</td><td>9.42</td><td>10.31</td><td>11.68</td><td>14.14</td><td>14.66</td><td>13.78</td><td>13.78</td><td>15.34</td><td>13.97</td><td>16.80</td><td>19.10</td><td>19.15</td><td>20.15</td><td class="warn rev-tip" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="原1Q26版：20.96<br><span class=&quot;tip-down&quot;>↓ -1.4%</span>">20.67</td><td class="warn rev-tip" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="原1Q26版：22.21<br><span class=&quot;tip-down&quot;>↓ -3.2%</span>">21.50</td><td class="warn rev-tip" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="原1Q26版：23.55<br><span class=&quot;tip-down&quot;>↓ -3.2%</span>">22.79</td><td class="warn rev-tip" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="原1Q26版：24.02<br><span class=&quot;tip-down&quot;>↓ -1.3%</span>">23.70</td><td class="warn rev-tip" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="原1Q26版：25.46<br><span class=&quot;tip-down&quot;>↓ -1.3%</span>">25.13</td><td class="warn rev-tip" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="原1Q26版：26.99<br><span class=&quot;tip-down&quot;>↓ -1.3%</span>">26.63</td><td class="warn rev-tip" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="原1Q26版：28.61<br><span class=&quot;tip-down&quot;>↓ -1.3%</span>">28.23</td></tr>
+            <tr><td>综合 ASP（$/Gb）</td><td>0.289</td><td>0.259</td><td>0.236</td><td>0.242</td><td>0.284</td><td>0.340</td><td>0.386</td><td>0.417</td><td>0.438</td><td>0.421</td><td>0.470</td><td>0.564</td><td>0.931</td><td class="warn rev-tip" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="原1Q26版：1.350<br><span class=&quot;tip-up&quot;>↑ +12.2%</span>">1.515</td><td class="warn rev-tip" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="原1Q26版：1.621<br><span class=&quot;tip-up&quot;>↑ +12.2%</span>">1.818</td><td class="warn rev-tip" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="原1Q26版：1.702<br><span class=&quot;tip-up&quot;>↑ +12.2%</span>">1.909</td><td class="warn rev-tip" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="原1Q26版：1.702<br><span class=&quot;tip-up&quot;>↑ +12.2%</span>">1.909</td><td class="warn rev-tip" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="原1Q26版：1.702<br><span class=&quot;tip-up&quot;>↑ +12.2%</span>">1.909</td><td class="warn rev-tip" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="原1Q26版：1.617<br><span class=&quot;tip-up&quot;>↑ +12.2%</span>">1.814</td><td class="warn rev-tip" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="原1Q26版：1.536<br><span class=&quot;tip-up&quot;>↑ +12.2%</span>">1.723</td></tr>
+            <tr><td>DRAM 营收（$mn）</td><td>2,722</td><td>2,672</td><td>2,755</td><td>3,427</td><td>4,158</td><td>4,692</td><td>5,326</td><td>6,400</td><td>6,123</td><td>7,071</td><td>8,984</td><td>10,812</td><td>18,768</td><td class="warn rev-tip" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="原1Q26版：28,302<br><span class=&quot;tip-up&quot;>↑ +10.7%</span>">31,328</td><td class="warn rev-tip" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="原1Q26版：36,000<br><span class=&quot;tip-up&quot;>↑ +8.6%</span>">39,098</td><td class="warn rev-tip" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="原1Q26版：40,067<br><span class=&quot;tip-up&quot;>↑ +8.6%</span>">43,516</td><td class="warn rev-tip" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="原1Q26版：40,869<br><span class=&quot;tip-up&quot;>↑ +10.7%</span>">45,257</td><td class="warn rev-tip" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="原1Q26版：43,321<br><span class=&quot;tip-up&quot;>↑ +10.7%</span>">47,972</td><td class="warn rev-tip" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="原1Q26版：43,624<br><span class=&quot;tip-up&quot;>↑ +10.7%</span>">48,308</td><td class="warn rev-tip" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="原1Q26版：43,930<br><span class=&quot;tip-up&quot;>↑ +10.7%</span>">48,646</td></tr>
             <tr class="section-row"><td colspan="21">其中：传统 DRAM（Conventional）</td></tr>
-            <tr class="subtle"><td>出货量（bn Gb）</td><td class="na">—</td><td class="na">—</td><td class="na">—</td><td class="na">—</td><td class="na">—</td><td>13.72</td><td>13.59</td><td>14.91</td><td>13.32</td><td>15.86</td><td>17.98</td><td>17.86</td><td>18.79</td><td class="na">—</td><td class="na">—</td><td class="na">—</td><td class="na">—</td><td class="na">—</td><td class="na">—</td><td class="na">—</td></tr>
-            <tr class="subtle"><td>ASP（$/Gb）</td><td class="na">—</td><td class="na">—</td><td class="na">—</td><td class="na">—</td><td class="na">—</td><td>0.335</td><td>0.370</td><td>0.382</td><td>0.377</td><td>0.345</td><td>0.388</td><td>0.471</td><td class="hl">0.850</td><td class="na">—</td><td class="na">—</td><td class="na">—</td><td class="na">—</td><td class="na">—</td><td class="na">—</td><td class="na">—</td></tr>
-            <tr><td>营收（$mn）</td><td class="na">—</td><td class="na">—</td><td class="na">—</td><td class="na">—</td><td class="na">—</td><td>4,592</td><td>5,026</td><td>5,700</td><td>5,023</td><td>5,471</td><td>6,984</td><td>8,412</td><td>15,968</td><td class="warn">24,802*</td><td class="warn">32,000*</td><td class="warn">35,567*</td><td class="warn">35,869*</td><td class="warn">37,821*</td><td class="warn">37,624*</td><td class="warn">37,430*</td></tr>
+            <tr class="subtle"><td>出货量（bn Gb）</td><td class="na">—</td><td class="na">—</td><td class="na">—</td><td class="na">—</td><td class="na">—</td><td>13.72</td><td>13.59</td><td>14.91</td><td>13.32</td><td>15.86</td><td>17.98</td><td>17.86</td><td>18.79</td><td class="warn rev-tip" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="原1Q26版：—（模型未拆分）<br>2Q26 模型新增该季度独立数据">19.28</td><td class="na">—</td><td class="na">—</td><td class="na">—</td><td class="na">—</td><td class="na">—</td><td class="na">—</td></tr>
+            <tr class="subtle"><td>ASP（$/Gb）</td><td class="na">—</td><td class="na">—</td><td class="na">—</td><td class="na">—</td><td class="na">—</td><td>0.335</td><td>0.370</td><td>0.382</td><td>0.377</td><td>0.345</td><td>0.388</td><td>0.471</td><td class="hl">0.850</td><td class="warn rev-tip" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="原1Q26版：—（模型未拆分）<br>2Q26 模型新增该季度独立数据">1.480</td><td class="na">—</td><td class="na">—</td><td class="na">—</td><td class="na">—</td><td class="na">—</td><td class="na">—</td></tr>
+            <tr><td>营收（$mn）</td><td class="na">—</td><td class="na">—</td><td class="na">—</td><td class="na">—</td><td class="na">—</td><td>4,592</td><td>5,026</td><td>5,700</td><td>5,023</td><td>5,471</td><td>6,984</td><td>8,412</td><td>15,968</td><td class="warn rev-tip" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="原1Q26版：24,802*<br><span class=&quot;tip-up&quot;>↑ +15.0%</span>">28,528*</td><td class="warn rev-tip" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="原1Q26版：32,000*<br><span class=&quot;tip-up&quot;>↑ +9.7%</span>">35,098*</td><td class="warn rev-tip" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="原1Q26版：35,567*<br><span class=&quot;tip-up&quot;>↑ +9.7%</span>">39,016*</td><td class="warn rev-tip" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="原1Q26版：35,869*<br><span class=&quot;tip-up&quot;>↑ +12.2%</span>">40,257*</td><td class="warn rev-tip" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="原1Q26版：37,821*<br><span class=&quot;tip-up&quot;>↑ +12.3%</span>">42,472*</td><td class="warn rev-tip" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="原1Q26版：37,624*<br><span class=&quot;tip-up&quot;>↑ +12.4%</span>">42,308*</td><td class="warn rev-tip" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="原1Q26版：37,430*<br><span class=&quot;tip-up&quot;>↑ +12.6%</span>">42,146*</td></tr>
             <tr class="section-row"><td colspan="21">其中：HBM</td></tr>
-            <tr class="subtle"><td>出货量（bn Gb）</td><td class="na">—</td><td class="na">—</td><td class="na">—</td><td class="na">—</td><td class="na">—</td><td>0.07</td><td>0.19</td><td>0.43</td><td>0.66</td><td>0.94</td><td>1.12</td><td>1.29</td><td>1.36</td><td class="na">—</td><td class="na">—</td><td class="na">—</td><td class="na">—</td><td class="na">—</td><td class="na">—</td><td class="na">—</td></tr>
-            <tr class="subtle"><td>ASP（$/Gb）</td><td class="na">—</td><td class="na">—</td><td class="na">—</td><td class="na">—</td><td class="na">—</td><td>1.451</td><td>1.555</td><td>1.630</td><td>1.675</td><td>1.701</td><td>1.790</td><td>1.856</td><td class="hl">2.059</td><td class="na">—</td><td class="na">—</td><td class="na">—</td><td class="na">—</td><td class="na">—</td><td class="na">—</td><td class="na">—</td></tr>
-            <tr><td>营收（$mn）</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>100</td><td>300</td><td>700</td><td>1,100</td><td>1,600</td><td>2,000</td><td>2,400</td><td>2,800</td><td class="warn">3,500</td><td class="warn">4,000</td><td class="warn">4,500</td><td class="warn">5,000</td><td class="warn">5,500</td><td class="warn">6,000</td><td class="warn">6,500</td></tr>
+            <tr class="subtle"><td>出货量（bn Gb）</td><td class="na">—</td><td class="na">—</td><td class="na">—</td><td class="na">—</td><td class="na">—</td><td>0.07</td><td>0.19</td><td>0.43</td><td>0.66</td><td>0.94</td><td>1.12</td><td>1.29</td><td>1.36</td><td class="warn rev-tip" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="原1Q26版：—（模型未拆分）<br>2Q26 模型新增该季度独立数据">1.40</td><td class="na">—</td><td class="na">—</td><td class="na">—</td><td class="na">—</td><td class="na">—</td><td class="na">—</td></tr>
+            <tr class="subtle"><td>ASP（$/Gb）</td><td class="na">—</td><td class="na">—</td><td class="na">—</td><td class="na">—</td><td class="na">—</td><td>1.451</td><td>1.555</td><td>1.630</td><td>1.675</td><td>1.701</td><td>1.790</td><td>1.856</td><td class="hl">2.059</td><td class="warn rev-tip" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="原1Q26版：—（模型未拆分）<br>2Q26 模型新增该季度独立数据">2.006</td><td class="na">—</td><td class="na">—</td><td class="na">—</td><td class="na">—</td><td class="na">—</td><td class="na">—</td></tr>
+            <tr><td>营收（$mn）</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>100</td><td>300</td><td>700</td><td>1,100</td><td>1,600</td><td>2,000</td><td>2,400</td><td>2,800</td><td class="warn rev-tip" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="原1Q26版：3,500<br><span class=&quot;tip-down&quot;>↓ -20.0%</span>">2,800</td><td class="warn">4,000</td><td class="warn">4,500</td><td class="warn">5,000</td><td class="warn">5,500</td><td class="warn">6,000</td><td class="warn">6,500</td></tr>
             <tr class="section-row"><td colspan="21">NAND</td></tr>
-            <tr><td>出货量（bn GB）</td><td>14.51</td><td>20.03</td><td>28.36</td><td>24.10</td><td>23.33</td><td>25.62</td><td>27.41</td><td>26.59</td><td>26.86</td><td>33.92</td><td>32.46</td><td>34.67</td><td>35.48</td><td class="warn">37.26</td><td class="warn">42.85</td><td class="warn">47.13</td><td class="warn">44.77</td><td class="warn">45.67</td><td class="warn">46.58</td><td class="warn">51.24</td></tr>
-            <tr><td>ASP（$/GB）</td><td>0.061</td><td>0.051</td><td>0.042</td><td>0.051</td><td>0.067</td><td>0.081</td><td>0.086</td><td>0.084</td><td>0.069</td><td>0.064</td><td>0.069</td><td>0.079</td><td class="hl">0.141</td><td class="warn">0.246</td><td class="warn">0.296</td><td class="warn">0.325</td><td class="warn">0.325</td><td class="warn">0.325</td><td class="warn">0.303</td><td class="warn">0.312</td></tr>
-            <tr><td>NAND 营收（$mn）</td><td>885</td><td>1,013</td><td>1,205</td><td>1,230</td><td>1,567</td><td>2,065</td><td>2,365</td><td>2,241</td><td>1,855</td><td>2,155</td><td>2,252</td><td>2,743</td><td>4,997</td><td class="warn">9,183</td><td class="warn">12,672</td><td class="warn">15,333</td><td class="warn">14,567</td><td class="warn">14,858</td><td class="warn">14,094</td><td class="warn">15,969</td></tr>
+            <tr><td>出货量（bn GB）</td><td>14.51</td><td>20.03</td><td>28.36</td><td>24.10</td><td>23.33</td><td>25.62</td><td>27.41</td><td>26.59</td><td>26.86</td><td>33.92</td><td>32.46</td><td>34.67</td><td>35.48</td><td class="warn rev-tip" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="原1Q26版：37.26<br><span class=&quot;tip-up&quot;>↑ +1.9%</span>">37.96</td><td class="warn rev-tip" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="原1Q26版：42.85<br><span class=&quot;tip-down&quot;>↓ -7.0%</span>">39.85</td><td class="warn rev-tip" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="原1Q26版：47.13<br><span class=&quot;tip-down&quot;>↓ -11.2%</span>">41.85</td><td class="warn rev-tip" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="原1Q26版：44.77<br><span class=&quot;tip-down&quot;>↓ -6.5%</span>">41.85</td><td class="warn rev-tip" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="原1Q26版：45.67<br><span class=&quot;tip-down&quot;>↓ -6.5%</span>">42.68</td><td class="warn rev-tip" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="原1Q26版：46.58<br><span class=&quot;tip-down&quot;>↓ -6.5%</span>">43.54</td><td class="warn rev-tip" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="原1Q26版：51.24<br><span class=&quot;tip-down&quot;>↓ -6.5%</span>">47.89</td></tr>
+            <tr><td>ASP（$/GB）</td><td>0.061</td><td>0.051</td><td>0.042</td><td>0.051</td><td>0.067</td><td>0.081</td><td>0.086</td><td>0.084</td><td>0.069</td><td>0.064</td><td>0.069</td><td>0.079</td><td class="hl">0.141</td><td class="warn rev-tip" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="原1Q26版：0.246<br><span class=&quot;tip-up&quot;>↑ +6.5%</span>">0.262</td><td class="warn rev-tip" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="原1Q26版：0.296<br><span class=&quot;tip-up&quot;>↑ +6.1%</span>">0.314</td><td class="warn rev-tip" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="原1Q26版：0.325<br><span class=&quot;tip-up&quot;>↑ +6.5%</span>">0.346</td><td class="warn rev-tip" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="原1Q26版：0.325<br><span class=&quot;tip-up&quot;>↑ +6.5%</span>">0.346</td><td class="warn rev-tip" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="原1Q26版：0.325<br><span class=&quot;tip-up&quot;>↑ +6.5%</span>">0.346</td><td class="warn rev-tip" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="原1Q26版：0.303<br><span class=&quot;tip-up&quot;>↑ +6.3%</span>">0.322</td><td class="warn rev-tip" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="原1Q26版：0.312<br><span class=&quot;tip-up&quot;>↑ +6.1%</span>">0.331</td></tr>
+            <tr><td>NAND 营收（$mn）</td><td>885</td><td>1,013</td><td>1,205</td><td>1,230</td><td>1,567</td><td>2,065</td><td>2,365</td><td>2,241</td><td>1,855</td><td>2,155</td><td>2,252</td><td>2,743</td><td>4,997</td><td class="warn rev-tip" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="原1Q26版：9,183<br><span class=&quot;tip-up&quot;>↑ +8.3%</span>">9,943</td><td class="warn rev-tip" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="原1Q26版：12,672<br><span class=&quot;tip-down&quot;>↓ -1.1%</span>">12,528</td><td class="warn rev-tip" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="原1Q26版：15,333<br><span class=&quot;tip-down&quot;>↓ -5.6%</span>">14,470</td><td class="warn rev-tip" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="原1Q26版：14,567<br><span class=&quot;tip-down&quot;>↓ -0.7%</span>">14,470</td><td class="warn rev-tip" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="原1Q26版：14,858<br><span class=&quot;tip-down&quot;>↓ -0.7%</span>">14,760</td><td class="warn rev-tip" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="原1Q26版：14,094<br><span class=&quot;tip-down&quot;>↓ -0.7%</span>">14,001</td><td class="warn rev-tip" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="原1Q26版：15,969<br><span class=&quot;tip-down&quot;>↓ -0.7%</span>">15,863</td></tr>
             <tr class="section-row"><td colspan="21">收入构成验证（Bridge to Total）</td></tr>
             <tr class="subtle"><td>NOR + 其他营收（$mn）</td><td>86</td><td>67</td><td>50</td><td>68</td><td>100</td><td>54</td><td>59</td><td>68</td><td>75</td><td>75</td><td>79</td><td>88</td><td>95</td><td>95</td><td>95</td><td>95</td><td>95</td><td>95</td><td>95</td><td>95</td></tr>
-            <tr><td>合计营收（$mn）</td><td class="hl">3,693</td><td class="hl">3,752</td><td class="hl">4,010</td><td class="hl">4,726</td><td class="hl">5,824</td><td class="hl">6,811</td><td class="hl">7,750</td><td class="hl">8,709</td><td class="hl">8,053</td><td class="hl">9,301</td><td class="hl">11,315</td><td class="hl">13,643</td><td class="hl">23,860</td><td class="warn">37,579</td><td class="warn">48,767</td><td class="warn">55,496</td><td class="warn">55,531</td><td class="warn">58,274</td><td class="warn">57,814</td><td class="warn">59,993</td></tr>
+            <tr><td>合计营收（$mn）</td><td class="hl">3,693</td><td class="hl">3,752</td><td class="hl">4,010</td><td class="hl">4,726</td><td class="hl">5,824</td><td class="hl">6,811</td><td class="hl">7,750</td><td class="hl">8,709</td><td class="hl">8,053</td><td class="hl">9,301</td><td class="hl">11,315</td><td class="hl">13,643</td><td class="hl">23,860</td><td class="warn rev-tip" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="原1Q26版：37,579<br><span class=&quot;tip-up&quot;>↑ +10.1%</span>">41,367</td><td class="warn rev-tip" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="原1Q26版：48,767<br><span class=&quot;tip-up&quot;>↑ +6.1%</span>">51,721</td><td class="warn rev-tip" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="原1Q26版：55,496<br><span class=&quot;tip-up&quot;>↑ +4.7%</span>">58,081</td><td class="warn rev-tip" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="原1Q26版：55,531<br><span class=&quot;tip-up&quot;>↑ +7.7%</span>">59,822</td><td class="warn rev-tip" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="原1Q26版：58,274<br><span class=&quot;tip-up&quot;>↑ +7.8%</span>">62,827</td><td class="warn rev-tip" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="原1Q26版：57,814<br><span class=&quot;tip-up&quot;>↑ +7.9%</span>">62,404</td><td class="warn rev-tip" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="原1Q26版：59,993<br><span class=&quot;tip-up&quot;>↑ +7.7%</span>">64,604</td></tr>
           </tbody>
         </table>
       </div>
-      <div class="seg-sum" style="margin-bottom:10px">* 标记为推算值：worksheet 在 2Q26E 起只给出 HBM 营收的直接假设，未再单列传统 DRAM 的 bits/ASP，因此传统 DRAM 营收用"DRAM 总营收 − HBM 营收"反推——这本身说明<strong>模型对 2026E 以后的预测方式从"量价拆解"切换为"总量目标 + HBM 单列"</strong>，预测置信度低于 2025 年以前的实际值。</div>
+      <div class="seg-sum" style="margin-bottom:10px">*标记为推算值：2Q26E起模型只给HBM营收假设，传统DRAM用"总营收−HBM营收"反推——<strong>预测方式从"量价拆解"切换为"总量目标+HBM单列"</strong>，置信度低于2025年以前实际值。</div>
     </div>
+    <div id="t-co-sndk" class="tab-pane">
+      <div class="note-box note-fold" onclick="toggleNote(this)"><div class="note-head">Sandisk公司简介与口径 ▾</div><div class="note-body">Sandisk（SNDK）：西数闪存业务，2025-02分拆独立上市，<strong>100% NAND/SSD，无DRAM/HBM</strong>。与铠侠是<strong>Flash Ventures合资伙伴</strong>，共享日本晶圆厂产能。来源：<span class="src">Sandisk Model 1Q26.xlsx</span>，财年6月结束，已重映射为自然季；<strong style="color:var(--warn)">数据仅从3Q23起</strong>（分拆前无独立季报），1Q23-2Q23留空。</div></div>
+      <div class="chart-row">
+        <div class="chart-box"><h4>营收与营业利润率（$mn / %，按季）</h4><div class="chart-wrap"><canvas id="c-sndk-rev-q"></canvas></div></div>
+        <div class="chart-box"><h4>NAND 出货量与 ASP（mn GB / $·GB⁻¹，按季）</h4><div class="chart-wrap"><canvas id="c-sndk-bitsasp-q"></canvas></div></div>
+      </div>
+      <div class="model-wrap">
+        <table class="model-table">
+          <thead><tr><th>Sandisk 季度（$mn / mn GB / $·GB⁻¹）</th><th>1Q23</th><th>2Q23</th><th>3Q23</th><th>4Q23</th><th>1Q24</th><th>2Q24</th><th>3Q24</th><th>4Q24</th><th>1Q25</th><th>2Q25</th><th>3Q25</th><th>4Q25</th><th>1Q26</th><th>2Q26E</th><th>3Q26E</th><th>4Q26E</th><th>1Q27E</th><th>2Q27E</th><th>3Q27E</th><th>4Q27E</th></tr></thead>
+          <tbody>
+            <tr><td>NAND 出货量（mn GB）</td><td>—</td><td>—</td><td>25,111</td><td>24,609</td><td>20,918</td><td>19,453</td><td>22,177</td><td>24,173</td><td>23,689</td><td>24,874</td><td>28,605</td><td>29,463</td><td>24,454</td><td class="warn">28,147</td><td class="warn">32,369</td><td class="warn">33,987</td><td class="warn">33,308</td><td class="warn">34,973</td><td class="warn">38,470</td><td class="warn">41,548</td></tr>
+            <tr><td>NAND ASP（$/GB）</td><td>—</td><td>—</td><td>0.0571</td><td>0.0628</td><td>0.0741</td><td>0.0844</td><td>0.0794</td><td>0.0714</td><td>0.0664</td><td>0.0697</td><td>0.0732</td><td class="hl">0.0989</td><td class="hl">0.2382</td><td class="warn">0.3097</td><td class="warn">0.3562</td><td class="warn">0.3918</td><td class="warn">0.4114</td><td class="warn">0.4196</td><td class="warn">0.4196</td><td class="warn">0.4280</td></tr>
+            <tr><td>营收（$mn）</td><td>—</td><td>—</td><td>1,533</td><td>1,665</td><td>1,705</td><td>1,760</td><td>1,883</td><td>1,876</td><td>1,695</td><td>1,901</td><td>2,308</td><td>3,025</td><td>5,950</td><td class="warn">8,841</td><td class="warn">11,653</td><td class="warn">13,440</td><td class="warn">13,826</td><td class="warn">14,799</td><td class="warn">16,266</td><td class="warn">17,907</td></tr>
+            <tr class="subtle"><td>毛利率</td><td>—</td><td>—</td><td class="yn">-11.9%</td><td>7.8%</td><td>27.4%</td><td>36.4%</td><td>38.9%</td><td>32.5%</td><td>22.7%</td><td>26.4%</td><td>29.9%</td><td>51.1%</td><td class="hl">78.4%</td><td class="warn">84.3%</td><td class="warn">84.7%</td><td class="warn">84.6%</td><td class="warn">83.8%</td><td class="warn">82.6%</td><td class="warn">79.2%</td><td class="warn">76.5%</td></tr>
+            <tr class="subtle"><td>营业利润率</td><td>—</td><td>—</td><td class="yn">-32.3%</td><td class="yn">-11.2%</td><td>6.9%</td><td>14.5%</td><td>18.8%</td><td>12.4%</td><td>0.1%</td><td>5.3%</td><td>10.6%</td><td>37.5%</td><td class="hl">70.9%</td><td class="warn">78.7%</td><td class="warn">80.1%</td><td class="warn">80.3%</td><td class="warn">79.6%</td><td class="warn">78.5%</td><td class="warn">75.4%</td><td class="warn">73.1%</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="seg-sum note-fold" onclick="toggleNote(this)"><div class="note-head">Sandisk读数 ▾</div><div class="note-body">Sandisk营收/利润率走势与铠侠高度同步（1Q26起营业利润率均跳升至70%+），印证共享产能、成本结构相关；毛利率3Q23一度为负，1Q26后修复至80%+。<strong>营收=出货量×ASP反算与实际值有约6.5%差额</strong>（3Q23：1,434 vs 1,533），差额来自服务/授权等非芯片贸易收入，不建议逐项对照财报。</div></div>
+    </div>
+
+    <div id="t-co-kx" class="tab-pane">
+      <div class="note-box note-fold" onclick="toggleNote(this)"><div class="note-head">铠侠公司简介与口径 ▾</div><div class="note-body">铠侠Kioxia（285A.T）：原东芝存储，2024-12东京上市，<strong>NAND Flash+SSD&Storage两分部，无DRAM/HBM</strong>。与Sandisk是<strong>Flash Ventures合资伙伴</strong>。来源：<span class="src">Kioxia Model 2Q26.xlsx</span>，财年3月结束，已按财年→自然季规则重映射（验证：最新实际季对应本表2Q26，与文件名一致）；营收由JPY÷内嵌汇率换算为美元。</div></div>
+      <div class="chart-row">
+        <div class="chart-box"><h4>营收与营业利润率（$mn / %，按季）</h4><div class="chart-wrap"><canvas id="c-kx-rev-q"></canvas></div></div>
+        <div class="chart-box"><h4>NAND 出货量与 ASP（mn GB / $·GB⁻¹，按季）</h4><div class="chart-wrap"><canvas id="c-kx-bitsasp-q"></canvas></div></div>
+      </div>
+      <div class="model-wrap">
+        <table class="model-table">
+          <thead><tr><th>铠侠季度（$mn / mn GB / $·GB⁻¹）</th><th>1Q23</th><th>2Q23</th><th>3Q23</th><th>4Q23</th><th>1Q24</th><th>2Q24</th><th>3Q24</th><th>4Q24</th><th>1Q25</th><th>2Q25</th><th>3Q25</th><th>4Q25</th><th>1Q26</th><th>2Q26E</th><th>3Q26E</th><th>4Q26E</th><th>1Q27E</th><th>2Q27E</th><th>3Q27E</th><th>4Q27E</th></tr></thead>
+          <tbody>
+            <tr><td>NAND 出货量（mn GB）</td><td>29,224</td><td>33,608</td><td>29,239</td><td>29,239</td><td>31,578</td><td>35,683</td><td>39,251</td><td>38,466</td><td>34,619</td><td>34,619</td><td>47,775</td><td>50,163</td><td>45,147</td><td class="warn">46,502</td><td class="warn">52,758</td><td class="warn">56,451</td><td class="warn">55,945</td><td class="warn">58,438</td><td class="warn">65,066</td><td class="warn">70,161</td></tr>
+            <tr><td>NAND ASP（$/GB）</td><td>—</td><td>0.0448</td><td>0.0462</td><td>0.0499</td><td>0.0593</td><td>0.0678</td><td>0.0711</td><td>0.0691</td><td>0.0553</td><td>0.0591</td><td>0.0572</td><td class="hl">0.0634</td><td class="hl">0.1340</td><td class="warn">0.2285</td><td class="warn">0.2857</td><td class="warn">0.3285</td><td class="warn">0.3449</td><td class="warn">0.3553</td><td class="warn">0.3375</td><td class="warn">0.3139</td></tr>
+            <tr><td>营收（$mn）</td><td>1,841</td><td>1,849</td><td>1,676</td><td>1,761</td><td>2,196</td><td>2,764</td><td>3,143</td><td>3,020</td><td>2,254</td><td>2,364</td><td>3,050</td><td>3,553</td><td>6,470</td><td class="warn">11,044</td><td class="warn">15,429</td><td class="warn">18,903</td><td class="warn">19,656</td><td class="warn">21,121</td><td class="warn">22,319</td><td class="warn">22,382</td></tr>
+            <tr class="subtle"><td>营业利润（$mn）</td><td class="yn">-1,287</td><td class="yn">-963</td><td class="yn">-700</td><td class="yn">-437</td><td>299</td><td>812</td><td>1,085</td><td>824</td><td>241</td><td>310</td><td>584</td><td>933</td><td class="hl">3,850</td><td class="warn">7,938</td><td class="warn">12,248</td><td class="warn">15,479</td><td class="warn">16,126</td><td class="warn">17,564</td><td class="warn">18,406</td><td class="warn">18,259</td></tr>
+            <tr class="subtle"><td>营业利润率</td><td class="yn">-69.9%</td><td class="yn">-52.1%</td><td class="yn">-41.7%</td><td class="yn">-24.8%</td><td>13.6%</td><td>29.4%</td><td>34.5%</td><td>27.3%</td><td>10.7%</td><td>13.1%</td><td>19.2%</td><td>26.3%</td><td class="hl">59.5%</td><td class="warn">71.9%</td><td class="warn">79.4%</td><td class="warn">81.9%</td><td class="warn">82.0%</td><td class="warn">83.2%</td><td class="warn">82.5%</td><td class="warn">81.6%</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="seg-sum note-fold" onclick="toggleNote(this)"><div class="note-head">铠侠读数 ▾</div><div class="note-body">铠侠营业利润率1Q23-4Q23连续四季为负（-69.9%→-24.8%），2024转正，2026起加速至70-80%+，与海力士/三星NAND减产控产能逻辑一致。<strong>营收含SSD&Storage（非纯芯片贸易），与Sandisk/美光口径不完全可比</strong>，量级可比但不建议逐项对照。</div></div>
+    </div>
+
     <div class="chart-box" style="margin-top:14px"><h4>HBM 占 DRAM 营收比例（三家对比，%）</h4><div class="chart-wrap"><canvas id="c-hbmshare"></canvas></div></div>
-    <div class="seg-sum">关键洞察：三家口径独立的公司模型都呈现同一模式——HBM 占 DRAM 营收比例 2025 见阶段性高点后，2026E 因 commodity DRAM 涨价加速而回落，2027E 随 HBM4/4E 放量重新走高。这意味着"2026 普通 DRAM 涨价"和"HBM 持续放量"在公司营收结构上是<strong>同时发生但阶段性互相稀释</strong>的关系，而非此前理解的单纯"HBM 挤出普通 DRAM"单向逻辑。</div>
+    <div class="seg-sum">关键洞察：三家模型口径独立却同一模式——HBM占DRAM营收比 2025见高点后2026E因commodity涨价加速回落，2027E随HBM4/4E放量重新走高。<strong>"普通DRAM涨价"和"HBM放量"是同时发生但阶段性互相稀释</strong>，非单纯"HBM挤出普通DRAM"。</div>
   </div>
 </div>
 
@@ -454,7 +519,7 @@ code{font-size:10px;background:var(--tag-bg);color:var(--tag);padding:1px 5px;bo
 <div class="sec-body" style="margin-bottom:16px">
   <div class="card">
 
-    <div class="note-box" style="margin-top:14px">🏭 三家分拆：bit 出货 vs 晶圆产能。来源：<span class="src">SK Hynix model.xlsx · DRAM Revenue（行137-150）/ SAMSUNG model.xlsx · DRAM（行98-110）/ MU model.xlsx · Worksheet（行119-127）</span>，三表均按<strong>自然季</strong>对齐（美光为日历季，非其 8 月结束的财年口径，与本看板第一部分 FY 口径表不是同一基准，故数字不同但都正确）。<strong style="color:var(--warn)">三份模型均未单独拆出"HBM 专用晶圆产能"——只有 DRAM 总产能，没有 HBM/传统 DRAM 的产能分配明细</strong>，因此上表"三大厂 HBM 晶圆产能 ~250/~450/650 kwpm"和"海力士 HBM 占 DRAM 产能比"两行来自外部券商（Jefferies/汇丰），不是这三份公司模型本身的产出；公司模型能给出的是 <strong>bit 出货</strong>，以此反推产能利用方向。</div>
+    <div class="note-box note-fold" style="margin-top:14px" onclick="toggleNote(this)"><div class="note-head">数据来源与口径 ▾</div><div class="note-body">🏭三家分拆：bit出货 vs 晶圆产能。来源：<span class="src">SK Hynix/SAMSUNG/MU model.xlsx</span> 各自DRAM/Worksheet表，均按自然季对齐（美光为日历季，与第一部分FY口径表不是同一基准，数字不同但都对）。<strong style="color:var(--warn)">三份模型均未拆出"HBM专用晶圆产能"，只有DRAM总产能</strong>，故"三大厂HBM晶圆产能"两行来自外部券商（Jefferies/汇丰）而非公司模型；模型能给出的是bit出货，以此反推产能利用方向。</div></div>
     <div class="model-wrap">
       <table class="model-table" style="min-width:480px">
         <thead><tr><th style="min-width:140px">HBM bit 出货（bn Gb，自然年/季）</th><th>2023</th><th>2024</th><th>2025</th><th>2026E</th><th>2027E</th></tr></thead>
@@ -480,9 +545,9 @@ code{font-size:10px;background:var(--tag-bg);color:var(--tag);padding:1px 5px;bo
       </table>
     </div>
     <div class="chart-box" style="margin-top:0"><h4>三家 HBM ASP 对比（$/Gb，按季）</h4><div class="chart-wrap"><canvas id="c-hbm-asp-co"></canvas></div></div>
-    <div class="seg-sum">读数：①海力士 bit 出货量持续领先（2025 已是三星的 2.7 倍、美光的 3.1 倍），与其"HBM 占 DRAM 产能近 3 成"的份额地位一致；②美光起步最晚但 2025 bit 出货反超三星（4.01 vs 4.51，差距收窄），印证"美光从落后到追赶"的叙事不只体现在营收占比，bit 端已经追上；③三星 2025 bit 出货同比下滑（4.83→4.51），与其"HBM 占比 17.9%→11.3%"的回落互相印证，指向三星 2025 年 HBM 认证/出货节奏不及前一年，2026E 才重新放量。隐含 ASP 三家大致在 $1.3-1.8/Gb 区间，量级一致，差异主要来自产品组合（HBM3E vs HBM4 占比）和客户结构。</div>
+    <div class="seg-sum note-fold" onclick="toggleNote(this)"><div class="note-head">HBM供给端读数（3点）▾</div><div class="note-body">①海力士bit出货持续领先（2025是三星2.7倍、美光3.1倍），与其HBM产能份额地位一致。②美光起步最晚但2025 bit出货反超三星（4.01 vs 4.51），追赶不只体现在营收、bit端已追上。③三星2025 bit出货同比下滑（4.83→4.51），与HBM占比17.9%→11.3%回落互相印证，2026E才重新放量。隐含ASP三家大致$1.3-1.8/Gb区间，差异主要来自产品组合与客户结构。</div></div>
 
-    <div class="seg-sum">与本节供给侧数据交叉对比：三家原厂 2026E/2027E HBM bit 出货合计为 <strong>38.75 bn Gb（2026E）/ 52.12 bn Gb（2027E）</strong>（16.81+12.03+9.91 / 21.61+20.00+10.51，后者含美光估算值）。2027E 与"全球 AI HBM 消耗量最高 51 bn Gb"高度接近（差 &lt;3%），互相印证；2026E 供给合计 38.75 明显高于需求侧 31 的预估，差额可能来自非 AI 客户的 HBM 需求（网络设备、部分服务器内存等）或两个数据源的统计范围不完全一致，<strong>不建议将两个数字简单相减视为"过剩"，因口径未必可比</strong>。</div>
+    <div class="seg-sum note-fold" onclick="toggleNote(this)"><div class="note-head">供需交叉校验 ▾</div><div class="note-body">三家原厂HBM bit出货合计：<strong>38.75 bn Gb（2026E）/ 52.12 bn Gb（2027E）</strong>。2027E与"全球AI HBM消耗量最高51 bn Gb"接近（差&lt;3%），互相印证；2026E供给38.75明显高于需求侧31的预估，差额或来自非AI客户需求或统计范围不一致，<strong>不建议简单相减视为"过剩"</strong>。</div></div>
   </div>
 </div>
 
@@ -586,7 +651,7 @@ code{font-size:10px;background:var(--tag-bg);color:var(--tag);padding:1px 5px;bo
       <div class="chart-box"><h4>三家传统 DRAM 销售额对比（USD bn，按年）</h4><div class="chart-wrap"><canvas id="c-dram"></canvas></div></div>
       <div class="chart-box"><h4>三大厂 DRAM 晶圆产能（kwpm）</h4><div class="chart-wrap"><canvas id="c-cap"></canvas></div></div>
     </div>
-    <div class="seg-sum">普通 DRAM 名义产能仅个位数增长，且被 HBM 占用大量有效产能，2026E 供不应求（需求 +27% &gt; 产出 +21%）。这是 DDR5/DDR4 涨价的供给基础。三家传统 DRAM 销售额对比（左图）来自本看板第一部分各公司季度拆解表的传统 DRAM 营收按年汇总；<strong>美光 1Q23–1Q24 缺口期因其 HBM 营收当时为 0，传统 DRAM 营收=DRAM 总营收，直接取总营收即可，非估算</strong>。三家 2026E-2027E 销售额增幅高度一致（约 4-5 倍于 2023），印证"2026 commodity DRAM 涨价"是三家公司模型共同的核心假设，而非单一公司的乐观情景。</div>
+    <div class="seg-sum note-fold" onclick="toggleNote(this)"><div class="note-head">DRAM供需结论 ▾</div><div class="note-body">普通DRAM名义产能仅个位数增长，且被HBM占用有效产能，2026E供不应求（需求+27%&gt;产出+21%），是DDR5/DDR4涨价的供给基础。三家传统DRAM销售额对比来自第一部分各公司季度表年度汇总；<strong>美光1Q23-1Q24因HBM营收为0，传统DRAM=DRAM总营收，非估算</strong>。三家2026E-2027E增幅高度一致（约4-5倍于2023），印证涨价是三家模型共同假设而非单一乐观情景。</div></div>
   </div>
 </div>
 
@@ -651,18 +716,48 @@ code{font-size:10px;background:var(--tag-bg);color:var(--tag);padding:1px 5px;bo
         </table>
       </div>
     </div>
-    <div class="seg-sum">定位：CXMT 当前几乎全部产能押注高毛利的 commodity DRAM（而非 HBM），本轮涨价周期下盈利弹性兑现迅速（1Q26 营业利润率~70%，逼近海力士73%/三星81%）；HBM 技术与良率仍大幅落后三大原厂，2026-27 年对全球 HBM 供给影响有限，但其 DRAM 产能扩张（9%→12% 份额）是观察"国产替代会否打乱涨价节奏"的核心变量。<strong>CXMT 暂未上市，A 股标的代码待 IPO 落地后补充</strong><span class="todo">TODO</span>，关联 A 股可关注通富微电（CXMT 封测合作方）、兆易创新（参股+利基存储协同）。</div>
+    <div class="seg-sum note-fold" onclick="toggleNote(this)"><div class="note-head">CXMT定位判断 ▾</div><div class="note-body">CXMT当前几乎全押注高毛利commodity DRAM（非HBM），1Q26营业利润率~70%已逼近海力士73%/三星81%；HBM技术良率仍大幅落后，2026-27对全球HBM供给影响有限，但DRAM产能扩张（9%→12%份额）是观察"国产替代会否打乱涨价节奏"的核心变量。<strong>暂未上市</strong><span class="todo">TODO</span>，关联A股：通富微电（封测合作）、兆易创新（参股+利基协同）。</div></div>
   </div>
 </div>
 
 <!-- ════════ 第四部分 · NAND ════════ -->
-<div class="part part-nand"><span class="pn">第四部分</span> NAND 闪存 <span class="pd">供需 · 量价 · 3D 层数演进</span></div>
+<div class="part part-nand"><span class="pn">第四部分</span> NAND 闪存 <span class="pd">供需 · 量价 · 五强格局（新增 Sandisk / 铠侠）</span></div>
+
+<!-- NAND 五强对比：新增 Sandisk / 铠侠 -->
+<div id="sec-nand-5" class="st" onclick="toggleSec(this)">🏭 NAND 五强对比（新增 Sandisk / 铠侠）<span class="st-arrow">▾</span></div>
+<div class="sec-body" style="margin-bottom:16px">
+  <div class="card">
+    <div class="seg-sum note-fold" onclick="toggleNote(this)"><div class="note-head">新增标的说明 ▾</div><div class="note-body"><strong>新增两家纯NAND标的：</strong>Sandisk（SNDK，西数闪存分拆，2025-02上市）与铠侠Kioxia（285A.T，原东芝存储，2024-12上市）。两者是<strong>Flash Ventures合资伙伴</strong>，共享日本晶圆厂产能——也是出货量/ASP走势高度同步的结构性原因。连同三大原厂，NAND供给格局由五家主导。</div></div>
+    <div class="b-grid">
+      <div class="chart-box"><h4>NAND 出货量对比（mn GB，按季）</h4><div class="chart-wrap"><canvas id="c-nand-bits5"></canvas></div></div>
+      <div class="chart-box"><h4>NAND 营收对比（$mn，模型测算值，按季）</h4><div class="chart-wrap"><canvas id="c-nand-rev5"></canvas></div></div>
+    </div>
+    <div class="model-wrap">
+      <table class="model-table">
+        <thead><tr><th>公司</th><th>1Q26 出货量（mn GB）</th><th>出货份额</th><th>1Q26 营收（$mn）</th><th>营收份额</th></tr></thead>
+        <tbody>
+          <tr><td>三星 Samsung</td><td>92,400</td><td class="hl">38.2%</td><td>13,507</td><td class="hl">35.0%</td></tr>
+          <tr><td>铠侠 Kioxia</td><td>45,147</td><td>18.7%</td><td>6,470</td><td>16.8%</td></tr>
+          <tr><td>海力士 SK Hynix</td><td>44,400</td><td>18.4%</td><td>7,676</td><td>19.9%</td></tr>
+          <tr><td>美光 Micron</td><td>35,484</td><td>14.7%</td><td>4,997</td><td>12.9%</td></tr>
+          <tr><td>Sandisk</td><td>24,454</td><td>10.1%</td><td>5,950</td><td>15.4%</td></tr>
+          <tr><td class="src">合计</td><td class="src">241,885</td><td class="src">100%</td><td class="src">38,600</td><td class="src">100%</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="seg-sum note-fold" onclick="toggleNote(this)"><div class="note-head">数据来源与口径（4点）▾</div><div class="note-body"><strong>来源：</strong>五家均高盛(GS)模型，海力士/三星NAND表、美光/Sandisk Worksheet、铠侠PL表，均对齐至自然季。<br>
+      <strong>单位：</strong>海力士/三星原始为"mn chips，16Gb等效"，已×2折算为mn GB统一口径。<br>
+      <strong>铠侠财年重映射：</strong>3月结束财年已重映射为自然季（验证：最新实际季对应2Q26，与文件名一致）；营收由JPY÷内嵌汇率换算，海力士/三星营收由KRW÷内嵌汇率换算。<br>
+      <strong>起点差异：</strong>Sandisk数据仅从3Q23起（2025-02才分拆独立），1Q23-2Q23留空。<br>
+      <strong>营收提示：</strong>五家"NAND营收"均为出货量×ASP测算值，非完整分部收入口径，不建议与财报逐项对照。</div></div>
+  </div>
+</div>
 
 <!-- NAND 供需量价 -->
 <div id="sec-nand-sd" class="st" onclick="toggleSec(this)">🔢 NAND 供需与量价<span class="st-arrow">▾</span></div>
 <div class="sec-body" style="margin-bottom:16px">
   <div class="card">
-    <div class="chart-box" style="margin-bottom:14px"><h4>三大厂 NAND ASP 对比（$/GB，按季）</h4><div class="chart-wrap"><canvas id="c-nand-asp-co"></canvas></div></div>
+    <div class="chart-box" style="margin-bottom:14px"><h4>NAND ASP 对比（五家，$/GB，按季）</h4><div class="chart-wrap"><canvas id="c-nand-asp-co"></canvas></div></div>
     <div class="model-wrap">
       <table class="model-table">
         <thead><tr><th>NAND 指标</th><th>2024 均价</th><th>2025 均价</th><th>2025/12 价</th><th>vs 2024 均</th><th>vs 2025 均</th><th>来源</th></tr></thead>
@@ -684,6 +779,202 @@ code{font-size:10px;background:var(--tag-bg);color:var(--tag);padding:1px 5px;bo
   </div>
 </div>
 
+<!-- ════════ 第五部分 · AI存储技术路线 ════════ -->
+<div class="part part-nand"><span class="pn">第五部分</span> AI 存储技术路线 <span class="pd">内存墙破局：带宽/密度提升 × 存算解耦/分级</span></div>
+
+<div id="sec-tech-intro" class="st" onclick="toggleSec(this)">🧭 技术路线总体框架<span class="st-arrow">▾</span></div>
+<div class="sec-body" style="margin-bottom:16px">
+  <div class="card">
+    <div class="logic-box" style="margin-bottom:12px">
+      <strong>核心矛盾：</strong>AI 推理进入"长上下文+高并发+多模态"时代，KV Cache 呈平方级膨胀，单一依赖 HBM 的架构撞上
+      "内存墙（带宽/容量）"与"存储墙"。产业界的应对归纳为两条主线：<strong>① 提升存储器本身的带宽/密度</strong>
+      （HBM4→HBM5、3D DRAM、HBF、4F² 等）；<strong>② 重构存算关系，做存储分级与解耦</strong>
+      （CXL 池化、SCM 新层级、KV Cache 多级卸载、PD 分离、存内计算）。定价逻辑上，存储正从周期品向
+      "具备长期能见度的战略资源"重估。
+    </div>
+    <div style="overflow-x:auto">
+    <svg viewBox="0 0 970 660" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system,Segoe UI,PingFang SC,Microsoft YaHei,sans-serif" style="min-width:760px;width:100%;height:auto">
+      <defs>
+        <marker id="ah2" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#94a3b8"/></marker>
+      </defs>
+      <g fill="none" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#ah2)">
+        <path d="M200,315 C255,315 255,168 310,168"/>
+        <path d="M200,315 C255,315 255,493 310,493"/>
+        <path d="M485,168 C548,168 548,35 610,35"/>
+        <path d="M485,168 C548,168 548,100 610,100"/>
+        <path d="M485,168 C548,168 548,165 610,165"/>
+        <path d="M485,168 C540,168 540,230 595,230"/>
+        <path d="M485,493 C548,493 548,360 610,360"/>
+        <path d="M485,493 C548,493 548,425 610,425"/>
+        <path d="M485,493 C548,493 548,490 610,490"/>
+        <path d="M485,493 C548,493 548,555 610,555"/>
+        <path d="M485,493 C548,493 548,620 610,620"/>
+        <path d="M810,230 C838,230 838,315 860,315"/>
+        <path d="M795,620 C830,620 830,315 860,315"/>
+      </g>
+      <!-- 根节点 -->
+      <rect x="15" y="290" width="185" height="50" rx="7" fill="#1e293b"/>
+      <text x="107" y="311" text-anchor="middle" font-size="12" fill="#fff" font-weight="700">AI推理内存墙</text>
+      <text x="107" y="328" text-anchor="middle" font-size="11" fill="#cbd5e1">KV Cache膨胀</text>
+      <!-- 主线节点 -->
+      <rect x="310" y="145" width="175" height="46" rx="7" fill="#dbeafe" stroke="#2563eb" stroke-width="1.3"/>
+      <text x="397" y="173" text-anchor="middle" font-size="12" fill="#1e3a8a" font-weight="700">主线一 提升带宽/密度</text>
+      <rect x="310" y="470" width="175" height="46" rx="7" fill="#dbeafe" stroke="#2563eb" stroke-width="1.3"/>
+      <text x="397" y="498" text-anchor="middle" font-size="12" fill="#1e3a8a" font-weight="700">主线二 存算解耦/分级</text>
+      <!-- 主线一分支 -->
+      <rect x="610" y="15" width="185" height="40" rx="6" fill="#eff6ff" stroke="#93c5fd"/>
+      <text x="702" y="39" text-anchor="middle" font-size="11.5" fill="#1e3a8a">HBM4/4E/5 演进</text>
+      <rect x="610" y="80" width="185" height="40" rx="6" fill="#eff6ff" stroke="#93c5fd"/>
+      <text x="702" y="104" text-anchor="middle" font-size="11.5" fill="#1e3a8a">3D 堆叠 DRAM/WoW</text>
+      <rect x="610" y="145" width="185" height="40" rx="6" fill="#eff6ff" stroke="#93c5fd"/>
+      <text x="702" y="169" text-anchor="middle" font-size="11.5" fill="#1e3a8a">HBF 堆叠 NAND</text>
+      <rect x="595" y="210" width="215" height="40" rx="6" fill="#eff6ff" stroke="#93c5fd"/>
+      <text x="702" y="234" text-anchor="middle" font-size="11.5" fill="#1e3a8a">4F²+CBA→3D DRAM</text>
+      <!-- 主线二分支 -->
+      <rect x="610" y="340" width="185" height="40" rx="6" fill="#eff6ff" stroke="#93c5fd"/>
+      <text x="702" y="364" text-anchor="middle" font-size="11.5" fill="#1e3a8a">CXL 池化/扩展</text>
+      <rect x="610" y="405" width="185" height="40" rx="6" fill="#eff6ff" stroke="#93c5fd"/>
+      <text x="702" y="429" text-anchor="middle" font-size="11.5" fill="#1e3a8a">SCM 新存储层级</text>
+      <rect x="610" y="470" width="185" height="40" rx="6" fill="#eff6ff" stroke="#93c5fd"/>
+      <text x="702" y="494" text-anchor="middle" font-size="11.5" fill="#1e3a8a">KV Cache 多级卸载</text>
+      <rect x="610" y="535" width="185" height="40" rx="6" fill="#eff6ff" stroke="#93c5fd"/>
+      <text x="702" y="559" text-anchor="middle" font-size="11.5" fill="#1e3a8a">PD 分离部署</text>
+      <rect x="610" y="600" width="185" height="40" rx="6" fill="#eff6ff" stroke="#93c5fd"/>
+      <text x="702" y="624" text-anchor="middle" font-size="11.5" fill="#1e3a8a">存内计算 PIM</text>
+      <!-- 汇聚节点 -->
+      <rect x="860" y="290" width="100" height="50" rx="7" fill="#7c3aed"/>
+      <text x="910" y="311" text-anchor="middle" font-size="11.5" fill="#fff" font-weight="700">定制化/</text>
+      <text x="910" y="327" text-anchor="middle" font-size="11.5" fill="#fff" font-weight="700">近存计算</text>
+    </svg>
+    </div>
+    <p style="font-size:10.5px;color:var(--text2);text-align:center;margin:2px 0 0">图1：AI存储技术趋势总体框架（据 AI存储新技术趋势全景.md 图1 手绘复原）</p>
+    <div class="note-box">数据来源：<span class="src">AI存储新技术趋势全景.md</span>（2026 产业梳理，公开信息+研究综合）。本节为技术路线/长期趋势科普，不同于第一~四部分的公司财务测算，无法与量价数据直接加总核对；各技术的产业化时点、市场空间均引用自原始笔记标注来源（BofA/公司公告等）。</div>
+  </div>
+</div>
+
+<!-- 主线一 -->
+<div id="sec-tech-l1" class="st collapsed" onclick="toggleSec(this)">📶 主线一：提升带宽/密度（HBM演进 · HBF · 3D DRAM/WoW · 4F²+CBA）<span class="st-arrow">▾</span></div>
+<div class="sec-body collapsed" style="margin-bottom:16px">
+  <div class="card">
+    <h4 style="margin:0 0 8px;font-size:13px">HBM4 / HBM4E / HBM5 演进</h4>
+    <div class="model-wrap">
+      <table class="model-table">
+        <thead><tr><th>规格</th><th>HBM3E</th><th>HBM4</th><th>HBM4E</th><th>HBM5</th></tr></thead>
+        <tbody>
+          <tr><td>量产年份</td><td>2024</td><td>2H25</td><td>2027</td><td>2028</td></tr>
+          <tr><td>I/O 位宽</td><td>1,024</td><td>2,048</td><td>2,048</td><td>4,096</td></tr>
+          <tr><td>单堆栈带宽</td><td>1.2 TB/s</td><td>2.0-3.3 TB/s</td><td>3.5+ TB/s</td><td>5.0+ TB/s</td></tr>
+          <tr><td>容量</td><td>24/36 GB</td><td>36/48 GB</td><td>48/64 GB</td><td>80 GB</td></tr>
+          <tr><td>堆叠层数</td><td>8/12-hi</td><td>12/16-hi</td><td>12/16-hi</td><td>16-hi</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="seg-sum" style="margin-top:8px">数据来源：BofA全球存储技术研究。两大提升路径：①带宽=位宽×速率，速率靠制程、通道数靠键合工艺（Microbump→Cu-Cu混合键合缩小pitch）；②容量靠单Die容量+堆叠层数。长期HBM4→HBM8带宽有望2TB/s→64TB/s（32倍）。HBM4起base die承担更多计算功能，走向"定制HBM"。<strong>进展</strong>：三星2026-02宣布量产HBM4（11.7Gbps，可增强至13Gbps）；海力士12-hi HBM4已送样，部署于英伟达Rubin；Rubin Ultra（2H27）预计用1024GB HBM4E。</div>
+
+    <div class="tech-grid" style="margin-top:16px">
+      <div class="tech-card">
+        <h5>HBF（High Bandwidth Flash）</h5>
+        <p>类比HBM堆叠DRAM，把多颗NAND Flash 3D堆叠制成高带宽闪存。存KV Cache可减轻GPU/HBM负担，以"更大容量+非易失"补充HBM。</p>
+        <span class="tf-chip">推进厂商：闪迪(SanDisk)、SK海力士</span>
+      </div>
+      <div class="tech-card">
+        <h5>3D堆叠DRAM / WoW（近存计算）</h5>
+        <p>逻辑芯片上堆叠多层DRAM，TSV+混合键合(Cu-Cu)连接。<strong>带宽更高</strong>（紫光国芯2层方案每Gb I/O达HBM3的386倍、带宽29倍）、<strong>功耗更低</strong>；但容量拓展性不及HBM（1颗计算芯片仅配1颗WoW 3D DRAM）。长江存储混合键合已有积累，路径与HBM4后续演进高度重合。</p>
+      </div>
+    </div>
+
+    <h4 style="margin:0 0 8px;font-size:13px">DRAM架构革命：4F²+CBA → 真正的3D DRAM</h4>
+    <p style="font-size:12px;color:var(--text2);margin-bottom:8px">背景：DRAM平面制程微缩逼近物理极限（10nm级后比特密度增长停滞），厂商转向架构创新。</p>
+    <div class="gen-row" style="grid-template-columns:repeat(4,1fr)">
+      <div class="gen-card"><div class="g-name">6F² 平面</div><div class="g-yr">当前</div><div class="g-spec">BCAT<br>制程微缩逼近极限</div></div>
+      <div class="gen-card"><div class="g-name">4F² 垂直单元</div><div class="g-yr">2027-28</div><div class="g-spec">VCT/VG垂直沟道/栅极<br>面积-30%，降EUV依赖</div></div>
+      <div class="gen-card cur"><div class="g-name">4F²+CBA ★</div><div class="g-yr">同期</div><div class="g-spec">存储阵列/CMOS分制<br>W2W混合键合，芯片数+22-38%</div></div>
+      <div class="gen-card"><div class="g-name">真3D DRAM</div><div class="g-yr">2032+</div><div class="g-spec">多层垂直堆叠<br>靠层数而非缩线宽</div></div>
+    </div>
+    <div class="seg-sum">三星4F² VCT、海力士4F² VG均在推进，预计2027-28/D0a节点进入早期生产；<strong>长鑫在4F²研发布局领先，与三大巨头几乎无差距</strong>。3D DRAM代表案例：NEO Semiconductor 3D X-DRAM用IGZO材料，层数可达数百层，可用宽松光刻节点（20nm级）降EUV依赖，预计2032年后推广。</div>
+  </div>
+</div>
+
+<!-- 主线二 -->
+<div id="sec-tech-l2" class="st collapsed" onclick="toggleSec(this)">🔀 主线二：存算解耦/分级（CXL · SCM · KV Cache卸载 · PD分离 · 存内计算）<span class="st-arrow">▾</span></div>
+<div class="sec-body collapsed" style="margin-bottom:16px">
+  <div class="card">
+    <h4 style="margin:0 0 8px;font-size:13px">CXL（Compute Express Link）——内存池化与扩展</h4>
+    <p style="font-size:12px;color:var(--text2)">以PCIe总线为物理基础的高速互联协议，通过池化实现"存算解耦"。三大子协议：CXL.io（继承PCIe I/O）、CXL.cache（设备缓存主机内存）、CXL.mem（内存直接共享寻址）。两大用法：①内存扩展（单节点扩容，门槛低先渗透）；②内存池化（多节点共享，依赖CXL 3.0+ Switch，落地稍晚）。</p>
+    <div class="model-wrap">
+      <table class="model-table">
+        <thead><tr><th>市场空间指标</th><th>2024</th><th>2030</th></tr></thead>
+        <tbody>
+          <tr><td>CXL占服务器DRAM总份额</td><td>近零</td><td class="hl">约15%</td></tr>
+          <tr><td>支持CXL的服务器占比</td><td>2026年68%</td><td class="hl">99%</td></tr>
+          <tr><td>CXL互连芯片市场（$mn）</td><td>4.3</td><td class="hl">1,703（CAGR~170%）</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="seg-sum note-fold" onclick="toggleNote(this)"><div class="note-head">CXL进展与产业链 ▾</div><div class="note-body">协议演进：CXL 2.0首度支持池化（限单交换机）；<strong>CXL 3.0引入Fabric多级交换，实现机架级全局池化</strong>，新增共享内存与动态容量分配；3.1已落地，4.0规划中。核心价值：突破CPU插槽/单条容量限制，多CPU DRAM组成"全局共享内存池"，GPU可动态借用。AI推理场景：DDR热数据与SSD冷数据间增设"温数据层"，是KV Cache卸载的更优解；SK海力士IMTE方案可提升推理效率35.7%，三星测试CXL内存性能达传统DRAM的92%。<strong>产业进展</strong>：英伟达Vera/Grace支持CXL 3.1（收购Enfabrica）；阿里云、浪潮已推出方案；三星计划2026Q4量产CXL内存。<strong>产业链核心环节</strong>：CXL内存控制器(MXC)+CXL Switch，玩家含澜起科技（全球首发CXL 3.1控制器，导入三星/海力士）、Rambus、Astera Labs、Marvell（收购Xconn首发CXL Switch芯片）、博通。</div></div>
+
+    <div class="tech-grid" style="margin-top:14px">
+      <div class="tech-card">
+        <h5>SCM（存储级内存）/ XL-FLASH / PCM</h5>
+        <p>介于DRAM与传统NAND之间，比闪存快又保留非易失特性，填补性能空档。<strong>XL-FLASH</strong>（铠侠，基于BiCS 3D NAND）第二代128Gb SLC/256Gb MLC，读取延迟&lt;5微秒，英伟达storage next有望2027年应用带动放量。<strong>PCM</strong>写入/访问快、耐久佳、功耗低，可作核心/边缘网络主内存。</p>
+        <span class="tf-chip">介质层：普冉/东芯/兆易/江波龙/新存科技</span><span class="tf-chip">配套芯片：联芸科技/聚辰股份/大普微</span>
+      </div>
+      <div class="tech-card">
+        <h5>Prefill/Decode（PD）分离部署</h5>
+        <p>Prefill（预填充，计算密集）与Decode（解码，访存密集）对硬件要求冲突，顶级框架拆分到不同物理集群——A集群高算力GPU"读长文"生成KV Cache，经高速网络传给B集群大显存/大带宽GPU"逐字吐字"。英伟达GTC 2026最新方案，为存储系统创造跨节点缓存共享与持久化优化空间。</p>
+      </div>
+    </div>
+
+    <h4 style="margin:16px 0 8px;font-size:13px">KV Cache 多级卸载与分级存储（"以存换算"）</h4>
+    <p style="font-size:12px;color:var(--text2);margin-bottom:8px">核心痛点：KV Cache占用=2×BatchSize×SeqLen×NumLayers×NumHeads×HeadDim×dtype，随上下文平方级增长，超单卡HBM上限。三/四级存储金字塔：<strong>GPU HBM（极热）→ DRAM/CPU内存（温热）→ 本地NVMe SSD（冷）→ 远端存储（最冷）</strong>，按访问频率智能换入换出。</p>
+    <div class="seg-sum note-fold" onclick="toggleNote(this)"><div class="note-head">关键技术与需求测算 ▾</div><div class="note-body"><strong>关键软件</strong>：PagedAttention（显存分页，vLLM并发+3倍）、Prefix Caching/RadixAttention（复用共享前缀）、异步预取、RDMA直通存储。<strong>工业方案</strong>：英伟达Dynamo（GPU Hot→RAM Warm→NVMe Cold三级联动）、月之暗面Mooncake（Conductor全局调度+分布式KV池）、华为UCM。<strong>需求量级</strong>：某20万GPU集群模型，HBM用量约200PB、DRAM约4EB、NAND约42EB；若全球3个此类模型，将分别占2026年全球HBM/DRAM/NAND供给的17%/35%/92%。</div></div>
+
+    <h4 style="margin:16px 0 8px;font-size:13px">存内计算/近存计算（PIM）——从底层解决内存墙</h4>
+    <p style="font-size:12px;color:var(--text2)">技术路线并行：SRAM（先进制程读写快，如Groq）、DRAM（密度高但降本受限）、Flash（非易失低功耗）、<strong>新型忆阻器</strong>（ReRAM/MRAM/PCM，工艺可扩展性好、超低功耗；MRAM非易失抗辐射适合推理，SRAM可兼顾训练推理）。前沿：ISSCC 2026清华+华为+字节联合发布28nm ReRAM混合存内计算芯片。先进制程下部署成本有望降至GPU的1/2以下，成为端侧推理补充。</p>
+  </div>
+</div>
+
+<!-- 配套技术 -->
+<div id="sec-tech-support" class="st collapsed" onclick="toggleSec(this)">🧩 配套：新形态内存模组 · 混合键合<span class="st-arrow">▾</span></div>
+<div class="sec-body collapsed" style="margin-bottom:16px">
+  <div class="card">
+    <div class="tech-grid">
+      <div class="tech-card">
+        <h5>新形态内存模组：SoCAMM / LPCAMM</h5>
+        <p><strong>SoCAMM/SoCAMM2</strong>：面向AI服务器的新模组形态，三星率先面向英伟达Vera Rubin平台量产SOCAMM2；Vera CPU需搭配1.5TB LPDDR5X（超Grace 3倍）。<strong>LPCAMM</strong>：低功耗大容量，适合终端/边缘（机器狗、人形机器人、AI PC/手机等电池设备），部分场景可替代HBM。</p>
+      </div>
+      <div class="tech-card">
+        <h5>支撑性工艺：混合键合（Hybrid Bonding）</h5>
+        <p>HBM4+、3D DRAM、HBF、CBA、WoW的<strong>共性使能工艺</strong>：Cu-Cu或SiO₂-SiO₂无凸点键合，电气性能优于Micro Bump、互连密度达1 million I/O/mm²（TSV的100倍）、堆叠高度更低。应用主战场：HBM（HBM4/5全面导入）、3D NAND、3D DRAM、Chiplet。</p>
+        <span class="tf-chip">设备：北方华创(Qomola HPD30)、ASMPT(TCB龙头)</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 存储介质分层总览 -->
+<div id="sec-tech-tiers" class="st" onclick="toggleSec(this)">🗂️ 存储介质分层总览<span class="st-arrow">▾</span></div>
+<div class="sec-body" style="margin-bottom:16px">
+  <div class="card">
+    <div class="model-wrap">
+      <table class="model-table">
+        <thead><tr><th>层级</th><th>介质</th><th>角色</th><th>AI场景</th></tr></thead>
+        <tbody>
+          <tr><td class="hl">L1 极热</td><td>HBM</td><td>GPU侧高带宽访问</td><td>权重 + 极热KV Cache</td></tr>
+          <tr><td>L2 温热</td><td>DRAM / CXL内存池</td><td>主内存 + 池化扩展</td><td>温KV、Agent短期记忆</td></tr>
+          <tr><td>L2.5 新层级</td><td>SCM / XL-FLASH / PCM</td><td>低时延非易失中间层</td><td>长上下文、RAG、向量检索</td></tr>
+          <tr><td>L3 冷</td><td>TLC/QLC eSSD</td><td>大容量成本敏感</td><td>冷KV、检索库、数据集</td></tr>
+          <tr><td>L4 最冷</td><td>HDD / 远端存储</td><td>归档 / 知识库</td><td>Datalake</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="logic-box" style="margin-top:12px;margin-bottom:0">
+      <strong>结语：</strong>AI存储技术趋势的本质是"分层协同 + 存算解耦"——不再追求单一介质通吃，而是让HBM/DRAM/CXL/SCM/NAND各司其职，
+      并通过CXL、KV Cache卸载、PD分离等把存储从"被动配套"升级为"推理工作流的主动参与者"。
+    </div>
+  </div>
+</div>
+
 <!-- ════════ A股映射 · 投资启示 · 催化剂 ════════ -->
 <div class="part part-co" style="background:linear-gradient(90deg,#334155,#475569)"><span class="pn">落地</span> A 股映射 · 投资启示 · 催化剂</div>
 
@@ -691,12 +982,12 @@ code{font-size:10px;background:var(--tag-bg);color:var(--tag);padding:1px 5px;bo
 <div id="sec-list" class="st" onclick="toggleSec(this)">📋 标的汇总与 A 股映射<span class="st-arrow">▾</span></div>
 <div class="sec-body" style="margin-bottom:16px">
   <div class="card">
-    <div class="note-box">海外原厂数据来自全球存储模型；A 股映射按<strong>两条独立逻辑链</strong>组织——① HBM 链：HBM 放量所需的核心设备/材料弹性；② 存储大周期链：commodity DRAM/NAND 涨价潮下利基存储与模组厂的传导弹性。两条链驱动因素不同（HBM 链跟良率/产能爬坡，大周期链跟合约价）。<strong>逻辑链一</strong>明细来源：<span class="src">优先级设备材料判断第一层T_20260625212250.xlsx</span>（按"题材纯度"★评级映射关注度：★★★★及以上=🟢核心，★★★=🟡观察，★★及以下=⚪边缘）；<strong>逻辑链二</strong>具体代码/关注度待用户确认补充（<span class="todo">TODO: A 股名单</span>）。</div>
+    <div class="note-box note-fold" onclick="toggleNote(this)"><div class="note-head">数据来源与口径 ▾</div><div class="note-body">A股映射按<strong>两条逻辑链</strong>组织：①HBM链（设备/材料弹性，来源 <span class="src">优先级设备材料判断T_20260625212250.xlsx</span>，按★评级映射关注度）；②存储大周期链（利基/模组传导弹性，<span class="todo">TODO: 具体代码待补</span>）。</div></div>
     <table class="ctable">
       <thead><tr><th style="width:90px">代码</th><th style="width:130px">名称</th><th>产业链位置</th><th>对标 / 备注</th><th style="width:80px">关注度</th></tr></thead>
       <tbody>
         <tr class="grp"><td colspan="5">三大原厂（海外，两条逻辑链的源头）</td></tr>
-        <tr><td>000660.KS</td><td><a href="sk-hynix.html" target="_blank">SK 海力士</a></td><td>DRAM/HBM 龙头，HBM3E 供应英伟达</td><td>DRAM 份额 38.2%（第一） · <a href="sk-hynix.html" target="_blank">公司页</a></td><td><span class="dot d-na">海外</span></td></tr>
+        <tr><td>000660.KS</td><td><a href="SK海力士_公司看板.html" target="_blank">SK 海力士</a></td><td>DRAM/HBM 龙头，HBM3E 供应英伟达</td><td>DRAM 份额 38.2%（第一） · <a href="SK海力士_公司看板.html" target="_blank">公司页</a></td><td><span class="dot d-na">海外</span></td></tr>
         <tr><td>005930.KS</td><td>三星电子</td><td>DRAM/HBM/NAND 全覆盖，产能最大</td><td>份额 33.5%，HBM4 认证领先</td><td><span class="dot d-na">海外</span></td></tr>
         <tr><td>MU</td><td>美光 Micron</td><td>DRAM/HBM/NAND，美系唯一</td><td>份额 22.0%，FY26Q2 毛利率 74.4%</td><td><span class="dot d-na">海外</span></td></tr>
         <tr class="grp"><td colspan="5">🔗 逻辑链一·HBM 相关 · 第一层：HBM 制造核心设备</td></tr>
@@ -722,7 +1013,7 @@ code{font-size:10px;background:var(--tag-bg);color:var(--tag);padding:1px 5px;bo
         <tr><td>688525</td><td>佰维存储</td><td>存储模组 / 封测</td><td>涨价弹性</td><td><span class="dot d-na">待定</span></td></tr>
       </tbody>
     </table>
-    <div class="seg-sum">两条逻辑链的核心区别：<strong>逻辑链一（HBM）</strong>赚的是"HBM 渗透率提升+先进封装良率爬坡"的钱，跟随海力士/三星/美光的 HBM bit 出货与资本开支节奏，弹性大但收入体量小（HBM 仅占三大厂总营收 10%-20%，见"当前判断速览"）；<strong>逻辑链二（存储大周期）</strong>赚的是"commodity DRAM/NAND 合约价上涨"的钱，跟随 DDR5/DDR4/NAND 价格曲线，体量更大、覆盖三大厂绝大部分收入，1Q26 后是业绩兑现的主战场。A 股标的为产业链常见方向占位，具体代码/关注度（🟢核心/🟡观察）与最终名单需结合海外映射、业绩相关性与估值水位由用户确认。</div>
+    <div class="seg-sum note-fold" onclick="toggleNote(this)"><div class="note-head">两条逻辑链的收益结构区别 ▾</div><div class="note-body"><strong>逻辑链一（HBM）</strong>赚渗透率+封装良率爬坡的钱，跟海力士/三星/美光HBM bit出货走，弹性大但仅占营收10%-20%；<strong>逻辑链二（大周期）</strong>赚commodity涨价的钱，跟DDR5/DDR4/NAND价格曲线走，覆盖绝大部分营收，1Q26后是兑现主战场。具体代码/关注度需结合估值由用户确认。</div></div>
   </div>
 </div>
 
@@ -730,7 +1021,7 @@ code{font-size:10px;background:var(--tag-bg);color:var(--tag);padding:1px 5px;bo
 <div id="sec-calc" class="st" onclick="toggleSec(this)">📐 利润速算器（Bits × ASP，可调整假设）<span class="st-arrow">▾</span></div>
 <div class="sec-body" style="margin-bottom:16px">
   <div class="card">
-    <div class="note-box">核心公式：<strong>营收 = 出货量(Bits) × 单价(ASP)；利润 = 出货量 × (ASP − 单位成本)</strong>。三个输入框默认填的是 <strong>2025（美光为FY25）实际年化值</strong>，单位成本是用该年度披露的利润率反推出的隐含值（<code>成本/bit = ASP×(1−利润率%)</code>），可直接改 Bits/ASP/成本任意一项做敏感性测算。<strong style="color:var(--warn)">注意口径差异</strong>：美光单列 COGS，是三表里唯一的真毛利率；海力士/三星只给营业利润率（已扣SG&A/研发），反推出的"成本"是更宽口径的隐含值，三家利润率不能直接横比。隐含成本本身也不是恒定的（如海力士 DRAM 隐含成本 2025→2026E 模型里其实从 $0.226 涨到 $0.322/Gb），改 ASP 测算未来时建议同步检查成本假设是否还合理。</div>
+    <div class="note-box note-fold" onclick="toggleNote(this)"><div class="note-head">核心公式与口径提示 ▾</div><div class="note-body">核心公式：<strong>营收=出货量(Bits)×ASP；利润=出货量×(ASP−单位成本)</strong>。输入框默认2025（美光FY25）实际年化值，单位成本由利润率反推（<code>成本/bit=ASP×(1−利润率%)</code>），可改任意一项做敏感性测算。<strong style="color:var(--warn)">口径差异</strong>：美光单列COGS是唯一真毛利率，海力士/三星只给营业利润率，三家不能直接横比；隐含成本也非恒定（如海力士DRAM 2025→2026E从$0.226涨到$0.322/Gb），改ASP测算时建议同步检查成本假设。</div></div>
     <div class="calc-grid">
       <div class="calc-col" data-co="skh">
         <div class="calc-h">海力士 SK Hynix</div>
@@ -797,7 +1088,7 @@ code{font-size:10px;background:var(--tag-bg);color:var(--tag);padding:1px 5px;bo
   </div>
 </div>
 
-<div style="font-size:11px;color:var(--text2);text-align:center;padding:18px 0 4px">存储 / HBM 研究看板 · 结构：HBM → DRAM → NAND → 三大原厂 · 数据源：全球存储模型（2026-06-24）· 标 <span class="todo">TODO</span> 项为待补数据</div>
+<div style="font-size:11px;color:var(--text2);text-align:center;padding:18px 0 4px">存储 / HBM 研究看板 · 结构：HBM → DRAM → NAND（五强：三大原厂 + Sandisk + 铠侠）→ AI存储技术路线 · 数据源：全球存储模型（2026-08-04 三星/美光升级至2Q26模型，橙色数字可悬停查看原1Q26版预测；新增技术路线部分）· 标 <span class="todo">TODO</span> 项为待补数据</div>
 
 </div>
 
@@ -807,6 +1098,24 @@ function toggleSec(el){
   var b=el.nextElementSibling;
   if(b&&b.classList.contains('sec-body')) b.classList.toggle('collapsed');
 }
+// 2026-08-04：2Q26 模型上修浮窗——鼠标悬停 .rev-tip 显示原 1Q26 版本预测值与调整幅度
+function showTip(el){
+  let tip=document.getElementById('gtip');
+  if(!tip){tip=document.createElement('div');tip.id='gtip';tip.className='gtip';document.body.appendChild(tip);}
+  tip.innerHTML=el.getAttribute('data-tip');
+  tip.style.display='block';
+  const r=el.getBoundingClientRect();
+  const tr=tip.getBoundingClientRect();
+  let left=r.left+r.width/2-tr.width/2;
+  left=Math.max(6,Math.min(left,window.innerWidth-tr.width-6));
+  let top=r.top-tr.height-8;
+  if(top<4) top=r.bottom+8;
+  tip.style.left=left+'px';
+  tip.style.top=top+'px';
+}
+function hideTip(){ const tip=document.getElementById('gtip'); if(tip) tip.style.display='none'; }
+// 2026-08-04：分析文字块默认折叠，点标题展开
+function toggleNote(el){ el.classList.toggle('open'); }
 function switchTab(btn,id){
   var nav=btn.parentNode, wrap=nav.parentNode;
   nav.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
@@ -846,22 +1155,74 @@ const OPTS=(yt)=>({responsive:true,maintainAspectRatio:false,
   plugins:{legend:{position:'top',labels:{font:{size:10},padding:8}},tooltip:{mode:'index',intersect:false}},
   scales:{x:{grid:{color:GRID},ticks:{font:{size:9}}},y:{grid:{color:GRID},ticks:{font:{size:9}},title:yt?{display:true,text:yt,font:{size:9},color:'#94a3b8'}:undefined}}});
 
-// 三大厂 NAND ASP 对比（按季）
+// NAND 五强：自然季标签 + 各口径数据（2026-08-04 新增 Sandisk / 铠侠）
+const NAND5_Q = ['1Q23','2Q23','3Q23','4Q23','1Q24','2Q24','3Q24','4Q24','1Q25','2Q25','3Q25','4Q25','1Q26','2Q26E','3Q26E','4Q26E','1Q27E','2Q27E','3Q27E','4Q27E'];
+const NAND5_BITS_SKH=[28600,42200,44800,43400,43300,42220,35920,34500,28500,48600,46600,51100,44400,50616,53653,55799,53009,57250,61830,64303];
+const NAND5_BITS_SAM=[65200,68000,67300,90840,88200,83800,78200,75800,68400,86800,95400,85400,92400,93200,99724,95735,96692,102494,111718,118421];
+const NAND5_BITS_MU=[14512,20027,28358,24105,23333,25620,27413,26591,26857,33920,32462,34669,35484,37957,39855,41848,41848,42685,43538,47892];
+const NAND5_BITS_SNDK=[null,null,25111,24609,20918,19453,22177,24173,23689,24874,28605,29463,24454,28147,32369,33987,33308,34973,38470,41548];
+const NAND5_BITS_KX=[29224,33608,29239,29239,31578,35683,39251,38466,34619,34619,47775,50163,45147,46502,52758,56451,55945,58438,65066,70161];
+const NAND5_ASP_SKH=[0.0466,0.0413,0.041,0.0578,0.0751,0.0875,0.1003,0.0962,0.0767,0.0696,0.0773,0.1013,0.1729,0.2766,0.3319,0.3684,0.3832,0.3908,0.3674,0.3343];
+const NAND5_ASP_SAM=[0.0441,0.0411,0.0424,0.0458,0.0601,0.0731,0.0783,0.0735,0.0624,0.0595,0.0625,0.0775,0.1462,0.2437,0.2851,0.3108,0.3263,0.3328,0.3162,0.294];
+const NAND5_ASP_MU=[0.061,0.0506,0.0425,0.051,0.0672,0.0806,0.0863,0.0843,0.0691,0.0635,0.0694,0.0791,0.1408,0.262,0.3143,0.3458,0.3458,0.3458,0.3216,0.3312];
+const NAND5_ASP_SNDK=[null,null,0.0571,0.0628,0.0741,0.0844,0.0794,0.0714,0.0664,0.0697,0.0732,0.0989,0.2382,0.3097,0.3562,0.3918,0.4114,0.4196,0.4196,0.428];
+const NAND5_ASP_KX=[null,0.0448,0.0462,0.0499,0.0593,0.0678,0.0711,0.0691,0.0553,0.0591,0.0572,0.0634,0.134,0.2285,0.2857,0.3285,0.3449,0.3553,0.3375,0.3139];
+const NAND5_REV_SKH=[1333,1744,1836,2507,3253,3696,3603,3319,2187,3384,3604,5177,7676,14000,17808,20558,20311,22375,22715,21497];
+const NAND5_REV_SAM=[2876,2797,2855,4162,5303,6128,6121,5574,4270,5166,5963,6618,13507,22710,28431,29750,31550,34112,35323,34822];
+const NAND5_REV_MU=[885,1013,1205,1230,1567,2065,2365,2241,1855,2155,2252,2743,4997,9943,12528,14470,14470,14760,14001,15863];
+const NAND5_REV_SNDK=[null,null,1533,1665,1705,1760,1883,1876,1695,1901,2308,3025,5950,8841,11653,13440,13826,14799,16266,17907];
+const NAND5_REV_KX=[1841,1849,1676,1761,2196,2764,3143,3020,2254,2364,3050,3553,6470,11044,15429,18903,19656,21121,22319,22382];
+const NAND5_COLORS={海力士:'#2563eb',三星:'#16a34a',美光:'#d97706',Sandisk:'#7c3aed',铠侠:'#dc2626'};
+function nand5Datasets(dSKH,dSAM,dMU,dSNDK,dKX){
+  return [
+    {label:'海力士',data:dSKH,borderColor:NAND5_COLORS.海力士,tension:.3,borderWidth:2},
+    {label:'三星',data:dSAM,borderColor:NAND5_COLORS.三星,tension:.3,borderWidth:2},
+    {label:'美光',data:dMU,borderColor:NAND5_COLORS.美光,tension:.3,borderWidth:2},
+    {label:'Sandisk（新增）',data:dSNDK,borderColor:NAND5_COLORS.Sandisk,tension:.3,borderWidth:2,borderDash:[4,2]},
+    {label:'铠侠（新增）',data:dKX,borderColor:NAND5_COLORS.铠侠,tension:.3,borderWidth:2,borderDash:[4,2]}];
+}
+
+// NAND 出货量对比（五家）
+new Chart(document.getElementById('c-nand-bits5'),{type:'line',
+  data:{labels:NAND5_Q,datasets:nand5Datasets(NAND5_BITS_SKH,NAND5_BITS_SAM,NAND5_BITS_MU,NAND5_BITS_SNDK,NAND5_BITS_KX)},
+  options:OPTS('mn GB')});
+
+// NAND 营收对比（五家，模型测算值）
+new Chart(document.getElementById('c-nand-rev5'),{type:'line',
+  data:{labels:NAND5_Q,datasets:nand5Datasets(NAND5_REV_SKH,NAND5_REV_SAM,NAND5_REV_MU,NAND5_REV_SNDK,NAND5_REV_KX)},
+  options:OPTS('$mn')});
+
+// NAND ASP 对比（五家，按季）
 new Chart(document.getElementById('c-nand-asp-co'),{type:'line',
-  data:{labels:['1Q23','2Q23','3Q23','4Q23','1Q24','2Q24','3Q24','4Q24','1Q25','2Q25','3Q25','4Q25','1Q26','2Q26E','3Q26E','4Q26E','1Q27E','2Q27E','3Q27E','4Q27E'],
-    datasets:[
-    {label:'海力士',data:[0.047,0.041,0.041,0.058,0.075,0.088,0.100,0.096,0.077,0.070,0.077,0.101,0.173,0.277,0.332,0.368,0.383,0.391,0.367,0.334],borderColor:'#2563eb',tension:.3,borderWidth:2},
-    {label:'三星',data:[0.044,0.041,0.042,0.046,0.060,0.073,0.078,0.074,0.062,0.060,0.063,0.077,0.146,0.241,0.292,0.327,0.343,0.350,0.333,0.309],borderColor:'#16a34a',tension:.3,borderWidth:2},
-    {label:'美光',data:[0.061,0.051,0.042,0.051,0.067,0.081,0.086,0.084,0.069,0.064,0.069,0.079,0.141,0.246,0.296,0.325,0.325,0.325,0.303,0.312],borderColor:'#d97706',tension:.3,borderWidth:2}]},
+  data:{labels:NAND5_Q,datasets:nand5Datasets(NAND5_ASP_SKH,NAND5_ASP_SAM,NAND5_ASP_MU,NAND5_ASP_SNDK,NAND5_ASP_KX)},
   options:OPTS('$/GB')});
+
+// Sandisk / 铠侠 公司页：营业利润率（第一部分新增两家 tab 用）
+const SNDK_OPM_PCT=[null,null,-32.3,-11.2,6.9,14.5,18.8,12.4,0.1,5.3,10.6,37.5,70.9,78.7,80.1,80.3,79.6,78.5,75.4,73.1];
+const KX_OPM_PCT=[-69.9,-52.1,-41.7,-24.8,13.6,29.4,34.5,27.3,10.7,13.1,19.2,26.3,59.5,71.9,79.4,81.9,82.0,83.2,82.5,81.6];
+function dualAxisChart(elId,barLabel,barData,barColor,lineLabel,lineData,lineColor,barUnit,lineUnit){
+  new Chart(document.getElementById(elId),{
+    data:{labels:NAND5_Q,datasets:[
+      {type:'bar',label:barLabel,data:barData,backgroundColor:barColor,yAxisID:'y'},
+      {type:'line',label:lineLabel,data:lineData,borderColor:lineColor,yAxisID:'y1',tension:.3,borderWidth:2,pointRadius:2}]},
+    options:{responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{position:'top',labels:{font:{size:10},padding:8}},tooltip:{mode:'index',intersect:false}},
+      scales:{x:{grid:{color:GRID},ticks:{font:{size:8}}},
+        y:{position:'left',grid:{color:GRID},ticks:{font:{size:9}},title:{display:true,text:barUnit,font:{size:9},color:'#94a3b8'}},
+        y1:{position:'right',grid:{display:false},ticks:{font:{size:9}},title:{display:true,text:lineUnit,font:{size:9},color:'#94a3b8'}}}}});
+}
+dualAxisChart('c-sndk-rev-q','营收（$mn）',NAND5_REV_SNDK,'#7c3aed','营业利润率（%）',SNDK_OPM_PCT,'#dc2626','$mn','营业利润率 %');
+dualAxisChart('c-sndk-bitsasp-q','出货量（mn GB）',NAND5_BITS_SNDK,'#0891b2','ASP（$/GB）',NAND5_ASP_SNDK,'#d97706','mn GB','$/GB');
+dualAxisChart('c-kx-rev-q','营收（$mn）',NAND5_REV_KX,'#7c3aed','营业利润率（%）',KX_OPM_PCT,'#dc2626','$mn','营业利润率 %');
+dualAxisChart('c-kx-bitsasp-q','出货量（mn GB）',NAND5_BITS_KX,'#0891b2','ASP（$/GB）',NAND5_ASP_KX,'#d97706','mn GB','$/GB');
 
 // 三家传统 DRAM ASP 对比（按季）
 new Chart(document.getElementById('c-conv-asp-co'),{type:'line',
   data:{labels:['1Q23','2Q23','3Q23','4Q23','1Q24','2Q24','3Q24','4Q24','1Q25','2Q25','3Q25','4Q25','1Q26','2Q26E','3Q26E','4Q26E','1Q27E','2Q27E','3Q27E','4Q27E'],
     datasets:[
     {label:'海力士',data:[0.187,0.198,0.221,0.259,0.310,0.344,0.358,0.351,0.325,0.339,0.375,0.531,1.073,1.565,1.846,2.003,2.093,2.135,2.155,2.064],borderColor:'#2563eb',tension:.3,borderWidth:2},
-    {label:'三星',data:[0.210,0.192,0.200,0.226,0.270,0.315,0.319,0.337,0.325,0.331,0.380,0.557,1.139,1.686,1.954,2.099,2.173,2.219,2.241,2.133],borderColor:'#16a34a',tension:.3,borderWidth:2},
-    {label:'美光（1Q23-1Q24 为总 DRAM ASP，因 HBM=0 时等同传统 DRAM；2Q26E 起无季度数据，留空）',data:[0.289,0.259,0.236,0.242,0.284,0.335,0.370,0.382,0.377,0.345,0.388,0.471,0.850,null,null,null,null,null,null,null],borderColor:'#d97706',tension:.3,borderWidth:2},
+    {label:'三星',data:[0.210,0.192,0.200,0.226,0.270,0.315,0.319,0.337,0.325,0.331,0.380,0.557,1.139,1.659,1.913,2.031,2.105,2.155,2.175,2.055],borderColor:'#16a34a',tension:.3,borderWidth:2},
+    {label:'美光（1Q23-1Q24 为总 DRAM ASP，因 HBM=0 时等同传统 DRAM；3Q26E 起无季度数据，留空）',data:[0.289,0.259,0.236,0.242,0.284,0.335,0.370,0.382,0.377,0.345,0.388,0.471,0.850,1.480,null,null,null,null,null,null],borderColor:'#d97706',tension:.3,borderWidth:2},
     {label:'海力士 Cost/Gb（1Q26，TrendForce）',data:Array(20).fill(0.21),borderColor:'#2563eb',borderDash:[6,4],borderWidth:1.5,pointRadius:0,tension:0},
     {label:'三星 Cost/Gb（1Q26，TrendForce）',data:Array(20).fill(0.21),borderColor:'#16a34a',borderDash:[6,4],borderWidth:1.5,pointRadius:0,tension:0},
     {label:'美光 Cost/Gb（1Q26，TrendForce）',data:Array(20).fill(0.20),borderColor:'#d97706',borderDash:[6,4],borderWidth:1.5,pointRadius:0,tension:0},
@@ -873,16 +1234,16 @@ new Chart(document.getElementById('c-hbm-asp-co'),{type:'line',
   data:{labels:['1Q23','2Q23','3Q23','4Q23','1Q24','2Q24','3Q24','4Q24','1Q25','2Q25','3Q25','4Q25','1Q26','2Q26E','3Q26E','4Q26E','1Q27E','2Q27E','3Q27E','4Q27E'],
     datasets:[
     {label:'海力士',data:[1.413,1.425,1.438,1.438,1.450,1.462,1.488,1.518,1.650,1.731,1.675,1.575,1.266,1.375,1.500,1.688,2.125,2.163,2.188,2.225],borderColor:'#2563eb',tension:.3,borderWidth:2},
-    {label:'三星',data:[1.375,1.387,1.425,1.413,1.413,1.413,1.413,1.425,1.454,1.395,1.188,1.250,1.238,1.350,1.538,1.700,2.150,2.175,2.200,2.225],borderColor:'#16a34a',tension:.3,borderWidth:2},
-    {label:'美光（2Q26E 起无季度数据，留空）',data:[null,null,null,null,null,1.451,1.555,1.630,1.675,1.701,1.790,1.856,2.059,null,null,null,null,null,null,null],borderColor:'#d97706',tension:.3,borderWidth:2}]},
+    {label:'三星',data:[1.375,1.387,1.425,1.413,1.413,1.413,1.413,1.425,1.454,1.395,1.188,1.250,1.238,1.469,1.538,1.700,2.750,2.850,2.938,3.000],borderColor:'#16a34a',tension:.3,borderWidth:2},
+    {label:'美光（3Q26E 起无季度数据，留空）',data:[null,null,null,null,null,1.451,1.555,1.630,1.675,1.701,1.790,1.856,2.059,2.006,null,null,null,null,null,null],borderColor:'#d97706',tension:.3,borderWidth:2}]},
   options:OPTS('$/Gb')});
 
 // HBM 占 DRAM 营收比例（三家对比）
 new Chart(document.getElementById('c-hbmshare'),{type:'line',
   data:{labels:['2023','2024','2025','2026E','2027E'],datasets:[
     {label:'海力士',data:[13.2,28.7,39.0,13.2,16.7],borderColor:'#2563eb',tension:.3,borderWidth:2},
-    {label:'三星',data:[7.7,17.9,11.3,7.7,12.7],borderColor:'#16a34a',tension:.3,borderWidth:2},
-    {label:'美光',data:[0,2.3,18.9,13.5,12.5],borderColor:'#d97706',tension:.3,borderWidth:2}]},
+    {label:'三星',data:[7.7,17.9,11.3,7.9,16.1],borderColor:'#16a34a',tension:.3,borderWidth:2},
+    {label:'美光',data:[0,2.3,18.9,12.0,11.4],borderColor:'#d97706',tension:.3,borderWidth:2}]},
   options:OPTS('%')});
 
 // 海力士季度营收构成（堆叠）
@@ -926,9 +1287,9 @@ new Chart(document.getElementById('c-skh-bits-q'),{type:'line',
 new Chart(document.getElementById('c-mu-rev-q'),{type:'bar',
   data:{labels:['1Q23','2Q23','3Q23','4Q23','1Q24','2Q24','3Q24','4Q24','1Q25','2Q25','3Q25','4Q25','1Q26','2Q26E','3Q26E','4Q26E','1Q27E','2Q27E','3Q27E','4Q27E'],
     datasets:[
-      {label:'传统 DRAM',data:[2722,2672,2755,3427,4158,4592,5026,5700,5023,5471,6984,8412,15968,24802,32000,35567,35869,37821,37624,37430],backgroundColor:'#2563eb',stack:'s'},
-      {label:'HBM',data:[0,0,0,0,0,100,300,700,1100,1600,2000,2400,2800,3500,4000,4500,5000,5500,6000,6500],backgroundColor:'#d97706',stack:'s'},
-      {label:'NAND',data:[885,1013,1205,1230,1567,2065,2365,2241,1855,2155,2252,2743,4997,9183,12672,15333,14567,14858,14094,15969],backgroundColor:'#16a34a',stack:'s'},
+      {label:'传统 DRAM',data:[2722,2672,2755,3427,4158,4592,5026,5700,5023,5471,6984,8412,15968,28528,35098,39016,40257,42472,42308,42146],backgroundColor:'#2563eb',stack:'s'},
+      {label:'HBM',data:[0,0,0,0,0,100,300,700,1100,1600,2000,2400,2800,2800,4000,4500,5000,5500,6000,6500],backgroundColor:'#d97706',stack:'s'},
+      {label:'NAND',data:[885,1013,1205,1230,1567,2065,2365,2241,1855,2155,2252,2743,4997,9943,12528,14470,14470,14760,14001,15863],backgroundColor:'#16a34a',stack:'s'},
       {label:'NOR+其他',data:[86,67,50,68,100,54,59,68,75,75,79,88,95,95,95,95,95,95,95,95],backgroundColor:'#94a3b8',stack:'s'}]},
   options:{...OPTS('USD mn'),scales:{x:{stacked:true,grid:{color:GRID},ticks:{font:{size:8}}},y:{stacked:true,grid:{color:GRID},ticks:{font:{size:9}}}}}});
 
@@ -936,14 +1297,14 @@ new Chart(document.getElementById('c-mu-rev-q'),{type:'bar',
 new Chart(document.getElementById('c-mu-asp-q'),{type:'line',
   data:{labels:['1Q23','2Q23','3Q23','4Q23','1Q24','2Q24','3Q24','4Q24','1Q25','2Q25','3Q25','4Q25','1Q26','2Q26E','3Q26E','4Q26E','1Q27E','2Q27E','3Q27E','4Q27E'],
     datasets:[
-      {label:'传统 DRAM ASP',data:[null,null,null,null,null,0.335,0.370,0.382,0.377,0.345,0.388,0.471,0.850,null,null,null,null,null,null,null],borderColor:'#2563eb',tension:.3,borderWidth:2},
-      {label:'HBM ASP',data:[null,null,null,null,null,1.451,1.555,1.630,1.675,1.701,1.790,1.856,2.059,null,null,null,null,null,null,null],borderColor:'#d97706',tension:.3,borderWidth:2}]},
+      {label:'传统 DRAM ASP',data:[null,null,null,null,null,0.335,0.370,0.382,0.377,0.345,0.388,0.471,0.850,1.480,null,null,null,null,null,null],borderColor:'#2563eb',tension:.3,borderWidth:2},
+      {label:'HBM ASP',data:[null,null,null,null,null,1.451,1.555,1.630,1.675,1.701,1.790,1.856,2.059,2.006,null,null,null,null,null,null],borderColor:'#d97706',tension:.3,borderWidth:2}]},
   options:{...OPTS('$/Gb'),scales:{x:{grid:{color:GRID},ticks:{font:{size:8}}},y:{grid:{color:GRID},ticks:{font:{size:9}}}}}});
 
 // 美光 NAND ASP 走势
 new Chart(document.getElementById('c-mu-nandasp-q'),{type:'line',
   data:{labels:['1Q23','2Q23','3Q23','4Q23','1Q24','2Q24','3Q24','4Q24','1Q25','2Q25','3Q25','4Q25','1Q26','2Q26E','3Q26E','4Q26E','1Q27E','2Q27E','3Q27E','4Q27E'],
-    datasets:[{label:'NAND ASP（$/GB）',data:[0.061,0.051,0.042,0.051,0.067,0.081,0.086,0.084,0.069,0.064,0.069,0.079,0.141,0.246,0.296,0.325,0.325,0.325,0.303,0.312],
+    datasets:[{label:'NAND ASP（$/GB）',data:[0.061,0.051,0.042,0.051,0.067,0.081,0.086,0.084,0.069,0.064,0.069,0.079,0.141,0.262,0.314,0.346,0.346,0.346,0.322,0.331],
       borderColor:'#16a34a',backgroundColor:'rgba(22,163,74,.08)',tension:.3,fill:true,borderWidth:2}]},
   options:{...OPTS('$/GB'),plugins:{legend:{display:false},tooltip:{mode:'index'}},scales:{x:{grid:{color:GRID},ticks:{font:{size:8}}},y:{grid:{color:GRID},ticks:{font:{size:9}}}}}});
 
@@ -951,8 +1312,8 @@ new Chart(document.getElementById('c-mu-nandasp-q'),{type:'line',
 new Chart(document.getElementById('c-mu-bits-q'),{type:'line',
   data:{labels:['1Q23','2Q23','3Q23','4Q23','1Q24','2Q24','3Q24','4Q24','1Q25','2Q25','3Q25','4Q25','1Q26','2Q26E','3Q26E','4Q26E','1Q27E','2Q27E','3Q27E','4Q27E'],
     datasets:[
-      {label:'传统 DRAM（bn Gb）',data:[null,null,null,null,null,13.72,13.59,14.91,13.32,15.86,17.98,17.86,18.79,null,null,null,null,null,null,null],borderColor:'#2563eb',tension:.3,borderWidth:2,yAxisID:'y'},
-      {label:'HBM（bn Gb，右轴）',data:[null,null,null,null,null,0.07,0.19,0.43,0.66,0.94,1.12,1.29,1.36,null,null,null,null,null,null,null],borderColor:'#d97706',tension:.3,borderWidth:2,yAxisID:'y1'}]},
+      {label:'传统 DRAM（bn Gb）',data:[null,null,null,null,null,13.72,13.59,14.91,13.32,15.86,17.98,17.86,18.79,19.28,null,null,null,null,null,null],borderColor:'#2563eb',tension:.3,borderWidth:2,yAxisID:'y'},
+      {label:'HBM（bn Gb，右轴）',data:[null,null,null,null,null,0.07,0.19,0.43,0.66,0.94,1.12,1.29,1.36,1.40,null,null,null,null,null,null],borderColor:'#d97706',tension:.3,borderWidth:2,yAxisID:'y1'}]},
   options:{responsive:true,maintainAspectRatio:false,
     plugins:{legend:{position:'top',labels:{font:{size:10},padding:8}},tooltip:{mode:'index',intersect:false}},
     scales:{x:{grid:{color:GRID},ticks:{font:{size:8}}},
@@ -963,23 +1324,23 @@ new Chart(document.getElementById('c-mu-bits-q'),{type:'line',
 new Chart(document.getElementById('c-sam-rev-q'),{type:'bar',
   data:{labels:['1Q23','2Q23','3Q23','4Q23','1Q24','2Q24','3Q24','4Q24','1Q25','2Q25','3Q25','4Q25','1Q26','2Q26E','3Q26E','4Q26E','1Q27E','2Q27E','3Q27E','4Q27E'],
     datasets:[
-      {label:'传统 DRAM',data:[3816,3973,4543,6924,7016,8515,8468,7456,7920,8873,11490,17005,35542,54644,63083,66684,67816,72854,80061,80263],backgroundColor:'#2563eb',stack:'s'},
-      {label:'HBM',data:[201,299,460,643,694,1042,1784,3334,910,1130,1778,1974,1910,3119,5337,7990,8726,9747,11542,13832],backgroundColor:'#d97706',stack:'s'},
-      {label:'NAND',data:[2876,2797,2856,4162,5303,6128,6121,5574,4270,5166,5964,6618,13507,22510,27510,30195,32021,34622,35851,35342],backgroundColor:'#16a34a',stack:'s'}]},
+      {label:'传统 DRAM',data:[3816,3973,4543,6924,7016,8515,8468,7456,7920,8873,11490,17005,35542,56090,65784,69564,70872,76291,84773,85006],backgroundColor:'#2563eb',stack:'s'},
+      {label:'HBM',data:[201,299,460,643,694,1042,1784,3334,910,1130,1778,1974,1910,3517,5565,8335,11537,14532,16147,18660],backgroundColor:'#d97706',stack:'s'},
+      {label:'NAND',data:[2876,2797,2856,4162,5303,6128,6121,5574,4270,5166,5964,6618,13507,22710,28431,29750,31550,34112,35323,34822],backgroundColor:'#16a34a',stack:'s'}]},
   options:{...OPTS('USD mn'),scales:{x:{stacked:true,grid:{color:GRID},ticks:{font:{size:8}}},y:{stacked:true,grid:{color:GRID},ticks:{font:{size:9}}}}}});
 
 // 三星 DRAM ASP：传统 vs HBM
 new Chart(document.getElementById('c-sam-asp-q'),{type:'line',
   data:{labels:['1Q23','2Q23','3Q23','4Q23','1Q24','2Q24','3Q24','4Q24','1Q25','2Q25','3Q25','4Q25','1Q26','2Q26E','3Q26E','4Q26E','1Q27E','2Q27E','3Q27E','4Q27E'],
     datasets:[
-      {label:'传统 DRAM ASP',data:[0.210,0.192,0.200,0.226,0.270,0.315,0.319,0.337,0.325,0.331,0.380,0.557,1.139,1.686,1.954,2.099,2.173,2.219,2.241,2.133],borderColor:'#2563eb',tension:.3,borderWidth:2},
-      {label:'HBM ASP',data:[1.375,1.387,1.425,1.413,1.413,1.413,1.413,1.425,1.454,1.395,1.188,1.250,1.238,1.350,1.538,1.700,2.150,2.175,2.200,2.225],borderColor:'#d97706',tension:.3,borderWidth:2}]},
+      {label:'传统 DRAM ASP',data:[0.210,0.192,0.200,0.226,0.270,0.315,0.319,0.337,0.325,0.331,0.380,0.557,1.139,1.659,1.913,2.031,2.105,2.155,2.175,2.055],borderColor:'#2563eb',tension:.3,borderWidth:2},
+      {label:'HBM ASP',data:[1.375,1.387,1.425,1.413,1.413,1.413,1.413,1.425,1.454,1.395,1.188,1.250,1.238,1.469,1.538,1.700,2.750,2.850,2.938,3.000],borderColor:'#d97706',tension:.3,borderWidth:2}]},
   options:{...OPTS('$/Gb'),scales:{x:{grid:{color:GRID},ticks:{font:{size:8}}},y:{grid:{color:GRID},ticks:{font:{size:9}}}}}});
 
 // 三星 NAND ASP 走势
 new Chart(document.getElementById('c-sam-nandasp-q'),{type:'line',
   data:{labels:['1Q23','2Q23','3Q23','4Q23','1Q24','2Q24','3Q24','4Q24','1Q25','2Q25','3Q25','4Q25','1Q26','2Q26E','3Q26E','4Q26E','1Q27E','2Q27E','3Q27E','4Q27E'],
-    datasets:[{label:'NAND ASP（$/GB）',data:[0.044,0.041,0.042,0.046,0.060,0.073,0.078,0.074,0.062,0.060,0.063,0.077,0.146,0.241,0.292,0.327,0.343,0.350,0.333,0.309],
+    datasets:[{label:'NAND ASP（$/GB）',data:[0.044,0.041,0.042,0.046,0.060,0.073,0.078,0.074,0.062,0.060,0.063,0.077,0.146,0.244,0.285,0.311,0.326,0.333,0.316,0.294],
       borderColor:'#16a34a',backgroundColor:'rgba(22,163,74,.08)',tension:.3,fill:true,borderWidth:2}]},
   options:{...OPTS('$/GB'),plugins:{legend:{display:false},tooltip:{mode:'index'}},scales:{x:{grid:{color:GRID},ticks:{font:{size:8}}},y:{grid:{color:GRID},ticks:{font:{size:9}}}}}});
 
@@ -987,8 +1348,8 @@ new Chart(document.getElementById('c-sam-nandasp-q'),{type:'line',
 new Chart(document.getElementById('c-sam-bits-q'),{type:'line',
   data:{labels:['1Q23','2Q23','3Q23','4Q23','1Q24','2Q24','3Q24','4Q24','1Q25','2Q25','3Q25','4Q25','1Q26','2Q26E','3Q26E','4Q26E','1Q27E','2Q27E','3Q27E','4Q27E'],
     datasets:[
-      {label:'传统 DRAM（bn Gb）',data:[18.17,20.68,22.75,30.68,26.01,27.06,26.54,22.14,24.37,26.84,30.20,30.52,31.21,32.40,32.29,31.77,31.21,32.83,35.72,37.62],borderColor:'#2563eb',tension:.3,borderWidth:2,yAxisID:'y'},
-      {label:'HBM（bn Gb，右轴）',data:[0.15,0.22,0.32,0.46,0.49,0.74,1.26,2.34,0.63,0.81,1.50,1.58,1.54,2.31,3.47,4.70,4.06,4.48,5.25,6.22],borderColor:'#d97706',tension:.3,borderWidth:2,yAxisID:'y1'}]},
+      {label:'传统 DRAM（bn Gb）',data:[18.17,20.68,22.75,30.68,26.01,27.06,26.54,22.14,24.37,26.84,30.20,30.52,31.21,33.81,34.39,34.25,33.66,35.41,38.98,41.37],borderColor:'#2563eb',tension:.3,borderWidth:2,yAxisID:'y'},
+      {label:'HBM（bn Gb，右轴）',data:[0.15,0.22,0.32,0.46,0.49,0.74,1.26,2.34,0.63,0.81,1.50,1.58,1.54,2.39,3.62,4.90,4.20,5.10,5.50,6.22],borderColor:'#d97706',tension:.3,borderWidth:2,yAxisID:'y1'}]},
   options:{responsive:true,maintainAspectRatio:false,
     plugins:{legend:{position:'top',labels:{font:{size:10},padding:8}},tooltip:{mode:'index',intersect:false}},
     scales:{x:{grid:{color:GRID},ticks:{font:{size:8}}},
@@ -1005,8 +1366,8 @@ new Chart(document.getElementById('c-cxmt'),{type:'bar',
 new Chart(document.getElementById('c-dram'),{type:'bar',
   data:{labels:['2023','2024','2025','2026E','2027E'],datasets:[
     {label:'海力士',data:[13.79,23.50,32.17,162.65,235.35],backgroundColor:'#2563eb',borderRadius:3},
-    {label:'三星',data:[19.26,31.46,45.29,219.95,300.99],backgroundColor:'#16a34a',borderRadius:3},
-    {label:'美光',data:[10.58,19.48,25.89,108.34,148.74],backgroundColor:'#d97706',borderRadius:3}]},
+    {label:'三星',data:[19.26,31.46,45.29,226.98,316.94],backgroundColor:'#16a34a',borderRadius:3},
+    {label:'美光',data:[10.58,19.48,25.89,118.61,167.18],backgroundColor:'#d97706',borderRadius:3}]},
   options:OPTS('USD bn')});
 
 // DRAM 晶圆产能

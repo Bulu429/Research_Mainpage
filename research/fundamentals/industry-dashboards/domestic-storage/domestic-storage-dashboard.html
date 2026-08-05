@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>国产半导体研究看板</title>
+<title>国产存储研究看板</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <style>
 :root {
@@ -155,9 +155,9 @@ code{font-size:10px;background:var(--tag-bg);color:var(--tag);padding:1px 5px;bo
 
 <header class="hdr">
   <div class="hdr-l">
-    <a class="back-link" href="../industry-fundamentals-entry.html">← 行业基本面入口</a>
-    <span class="hdr-title">国产半导体产业链</span>
-    <span class="hdr-sub">设备 · 材料 · 芯片设计 · 晶圆+封装</span>
+    <a class="back-link" href="../行业基本面入口.html">← 行业基本面入口</a>
+    <span class="hdr-title">国产存储产业链</span>
+    <span class="hdr-sub">长存长鑫扩产 · 先进封装与HBM设备 · 先进制程 · 缺货涨价</span>
     <span class="badge-warn">🟡 结构分化</span>
     <span class="badge-tag">国产替代主线</span>
   </div>
@@ -305,7 +305,7 @@ code{font-size:10px;background:var(--tag-bg);color:var(--tag);padding:1px 5px;bo
       </tr>
       <tr class="cap-sub-row">
         <td colspan="6" class="cap-lbl">对应CapEx（亿元）：1万片=60亿，HBM=90亿</td>
-        <td>330</td><td>300</td><td>240</td><td>180</td><td class="cap-pending">360</td><td class="cap-pending">270</td>
+        <td>330</td><td>300</td><td>240</td><td>180</td><td title="扩产110kwpm：常规6万片×60亿=360 + 上海A3(HBM3/HBM3E)5万片×90亿=450">810</td><td title="扩产90kwpm全部来自上海A3(HBM3/HBM3E)：9万片×90亿=810；其余六厂2027持平">810</td>
       </tr>
       <tr>
         <td rowspan="3">合肥</td><td>一期 A1（Fab1）</td><td class="cap-lbl">DDR4、LPDDR4X</td><td>494</td><td>满产</td><td>100</td>
@@ -366,7 +366,8 @@ code{font-size:10px;background:var(--tag-bg);color:var(--tag);padding:1px 5px;bo
   </table>
   <div style="font-size:10px;color:var(--text2);margin-top:8px;padding:6px 10px;background:var(--warn-bg);border-radius:5px;border-left:3px solid var(--warn)">
     ⚠️ 原始数据表格中"二期/三期"相关单元格带有批注标记（右上角小三角），本次还原未能读取批注文字内容；如有批注原文，请补充以便完整还原。<br>
-    ⚠️ 标*的CapEx数字（长鑫2026/2027对应CapEx、长江2026/2027对应CapEx）仍按各自旧产能口径测算，尚未跟随新口径（长鑫扩产110/90kwpm；长江扩产140/0kwpm）重新测算，待补充。
+    ✅ <b>长鑫 2026/2027 已按新口径重算（2026-08-03）</b>：均为 810 亿。2026＝常规 6 万片×60亿 360 ＋ 上海 A3（HBM3/HBM3E）5 万片×90亿 450；2027 扩产 90kwpm 全部来自 A3，9 万片×90亿＝810（其余六厂 2027 持平）。北京 C1B 虽标注"潜在 HBM TSV"，本次仍按常规 60 亿计。悬停单元格可看构成。<br>
+    ⚠️ 标*的长江存储 2026/2027 CapEx（280／350）仍是<b>旧口径</b>（4 万／5 万片×70亿），尚未跟随新口径（扩产 140／0kwpm）重算。按本表「扩产×单价」规则应为 <b>980／0</b>；其中 2027 扩产为 0，若要保留非零值需另行说明来源（如在建工程、设备尾款），待定后再改。
   </div>
 
   <!-- 子模块：长鑫存储财务与产能 vs 海力士/三星/美光 -->

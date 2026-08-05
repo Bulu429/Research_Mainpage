@@ -54,6 +54,10 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Micr
 .ctable td{padding:8px 8px;border-bottom:1px solid var(--border);vertical-align:middle}
 .ctable tr:last-child td{border-bottom:none}
 .ctable tr:hover td{background:#fafbfc}
+.hist-cell[data-tip]{position:relative;cursor:help;box-shadow:inset 0 0 0 1px rgba(124,58,237,.18)}
+.hist-cell[data-tip]::after{content:attr(data-tip);position:absolute;left:50%;top:calc(100% + 8px);transform:translateX(-50%);width:max-content;max-width:320px;padding:8px 10px;border-radius:6px;background:#0f172a;color:#f8fafc;font-size:11px;line-height:1.55;font-weight:500;white-space:pre-line;text-align:left;box-shadow:0 8px 24px rgba(15,23,42,.24);opacity:0;visibility:hidden;pointer-events:none;z-index:320}
+.hist-cell[data-tip]::before{content:"";position:absolute;left:50%;top:calc(100% + 2px);transform:translateX(-50%);border:6px solid transparent;border-bottom-color:#0f172a;opacity:0;visibility:hidden;z-index:321}
+.hist-cell[data-tip]:hover::after,.hist-cell[data-tip]:hover::before{opacity:1;visibility:visible}
 .a-super{display:inline-block;padding:1px 7px;border-radius:3px;font-size:10px;font-weight:700;background:var(--up-bg);color:var(--up);border:1px solid #86efac}
 .a-meet{display:inline-block;padding:1px 7px;border-radius:3px;font-size:10px;font-weight:700;background:var(--tag-bg);color:var(--tag);border:1px solid #fdba74}
 .a-miss{display:inline-block;padding:1px 7px;border-radius:3px;font-size:10px;font-weight:700;background:var(--warn-bg);color:var(--warn);border:1px solid #fcd34d}
@@ -245,7 +249,7 @@ code{font-size:10px;background:var(--tag-bg);color:var(--tag);padding:1px 5px;bo
 <!-- ── Header ── -->
 <div class="hdr">
   <div class="hdr-l">
-    <a class="back-link" href="../industry-fundamentals-entry.html">← 行业基本面入口</a>
+    <a class="back-link" href="../行业基本面入口.html">← 行业基本面入口</a>
     <div class="hdr-title">🔬 先进封装</div>
     <div class="hdr-sub">CoWoS · TSV · Hybrid Bonding · RDL · 2.5D/3D Packaging</div>
     <span class="badge-up">🟢 AI算力驱动封装重构</span>
@@ -457,8 +461,8 @@ code{font-size:10px;background:var(--tag-bg);color:var(--tag);padding:1px 5px;bo
     <colgroup><col style="width:16%"><col style="width:8%"><col style="width:8%"><col style="width:8%"><col style="width:9%"><col style="width:9%"><col style="width:42%"></colgroup>
     <thead><tr><th>指标</th><th class="num">2023</th><th class="num">2024</th><th class="num">2025</th><th class="num">2026E</th><th class="num">2027E</th><th>备注</th></tr></thead>
     <tbody>
-      <tr><td>TSMC自有月产能</td><td class="num">1.4万</td><td class="num">3.5万</td><td class="num">7.5万</td><td class="num"><strong>12.7万</strong></td><td class="num"><strong style="color:var(--up)">20万</strong></td><td style="font-size:11px;color:var(--text2)">上调：旧估16-17万→20万；AP7持续扩产+15A厂28/22nm转55nm中介层</td></tr>
-      <tr><td>OSAT外包月产能</td><td class="num" style="color:var(--text2)">—</td><td class="num">0.5万</td><td class="num">0.8万</td><td class="num"><strong>4.5万</strong></td><td class="num"><strong style="color:var(--up)">8万</strong></td><td style="font-size:11px;color:var(--text2)">上调：旧估5.5万→8万；ASE/SPIL 3→5万，Amkor 2→3万，侧重CoWoS-L/R</td></tr>
+      <tr><td>TSMC自有月产能</td><td class="num">1.4万</td><td class="num">3.5万</td><td class="num">7.5万</td><td class="num hist-cell" data-tip="TSMC自有月产能口径对照：&#10;260623 MS口径：2026E 12.7万&#10;260710 JPM口径：2026E 11.5万（较JPM前次预估+1%）&#10;差异：机构模型假设不同，并列保留不覆盖">12.7万</td><td class="num hist-cell" data-tip="TSMC自有月产能口径对照：&#10;260623 MS口径：2027E 20万&#10;260710 JPM口径：2027E 19万（较JPM前次预估+9%）&#10;差异：机构模型假设不同，并列保留不覆盖" style="color:var(--up)">20万</td><td style="font-size:11px;color:var(--text2)">上调：旧估16-17万→20万；AP7持续扩产+15A厂28/22nm转55nm中介层</td></tr>
+      <tr><td>OSAT外包月产能</td><td class="num" style="color:var(--text2)">—</td><td class="num">0.5万</td><td class="num">0.8万</td><td class="num hist-cell" data-tip="OSAT外包产能口径对照：&#10;260623 MS口径：2026E 4.5万&#10;260710 JPM口径：2026E 1.5万（JPM统计口径更窄，主要为类CoWoS OSAT产能）&#10;差异：统计范围不同，并列保留不覆盖">4.5万</td><td class="num hist-cell" data-tip="OSAT外包产能口径对照：&#10;260623 MS口径：2027E 8万&#10;260710 JPM口径：2027E 5万&#10;差异：统计范围不同，并列保留不覆盖" style="color:var(--up)">8万</td><td style="font-size:11px;color:var(--text2)">上调：旧估5.5万→8万；ASE/SPIL 3→5万，Amkor 2→3万，侧重CoWoS-L/R</td></tr>
       <tr style="background:#f8faff"><td><strong>合计月产能（年底）</strong></td><td class="num"><strong>1.4万</strong></td><td class="num"><strong>4万</strong></td><td class="num"><strong>8万</strong></td><td class="num"><strong>18万</strong></td><td class="num"><strong style="color:var(--up)">28万</strong></td><td style="font-size:11px;color:var(--text2)">上调：旧估21.5万→28万（TSMC 20万+非台积电8万）；对应AI XPU行业约60% YoY增长</td></tr>
       <tr><td>技术结构：CoWoS-S/L/R</td><td class="num" style="color:var(--text2)">S为主</td><td class="num">S主力</td><td class="num">L起量</td><td class="num">L占比提升</td><td class="num" style="color:var(--up)">L为主力</td><td style="font-size:11px;color:var(--text2)">2027E：S~2万（成熟）/L~8万（Blackwell/Rubin主用）/R~2.5万（Vera CPU主用）</td></tr>
     </tbody>
@@ -488,6 +492,7 @@ code{font-size:10px;background:var(--tag-bg);color:var(--tag);padding:1px 5px;bo
     </tbody>
   </table>
   <div class="seg-sum">💡 <strong>核心结论：</strong>全球CoWoS供给紧张状态在2026-2027年显著缓解——合计月产能从2025年8万片跃升至2027年28万片（+250%），供需缺口从20-30%收窄至10-20%乃至"不再是唯一瓶颈"。这意味着先进封装板块的投资逻辑正从"纯短缺驱动"切换至"结构性份额+新客户导入"（详见下方客户分配）。</div>
+  <div class="seg-sum">🔍 <strong>CoW/WoS结构性瓶颈区分（260720会议纪要，补充细化）</strong>：CoWoS供需紧张本质是CoW（Chip on Wafer，芯片贴装中介层）环节瓶颈——扩产难度和技术壁垒远高于WoS（Wafer on Substrate，基板集成）；WoS可外包给日月光/安靠/矽品等OSAT，海外客户CoW订单则集中在台积电/三星/英特尔（国内订单给盛合晶微、通富微电）。预计2027年后随产能持续释放，<strong>WoS环节或率先出现供过于求、引发价格竞争</strong>，CoW仍是核心稀缺环节——这一细化视角在此前的供需框架中未单独区分，补充有助于判断产业链各环节议价权变化节奏。</div>
 </div>
 
 <div class="card" style="margin-bottom:16px">
@@ -510,6 +515,61 @@ code{font-size:10px;background:var(--tag-bg);color:var(--tag);padding:1px 5px;bo
     </tbody>
   </table>
   <div class="seg-sum">谷歌TPU链条横跨联发科（v8t ZebraFish）、博通（v8i SunFish/v9 HumuFish）两家设计方；封装路线从CoWoS-S延伸至Intel EMIB-T（v9首款），供应链多元化明显；ZebraFish+SunFish合计预订51万片CoWoS-S，是博通/联发科业绩核心驱动。</div>
+</div>
+
+<!-- ── JPM口径最新上修（2026-07-10） ── -->
+<div class="card" style="margin-bottom:16px;border-left:3px solid var(--warn)">
+  <div style="font-weight:700;font-size:12px;margin-bottom:4px">🆕 供需框架进一步上修（JPM台湾团队口径，2026-07-10）</div>
+  <div style="font-size:11px;color:var(--text2);margin-bottom:12px">台积电Q2业绩发布前夕，JPM分析师更新CoWoS供需模型（经"2030"公众号纪要转发整理）；因来源不同、模型假设不同，与上方MS口径并列保留，不做替换，仅作交叉验证参考。</div>
+
+  <div style="font-weight:700;font-size:12px;margin-bottom:8px">供给端（JPM上修）</div>
+  <table class="ctable" style="margin-bottom:12px;table-layout:fixed">
+    <colgroup><col style="width:18%"><col style="width:9%"><col style="width:9%"><col style="width:9%"><col style="width:55%"></colgroup>
+    <thead><tr><th>指标</th><th class="num">2026E</th><th class="num">2027E</th><th class="num">2028E</th><th>说明</th></tr></thead>
+    <tbody>
+      <tr><td>TSMC自有CoWoS月产能</td><td class="num hist-cell" data-tip="TSMC自有月产能历史修改：&#10;260710 JPM上调前：约11.4万（反推，+1%后为11.5万）&#10;260710 JPM上调后：2026E 11.5万&#10;对照260623 MS口径：2026E 12.7万&#10;变化：JPM本次上修1%，但绝对值仍低于MS口径"><strong>11.5万</strong></td><td class="num hist-cell" data-tip="TSMC自有月产能历史修改：&#10;260710 JPM上调前：约17.4万（反推，+9%后为19万）&#10;260710 JPM上调后：2027E 19万&#10;对照260623 MS口径：2027E 20万&#10;变化：JPM本次上修9%，接近MS口径"><strong>19万</strong></td><td class="num hist-cell" data-tip="TSMC自有月产能历史修改：&#10;260710 JPM上调前：约20.3万（反推，+11%后为22.5万）&#10;260710 JPM上调后：2028E 22.5万&#10;对照：MS口径未覆盖2028E&#10;变化：JPM本次上修11%，2028E为JPM独有前瞻" style="color:var(--up)"><strong>22.5万</strong></td><td style="font-size:11px;color:var(--text2)">较JPM此前预估上调1%/9%/11%；AP7二期50-60%产能转投CoWoS（此前规划100%投产SoIC），并选择性将中介层晶圆外包世界先进(UMC)扩充整体产能</td></tr>
+      <tr><td>OSAT类CoWoS月产能</td><td class="num"><strong>1.5万</strong></td><td class="num"><strong>5万</strong></td><td class="num"><strong style="color:var(--up)">8.5万</strong></td><td style="font-size:11px;color:var(--text2)">绝大多数用于服务器CPU封装，其次网络芯片，仅少量供给LPU、Trainium3等加速器芯片</td></tr>
+      <tr style="background:#fff7ed"><td>供需缺口</td><td class="num" colspan="3" style="color:var(--dn)"><strong>约20%（扩大）</strong></td><td style="font-size:11px;color:var(--text2)">受智能体AI驱动CPU需求大幅增长影响，缺口较此前预期扩大</td></tr>
+    </tbody>
+  </table>
+  <div class="seg-sum" style="margin-bottom:12px">⚠️ JPM口径2026E台积电自有产能11.5万，与上方MS口径12.7万存在差异（机构模型假设不同），暂不覆盖替换上表，仅并列供交叉验证。台积电同步加码CoW-R产能扩张，分别匹配英伟达CPU、亚马逊加速器的旺盛需求。</div>
+
+  <div style="font-weight:700;font-size:12px;margin-bottom:8px">主要客户CoWoS需求变化（JPM口径）</div>
+  <table class="ctable" style="margin-bottom:12px">
+    <thead><tr><th>客户</th><th>变化</th><th>细节</th></tr></thead>
+    <tbody>
+      <tr><td><strong style="color:#16a34a">英伟达</strong></td><td style="font-size:11px;white-space:nowrap">2027 +7%<br>2028 +45%</td>
+        <td style="font-size:11px">全系加速器/CPO芯片统一用<strong>CoWoS-L</strong>；CPU(Vera)/LPU用<strong>CoWoS-R</strong>（台积电+安靠+日月光联合供应）；2027年双芯片Rubin Ultra；2028年高端Feynman四芯片方案，全系以CoWoS-L为基础架构，部分型号叠加SoIC逻辑堆叠，高端光罩尺寸达9-10倍；若Feynman配套NVLink Switch CPO大规模量产，2028需求或再超预期；暂无2028年使用CoPoS的线索</td></tr>
+      <tr><td><strong style="color:#dc2626">AMD</strong></td><td class="hist-cell" data-tip="AMD CoWoS需求历史修改：&#10;260623 MS口径：2027E 53.0万片，YoY+308%（对全球总量口径）&#10;260710 JPM口径：2027E较JPM前次预估再上调97%（对JPM自身模型口径）&#10;变化：两家机构统计基数不同，均指向AMD 2027年需求大幅上修，方向一致" style="font-size:11px;white-space:nowrap;color:var(--dn)"><strong>2027 +97%</strong><br>2028进一步上调</td>
+        <td style="font-size:11px">核心驱动Venice服务器CPU（CoWoS-L，日月光类CoWoS-L承接）：2027出货约300万颗，2028约450万颗；MI450爬坡顺畅，2027出货150万颗；超大14-15倍光罩规格MI500将于2028年量产；2027年起高端PC/游戏显卡/Xbox定制芯片用改良CoWoS+2.5D Elevated Fan Out Bridge扇出工艺；晶圆级封装总需求5-6万片/月，当前产能利用率仅50-60%</td></tr>
+      <tr><td><strong style="color:#d97706">联发科(TPU)</strong></td><td style="font-size:11px;white-space:nowrap">2027 800→<strong>890万颗</strong></td>
+        <td style="font-size:11px">v8t 300万颗+v8i Sunfish 420万颗+剩余v7 Ironwood；2028年TPU v9 Humufish量产300万颗+四芯Sunfish Ultra，总出货同比+30%至1160万颗；<strong style="color:var(--dn)">v9 Humufish改用Intel EMIB-T封装（非CoWoS），致2028联发科CoWoS需求下滑</strong>；2027-2028份额维持30-40%，能否提升取决于基板、晶圆供给</td></tr>
+      <tr><td><strong>AWS(Trainium)</strong></td><td style="font-size:11px;white-space:nowrap">全生命周期<br><strong>480万颗</strong></td>
+        <td style="font-size:11px">Trainium3供给持续跟不上需求；AWS、Alchip为主要采购方，产能紧张时部分订单外包迈威尔；Trainium4 2028年量产，采用3D-SoIC逻辑堆叠+多类互连方案，AWS/Alchip仍是主力，迈威尔承接部分NVLink互连版本；2028 Trainium4出货量与2027 Trainium3持平，但单片晶圆消耗、芯片均价显著提升</td></tr>
+      <tr><td><strong>其余ASIC</strong></td><td style="font-size:11px">Meta/微软/OpenAI<br>2027核心增量</td>
+        <td style="font-size:11px">微软Maia200 2026H2量产，生命周期出货仅20-30万颗，放量靠2027H2 Maia300及后续Maia400；Meta 2026-2028规划3-4款推理ASIC，2027增量有限；OpenAI 2026H2首款Jalapeño，2027出货偏少，第二款Nexus2于2028-2029年放量；SpaceX自研AI芯片处于询价阶段，预计2028年末启动量产，是全年最大需求变量</td></tr>
+    </tbody>
+  </table>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:4px">
+    <div style="padding:10px 12px;background:var(--bg);border:1px solid var(--border);border-radius:6px">
+      <div style="font-weight:700;font-size:11px;margin-bottom:4px">3D SoIC产能与客户规划</div>
+      <div style="font-size:11px;color:var(--text2)">2028年末产能达<strong style="color:var(--text)">6.5万片/月</strong>，2027年爬坡延后（台积电优先满足CoWoS订单）；客户：AMD MI系列/苹果M5 Max&Ultra/AWS Trainium4/OpenAI Nexus2/Meta MTIA450&500/部分Feynman均2028搭载（谷歌TPU仅v10用）；实际晶圆需求有限，1-1.5万片/月即可覆盖</div>
+    </div>
+    <div style="padding:10px 12px;background:var(--bg);border:1px solid var(--border);border-radius:6px">
+      <div style="font-weight:700;font-size:11px;margin-bottom:4px">CoPoS技术研发进度</div>
+      <div style="font-size:11px;color:var(--text2)">仍处工程研发阶段，预计<strong style="color:var(--text)">2028年启动风险试产，2029年量产</strong>；台积电仍在解决工艺缺陷、敲定制造流程；Feynman GPU 2028H2不用CoPoS，<strong>Feynman Ultra是首款搭载该工艺的产品</strong></div>
+    </div>
+    <div style="padding:10px 12px;background:var(--bg);border:1px solid var(--border);border-radius:6px">
+      <div style="font-weight:700;font-size:11px;margin-bottom:4px">服务器CPU封装：2027核心增长动力</div>
+      <div style="font-size:11px;color:var(--text2)">英伟达Vera、AMD Venice首次采用CoWoS封装，大幅拉动2027需求；2028年多家云厂商自研ARM CPU或跟进2.5D封装；CPU订单多流向OSAT：Venice由日月光承接，Vera由安靠、日月光分担；台积电优先保障AI加速器大光罩CoWoS与3DIC产能</div>
+    </div>
+    <div style="padding:10px 12px;background:var(--bg);border:1px solid var(--border);border-radius:6px">
+      <div style="font-weight:700;font-size:11px;margin-bottom:4px">英特尔EMIB-T进展</div>
+      <div style="font-size:11px;color:var(--text2)">标杆项目联发科TPU v9 Humufish，推进顺利；基板良率约60%，距量产1-1.5年；成本约CoWoS-L的一半，支持更大光罩，短板是基板堆叠/硅桥嵌入良率偏低；亚马逊少量Trainium3/4、部分CPU厂商也在评估EMIB</div>
+    </div>
+  </div>
+  <div class="seg-sum" style="margin-top:8px">数据来源：JPM分析师CoWoS供需模型更新，经"2030"公众号纪要转发整理（2026-07-10，台积电Q2财报发布前夕）；⚠️ 转述整理口径，未见完整原始报告，需与上方MS口径及后续台积电法说会交叉验证，精确数字谨慎对待。</div>
 </div>
 
 <div class="card" style="margin-bottom:20px">
@@ -575,22 +635,26 @@ code{font-size:10px;background:var(--tag-bg);color:var(--tag);padding:1px 5px;bo
   <table class="ctable">
     <thead><tr><th>厂商</th><th>技术路线</th><th>当前类CoWoS产能</th><th>2026年底目标</th><th>中期目标</th><th>口径</th></tr></thead>
     <tbody>
-      <tr style="background:#f5f3ff"><td><strong>盛合晶微</strong> <code>688820</code></td><td style="font-size:11px">SmartPak-Si（类CoWoS-S）+混合键合研发</td><td>6000–8000片/月（2.5D为主）</td><td>1万片/月以上</td><td>1.3–1.6万片/月；募投再+1.6万片；<strong style="color:var(--accent)">混合键合技术2026Q2小批量试产</strong>（专家口径）</td><td style="font-size:10px;color:var(--text2)">卖方测算+招股书+专家会</td></tr>
-      <tr><td><strong>长电科技</strong> <code>600584</code></td><td style="font-size:11px">XDFOI（类CoWoS-S/R）+CoWoS-L能力</td><td>XDFOI约2000片/月，2.5D爬坡</td><td>约5000片/月</td><td>27年1万片/月，2年展望2.5万片</td><td style="font-size:10px;color:var(--text2)">公司通线+卖方测算</td></tr>
-      <tr><td><strong>通富微电</strong> <code>002156</code></td><td style="font-size:11px">CoWoS-S已量产，CoWoS-L/SoIC-L技术储备</td><td>CoWoS-S已量产（未披露数字）</td><td>—</td><td>跟随AMD及国产客户扩产；专家口径称与AMD合作深化后盈利能力大幅提升，已接近长电营收水平（⚠️需财报验证，与现有收入数据存在出入）</td><td style="font-size:10px;color:var(--text2)">卖方+公司+专家会</td></tr>
-      <tr><td><strong>华天科技</strong> <code>002185</code></td><td style="font-size:11px">2.5D/3D（早期验证）</td><td>约1000片/月（验证）</td><td>按客户需求扩产</td><td>—</td><td style="font-size:10px;color:var(--text2)">公司口径</td></tr>
-      <tr><td><strong>甬矽电子</strong> <code>688362</code></td><td style="font-size:11px">FH-BSAP平台（硅转接板+硅桥双方案）</td><td>通线送样，未量产</td><td>约2000片/月起步</td><td>募投5000片/月；三期103亿</td><td style="font-size:10px;color:var(--text2)">公司+卖方</td></tr>
+      <tr style="background:#f5f3ff"><td><strong>盛合晶微</strong> <code>688820</code></td><td style="font-size:11px">SmartPak-Si（类CoWoS-S）+混合键合研发</td><td class="hist-cell" data-tip="260720更新前：6000–8000片/月（2.5D为主，未分S/L）&#10;260720会议纪要口径：其中CoWoS-L产能约6000片，良率约92%&#10;变化：新纪要首次给出CoWoS-L细分产能与良率，与原区间不冲突，取并列">6000–8000片/月（2.5D为主）<br><span style="font-size:10px;color:var(--accent)">CoWoS-L产能约6000片，良率~92%</span></td><td>1万片/月以上</td><td>1.3–1.6万片/月；募投再+1.6万片；<strong style="color:var(--accent)">混合键合技术2026Q2小批量试产</strong>（专家口径）；<span style="font-size:10px;color:var(--text2)">先进封装产能利用率95%+（260720会议纪要）</span></td><td style="font-size:10px;color:var(--text2)">卖方测算+招股书+专家会</td></tr>
+      <tr><td><strong>长电科技</strong> <code>600584</code></td><td style="font-size:11px">XDFOI（类CoWoS-S/R）+CoWoS-L能力</td><td>XDFOI约2000片/月，2.5D爬坡<br><span style="font-size:10px;color:var(--text2)">良率约88-89%（260720会议纪要，与华天、渠梁同档）</span></td><td>约5000片/月</td><td>27年1万片/月，2年展望2.5万片；<span style="font-size:10px;color:var(--text2)">传统封装产能利用率92%+（260720会议纪要）</span></td><td style="font-size:10px;color:var(--text2)">公司通线+卖方测算</td></tr>
+      <tr><td><strong>通富微电</strong> <code>002156</code></td><td style="font-size:11px">CoWoS-S已量产，CoWoS-L/SoIC-L技术储备</td><td class="hist-cell" data-tip="260720更新前：CoWoS-S已量产（未披露数字）&#10;260720会议纪要口径：类CoWoS-L产能约5000片/月，良率约92%&#10;差异：此前认为公司未披露产能数字，新纪要首次给出具体数字；且纪要口径为CoWoS-L而非CoWoS-S，与下方结论②『国内95%+产能为CoWoS-S』存在张力，公司未正式披露，⚠️需财报/公司交流交叉验证，暂不作为确定性数字采信"><strong style="color:var(--accent)">类CoWoS-L产能约5000片/月，良率约92%</strong><br><span style="font-size:10px;color:var(--warn)">⚠️公司未正式披露，与"95%+为CoWoS-S"结论有冲突，待核实</span></td><td>—</td><td>跟随AMD及国产客户扩产；专家口径称与AMD合作深化后盈利能力大幅提升，已接近长电营收水平（⚠️需财报验证，与现有收入数据存在出入）</td><td style="font-size:10px;color:var(--text2)">卖方+公司+专家会</td></tr>
+      <tr><td><strong>华天科技</strong> <code>002185</code></td><td style="font-size:11px">2.5D/3D（早期验证）</td><td>约1000片/月（验证）<br><span style="font-size:10px;color:var(--text2)">良率约88-89%；传统封装产能利用率92%+（260720会议纪要）</span></td><td>按客户需求扩产</td><td>—</td><td style="font-size:10px;color:var(--text2)">公司口径</td></tr>
+      <tr><td><strong>甬矽电子</strong> <code>688362</code></td><td style="font-size:11px">FH-BSAP平台（硅转接板+硅桥双方案）</td><td class="hist-cell" data-tip="260720更新前：通线送样，未量产&#10;260720会议纪要口径：先进封装产能利用率约85%，暗示已有实际出货&#10;差异：与『未量产』表述矛盾，可能是纪要将甬矽整体（含传统封装线）稼动率与CoWoS专线混谈，待核实"><strong style="color:var(--warn)">通线送样，未量产</strong><br><span style="font-size:10px;color:var(--warn)">⚠️先进封装产能利用率约85%（260720会议纪要），与"未量产"矛盾，待核实</span></td><td>约2000片/月起步</td><td>募投5000片/月；三期103亿</td><td style="font-size:10px;color:var(--text2)">公司+卖方</td></tr>
       <tr style="background:#fef2f2"><td><strong>汇成股份</strong> <code>688403</code></td><td style="font-size:11px">HITS先进封装：CoWoS-L自研中介层，核心团队具台积电背景；CoWoS-S现2倍reticle，明后年CoWoS-L目标5-10倍reticle</td><td>建设期（Miniline未建成）</td><td>Miniline一期4000-5000片/月，2027Q1建成，H2量产</td><td>二期扩至1万片/月，追加投资至75亿（45+30亿），27年底-28年初达成</td><td style="font-size:10px;color:var(--text2)">专家会/公司交流（较此前卖方测算更详细）</td></tr>
       <tr><td><strong>中芯国际</strong> <code>688981</code></td><td style="font-size:11px">Interposer代工配套</td><td>Interposer供应+芯三维配套</td><td>—</td><td>—</td><td style="font-size:10px;color:var(--text2)">公司口径</td></tr>
+      <tr style="background:#fafaf9"><td><strong>渠梁电子</strong><br><span style="font-size:10px;color:var(--text2)">非上市</span></td><td style="font-size:11px">存储/运算封测+先进封装（2.5D、扇出型晶圆封装）</td><td>单家产能1000-2000片/月<br><span style="font-size:10px;color:var(--text2)">良率约88-89%；先进封装产能利用率约87%（260720会议纪要）</span></td><td>—</td><td>—</td><td style="font-size:10px;color:var(--text2)">260720会议纪要，福建晋江集成电路产业园背景企业，无明确上市母公司，此前未纳入本看板覆盖</td></tr>
       <tr style="background:var(--bg);font-weight:700"><td>国内合计</td><td>—</td><td>约1–1.5万片/月有效产能</td><td>约1.5–2万片/月</td><td>远期需求4–5万乃至7万片/月缺口</td><td style="font-size:10px;color:var(--text2)">卖方测算</td></tr>
     </tbody>
   </table>
   <div style="margin-top:10px;display:grid;grid-template-columns:1fr 1fr;gap:8px">
-    <div class="seg-sum" style="margin-top:0">1️⃣ <strong>有效产能≠规划产能</strong>：真正稀缺的是"通过客户验证、具备稳定良率和连续交付能力"的产能；国内除盛合外多数厂商仍在良率爬坡。</div>
-    <div class="seg-sum" style="margin-top:0">2️⃣ <strong>结构性短板在CoWoS-L</strong>：国内95%+产能为CoWoS-S，台积电26年底CoWoS-L占比将达45%；国产算力芯片25Q3起已从S向L迁移。</div>
+    <div class="seg-sum" style="margin-top:0">1️⃣ <strong>有效产能≠规划产能</strong>：真正稀缺的是"通过客户验证、具备稳定良率和连续交付能力"的产能；国内除盛合外多数厂商仍在良率爬坡。260720会议纪要首次给出量化良率：盛合92%、通富92%、长电/华天/渠梁88-89%。</div>
+    <div class="hist-cell seg-sum" style="margin-top:0" data-tip="260720更新前：国内95%+产能为CoWoS-S&#10;260720会议纪要口径：盛合CoWoS-L约6000片、通富类CoWoS-L约5000片，均给出良率92%&#10;差异：新纪要通篇以CoWoS-L产能计数，与'95%+为CoWoS-S'结论冲突；可能是新纪要混用CoWoS-S/L口径，也可能是原结论已过时，⚠️待与公司/卖方交叉验证后更新">2️⃣ <strong>结构性短板在CoWoS-L</strong>：国内95%+产能为CoWoS-S，台积电26年底CoWoS-L占比将达45%；国产算力芯片25Q3起已从S向L迁移。⚠️与260720会议纪要口径存在冲突（悬停查看）。</div>
     <div class="seg-sum" style="margin-top:0">3️⃣ <strong>口径差异需注意</strong>：汇成CoWoS产能时间表不同卖方差异大（长江：26Q2启动2000片；华福：27Q1 5000片），公司披露极少。</div>
     <div class="seg-sum" style="margin-top:0">4️⃣ <strong>扩产军备竞赛已启动</strong>：2026年6–7月密集公告——汇成HITS一期+二期共75亿、长电78亿、甬矽103亿，卖方预期其他家将跟进。</div>
     <div class="seg-sum" style="margin-top:0">5️⃣ <strong>国内HBM封装现状（专家口径）</strong>：长电8层HBM堆叠良率约70%；国内HBM量产最先进水平仅到HBM2E-3，某企业HBM3工艺尚不成熟、良率不高，与海力士/三星差距仍大。</div>
+    <div class="seg-sum" style="margin-top:0">6️⃣ <strong>产能利用率全景（260720会议纪要）</strong>：传统封装——通富/长电/华天92%+，紫光宏茂99%，沛顿87%；先进封装——盛合95%+，渠梁87%，甬矽85%。</div>
+    <div class="seg-sum" style="margin-top:0">7️⃣ <strong>竞争格局梯队（260720会议纪要）</strong>：传统先进封装单一工艺排名 长电&gt;通富&gt;华天；2.5D CoWoS类第一梯队为盛合晶微+通富微电（技术与订单领先），第二梯队为甬矽/长电/华天/沛顿/紫光宏茂（订单量较少）。与本表长电扩产力度（27年1万片、展望2.5万片）相比，梯队定位是否偏保守待观察。</div>
+    <div class="seg-sum" style="margin-top:0">8️⃣ <strong>CoWoS-L转产/新建周期（260720会议纪要）</strong>：从CoWoS-S产线转产CoWoS-L约需6-7个月；完全新建CoWoS-L产线约需1-1.5年。</div>
   </div>
 </div>
 
@@ -636,6 +700,20 @@ code{font-size:10px;background:var(--tag-bg);color:var(--tag);padding:1px 5px;bo
     </div>
   </div>
   <div class="seg-sum">💡 <strong>展望</strong>：26年DDIC稼动率提升+涨价10-15%，存储产能逐步释放；28年随HITS产能释放，公司整体利润有望达<strong>30亿元以上</strong>。</div>
+</div>
+
+<div class="card" style="margin-bottom:20px">
+  <div style="font-weight:700;font-size:12px;margin-bottom:8px">📌 存储厂商封装委外模式与母公司关系（260720会议纪要+公开资料交叉核实）</div>
+  <div style="font-size:11px;color:var(--text2);margin-bottom:12px">长鑫存储、长江存储均已从全流程IDM模式调整为聚焦前道制程研发，中后道封装工艺委外给第三方OSAT/关联封测厂；委外对象的母公司归属此前本看板未覆盖，260720交叉核实后补充。</div>
+  <table class="ctable" style="margin-bottom:8px">
+    <thead><tr><th>存储厂</th><th>委外产品/工艺</th><th>承接方</th><th>承接方母公司</th></tr></thead>
+    <tbody>
+      <tr><td rowspan="2"><strong>长鑫存储</strong></td><td style="font-size:11px">HBM：TSV工艺、微凸点工艺、后端堆叠封装</td><td>沛顿科技、通富微电</td><td rowspan="2" style="font-size:11px">沛顿科技（深圳）为<strong>深科技（000021.SZ）</strong>全资子公司，合肥沛顿存储为其控股子公司；2026年5月深科技公告由深圳沛顿/合肥沛顿实施高端存储芯片封测扩产项目，总投资14.7亿元</td></tr>
+      <tr><td style="font-size:11px">DDR4/DDR5等传统存储：flip chip封装、bumping、打线全流程</td><td>沛顿科技、通富微电</td></tr>
+      <tr><td><strong>长江存储</strong></td><td style="font-size:11px">NAND Flash（176层V7、232层V8）：打线、塑封、焊锡球、切割</td><td>紫光宏茂（主）、沛顿科技（少量）</td><td style="font-size:11px">宏茂微电子（上海）隶属<strong>长江存储科技</strong>，非直接挂靠紫光集团——此前表述"同属紫光集团"不够准确，宏茂→长江存储→紫光集团"芯"战略体系是正确链条</td></tr>
+    </tbody>
+  </table>
+  <div class="seg-sum">💡 <strong>渠梁电子归属核实</strong>：福建晋江集成电路产业园背景企业（2017年成立，法定代表人胡道鑫），主营存储/运算封测及2.5D、扇出型晶圆封装；公开资料未披露明确上市公司母公司，属地方产业园区龙头，非某上市公司控股子公司——此前一度误判为AI会议转写错误，已核实为真实存在但此前未纳入本看板覆盖的公司，已补入上方产能明细表。</div>
 </div>
 </div>
 
@@ -1681,6 +1759,7 @@ X-Cube</div>
     </tbody>
   </table>
   <div class="seg-sum">🏭 <strong>国际大厂技术选择分化</strong>：台积电验证后选择ASM的Plasma方案（更稳健）；K&S的甲酸方案因生成盐类需额外清洗，英特尔虽采用但存在可靠性隐患；海力士对Fluxless技术谨慎，采用离线+在线Plasma处理保证质量。</div>
+  <div class="hist-cell seg-sum" data-tip="上表为HBM die堆叠场景TCB/混合键合口径（中银国际专家会，2026-07）&#10;260720会议纪要为CoWoS-L中介层键合场景，给出不同梯队：&#10;· TCB：1万片CoWoS-L产线约需3台，供应商荷兰Besi、日本Yamada、韩国韩美半导体（Hanmi）、ASMPT——与上表『每台约200-300万美元』量级可交叉印证，但新增Yamada、ASMPT两家未在上表出现&#10;· 混合键合：第一梯队Besi/ASMPT/KNS，第二梯队SUSS/EVG，国内拓荆/新凯来技术尚未成熟&#10;差异：两份口径应用场景不同（HBM堆叠 vs CoWoS-L中介层），且『ASM』（上表，疑指ASM International）与『ASMPT』（新纪要，原ASM Pacific Technology，现独立上市）是否为同一实体存在混淆风险，国内厂商名单也不同（上表：华峰/精科/固锝微/苏州新锐；新纪要：拓荆/新凯来），并列保留，不做合并，⚠️引用时需明确具体应用场景">💡 <strong>CoWoS-L中介层键合口径（260720会议纪要，与上表HBM堆叠口径分场景并列）</strong>：1万片CoWoS-L产能约需<strong>3台TCB设备</strong>，供应商为荷兰Besi、日本Yamada、韩国韩美半导体（Hanmi）、ASMPT；混合键合设备格局，第一梯队<strong>Besi/ASMPT/KNS</strong>（Besi客户覆盖最广、技术略领先但优势不大），第二梯队欧洲SUSS/EVG，国内拓荆、新凯来技术尚未成熟。⚠️与上表HBM堆叠场景口径来源不同、应用场景不同，悬停查看差异说明，不做直接合并。</div>
 </div>
 
 <div class="card" style="margin-bottom:20px">

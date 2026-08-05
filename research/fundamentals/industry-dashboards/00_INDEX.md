@@ -1,6 +1,6 @@
 ---
 title: TMT 研究看板 · 总索引
-更新日期: 2026-05-26
+更新日期: 2026-08-03
 tags:
   - 行业看板
   - 索引
@@ -9,135 +9,42 @@ tags:
 # TMT 研究看板 · 总索引
 
 > 每个版块包含 Markdown 分析底稿（`.md`）+ HTML 可视化看板（`.html`）。
-> 模板文件见 `_templates/` 目录，新版块复制模板后填充即可。
-> **总览入口**：[[main-dashboard.html|🔗 总看板]] · [[roadmap.html|🔗 AI算力路线图]]
+> **总览入口**：[industry-fundamentals-entry.html](industry-fundamentals-entry.html) · [main-dashboard.html](../../../main-dashboard.html) · [roadmap.html](roadmap.html)
 
 ---
 
-## 景气评级汇总
+## 景气评级汇总（16 个版块）
 
-| 版块 | 景气评级 | 核心逻辑（一句话） | 底稿 | 看板 | 更新日期 |
-|------|---------|-----------------|------|------|----------|
-| **PCB** | 🟢 上行 | AI服务器拉动高多层板量价双升，CCL提价周期开启 | [[PCB/PCB_看板]] | [[PCB/PCB-dashboard.html\|🔗]] | 2026-05-22 |
-| **先进封装** | 🟢 上行（全球口径） | TSMC CoWoS 垄断→供给瓶颈30-40%缺口，HBM4/Hybrid Bonding 2026+ | [[先进封装/先进封装_看板]] | [[advanced-packaging/advanced-packaging-dashboard.html\|🔗]] | 2026-05-21 |
-| **国产AI算力** | 🟢 上行 | 出口管制+国产替代，华为/寒武纪/海光算力放量 | — | [[domestic-ai-compute/domestic-ai-compute-dashboard.html\|🔗]] | 2026-05-21 |
-| **光模块** | 🟢 上行 | 北美CapEx高增 + 800G放量 + 1.6T导入 | — | [[optical-modules/optical-modules-dashboard.html\|🔗]] | 2026-05-25 |
-| **光纤光缆** | 🟢 上行 | AI数据中心拉动光纤需求 | — | [[fiber-optic-cable/fiber-optic-cable-dashboard.html\|🔗]] | 2026-05-25 |
-| **国产半导体** | 🟡 结构分化 | 设备景气 > 材料回暖 > 设计分化，国产化率20%→40%5年主线 | [[国产半导体/国产半导体_看板]] | [[domestic-semiconductor/domestic-semiconductor-dashboard.html\|🔗]] | 2026-05-18 |
-| **液冷** | 🟡 加速期 | AI算力驱动，单柜功率密度突破30kW→液冷必选 | [[液冷/液冷_看板]] | [[liquid-cooling/liquid-cooling-dashboard.html\|🔗]] | 2026-05-19 |
-| 光通信（早期版） | 🟢 上行 | 已被光模块/光纤光缆细分覆盖，保留作父概念 | [[光通信/光通信_看板]] | [[optical-communication/optical-communication-dashboard.html\|🔗]] | 2026-05-14 |
-| **台股电子（交叉验证）** | — | 台股月营收披露领先A股财报2-4周，含A股逻辑映射，非独立行业thesis | — | [[taiwan-electronics/taiwan-electronics-dashboard.html\|🔗]] | 2026-06-26 |
-| **业绩跟踪（业绩季专题）** | — | 财报数据、机构观点摘要与股价反应速记，跨行业，非独立行业thesis | — | [[earnings-tracker/earnings-tracker-dashboard.html\|🔗]] | 2026-07-24 |
-| **AI Labs（Anthropic）** | 🟢 上行 | API收入占比75-85%+毛利率~65%+3Q26 GAAP EBIT转正，SemiA给$6万亿估值基准 | [[ai-labs/anthropic-dashboard]] | [[ai-labs/anthropic-dashboard.html\|🔗]] | 2026-07-09 |
-| 服务器 | ⚪ 待建 | — | — | — | — |
-| 存储 | ⚪ 待建 | — | — | — | — |
-| AI-配电 | ⚪ 待建 | — | — | — | — |
-| AI-发电 | ⚪ 待建 | — | — | — | — |
-| 电-柜内 | ⚪ 待建 | — | — | — | — |
-| 国内CapEx | ⚪ 待建 | — | — | — | — |
-| 软件应用 | ⚪ 待建 | — | — | — | — |
-| 云 | ⚪ 待建 | — | — | — | — |
-
----
-
-## 已完成版块（8 个主版块 + 1 个早期版本）
-
-### 🟢 PCB
-> CCL · PCB制造 · 铜箔 · 电子布 · 钻针 · 钻孔设备｜18 支标的
-
-- **重点标的**：沪电股份 `002463`、深南电路 `002916`、生益科技 `600183`、胜宏科技 `300476`
-- **核心催化剂**：台湾 PCB 厂月营收（每月10日）、GB300 新品发布
-- **看板亮点**：6 Tab 竞争格局 + 下游CapEx三段链 + CCL材料代际时间轴(M6→PTFE) + 35份研报增量
-- 底稿：[[PCB/PCB_看板]]　·　看板：[[PCB/PCB-dashboard.html]]
-
-### 🟢 先进封装（全球口径）
-> CoWoS-S/L/R · HBM · TIV · LSI/IPD · 玻璃载板｜全球视角
-
-- **重点标的**：TSMC（垄断 ~90%）+ 国产设备替代弹性
-- **核心催化剂**：HBM4 量产、Hybrid Bonding 2026+、TSMC CoWoS 月产能扩产节奏
-- **看板亮点**：CoWoS-S 13 层 hover 描述 + L/R 截面图 + 玻璃 vs 有机载板对比
-- 底稿：[[先进封装/先进封装_看板]]　·　看板：[[advanced-packaging/advanced-packaging-dashboard.html]]
-
-### 🟢 国产AI算力
-> AI芯片 · 先进封装 · HBM配套 · 配套材料/设备
-
-- **重点标的**：华为(未上市)、寒武纪 `688256`、海光信息 `688041`
-- **附加产出**：投资汇报PPT(62KB) · 行情分析HTML(206KB) · AGENT_HANDOFF文档
-- 看板：[[domestic-ai-compute/domestic-ai-compute-dashboard.html]]
-
-### 🟢 光模块（伙伴主导）
-> 800G/1.6T · CPO · 光芯片
-
-- **重点标的**：中际旭创 `300308`、新易盛 `300502`、天孚通信 `300394`
-- **原始数据完整度最高**：20 张 csv 拆表（22-27E 年度供需 + TAM + 6 大公司 + 光芯片缺口 + 价格序列）+ READ_ME 引导
-- 看板：[[optical-modules/optical-modules-dashboard.html]]
-
-### 🟢 光纤光缆（伙伴主导）
-> AI数据中心光纤需求拉动
-- 看板：[[fiber-optic-cable/fiber-optic-cable-dashboard.html]]
-
-### 🟡 国产半导体
-> 设备 · 材料 · 芯片设计 · 晶圆+封装｜4 Tab 竞争格局
-
-- **重点标的**：北方华创 `002371`、中微公司 `688012`、拓荆科技 `688072`、沪硅产业 `688126`
-- **状态**：7 章 MD 框架成形，HTML 布局完毕，26Q1 实际数据待回写
-- 底稿：[[国产半导体/国产半导体_看板]]　·　看板：[[domestic-semiconductor/domestic-semiconductor-dashboard.html]]
-
-### 🟡 液冷
-> 冷板式 · 浸没式 · CDU · 精密液冷
-
-- **重点标的**：英维克 `688286`、佳力图 `301110`、中科曙光 `603019`
-- **状态**：8 模块骨架完成，市场规模/渗透率数据待填实
-- 底稿：[[液冷/液冷_看板]]　·　看板：[[liquid-cooling/liquid-cooling-dashboard.html]]
-
-### 🟢 AI Labs（首期：Anthropic）
-> IPO财务与估值 · 与OpenAI对比 · 商业模式与产品 · 算力与技术路线｜海外AI实验室专题
-
-- **重点标的**：Anthropic（未上市，2026-06-01秘密提交IPO）
-- **核心催化剂**：IPO进程节点、下一轮融资、Fable/Mythos新模型定价、电力/TPU供给瓶颈演变
-- **看板亮点**：5 Tab深度拆解（IPO财务/OpenAI对比/商业模式/算力技术路线/风险催化剂），数据来自SemiAnalysis Tokenomics Model + Yipit高频数据 + 谷歌内部调研访谈，多信源口径差异均已标注
-- 底稿：[[ai-labs/anthropic-dashboard]]　·　看板：[[ai-labs/anthropic-dashboard.html]]
+| 版块 | 分组 | 景气评级 | 核心逻辑（一句话） | 看板 | 更新日期 |
+|------|------|---------|-----------------|------|----------|
+| **海外大厂CapEx** | 海外需求侧 | 🟢 上行 | 四家2Q26单季CapEx 1712亿，同期FCF只剩5.5亿(较峰值缩水99%)——扩张已越过经营现金流自付边界 | [overseas-capex-dashboard.html](overseas-capex/overseas-capex-dashboard.html) | 2026-08-03 |
+| **AI Labs（Anthropic）** | 海外需求侧 | 🟢 上行 | API收入占比75-85%+毛利率~65%+3Q26 GAAP EBIT转正，SemiA给$6万亿估值基准 | [anthropic-dashboard.html](ai-labs/anthropic-dashboard.html) | 2026-07-10 |
+| **CoWoS产能分配** | 芯片链条 | 🟢 上行 | 台积电+非台积电阵营2027产能规划与NVDA/AMD/AVGO/MTK客户分配 | [CoWoS-capacity-allocation-dashboard.html](chip-chain/CoWoS-capacity-allocation-dashboard.html) | 2026-07-06 |
+| **先进封装** | 芯片链条 | 🟢 上行（全球口径） | TSMC CoWoS 垄断→供给瓶颈30-40%缺口，HBM4/Hybrid Bonding 2026+ | [advanced-packaging-dashboard.html](advanced-packaging/advanced-packaging-dashboard.html) | 2026-07-21 |
+| **存储 / HBM** | 芯片链条 | 🟢 上行 | HBM为主线，五强财务(三大原厂+Sandisk+铠侠)+AI存储技术路线(CXL/HBM4-5/PIM等)+CoWoS联动 | [index.html](memory/index.html) | 2026-08-04 |
+| **交换芯片** | 芯片链条 | 🟢 上行 | Switch ASIC/SerDes/超节点/光电协同，验证国产交换芯片放量窗口 | [switch-chip-dashboard.html](switch-chip/switch-chip-dashboard.html) | 2026-06-12 |
+| **光模块** | 光通信链条 | 🟢 上行 | 北美CapEx高增 + 800G放量 + 1.6T导入 | [optical-modules-dashboard.html](optical-modules/optical-modules-dashboard.html) | 2026-06-23 |
+| **光纤光缆** | 光通信链条 | 🟢 上行 | AI数据中心拉动光纤需求 | [fiber-optic-cable-dashboard.html](fiber-optic-cable/fiber-optic-cable-dashboard.html) | 2026-07-13 |
+| **PCB** | 材料设备散热 | 🟢 上行 | AI服务器拉动高多层板量价双升，CCL提价周期开启 | [PCB-dashboard.html](PCB/PCB-dashboard.html) | 2026-06-26 |
+| **液冷** | 材料设备散热 | 🟡 加速期 | AI算力驱动，单柜功率密度突破30kW→液冷必选 | [liquid-cooling-dashboard.html](liquid-cooling/liquid-cooling-dashboard.html) | 2026-06-12 |
+| **国产AI算力** | 国产算力与半导体 | 🟢 上行 | 出口管制+国产替代，华为/寒武纪/海光算力放量 | [domestic-ai-compute-dashboard.html](domestic-ai-compute/domestic-ai-compute-dashboard.html) | 2026-07-20 |
+| **国产存储** | 国产算力与半导体 | 🟡 结构分化 | 28只设备材料标的按4条并行逻辑重切（长存长鑫扩产/HBM封装设备/先进制程/缺货涨价），判断当下哪条主导行情 | [domestic-storage-dashboard.html](domestic-storage/domestic-storage-dashboard.html) | 2026-07-21 |
+| **全球半导体设备** | 国产算力与半导体 | 🟡 建设中 | AI驱动WFE总量测算+逻辑vs存储CapEx结构+36家海外设备商盈利估值与A股映射 | [global-semiconductor-equipment-dashboard.html](global-semiconductor-equipment/global-semiconductor-equipment-dashboard.html) | 2026-07-27 |
+| **国产半导体设备** | 国产算力与半导体 | 🟡 建设中 | 双向测算器：CapEx/产能→设备TAM→国产化率→公司收入，亦可由目标市值反推CapEx情景；当前国产TAM 724亿/国产化率43.8% | [domestic-semiconductor-equipment-dashboard.html](domestic-semiconductor-equipment/domestic-semiconductor-equipment-dashboard.html) | 2026-07-28 |
+| **业绩跟踪** | 跨行业专题 | 🔄 业绩季 | 32家公司财报后股价反应矩阵(1日/2日/3日/5日)+业绩vs预期分布，17行业筛选 | [earnings-tracker-dashboard.html](earnings-tracker/earnings-tracker-dashboard.html) | 2026-07-30 |
+| **台股电子月营收** | 跨行业专题 | 🔄 月度 | 36家台股电子/13环节月营收+累计YoY+A股映射，产业链最快先行读数 | [taiwan-electronics-dashboard.html](taiwan-electronics/taiwan-electronics-dashboard.html) | 2026-06-26 |
 
 ---
 
 ## 基础设施
 
-| 文件 | 功能 | 维护者 |
-|------|------|--------|
-| `main-dashboard.html` | 7 版块卡片入口页 + 景气汇总条 | 伙伴 |
-| `roadmap.html` | 28 季度 AI 算力技术路线图（多 swimlane） | 伙伴 |
-| `总看板数据/Roadmap.xlsx` | roadmap 数据源 | 伙伴 |
-| `_templates/行业看板模板.{html,md}` | 新版块脚手架 | 伙伴 |
-| `工作日志_YYYYMMDD.md` | 阶段性复盘 | 我 |
+| 文件 | 功能 |
+|------|------|
+| `industry-fundamentals-entry.html` | **本目录的唯一入口页**，16 张看板卡片 + 研究矩阵 |
+| `../../../main-dashboard.html` | 全站总入口 |
+| `roadmap.html` | 28 季度 AI 算力技术路线图（多 swimlane） |
+| `worklog_20260526.md` | 阶段性复盘 |
 
 ---
 
-## 待建版块优先级建议
-
-| 优先级 | 版块 | 建议理由 |
-|--------|------|----------|
-| 高 | 存储 | 供需周期明确，NOR/NAND/HBM 多条线 |
-| 高 | 服务器 | 工业富联/立讯，与光模块/PCB联动强 |
-| 中 | AI-配电 | 变压器/UPS，CapEx 周期滞后受益 |
-| 中 | 电-柜内 | 母线/铜排，单柜功率密度提升直接受益 |
-| 低 | 软件应用 | 标的多、差异大，建议拆成子版块 |
-
----
-
-## 使用说明
-
-### 新建版块步骤
-1. 复制 `_templates/行业看板模板.md` 到新目录（如 `存储/存储_看板.md`）
-2. 修改 frontmatter（版块名、景气评级、核心逻辑）
-3. 填充六个章节内容
-4. 复制 `_templates/行业看板模板.html`，修改 `DATA` 对象中的数据
-5. 在本索引文件 + 在 `main-dashboard.html` 中新增卡片
-
-### 更新节奏
-- **每月**：供需追踪表数据（价格/出货量/交期）
-- **每季度**：竞争格局、标的估值水位、A股映射观点
-- **事件驱动**：催化剂跟踪状态更新（待观察→已验证/已证伪）
-
----
-
-*TMT 产业链覆盖名单：[[workwork/monitoring/list/TMT_net_list]]*
+*本索引对应本地工作区 `workwork/research/基本面研究/行业看板/00_INDEX.md`，仅收录对外公开的看板产出，不含原始数据、脚本与内部笔记。*

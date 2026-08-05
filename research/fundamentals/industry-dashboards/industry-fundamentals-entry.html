@@ -302,21 +302,47 @@ h1 {
   <div class="layout">
     <nav class="nav panel">
       <div class="nav-title">页面导航</div>
-      <a href="#chip"><span>芯片链条</span><span>3</span></a>
+      <a href="#demand"><span>海外需求侧</span><span>2</span></a>
+      <a href="#chip"><span>芯片链条</span><span>4</span></a>
       <a href="#optical"><span>光通信链条</span><span>2</span></a>
-      <a href="#materials"><span>材料设备散热</span><span>1</span></a>
-      <a href="#network"><span>网络互联</span><span>1</span></a>
+      <a href="#materials"><span>材料设备散热</span><span>2</span></a>
       <a href="#compute"><span>国产算力与半导体</span><span>4</span></a>
-      <a href="#ailabs"><span>AI Labs</span><span>1</span></a>
+      <a href="#cross"><span>跨行业专题</span><span>2</span></a>
       <a href="#matrix"><span>研究矩阵</span><span>框架</span></a>
     </nav>
 
     <div class="content">
+      <section id="demand" class="section panel">
+        <div class="section-head">
+          <div>
+            <h2>海外需求侧</h2>
+            <div class="sub">这条链的钱从哪来、又靠什么还回去。云厂商资本开支决定下游所有环节的量价前提；AI 实验室的收入结构与毛利率，则决定这笔开支最终能否被变现支撑——两端要放在一起看。</div>
+          </div>
+          <span class="chip">资金源头 × 变现验证</span>
+        </div>
+        <div class="cards">
+          <a class="card" href="overseas-capex/overseas-capex-dashboard.html" target="_blank">
+            <div>
+              <div class="line"><h3>海外大厂 AI CapEx</h3><span class="code">CPX</span></div>
+              <p>四家云厂资本开支季度序列至 2Q26，含一致预期误差、云收入剪刀差与自由现金流。</p>
+            </div>
+            <div class="foot"><span class="tag blue">需求源头</span><span class="open">进入看板</span></div>
+          </a>
+          <a class="card" href="ai-labs/anthropic-dashboard.html" target="_blank">
+            <div>
+              <div class="line"><h3>AI Labs：Anthropic</h3><span class="code">ANT</span></div>
+              <p>IPO 财务、与 OpenAI 对比、商业模式与算力路线，验证这轮 CapEx 的变现能力。</p>
+            </div>
+            <div class="foot"><span class="tag purple">变现验证</span><span class="open">进入看板</span></div>
+          </a>
+        </div>
+      </section>
+
 <section id="chip" class="section panel">
         <div class="section-head">
           <div>
             <h2>芯片链条</h2>
-            <div class="sub">关注全球 CoWoS 产能分配、GPU/CPU 先进封装、HBM 供需和 AI 晶圆收入。</div>
+            <div class="sub">关注全球 CoWoS 产能分配、GPU/CPU 先进封装、HBM 供需、AI 晶圆收入，以及把这些芯片连起来的交换与互联环节。</div>
           </div>
           <span class="chip">新增链条</span>
         </div>
@@ -324,23 +350,30 @@ h1 {
           <a class="card" href="chip-chain/CoWoS-capacity-allocation-dashboard.html" target="_blank">
             <div>
               <div class="line"><h3>CoWoS 产能分配</h3><span class="code">CW</span></div>
-              <p>台积电 + 非台积电阵营 2027 年产能规划、NVDA/AMD/AVGO/MTK 客户分配、HBM 需求与 AI 晶圆收入测算。</p>
+              <p>台积电与非台积电阵营 2027 产能规划、四大客户分配比例与 HBM 需求测算。</p>
             </div>
             <div class="foot"><span class="tag purple">产能分配</span><span class="open">进入看板</span></div>
           </a>
           <a class="card" href="advanced-packaging/advanced-packaging-dashboard.html" target="_blank">
             <div>
               <div class="line"><h3>先进封装技术</h3><span class="code">PKG</span></div>
-              <p>CoWoS 结构解析、载板材料路线、竞争格局与 A 股标的，连接封装瓶颈和国产替代逻辑。</p>
+              <p>CoWoS 结构解析、载板材料路线、全球封装厂与设备商格局。</p>
             </div>
             <div class="foot"><span class="tag blue">封装技术</span><span class="open">进入看板</span></div>
           </a>
-          <a class="card" href="memory/" target="_blank">
+          <a class="card" href="memory/index.html" target="_blank">
             <div>
               <div class="line"><h3>存储 / HBM</h3><span class="code">MEM</span></div>
-              <p>HBM 堆叠/TSV、三大原厂供需量价、CoWoS 联动与 A 股材料设备模组映射，AI 存储主线入口。</p>
+              <p>HBM 堆叠与 TSV、三大原厂供需量价、A 股材料设备模组映射。</p>
             </div>
             <div class="foot"><span class="tag purple">AI 主线</span><span class="open">进入看板</span></div>
+          </a>
+          <a class="card" href="switch-chip/switch-chip-dashboard.html" target="_blank">
+            <div>
+              <div class="line"><h3>交换芯片</h3><span class="code">SW</span></div>
+              <p>Switch ASIC、SerDes 与超节点架构，验证国产交换芯片的放量窗口。</p>
+            </div>
+            <div class="foot"><span class="tag">网络核心</span><span class="open">进入看板</span></div>
           </a>
         </div>
       </section>
@@ -357,14 +390,14 @@ h1 {
           <a class="card" href="optical-modules/optical-modules-dashboard.html" target="_blank">
             <div>
               <div class="line"><h3>光模块</h3><span class="code">OM</span></div>
-              <p>800G、1.6T、CPO、光芯片和主要公司收入弹性，是 AI 基建最直接映射方向。</p>
+              <p>800G/1.6T 代际升级、CPO、光芯片供需与主要公司收入弹性。</p>
             </div>
             <div class="foot"><span class="tag">核心景气</span><span class="open">进入看板</span></div>
           </a>
           <a class="card" href="fiber-optic-cable/fiber-optic-cable-dashboard.html" target="_blank">
             <div>
               <div class="line"><h3>光纤光缆</h3><span class="code">FC</span></div>
-              <p>光纤预制棒、光缆、海缆和供给周期，适合跟踪传输侧周期变化。</p>
+              <p>光纤预制棒、光缆、海缆与供给周期，传输侧的周期跟踪。</p>
             </div>
             <div class="foot"><span class="tag gold">周期品</span><span class="open">进入看板</span></div>
           </a>
@@ -383,32 +416,19 @@ h1 {
           <a class="card" href="PCB/PCB-dashboard.html" target="_blank">
             <div>
               <div class="line"><h3>PCB</h3><span class="code">PCB</span></div>
-              <p>高多层板、CCL、电子布、铜箔和钻孔设备，适合跟踪材料涨价和扩产节奏。</p>
+              <p>高多层板、CCL、电子布、铜箔与钻针，跟踪材料涨价和扩产节奏。</p>
             </div>
             <div class="foot"><span class="tag">材料涨价</span><span class="open">进入看板</span></div>
           </a>
-        </div>
-      </section>
-
-      <section id="network" class="section panel">
-        <div class="section-head">
-          <div>
-            <h2>网络互联</h2>
-            <div class="sub">关注交换芯片、SerDes、Scale-out/Scale-up 和超节点网络架构变化。</div>
-          </div>
-          <span class="chip">映射重点：AVGO / MRVL</span>
-        </div>
-        <div class="cards">
-          <a class="card" href="switch-chip/switch-chip-dashboard.html" target="_blank">
+          <a class="card" href="liquid-cooling/liquid-cooling-dashboard.html" target="_blank">
             <div>
-              <div class="line"><h3>交换芯片</h3><span class="code">SW</span></div>
-              <p>Switch ASIC、SerDes、超节点和光电协同，用来验证国产交换芯片的放量窗口。</p>
+              <div class="line"><h3>液冷</h3><span class="code">LC</span></div>
+              <p>冷板式、浸没式与 CDU，单柜功率密度突破 30kW 后的必选路径。</p>
             </div>
-            <div class="foot"><span class="tag">网络核心</span><span class="open">进入看板</span></div>
+            <div class="foot"><span class="tag gold">加速期</span><span class="open">进入看板</span></div>
           </a>
         </div>
       </section>
-
 
       <section id="compute" class="section panel">
         <div class="section-head">
@@ -422,49 +442,56 @@ h1 {
           <a class="card" href="domestic-ai-compute/domestic-ai-compute-dashboard.html" target="_blank">
             <div>
               <div class="line"><h3>国产 AI 算力</h3><span class="code">AI</span></div>
-              <p>AI 芯片、超节点、国产替代、服务器和生态适配，是国产算力主线的核心入口。</p>
+              <p>AI 芯片、超节点与国产替代路径，华为/寒武纪/海光的交付与制程瓶颈。</p>
             </div>
             <div class="foot"><span class="tag">算力主线</span><span class="open">进入看板</span></div>
           </a>
-          <a class="card" href="domestic-semiconductor/domestic-semiconductor-dashboard.html" target="_blank">
+          <a class="card" href="domestic-storage/domestic-storage-dashboard.html" target="_blank">
             <div>
-              <div class="line"><h3>国产半导体</h3><span class="code">SE</span></div>
-              <p>设备、材料、晶圆、封装、设计链条，用来验证国产化进度和利润弹性。</p>
+              <div class="line"><h3>国产存储</h3><span class="code">CNM</span></div>
+              <p>28 只设备材料标的按 4 条并行逻辑重切：长存长鑫扩产、HBM 设备、先进制程、缺货涨价。</p>
             </div>
             <div class="foot"><span class="tag blue">国产替代</span><span class="open">进入看板</span></div>
           </a>
           <a class="card" href="global-semiconductor-equipment/global-semiconductor-equipment-dashboard.html" target="_blank">
             <div>
               <div class="line"><h3>全球半导体设备</h3><span class="code">EQ</span></div>
-              <p>AI驱动的WFE总量测算、逻辑vs存储CapEx结构、海外设备商盈利预测与估值。</p>
+              <p>AI 驱动的 WFE 总量测算、逻辑 vs 存储 CapEx 结构、海外设备商盈利与估值。</p>
             </div>
             <div class="foot"><span class="tag blue">全球WFE</span><span class="open">进入看板</span></div>
           </a>
           <a class="card" href="domestic-semiconductor-equipment/domestic-semiconductor-equipment-dashboard.html" target="_blank">
             <div>
               <div class="line"><h3>国产半导体设备</h3><span class="code">CN</span></div>
-              <p>CapEx/产能→设备TAM→国产公司收入测算器；按大类看国产化率与厂商份额，含市值反推与交叉验证。</p>
+              <p>测算器：从晶圆厂 CapEx／产能推设备 TAM 与国产化率，也可由市值反推 CapEx 情景。</p>
             </div>
             <div class="foot"><span class="tag blue">国产替代</span><span class="open">进入看板</span></div>
           </a>
         </div>
       </section>
 
-      <section id="ailabs" class="section panel">
+      <section id="cross" class="section panel">
         <div class="section-head">
           <div>
-            <h2>AI Labs</h2>
-            <div class="sub">海外AI实验室财务与估值专题，首期覆盖 Anthropic 的 IPO 财务、与 OpenAI 对比、商业模式与算力技术路线。</div>
+            <h2>跨行业专题</h2>
+            <div class="sub">不对应单一行业、按时间节奏动态更新的跟踪工具：业绩季的财报与股价反应，月度的台股电子供应链营收。</div>
           </div>
-          <span class="chip">新增分类</span>
+          <span class="chip">动态更新</span>
         </div>
         <div class="cards">
-          <a class="card" href="ai-labs/anthropic-dashboard.html" target="_blank">
+          <a class="card" href="earnings-tracker/earnings-tracker-dashboard.html" target="_blank">
             <div>
-              <div class="line"><h3>Anthropic</h3><span class="code">ANT</span></div>
-              <p>秘密提交IPO的头号AI实验室，API收入主导、毛利率大幅改善，是海外AI变现能力的关键验证标的。</p>
+              <div class="line"><h3>业绩跟踪</h3><span class="code">ER</span></div>
+              <p>32 家公司财报后的股价反应矩阵与业绩 vs 预期分布，可按行业筛选。</p>
             </div>
-            <div class="foot"><span class="tag purple">AI实验室</span><span class="open">进入看板</span></div>
+            <div class="foot"><span class="tag red">业绩季</span><span class="open">进入看板</span></div>
+          </a>
+          <a class="card" href="taiwan-electronics/taiwan-electronics-dashboard.html" target="_blank">
+            <div>
+              <div class="line"><h3>台股电子月营收</h3><span class="code">TW</span></div>
+              <p>36 家台厂、13 个环节的月营收与累计 YoY，附 A 股映射，每月 10 日更新。</p>
+            </div>
+            <div class="foot"><span class="tag blue">月度先行</span><span class="open">进入看板</span></div>
           </a>
         </div>
       </section>

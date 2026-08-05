@@ -184,7 +184,7 @@ code{font-size:10px;background:var(--tag-bg);color:var(--tag);padding:1px 5px;bo
 
 <header class="hdr">
   <div class="hdr-l">
-    <a class="back-link" href="../industry-fundamentals-entry.html">← 行业基本面入口</a>
+    <a class="back-link" href="../行业基本面入口.html">← 行业基本面入口</a>
     <span class="hdr-title">国产AI算力</span>
     <span class="hdr-sub">AI芯片 · 先进封装 · HBM · 推理基础设施</span>
     <span class="badge-up">🟢 替代加速</span>
@@ -247,7 +247,7 @@ code{font-size:10px;background:var(--tag-bg);color:var(--tag);padding:1px 5px;bo
 
 <!-- 产能总览表 -->
 <div class="card" style="margin-bottom:16px">
-  <div style="font-size:11px;color:var(--text2);margin-bottom:14px">数据来源：<strong>20251223 国产GPU性能对比报告（优先）</strong> / 中芯国际公告 / 摩根士丹利(2025.10)　｜　产能单位：万片/月（12寸等效）</div>
+  <div style="font-size:11px;color:var(--text2);margin-bottom:14px">数据来源：<strong>20251223 国产GPU性能对比报告（优先）</strong> / 中芯国际公告 / 摩根士丹利(2025.10) / <strong>2026-07-09会议现场Logic产能图</strong>　｜　产能单位：万片/月（12寸等效）</div>
   <table class="ctable">
     <thead>
       <tr><th>厂商</th><th>制程节点</th><th>技术路线</th><th>当前月产能（总）</th><th>其中可给AI</th><th>2026E目标（总）</th><th>良率</th><th>主要服务芯片</th><th>备注</th></tr>
@@ -265,8 +265,22 @@ code{font-size:10px;background:var(--tag-bg);color:var(--tag);padding:1px 5px;bo
       <tr style="background:#fef2f2"><td>N+3（≈5nm）</td><td>DUV多重曝光</td><td>爬坡初期</td><td>—</td><td>小批量</td><td>60-70%</td><td>麒麟9030等</td><td>2025年12月官宣量产</td></tr>
       <tr style="background:#fef2f2"><td>14nm FinFET</td><td>DUV多重曝光</td><td>15万片/月</td><td>部分</td><td>15+万片</td><td>95%+</td><td>消费电子/工控/汽车</td><td>良率已追平台积电南京厂</td></tr>
       <tr><td><strong>华虹半导体</strong></td><td>7nm级（DUV）</td><td>华为技术支持</td><td><strong>~7,000片/月</strong></td><td>试产</td><td>小批量</td><td>早期</td><td>AI芯片（华为支持）</td><td>在官方要求下加入先进制程开发</td></tr>
+      <tr style="background:#f8fafc"><td><strong>PXS（存疑）</strong><br><span style="font-size:9px;color:var(--text2)">最可能：深圳市鹏芯微集成电路制造有限公司<br>Fab 1</span></td><td>14/12nm</td><td>现场图未披露</td><td>规划2万片/月</td><td>—</td><td><strong>1万片/月</strong></td><td>—</td><td>12英寸晶圆代工（待客户核对）</td><td>2027E/2028E均为3万片/月；鹏芯微官方英文简称为PXW，未见官方使用“PXS”</td></tr>
+      <tr style="background:#f8fafc"><td rowspan="2"><strong>DGMT</strong><br><span style="font-size:9px;color:var(--text2)">Fab 1 / Fab 2</span></td><td>14/12nm</td><td>现场图未披露</td><td>规划3万片/月</td><td>—</td><td><strong>1.5万片/月</strong></td><td>—</td><td>逻辑芯片（待复核）</td><td><strong>2028提升至7nm</strong>；2027E/2028E均为3万片/月</td></tr>
+      <tr style="background:#f8fafc"><td>10nm</td><td>现场图未披露</td><td>规划3万片/月</td><td>—</td><td>—</td><td>—</td><td>逻辑芯片（待复核）</td><td>2027E 0.5万；2028E 1万片/月</td></tr>
+      <tr style="background:#f8fafc"><td><strong>ICRD</strong><br><span style="font-size:9px;color:var(--text2)">上海集成电路研发中心有限公司<br>P3</span></td><td>14/12nm</td><td>12英寸开放式试验平台 / AI Fab</td><td>规划2万片/月</td><td>—</td><td><strong>1万片/月</strong></td><td>—</td><td>研发、中试及开放式制造服务</td><td>成立于2002年；2026E-2028E均为1万片/月</td></tr>
+      <tr style="background:#f8fafc"><td rowspan="2"><strong>GTX</strong><br><span style="font-size:9px;color:var(--text2)">上海光通信有限公司<br>Shanghai GTX Semiconductor<br>Fab 1</span></td><td>28nm</td><td>12英寸晶圆代工</td><td rowspan="2">规划4万片/月</td><td rowspan="2">—</td><td><strong>3万片/月</strong></td><td rowspan="2">—</td><td rowspan="2">图像传感器 / RF等</td><td>2022年初转型进入55-28nm晶圆代工；2026E-2028E均为3万片/月</td></tr>
+      <tr style="background:#f8fafc"><td>14/12nm</td><td>现场图未披露</td><td><strong>1万片/月</strong></td><td>2026E-2028E均为1万片/月</td></tr>
+      <tr style="background:#f8fafc"><td rowspan="2"><strong>GTX</strong><br><span style="font-size:9px;color:var(--text2)">上海光通信有限公司<br>Fab 2</span></td><td>14/12nm</td><td>12英寸晶圆代工</td><td rowspan="2">规划4万片/月</td><td rowspan="2">—</td><td>—</td><td rowspan="2">—</td><td rowspan="2">图像传感器 / RF等</td><td>2028E 2万片/月</td></tr>
+      <tr style="background:#f8fafc"><td>10nm</td><td>现场图未披露</td><td>—</td><td>2027E 0.5万；2028E 1万片/月</td></tr>
+      <tr style="background:#f8fafc"><td rowspan="2"><strong>SiEn</strong><br><span style="font-size:9px;color:var(--text2)">芯恩（青岛）集成电路有限公司<br>SiEn (Qingdao) Semiconductor<br>Fab 3</span></td><td>28nm</td><td>CIDM协同式集成电路制造</td><td rowspan="2">规划3万片/月</td><td rowspan="2">—</td><td><strong>2.5万片/月</strong></td><td rowspan="2">—</td><td rowspan="2">中国首个CIDM项目</td><td>现场图未列2027E/2028E</td></tr>
+      <tr style="background:#f8fafc"><td>14/12nm</td><td>现场图未披露</td><td><strong>0.5万片/月</strong></td><td>现场图未列2027E/2028E</td></tr>
     </tbody>
   </table>
+
+  <div style="font-size:10px;color:var(--text2);line-height:1.6;margin:8px 0 12px;padding:7px 9px;background:#f8fafc;border-radius:6px">
+    注：SiEn、ICRD、GTX的全称及业务定位由用户补充；PXS最可能对应深圳鹏芯微，但其官方英文简称为PXW，因此继续标记存疑；DGMT仍待确认。产能数字来自现场图片，待公司公告与产业调研交叉验证。
+  </div>
 
 
   <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-top:4px">
@@ -282,6 +296,93 @@ code{font-size:10px;background:var(--tag-bg);color:var(--tag);padding:1px 5px;bo
       <div style="font-weight:700;font-size:11px;color:var(--up);margin-bottom:4px">✅ HBM国产化：超预期进展</div>
       <div style="font-size:11px;color:var(--text2);line-height:1.6">长鑫存储HBM进展<strong>远超此前预期</strong>：2026E月产能达5-6万片（占总产能20%），全球份额3-6%，与华为联合开发。<br>韩中差距已从5年缩至3年。这是国产AI算力最大的正向惊喜。</div>
     </div>
+  </div>
+</div>
+
+<!-- 2026-07-09 会议现场新增：Logic先进产能 -->
+<div class="card" id="logic-capacity-20260709" style="margin-bottom:16px;border-top:3px solid #2563eb">
+  <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:12px">
+    <div>
+      <div style="font-weight:800;font-size:13px;color:#1d4ed8">中国先进制程产能 · Logic</div>
+      <div style="font-size:10px;color:var(--text2);margin-top:3px">全国多厂区、多节点总供给口径｜单位：12寸等效片/月</div>
+    </div>
+    <span style="font-size:9px;padding:3px 7px;border-radius:999px;background:#eff6ff;color:#1d4ed8;border:1px solid #bfdbfe;white-space:nowrap">2026-07-09新增</span>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-bottom:10px">
+    <div style="padding:10px 12px;background:#f8fafc;border:1px solid var(--border);border-radius:8px">
+      <div style="font-size:9px;color:var(--text2)">2026E｜14-7nm合计</div><div style="font-size:20px;font-weight:800;color:#1d4ed8">14.0万片/月</div>
+      <div style="font-size:10px;color:var(--text2)">其中7nm：<strong>3.5万片/月</strong></div>
+    </div>
+    <div style="padding:10px 12px;background:#f8fafc;border:1px solid var(--border);border-radius:8px">
+      <div style="font-size:9px;color:var(--text2)">2027E｜14-7nm合计</div><div style="font-size:20px;font-weight:800;color:#1d4ed8">16.5万片/月</div>
+      <div style="font-size:10px;color:var(--text2)">其中7nm：<strong>3.5万片/月</strong></div>
+    </div>
+    <div style="padding:10px 12px;background:#eff6ff;border:1px solid #93c5fd;border-radius:8px">
+      <div style="font-size:9px;color:var(--text2)">2028E｜14-7nm合计</div><div style="font-size:20px;font-weight:800;color:#1d4ed8">20.5万片/月</div>
+      <div style="font-size:10px;color:var(--text2)">其中7nm：<strong>6.5万片/月</strong></div>
+    </div>
+  </div>
+  <div style="font-size:11px;line-height:1.65;color:var(--text2);padding:9px 11px;background:#fff7ed;border-left:3px solid #f59e0b;border-radius:5px">
+    <strong style="color:#9a3412">口径不要混用：</strong>本表是全国 Logic 先进节点总产能；原看板“中芯N+2 AI可用1万片/月、2026E总目标4万片/月”是单厂且关注AI实际分配。新数据抬升的是中期供给上限，不代表AI芯片当期即可获得同等产能。
+  </div>
+</div>
+
+<!-- 2026-07-09 会议现场新增：Memory先进产能 -->
+<div class="card" id="memory-capacity-20260709" style="margin-bottom:16px;border-top:3px solid #7c3aed">
+  <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:12px">
+    <div>
+      <div style="font-weight:800;font-size:13px;color:#6d28d9">中国先进制程产能 · Memory</div>
+      <div style="font-size:10px;color:var(--text2);margin-top:3px">覆盖DRAM、NAND与HBM/TSV相关厂区｜单位：片/月</div>
+    </div>
+    <span style="font-size:9px;padding:3px 7px;border-radius:999px;background:#f5f3ff;color:#6d28d9;border:1px solid #ddd6fe;white-space:nowrap">2023-2028E</span>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:7px;margin-bottom:12px">
+    <div style="padding:8px;background:#fafafa;border-radius:7px;text-align:center"><div style="font-size:9px;color:var(--text2)">2023</div><strong>27万</strong></div>
+    <div style="padding:8px;background:#fafafa;border-radius:7px;text-align:center"><div style="font-size:9px;color:var(--text2)">2024</div><strong>38万</strong></div>
+    <div style="padding:8px;background:#fafafa;border-radius:7px;text-align:center"><div style="font-size:9px;color:var(--text2)">2025</div><strong>46万</strong></div>
+    <div style="padding:8px;background:#f5f3ff;border-radius:7px;text-align:center"><div style="font-size:9px;color:var(--text2)">2026E</div><strong style="color:#6d28d9">56万</strong></div>
+    <div style="padding:8px;background:#f5f3ff;border-radius:7px;text-align:center"><div style="font-size:9px;color:var(--text2)">2027E</div><strong style="color:#6d28d9">69万</strong></div>
+    <div style="padding:8px;background:#ede9fe;border-radius:7px;text-align:center"><div style="font-size:9px;color:var(--text2)">2028E</div><strong style="color:#6d28d9">74万</strong></div>
+  </div>
+  <table class="ctable">
+    <thead><tr><th>关键厂区/路线</th><th>2026E</th><th>2028E</th><th>现场材料指引</th></tr></thead>
+    <tbody>
+      <tr><td><strong>CXMT Fab A1/A2</strong>｜G1→G3/G4</td><td>20万片/月</td><td>20万片/月</td><td>2028年全面升级G4</td></tr>
+      <tr><td><strong>CXMT C1及HBM/TSV相关</strong></td><td>12万片/月</td><td>16万片/月</td><td>C1向G4+(1a)升级；部分厂区名称待图片复核</td></tr>
+      <tr><td><strong>YMTC Fab1/2/3</strong></td><td>16万片/月</td><td>30万片/月</td><td>Fab1/2提升至2xx；Fab3在2027-2028放量</td></tr>
+      <tr><td><strong>XMC HBM/TSV</strong></td><td>2万片/月</td><td>2万片/月</td><td>HBM配套产能单列跟踪</td></tr>
+    </tbody>
+  </table>
+  <div style="font-size:10px;color:var(--text2);margin-top:8px">研究含义：2023-2028E总产能由27万增至74万片/月，复合增速约22%；增量不仅来自传统DRAM/NAND扩产，也包含制程代际升级与HBM/TSV配套。</div>
+</div>
+
+<!-- 2026-07-09 会议现场新增：14nm设备国产化率 -->
+<div class="card" id="localization-14nm-20260709" style="margin-bottom:16px;border-top:3px solid #059669">
+  <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:12px">
+    <div>
+      <div style="font-weight:800;font-size:13px;color:#047857">14nm（FinFET）设备国产化率</div>
+      <div style="font-size:10px;color:var(--text2);margin-top:3px">2023公开资料统计 vs 2026现场材料推测｜以销售额口径综合测算</div>
+    </div>
+    <span style="font-size:9px;padding:3px 7px;border-radius:999px;background:#ecfdf5;color:#047857;border:1px solid #a7f3d0;white-space:nowrap">设备环节</span>
+  </div>
+  <table class="ctable">
+    <thead><tr><th>工序</th><th>设备</th><th>2023</th><th>2026E</th><th>变化</th><th>判断</th></tr></thead>
+    <tbody>
+      <tr style="background:#fef2f2"><td>光刻</td><td>DUV dry / immersion</td><td>0%</td><td>10% / 0%</td><td>极低</td><td><strong style="color:var(--dn)">核心卡点仍未解除</strong></td></tr>
+      <tr><td>涂胶显影</td><td>inline / offline</td><td>0% / 0%</td><td>0% / 40%</td><td>+0/+40pct</td><td>离线设备先突破，整线能力仍弱</td></tr>
+      <tr style="background:#f0fdf4"><td>刻蚀</td><td>CCP / ICP</td><td>13% / 5%</td><td>60% / 50%</td><td>+47/+45pct</td><td>国产替代主战场，兑现度较高</td></tr>
+      <tr style="background:#f0fdf4"><td>薄膜沉积</td><td>PVD / PECVD / EPI</td><td>10% / 10% / 0%</td><td>60% / 60% / 50%</td><td>显著提升</td><td>平台化设备厂受益</td></tr>
+      <tr><td>薄膜沉积</td><td>SA/HDP CVD / LPCVD / ALD</td><td>0% / 0% / 10%</td><td>0% / 25% / 35%</td><td>分化</td><td>SA/HDP CVD仍为空白</td></tr>
+      <tr><td>离子注入</td><td>低能大束流 / 中低束流 / 高能</td><td>10% / 35% / 0%</td><td>40% / 60% / 20%</td><td>+20~30pct</td><td>中低束流领先，高能仍弱</td></tr>
+      <tr><td>热处理</td><td>氧化扩散 / 退火</td><td>15% / 20%</td><td>55% / 60%</td><td>+40pct</td><td>进入规模化替代阶段</td></tr>
+      <tr><td>CMP</td><td>化学机械研磨</td><td>8%</td><td>40%</td><td>+32pct</td><td>先进制程与先进封装双驱动</td></tr>
+      <tr style="background:#f0fdf4"><td>去胶 / 清洗</td><td>去胶机 / 清洗设备</td><td>45% / 30%</td><td>75% / 75%</td><td>+30/+45pct</td><td><strong style="color:var(--up)">高国产化环节</strong></td></tr>
+      <tr style="background:#fff7ed"><td>量测检测</td><td>OCD / 明场 / 暗场</td><td>0% / 0% / 0%</td><td>5% / 5% / 0%</td><td>进展有限</td><td><strong style="color:#9a3412">另一关键短板</strong></td></tr>
+      <tr><td>量测检测</td><td>膜厚 / AOI</td><td>35% / 40%</td><td>60% / 80%</td><td>+25/+40pct</td><td>结构性突破明显</td></tr>
+    </tbody>
+  </table>
+  <div style="font-size:10px;color:var(--text2);line-height:1.6;margin-top:8px;padding:8px 10px;background:#f8fafc;border-radius:6px">
+    <strong>来源与限制：</strong>2026-07-09 用户提供会议现场图片；2026为推测口径，待公司公告与产业调研交叉验证。厂商份额受拍摄角度和摩尔纹影响，本页不强行转录；完整25项比例已写入《国产算力数据库.xlsx》。
   </div>
 </div>
 
@@ -637,7 +738,7 @@ code{font-size:10px;background:var(--tag-bg);color:var(--tag);padding:1px 5px;bo
         <tr style="background:#fff7ed">
           <td><strong>盛合晶微</strong><br><code style="background:#fef3c7;color:#b45309">IPO待审</code></td>
           <td>CoWoS-S/L/R全制程<br>RDL Interposer</td>
-          <td><strong style="color:var(--up)">8,000→10,000片/月</strong><br><span style="font-size:10px;color:var(--text2)">2025末扩至1万</span></td>
+          <td><strong style="color:var(--up)">6,000-8,000片/月</strong><br><span style="font-size:10px;color:var(--text2)">2026年底目标1万+；中期1.3-1.6万，募投再+1.6万；混合键合26Q2小批量试产；良率~92%，先进封装产能利用率95%+（260720会议纪要）</span></td>
           <td><strong>65亿元</strong></td>
           <td style="font-size:11px">华为昇腾<br>头部云厂商</td>
           <td><span class="a-meet">科创板2026年4月</span></td>
@@ -645,8 +746,8 @@ code{font-size:10px;background:var(--tag-bg);color:var(--tag);padding:1px 5px;bo
         </tr>
         <tr>
           <td><strong>长电科技</strong><br><code>600584</code></td>
-          <td>2.5D/Chiplet封装<br>先进FC-BGA</td>
-          <td>—（扩产中）</td>
+          <td>XDFOI（类CoWoS-S/R）<br>+CoWoS-L能力</td>
+          <td><strong style="color:var(--up)">约2,000片/月</strong><br><span style="font-size:10px;color:var(--text2)">2026年底目标约5000；27年1万，2年展望2.5万；良率约88-89%，传统封装产能利用率92%+（260720会议纪要）</span></td>
           <td>~380亿元</td>
           <td style="font-size:11px">海外大客户为主<br>国内芯片设计</td>
           <td><span class="a-super">A股上市</span></td>
@@ -655,7 +756,7 @@ code{font-size:10px;background:var(--tag-bg);color:var(--tag);padding:1px 5px;bo
         <tr>
           <td><strong>通富微电</strong><br><code>002156</code></td>
           <td>AMD CoWoS代工<br>Flip Chip</td>
-          <td>—</td>
+          <td><strong style="color:var(--up)">CoWoS-S已量产</strong><br><span style="font-size:10px;color:var(--text2)">具体数字未披露；CoWoS-L/SoIC-L技术储备</span><br><span style="font-size:10px;color:var(--warn)">⚠️260720会议纪要口径：类CoWoS-L产能约5000片/月，良率约92%——公司未正式披露，待核实</span></td>
           <td>~260亿元</td>
           <td style="font-size:11px">AMD（海外）<br>国内GPU导入中</td>
           <td><span class="a-super">A股上市</span></td>
@@ -664,7 +765,7 @@ code{font-size:10px;background:var(--tag-bg);color:var(--tag);padding:1px 5px;bo
         <tr>
           <td><strong>甬矽电子</strong><br><code>688362</code></td>
           <td>Chiplet HBM堆叠<br>TSV测试</td>
-          <td>—</td>
+          <td><strong style="color:var(--up)">中期5,000片/月</strong><br><span style="font-size:10px;color:var(--text2)">拟投103亿建三期（BUMP/2.5D/FC/WB平台）</span><br><span style="font-size:10px;color:var(--warn)">⚠️260720会议纪要：先进封装产能利用率约85%，与"通线送样未量产"表述矛盾，待核实</span></td>
           <td>~30亿元</td>
           <td style="font-size:11px">国内AI芯片<br>寒武纪/等</td>
           <td><span class="a-super">科创板</span></td>
@@ -672,17 +773,26 @@ code{font-size:10px;background:var(--tag-bg);color:var(--tag);padding:1px 5px;bo
         </tr>
         <tr>
           <td><strong>汇成股份</strong><br><code>688403</code></td>
-          <td>FC-BGA<br>先进基板封装</td>
-          <td>—</td>
+          <td>HITS先进封装<br>CoWoS-L自研中介层</td>
+          <td><strong style="color:var(--warn)">建设期</strong><br><span style="font-size:10px;color:var(--text2)">一期Miniline 4000-5000片/月，27Q1建成H2量产；二期扩至1万，追加至75亿</span></td>
           <td>~45亿元</td>
           <td style="font-size:11px">GPU/NPU客户<br>FC基板封装</td>
           <td><span class="a-super">科创板</span></td>
-          <td style="font-size:11px">FC-BGA封装专攻；AI算力基板受益</td>
+          <td style="font-size:11px">CoWoS-L自研中介层，团队具台积电背景；⚠️公司披露有限，卖方口径为主</td>
+        </tr>
+        <tr style="background:#fafaf9">
+          <td><strong>渠梁电子</strong><br><span style="font-size:10px;color:var(--text2)">非上市</span></td>
+          <td>存储/运算封测<br>+2.5D、扇出型晶圆封装</td>
+          <td>单家产能1000-2000片/月<br><span style="font-size:10px;color:var(--text2)">良率约88-89%；先进封装产能利用率约87%（260720会议纪要）</span></td>
+          <td>—</td>
+          <td style="font-size:11px">存储厂商配套<br>（非国产算力主力）</td>
+          <td>—</td>
+          <td style="font-size:11px">福建晋江集成电路产业园背景企业，无明确上市母公司；此前未纳入本看板</td>
         </tr>
       </tbody>
     </table>
     <div class="seg-sum">
-      <strong>格局判断：</strong>盛合晶微独占CoWoS-S/L/R三档全覆盖，短期无对手；长电/通富依赖海外客户，国内AI导入进度是核心观察变量。2026年中国CoWoS有效产能约12-15万片/年，对应AI芯片需求30-40万片仍有较大缺口，供给侧不是问题，<strong>客户认证和技术门槛是护城河</strong>。
+      <strong>格局判断：</strong>盛合晶微独占CoWoS-S/L/R三档全覆盖，短期无对手；长电/通富依赖海外客户，国内AI导入进度是核心观察变量。国内95%+产能为CoWoS-S，结构性短板在CoWoS-L（台积电26年底CoWoS-L占比将达45%，国产算力芯片25Q3起已从S向L迁移）——⚠️此结论与260720会议纪要口径（盛合CoWoS-L约6000片、通富类CoWoS-L约5000片，均给良率92%）存在张力，待核实。2026年中国CoWoS有效产能约12-15万片/年，对应AI芯片需求30-40万片仍有较大缺口，供给侧不是问题，<strong>客户认证和技术门槛是护城河</strong>。竞争格局梯队（260720会议纪要口径）：2.5D CoWoS类第一梯队为盛合晶微+通富微电，第二梯队为甬矽/长电/华天/沛顿/紫光宏茂。CoW（芯片贴装中介层）是当前核心瓶颈环节，WoS（基板集成）可外包给日月光/安靠，2027年后WoS或率先供过于求。详细产能测算、口径冲突悬停浮窗、存储厂商封装委外母公司关系见「先进封装」看板「国内CoWoS产能与需求测算」章节（2026-07更新）。
     </div>
   </div>
 
@@ -1633,6 +1743,11 @@ const C = ['#ea580c','#0891b2','#16a34a','#7c3aed','#f43f5e','#64748b'];
               {name:'盛合晶微：CoWoS份额高', tip:'“最先进”封装平台，研报口径提到CoWoS份额85%', label:lbl('#ffffff','#475569','normal','#fed7aa',168)},
               {name:'长电/通富/伟测：封测升级', label:lbl('#ffffff','#475569','normal','#fed7aa',168)},
               {name:'封装设备', label:lbl('#ffffff','#475569','normal','#fed7aa',112)}
+            ]},
+          { name:'存储制造', tip:'HBM为主线，是国产算力芯片HBM供给端最大变量', label:lbl('#fff7ed','#9a3412','bold','#fdba74',128),
+            children:[
+              {name:'长鑫存储：2026E 5-6万片/月', tip:'未上市，HBM突破是重大产业里程碑', label:lbl('#ffffff','#475569','normal','#fed7aa',168)},
+              {name:'存储设备', label:lbl('#ffffff','#475569','normal','#fed7aa',112)}
             ]}
         ]},
       { name:'芯片', itemStyle:{color:'#0e7490'}, label:lbl('#0e7490','#fff','bold','#22d3ee',112),
@@ -1645,16 +1760,15 @@ const C = ['#ea580c','#0891b2','#16a34a','#7c3aed','#f43f5e','#64748b'];
           { name:'CPU\n海外映射', label:lbl('#ecfeff','#155e75','bold','#67e8f9',128),
             children:[{name:'海光信息：CPU+DCU双线', tip:'映射海外CPU产业趋势，也是国产算力确定性主线', label:lbl('#ffffff','#475569','normal','#bae6fd',168)}]},
           { name:'ASIC\n大厂自研', label:lbl('#ecfeff','#155e75','bold','#67e8f9',128),
-            children:[{name:'芯原股份：自研芯片需求', label:lbl('#ffffff','#475569','normal','#bae6fd',168)}]},
-          { name:'HBM\n风险与惊喜', tip:'最大单点风险，也是最大正向惊喜', label:lbl('#ecfeff','#155e75','bold','#67e8f9',128),
-            children:[
-              {name:'长鑫存储：2026E 5-6万片/月', tip:'未上市，HBM突破是重大产业里程碑', label:lbl('#ffffff','#475569','normal','#bae6fd',168)},
-              {name:'澜起科技：DDR5 RCD', tip:'内存接口芯片，受益AI服务器DDR5升级', label:lbl('#ffffff','#475569','normal','#bae6fd',168)}
-            ]}
+            children:[{name:'芯原股份：自研芯片需求', label:lbl('#ffffff','#475569','normal','#bae6fd',168)}]}
         ]},
       { name:'超节点\n提升算力产出', tip:'芯片出货不变的基础上，通过系统与互联提升总算力产出',
         itemStyle:{color:'#2563eb'}, label:lbl('#2563eb','#fff','bold','#60a5fa',126),
-        children:[{name:'浪潮/华勤/曙光：整机集群', label:lbl('#ffffff','#475569','normal','#bfdbfe',168)}]}
+        children:[
+          {name:'交换芯片', label:lbl('#ffffff','#475569','normal','#bfdbfe',168)},
+          {name:'华为超节点概念', label:lbl('#ffffff','#475569','normal','#bfdbfe',168)},
+          {name:'整机', label:lbl('#ffffff','#475569','normal','#bfdbfe',168)}
+        ]}
     ]
   };
   chart.setOption({
