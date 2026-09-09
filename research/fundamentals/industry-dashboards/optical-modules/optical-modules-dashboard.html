@@ -128,7 +128,57 @@ code{font-size:10px;background:var(--tag-bg);color:var(--tag);padding:1px 5px;bo
 .seg-sum{font-size:12px;color:var(--text2);background:var(--bg);border-radius:6px;padding:10px 12px;border-left:3px solid var(--accent);margin-top:8px}
 .kpi-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px}
 
+/* 2Q26 业绩：置于页面最上方，作为基本面更新的固定入口 */
+.earnings-hero{position:relative;overflow:hidden;margin-bottom:16px;padding:17px 20px 16px;border:1px solid #bfdbfe;border-radius:10px;background:linear-gradient(118deg,#eff6ff 0%,#f8fbff 55%,#f0fdf4 100%);box-shadow:0 4px 16px rgba(30,64,175,.08)}
+.earnings-hero::after{content:"2Q26";position:absolute;right:16px;top:-9px;font-size:66px;font-weight:900;letter-spacing:-4px;color:rgba(37,99,235,.07);pointer-events:none}
+.earnings-head{position:relative;display:flex;align-items:flex-start;justify-content:space-between;gap:14px;margin-bottom:12px}
+.earnings-kicker{font-size:10px;font-weight:800;letter-spacing:.9px;color:#2563eb;text-transform:uppercase}
+.earnings-title{margin-top:2px;font-size:19px;font-weight:900;letter-spacing:-.35px;color:#0f172a}
+.earnings-note{position:relative;max-width:650px;font-size:12px;line-height:1.65;color:#334155}
+.earnings-status{position:relative;flex-shrink:0;padding:4px 8px;border:1px solid #93c5fd;border-radius:999px;background:#fff;color:#1d4ed8;font-size:10px;font-weight:800;white-space:nowrap}
+.earnings-lead{position:relative;display:grid;grid-template-columns:1.25fr 1fr;gap:10px;margin-bottom:12px}
+.earnings-conclusion{padding:10px 12px;border-left:3px solid #2563eb;border-radius:7px;background:rgba(255,255,255,.9);font-size:12px;line-height:1.65;color:#1e293b}
+.earnings-conclusion strong{color:#1d4ed8}
+.earnings-points{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}
+.earnings-point{padding:8px 9px;border:1px solid rgba(148,163,184,.28);border-radius:7px;background:rgba(255,255,255,.72)}
+.earnings-point b{display:block;margin-bottom:3px;font-size:10px;color:#2563eb}
+.earnings-point span{font-size:10px;line-height:1.4;color:#475569}
+.earnings-matrix{position:relative;overflow-x:auto;border:1px solid #cbd5e1;border-radius:8px;background:#fff;box-shadow:0 1px 2px rgba(15,23,42,.04)}
+.financial-head{position:relative;display:flex;justify-content:space-between;align-items:baseline;margin:2px 0 7px}
+.financial-title{font-size:12px;font-weight:900;color:#0f172a}
+.financial-meta{font-size:10px;color:#64748b}
+.financial-matrix{position:relative;overflow-x:auto;border:1px solid #bfdbfe;border-radius:8px;background:#fff;margin-bottom:12px}
+.financial-table{width:100%;min-width:980px;border-collapse:collapse;font-size:11px;line-height:1.35}
+.financial-table th{padding:7px 8px;background:#eff6ff;color:#1e3a8a;text-align:right;font-size:10px;font-weight:850;border-bottom:1px solid #bfdbfe;white-space:nowrap}
+.financial-table th:first-child,.financial-table th:nth-child(2){text-align:left}.financial-table td{padding:7px 8px;text-align:right;border-bottom:1px solid #e2e8f0;color:#334155;white-space:nowrap}.financial-table td:first-child,.financial-table td:nth-child(2){text-align:left;font-weight:750;color:#0f172a}.financial-table tr:last-child td{border-bottom:none}.financial-table tbody tr:nth-child(even) td{background:#f8fbff}.financial-table .up{color:#15803d;font-weight:750}.financial-table .down{color:#dc2626;font-weight:750}.financial-table .margin{color:#1d4ed8;font-weight:750}
+.financial-read{position:relative;display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:0 0 12px}.financial-read-card{padding:9px 10px;border:1px solid #dbeafe;border-radius:7px;background:rgba(255,255,255,.75);font-size:11px;line-height:1.55;color:#475569}.financial-read-card b{display:block;margin-bottom:3px;color:#1e3a8a;font-size:10px}.financial-read-card.positive{border-top:2px solid #22c55e}.financial-read-card.watch{border-top:2px solid #f59e0b}.financial-read-card.risk{border-top:2px solid #ef4444}
+.call-notes{position:relative;margin-bottom:10px}.call-head{display:flex;justify-content:space-between;align-items:baseline;margin:2px 0 7px}.call-title{font-size:12px;font-weight:900;color:#0f172a}.call-meta{font-size:10px;color:#64748b}.call-card{margin-bottom:8px;border:1px solid #d7e3f4;border-radius:8px;background:rgba(255,255,255,.76);overflow:hidden}.call-card summary{position:relative;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 13px;background:#315f94;color:#fff;cursor:pointer;list-style:none;font-size:13px;font-weight:900}.call-card summary::-webkit-details-marker{display:none}.call-card summary::after{content:'＋';font-size:18px;font-weight:400;line-height:1}.call-card[open] summary::after{content:'−'}.call-hint{font-size:10px;font-weight:600;color:#dbeafe}.call-body{padding:11px 14px 12px}.call-company{padding:8px 0;border-bottom:1px solid #e5edf7;font-size:12px;line-height:1.65;color:#334155}.call-company:last-child{border-bottom:none;padding-bottom:0}.call-company:first-child{padding-top:0}.call-company b{color:#0f172a;font-size:12px}.call-company ul{margin:4px 0 0 18px;padding:0}.call-company li{margin:2px 0}.call-company .em{color:#dc2626;font-weight:750}.call-company .soft{color:#64748b}.call-tags{display:flex;flex-wrap:wrap;gap:5px;margin:0 0 7px}.call-tags span{padding:2px 6px;border-radius:999px;border:1px solid #bfdbfe;background:#eff6ff;color:#1d4ed8;font-size:10px;font-weight:750}
+.subsector-kpis{position:relative;display:grid;grid-template-columns:1.65fr repeat(3,1fr);gap:8px;margin:10px 0}.subsector-kpi{padding:9px 10px;border:1px solid #dbeafe;border-radius:7px;background:rgba(255,255,255,.78);font-size:11px;line-height:1.5;color:#475569}.subsector-kpi b{display:block;margin-bottom:3px;color:#1e3a8a;font-size:10px}.subsector-kpi strong{color:#0f172a}.subsector-kpi .good{color:#15803d;font-weight:800}.subsector-kpi .key{color:#dc2626;font-weight:800}.subsector-table{width:100%;border-collapse:separate;border-spacing:0;border:1px solid #dbe6f2;border-radius:8px;overflow:hidden;font-size:11px;line-height:1.4}.subsector-table th{padding:7px 8px;background:#eaf2fb;color:#1e3a8a;text-align:right;font-size:10px;font-weight:850;border-bottom:1px solid #cbddeb;white-space:nowrap}.subsector-table th:first-child{text-align:left}.subsector-table td{padding:7px 8px;text-align:right;border-bottom:1px solid #e8eef5;color:#334155;white-space:nowrap}.subsector-table td:first-child{text-align:left;color:#0f172a;font-weight:800}.subsector-table tr:last-child td{border-bottom:none}.subsector-table tbody tr:nth-child(even) td{background:#f8fbff}.subsector-table .up{color:#15803d;font-weight:800}.subsector-table .margin{color:#1d4ed8;font-weight:800}.subsector-note{margin-top:8px;font-size:10px;line-height:1.55;color:#64748b}
+.earnings-table{width:100%;min-width:1260px;border-collapse:separate;border-spacing:0;font-size:11px;line-height:1.55}
+.earnings-table th{padding:8px 9px;background:#1e3a8a;color:#fff;text-align:left;font-size:10px;font-weight:800;letter-spacing:.15px;white-space:nowrap;border-right:1px solid rgba(255,255,255,.16)}
+.earnings-table th:first-child{position:sticky;left:0;z-index:3;min-width:86px;background:#1e3a8a}
+.earnings-table td{padding:9px 10px;vertical-align:top;border-right:1px solid #e2e8f0;border-bottom:1px solid #e2e8f0;color:#334155;background:#fff}
+.earnings-table tbody tr:last-child td{border-bottom:none}
+.earnings-table tbody tr:nth-child(even) td{background:#f8fbff}
+.earnings-table td:first-child{position:sticky;left:0;z-index:2;width:86px;min-width:86px;background:#fff;color:#0f172a;font-size:12px;font-weight:900}
+.earnings-table tbody tr:nth-child(even) td:first-child{background:#f8fbff}
+.earnings-table td:nth-child(2){min-width:195px}.earnings-table td:nth-child(3){min-width:170px}.earnings-table td:nth-child(4){min-width:180px}.earnings-table td:nth-child(5){min-width:180px}.earnings-table td:nth-child(6){min-width:165px}.earnings-table td:nth-child(7){min-width:180px}
+.earnings-table .metric{display:block;margin-bottom:4px;color:#0f172a;font-weight:750}
+.earnings-table .signal{color:#1d4ed8;font-weight:750}
+.earnings-foot{position:relative;margin-top:8px;font-size:10px;color:#64748b}
+.earnings-placeholder{margin-top:16px;border-color:#c7d2fe;background:linear-gradient(118deg,#f5f7ff 0%,#fbfcff 62%,#f5f3ff 100%)}
+.earnings-placeholder::after{content:"PASSIVE";font-size:44px;letter-spacing:-2px;color:rgba(79,70,229,.06)}
+.earnings-placeholder .earnings-kicker{color:#4f46e5}
+.earnings-placeholder .earnings-conclusion{border-left-color:#4f46e5}
+.earnings-placeholder .earnings-conclusion strong{color:#4338ca}
+.earnings-scope{position:relative;display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}
+.earnings-scope span{padding:4px 7px;border:1px solid #c7d2fe;border-radius:999px;background:rgba(255,255,255,.75);color:#4338ca;font-size:10px;font-weight:750}
+
 @media(max-width:900px){.kpi-g{grid-template-columns:repeat(2,1fr)}.chart-row,.b-grid,.j-grid{grid-template-columns:1fr}}
+@media(max-width:900px){.earnings-lead{grid-template-columns:1fr}.earnings-points{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:900px){.financial-read{grid-template-columns:1fr 1fr}}
+@media(max-width:560px){.earnings-head{display:block}.earnings-status{display:inline-block;margin-top:8px}.earnings-points{grid-template-columns:1fr}}
+@media(max-width:560px){.financial-read{grid-template-columns:1fr}}
 /* 图/SVG 限宽居中：避免被容器拉伸导致图内文字过大 */
 .sec-body svg{display:block;margin:8px auto;max-width:720px;width:100%}
 .sec-body img{display:block;margin:0 auto;max-width:680px!important;height:auto}
@@ -147,47 +197,184 @@ code{font-size:10px;background:var(--tag-bg);color:var(--tag);padding:1px 5px;bo
   </div>
   <div style="display:flex;align-items:center;gap:14px">
     <a class="back-link" href="../industry-fundamentals-entry.html">← 行业基本面入口</a>
-    <div class="hdr-meta">研究看板 · TMT 产业链<br>测算表：260602(1) ｜ 更新：2026-06-16</div>
+    <div class="hdr-meta">研究看板 · TMT 产业链<br>预测基准：260602(1) ｜ 2Q26数据截止：2026-09-02</div>
   </div>
 </header>
 
 <div class="wrap">
 
+<!-- ── 2Q26 业绩 ── -->
+<section id="sec-earnings-2q26" class="earnings-hero" aria-labelledby="earnings-2q26-title">
+  <div class="earnings-head">
+    <div>
+      <div class="earnings-kicker">Earnings season · A-share</div>
+      <div id="earnings-2q26-title" class="earnings-title">2Q26业绩——光模块</div>
+    </div>
+    <div class="earnings-status">A股业绩期已结束 · 数据整理至2026-09-02</div>
+  </div>
+  <div class="earnings-lead">
+    <div class="earnings-conclusion"><strong>行业结论：</strong>高端光模块景气延续，龙头客户需求已可见至2027年；供给约束自Q3起改善但仍决定交付节奏。<strong>1.6T与LPO</strong>是26H2兑现主线，<strong>NPO/CPO</strong>更多对应27年后的技术选择权。</div>
+    <div class="earnings-points">
+      <div class="earnings-point"><b>订单能见度</b><span>中际、新易盛已按2027年需求准备产能；华工H2确认模块订单60亿元。</span></div>
+      <div class="earnings-point"><b>交付约束缓解</b><span>DSP、光芯片、PCB仍紧，华工交付满足率已由Q2不足50%升至85%-90%。</span></div>
+      <div class="earnings-point"><b>下一代产品</b><span>硅光渗透提升；NPO/CPO仍在验证、送样与产线准备阶段。</span></div>
+    </div>
+  </div>
+  <div class="financial-head"><div class="financial-title">2Q26 财务业绩对比</div><div class="financial-meta">公司整体口径｜单位：人民币亿元，毛利率变动为百分点</div></div>
+  <div class="financial-matrix" role="region" aria-label="2Q26光模块公司财务业绩对比" tabindex="0">
+    <table class="financial-table">
+      <thead><tr><th>公司</th><th>2Q26收入</th><th>环比</th><th>同比</th><th>毛利率</th><th>环比</th><th>同比</th><th>2Q26扣非</th><th>环比</th><th>同比</th></tr></thead>
+      <tbody>
+        <tr><td>中际旭创</td><td>222.8</td><td class="up">+14.3%</td><td class="up">+174.6%</td><td class="margin">46.4%</td><td class="up">+0.4pct</td><td class="up">+4.9pct</td><td>73.7</td><td class="up">+29.0%</td><td class="up">+206.4%</td></tr>
+        <tr><td>新易盛</td><td>125.7</td><td class="up">+50.8%</td><td class="up">+96.9%</td><td class="margin">48.0%</td><td class="down">-1.2pct</td><td class="up">+1.3pct</td><td>47.4</td><td class="up">+71.3%</td><td class="up">+100.5%</td></tr>
+        <tr><td>立讯精密</td><td>906.2</td><td class="up">+8.0%</td><td class="up">+44.5%</td><td class="margin">11.6%</td><td class="down">-0.3pct</td><td class="down">-0.4pct</td><td>31.9</td><td class="up">+14.8%</td><td class="down">-0.1%</td></tr>
+        <tr><td>光迅科技</td><td>38.4</td><td class="up">+38.3%</td><td class="up">+27.0%</td><td class="margin">24.6%</td><td class="down">-2.3pct</td><td class="up">+4.3pct</td><td>3.4</td><td class="up">+49.4%</td><td class="up">+55.5%</td></tr>
+        <tr><td>华工科技</td><td>35.6</td><td class="down">-16.6%</td><td class="down">-16.8%</td><td class="margin">21.5%</td><td class="up">+1.7pct</td><td class="up">+1.5pct</td><td>3.7</td><td class="up">+0.4%</td><td class="down">-10.9%</td></tr>
+        <tr><td>环旭电子</td><td>139.9</td><td class="up">+4.8%</td><td class="up">+3.1%</td><td class="margin">8.2%</td><td class="down">-1.2pct</td><td class="down">-2.0pct</td><td>3.81</td><td class="down">-6.5%</td><td class="up">+27.8%</td></tr>
+        <tr><td>联特科技</td><td>4.8</td><td class="up">+126.3%</td><td class="up">+80.0%</td><td class="margin">21.3%</td><td class="down">-22.2pct</td><td class="down">-11.0pct</td><td>0.01</td><td class="up">+38.0%</td><td class="down">-85.0%</td></tr>
+        <tr><td>德科立</td><td>2.9</td><td class="up">+14.2%</td><td class="up">+23.9%</td><td class="margin">25.4%</td><td class="down">-0.4pct</td><td>持平</td><td>0.08</td><td class="down">-42.9%</td><td class="down">-11.5%</td></tr>
+        <tr><td>剑桥科技</td><td>14.2</td><td class="up">+10.3%</td><td class="up">+24.3%</td><td class="margin">32.1%</td><td class="up">+2.7pct</td><td class="up">+8.6pct</td><td>2.0</td><td class="up">+73.2%</td><td class="up">+128.3%</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="financial-head"><div class="financial-title">财务解读</div><div class="financial-meta">基于2Q26单季实际数据</div></div>
+  <div class="financial-read">
+    <div class="financial-read-card positive"><b>龙头强化</b>中际、新易收入与扣非均翻倍增长，毛利率仍在46%-48%，1.6T结构与规模效应持续兑现。</div>
+    <div class="financial-read-card positive"><b>次级改善</b>光迅、剑桥收入与扣非增长较快；光迅需继续观察毛利率环比压力，剑桥则具备小基数高弹性。</div>
+    <div class="financial-read-card watch"><b>交付修复待验</b>华工收入、扣非承压但毛利率改善，核心矛盾是Q2物料约束；下半年1.6T/LPO交付是关键验证。</div>
+    <div class="financial-read-card risk"><b>分化与口径</b>联特收入高增但盈利质量走弱；德科仍在产能爬坡。立讯、环旭为集团口径，不宜与纯模块公司直接横比。</div>
+  </div>
+  <div class="call-notes" aria-label="业绩会主题要点">
+    <div class="call-head"><div class="call-title">业绩会要点</div><div class="call-meta">按主题阅读｜红字为关键数字、时点或判断</div></div>
+    <details class="call-card" open>
+      <summary>订单和现有产品 <span class="call-hint">需求能见度 · 出货节奏 · 盈利</span></summary>
+      <div class="call-body">
+        <div class="call-tags"><span>订单已看至2027年</span><span>1.6T / 800G仍高增</span><span>交付决定兑现</span></div>
+        <div class="call-company"><b>中际旭创</b><ul><li><b>毛利率：</b>目标维持高位、争取小幅增长；1.6T占比与硅光渗透率提升是正向因素，<span class="em">不预期季度大幅提升</span>。</li><li><b>订单：</b>客户已给出2027年需求与订单，1.6T、800G需求仍快增；<span class="em">2026年8月已有重要客户将2027年指引转为实际订单</span>。</li><li><b>竞争：</b>新进入者可在新云客户取得份额，但传统CSP的1.6T供应格局稳定，核心供应商份额稳固。</li></ul></div>
+        <div class="call-company"><b>新易盛</b><ul><li><b>订单：</b><span class="em">2027年需求已较清晰</span>，公司按客户指引准备产能；2028年也已可见大致方向。</li><li><b>竞争：</b>原材料获取与批量生产能力是核心门槛，行业进入壁垒较高。</li></ul></div>
+        <div class="call-company"><b>立讯精密</b>　<span class="em">2026年四季度首批智能自动化产线及部分产品开始量产，规模出货将从2027年逐步提升。</span></div>
+        <div class="call-company"><b>环旭电子</b>　近期聚焦<span class="em">800G产品放量生产</span>；1.6T最终方案预计2026年三季度末或四季度完成。</div>
+        <div class="call-company"><b>华工科技</b><ul><li>上半年未达预期主因：1.6T高端DSP偏紧、马威尔800G LPO driver不足，合计影响<span class="em">3-4亿元利润</span>。</li><li><span class="em">数通AI模块毛利率约20%，自2026年Q3起持续上升；2027年1.6T订单指引55万只，叠加800G LPO，整体出货目标500万只、对应约60亿元收入。</span></li></ul></div>
+      </div>
+    </details>
+    <details class="call-card">
+      <summary>产能 <span class="call-hint">数字参考：27年800G与1.6T全球需求各约8,000万只</span></summary>
+      <div class="call-body">
+        <div class="call-company"><b>中际旭创</b><ul><li>2026年扩产力度大，26H2及2027年CapEx维持较高水平；基建支出下半年占比更高。</li><li>境内外已发生CapEx约各占一半，CPO、LPO新品渗透后，海外产能占比将继续提高。</li></ul></div>
+        <div class="call-company"><b>新易盛</b>　<span class="soft">基本没有量化数据。</span></div>
+        <div class="call-company"><b>立讯精密</b>　<span class="em">截至2027年6月前扩至10条产线，对应约1,200万颗/年；可按客户需求在3个月内完成扩产。</span></div>
+        <div class="call-company"><b>环旭电子</b><ul><li><b>成都光引擎：</b>2026年10月整体达14万/月；2026Q4批量出货、2027Q1达20万/月。</li><li><b>越南：</b>光引擎2026年10月达10万/月、2027Q2达20万/月；光模块同步于2026年10月达10万/月、2027Q2达20万/月。</li></ul></div>
+        <div class="call-company"><b>华工科技</b><ul><li><span class="em">国内年产1,000万只800G产能建设已启动；泰国按月产50万只1.6T、40万只800G准备。</span></li><li>泰国一期已有月产18万只800G LPO、近2万只1.6T；2027年6月总产能50万/月。武汉补充15-20万只/月1.6T能力。</li></ul></div>
+      </div>
+    </details>
+    <details class="call-card">
+      <summary>供应链 <span class="call-hint">关键物料仍紧 · 龙头保供优势显著</span></summary>
+      <div class="call-body">
+        <div class="call-company"><b>中际旭创</b><ul><li>1.6T DSP、光芯片、PCB仍偏紧，供应商扩产预计<span class="em">2026年下半年至2027年上半年逐步释放</span>。</li><li>DSP受3nm、5nm先进制程限制，核心物料分配权主要在大客户；公司份额充足、可获得核心物料。</li><li>磷化铟等原料上涨，但通过长协锁价、硅光占比和良率提升压降BOM。</li></ul></div>
+        <div class="call-company"><b>新易盛</b>　供应链紧张自2026Q2起逐步缓解，Q3、Q4将进一步缓解，<span class="em">但核心物料整体紧张的前提未变</span>。</div>
+        <div class="call-company"><b>立讯精密</b>　当前规模下材料无瓶颈；<span class="em">核心A级物料由客户主导保障</span>，其余物料由公司深度参与协调。</div>
+        <div class="call-company"><b>华工科技</b><ul><li><span class="em">国产DSP上半年已完成导入</span>，形成美国、国内头部互联网、国产DSP服务二线互联网/算力代建三类布局。</li><li>自研覆盖硅光、InP CW laser/EML、薄膜铌酸锂；模块中硅光占70%-80%，云岭光电目标月产700万只CW laser。</li></ul></div>
+      </div>
+    </details>
+    <details class="call-card">
+      <summary>新技术 <span class="call-hint">硅光渗透 · NPO/CPO验证 · 27年后商业化</span></summary>
+      <div class="call-body">
+        <div class="call-company"><b>中际旭创</b><ul><li>2.4T、NPO、SPO按大客户定制开发/送样，<span class="em">预计2027H2量产、2028大规模出货</span>。</li><li><span class="em">已有2家大客户给出NPO明确指引甚至订单</span>；CPO已布局内/外置光源，2027年开始向scale up场景应用。</li><li>硅光将在2.4T、3.2T、CPO、LPO发挥关键作用，并与薄膜铌酸锂、光电混合集成协同。</li></ul></div>
+        <div class="call-company"><b>新易盛</b><ul><li>NPO、CPO、LPO、OCS均深入布局，部分方案预计<span class="em">2027H2或2028年商业落地</span>。</li><li>硅光占比随需求逐季提升，全年较2025年有明显提高。</li></ul></div>
+        <div class="call-company"><b>立讯精密</b>　各路线均布局，<span class="soft">当前没有单一重点披露。</span></div>
+        <div class="call-company"><b>环旭电子</b><ul><li>聚焦CPO FAU与ELSFP。ELSFP处设计验证末期，计划<span class="em">2027H2小批量或量产</span>；已对接6-7家高功率激光器供应商。</li><li>DFAU已完成终端open engine测试/出货，聚焦自动耦合系统设计和工艺以提升良率。</li></ul></div>
+        <div class="call-company"><b>华工科技</b><ul><li><span class="em">NPO量产速度、良率、成本和能效均优于CPO</span>，技术趋势明确。</li><li>海外16×200G NPO样品已进入内测；6.4T CPO处第二轮送样，预计2027年下半年正式放量。国内32×100G/32×200G NPO预计2027H2进入百万级需求。</li></ul></div>
+      </div>
+    </details>
+  </div>
+  <div class="earnings-foot">来源：原始数据／业绩会会议要点（公司口径与券商解读口径并存）；环旭、立讯为集团口径，不能与纯光模块公司直接横比。</div>
+</section>
 
-<!-- ── 当前判断速览 ── -->
-<div id="sec-quick" style="background:#1e293b;border-radius:10px;padding:14px 18px;margin-bottom:16px;display:flex;align-items:flex-start;gap:24px;flex-wrap:wrap">
-  <div style="flex:1;min-width:280px">
-    <div style="font-size:10px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:.5px;margin-bottom:5px">⚡ 当前判断速览（参考260602(1)测算表，2026-06-16更新）</div>
-    <div style="font-size:13px;color:#f1f5f9;line-height:1.7">
-      光模块进入 <strong style="color:#fb923c">1.6T 元年</strong>：2026E 1.6T 有效需求从 125 万颗爆发至 <strong style="color:#fb923c">3,000 万颗（+23×）</strong>，是近三年最大产品升级周期。<br>
-      800G 仍是当期主收入（旭创 2026E 贡献 38.8%，新易盛 55.9%），但 1.6T 将在 2026H2 起快速超越 800G 占比。<br>
-      <span style="color:#fbbf24;font-size:12px">⚠️ 供给端：200G EML 持续紧缺，实际出货约为有效需求 85-90%；硅光渗透率提升将拉动 CW 激光器（源杰）需求超预期。</span><br>
-      <span style="color:#7dd3fc;font-size:12px">🔵 技术路线：年初 SemiAnalysis 看好 CPO，但近期认为规模化将推迟至 2028 年；<strong style="color:#7dd3fc">2027 年是 NPO 放量的关键窗口</strong>（天孚受益）。</span><br>
-      <span style="color:#a78bfa;font-size:12px">🌏 海外映射：
-        <a href="../../us-mapping/companies/LITE_Lumentum.html" target="_blank" style="color:#c4b5fd;text-decoration:none;border-bottom:1px solid #7c3aed">Lumentum</a>（EML/CW 最激进）·
-        <a href="../../us-mapping/companies/COHR_Coherent.html" target="_blank" style="color:#c4b5fd;text-decoration:none;border-bottom:1px solid #7c3aed">Coherent</a>（EML/CW/硅光全覆盖）·
-        <a href="../../us-mapping/companies/AVGO_Broadcom.html" target="_blank" style="color:#c4b5fd;text-decoration:none;border-bottom:1px solid #7c3aed">Broadcom</a>（需求端/ASIC/SerDes）·
-        <a href="../../us-mapping/companies/MRVL_Marvell.html" target="_blank" style="color:#c4b5fd;text-decoration:none;border-bottom:1px solid #7c3aed">Marvell</a>（硅光 PIC 主攻）·
-        <span style="color:#94a3b8">AXT</span>（InP 衬底，无公司页）
-      </span><br>
-      <span style="color:#4ade80;font-size:12px">核心策略：买 1.6T 产能落地最快的双龙头，规避纯 400G 公司；CPO 2026-2027 为中期布局窗口。</span>
+<!-- ── 2Q26 业绩：光芯片 ── -->
+<section id="sec-earnings-chip-2q26" class="earnings-hero" aria-labelledby="earnings-chip-2q26-title">
+  <div class="earnings-head">
+    <div>
+      <div class="earnings-kicker">Earnings season · A-share</div>
+      <div id="earnings-chip-2q26-title" class="earnings-title">2Q26业绩——光芯片</div>
     </div>
+    <div class="earnings-status" style="color:#047857;border-color:#a7f3d0">斜率上行</div>
   </div>
-  <div style="display:flex;gap:8px;flex-shrink:0;flex-wrap:wrap">
-    <div style="background:#14532d;border:1px solid #166534;border-radius:7px;padding:8px 12px;text-align:center">
-      <div style="font-size:9px;font-weight:700;color:#4ade80;margin-bottom:3px">🟢 核心仓</div>
-      <div style="font-size:11px;color:#f1f5f9;font-weight:600">中际旭创<br><span style="color:#94a3b8">300308</span></div>
-    </div>
-    <div style="background:#14532d;border:1px solid #166534;border-radius:7px;padding:8px 12px;text-align:center">
-      <div style="font-size:9px;font-weight:700;color:#4ade80;margin-bottom:3px">🟢 核心仓</div>
-      <div style="font-size:11px;color:#f1f5f9;font-weight:600">天孚通信<br><span style="color:#94a3b8">300394</span></div>
-    </div>
-    <div style="background:#431407;border:1px solid #7c2d12;border-radius:7px;padding:8px 12px;text-align:center">
-      <div style="font-size:9px;font-weight:700;color:#fb923c;margin-bottom:3px">🟡 观察仓</div>
-      <div style="font-size:11px;color:#f1f5f9;font-weight:600">源杰科技<br><span style="color:#94a3b8">688498</span></div>
-    </div>
+  <div class="earnings-conclusion"><strong>行业结论：</strong>光芯片端呈现高弹性但高度分化：源杰的收入、扣非与毛利率同步跃升，是需求及产品结构改善的最直接映射；东山收入增长稳健但利润率仍受整合期影响；EML供给偏紧、CW随硅光渗透放量，仍是后续验证主线。</div>
+  <div class="subsector-kpis">
+    <div class="subsector-kpi"><b>最强业绩斜率</b><strong>源杰科技</strong> Q2收入 <span class="good">+60% QoQ / +373% YoY</span>，扣非3.4亿元；毛利率由78%升至<span class="key">82%</span>。</div>
+    <div class="subsector-kpi"><b>产品与供给</b>100G EML持续放量；200G EML送样验证。CW面向硅光、NPO/CPO的需求同步提升。</div>
+    <div class="subsector-kpi"><b>供需观察</b>东山称800G价格年降幅约10%以内；EML芯片有长期供应保障，价格压力小于800G。</div>
+    <div class="subsector-kpi"><b>重点验证</b>需求高增能否延续至2027年、200G EML客户验证、CW产能和高功率产品爬坡。</div>
   </div>
-</div>
+  <div style="overflow-x:auto">
+    <table class="subsector-table" aria-label="光芯片公司2Q26财务快照">
+      <thead><tr><th>公司</th><th>Q2收入（亿元）</th><th>环比</th><th>同比</th><th>Q2扣非（亿元）</th><th>毛利率</th><th>合同负债（亿元）</th></tr></thead>
+      <tbody>
+        <tr><td>东山精密</td><td>146.6</td><td class="up">+12%</td><td class="up">+76%</td><td>14.2</td><td class="margin">21%</td><td>4.6</td></tr>
+        <tr><td>源杰科技</td><td>5.7</td><td class="up">+60%</td><td class="up">+373%</td><td>3.4</td><td class="margin">82%</td><td>1.5</td></tr>
+        <tr><td>云南锗业</td><td>4.4</td><td class="up">+53%</td><td class="up">+53%</td><td>0.6</td><td class="margin">33%</td><td>0.6</td></tr>
+        <tr><td>长光华芯</td><td>2.6</td><td class="up">+101%</td><td class="up">+118%</td><td>0.0</td><td class="margin">23%</td><td>0.0</td></tr>
+        <tr><td>优迅股份</td><td>1.6</td><td class="up">+15%</td><td class="up">+32%</td><td>0.3</td><td class="margin">43%</td><td>0.0</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="call-notes" style="margin-top:10px" aria-label="光芯片业绩会要点">
+    <div class="call-head"><div class="call-title">业绩会要点</div><div class="call-meta">产品结构、价格与产能是后续盈利斜率的核心</div></div>
+    <details class="call-card" open>
+      <summary>需求、产品与价格 <span class="call-hint">800G / 1.6T · EML / CW</span></summary>
+      <div class="call-body">
+        <div class="call-company"><b>东山精密</b><ul><li>上半年索尔思营收53.5亿元、毛利率39.33%；随800G、1.6T放量，<span class="em">毛利率仍有提升空间</span>。</li><li>800G产品年降幅约10%以内，1.6T在2027年供需偏紧，预计价格压力小于800G。</li><li>EML芯片已与美国头部公司签订长期战略协议，并持续投入光芯片扩产。</li></ul></div>
+        <div class="call-company"><b>源杰科技</b><ul><li>上半年收入9.3亿元，其中7.7亿元来自数据中心；100G EML已开始批量出货。</li><li>毛利率提升主要来自<span class="em">产品结构优化、价格端增量订单及紧急需求订单</span>；预计全年维持增长逻辑。</li><li>NPO的CW光源需求功率从100mW升级，覆盖100mW至130mW、200mW区间；预计2026年底至2027年上半年开始放量。</li></ul></div>
+        <div class="call-company"><b>长光华芯 / 永鼎</b>　长光以EML为主并研发CW，预计2027年光通信业务中EML占比约60%、CW约20%；永鼎以CW为主、100mW订单增加，现有2台MOCVD，9—10月拟新增2台。</div>
+      </div>
+    </details>
+  </div>
+  <div class="subsector-note">注：除源杰等较纯光芯片公司外，东山、云南锗业、长光华芯、优迅均含非单一光通信业务；表内为公司口径Q2数据，不能直接等同于光芯片单项收入或盈利。</div>
+</section>
+
+<!-- ── 2Q26 业绩：无源器件 ── -->
+<section id="sec-earnings-passive-2q26" class="earnings-hero" aria-labelledby="earnings-passive-2q26-title">
+  <div class="earnings-head">
+    <div>
+      <div class="earnings-kicker">Earnings season · A-share</div>
+      <div id="earnings-passive-2q26-title" class="earnings-title">2Q26业绩——无源器件</div>
+    </div>
+    <div class="earnings-status" style="color:#047857;border-color:#a7f3d0">需求改善扩散</div>
+  </div>
+  <div class="earnings-conclusion"><strong>行业结论：</strong>无源器件的收入和扣非改善已从天孚向光库、仕佳、长芯、太辰、腾景等扩散，二季度多家公司出现跳升；但毛利率改善并不普遍，核心分野在于是否切入高附加值MPO、光引擎、AWG及CPO配套产品。</div>
+  <div class="subsector-kpis">
+    <div class="subsector-kpi"><b>规模龙头</b><strong>天孚通信</strong> Q2收入15.0亿元，环比<span class="good">+13%</span>；扣非6.9亿元，毛利率升至<span class="key">65%</span>。</div>
+    <div class="subsector-kpi"><b>高增梯队</b>光库、仕佳、长芯、太辰Q2收入环比均超40%，同比增幅介于44%—83%。</div>
+    <div class="subsector-kpi"><b>结构驱动</b>仕佳的MPO相关跳线、AWG及器件收入环比接近+50%，高附加值MPO线缆拉动毛利改善。</div>
+    <div class="subsector-kpi"><b>后续重点</b>光引擎、FAU/ELSFP、MPO及CPO配套的客户认证与量产节奏；关注高增收入能否转化为持续毛利率抬升。</div>
+  </div>
+  <div style="overflow-x:auto">
+    <table class="subsector-table" aria-label="无源器件公司2Q26财务快照">
+      <thead><tr><th>公司</th><th>Q2收入（亿元）</th><th>环比</th><th>同比</th><th>Q2扣非（亿元）</th><th>毛利率</th><th>合同负债（亿元）</th></tr></thead>
+      <tbody>
+        <tr><td>天孚通信</td><td>15.0</td><td class="up">+13%</td><td>-1%</td><td>6.9</td><td class="margin">65%</td><td>1.1</td></tr>
+        <tr><td>光库科技</td><td>6.1</td><td class="up">+42%</td><td class="up">+83%</td><td>1.0</td><td class="margin">40%</td><td>0.1</td></tr>
+        <tr><td>仕佳光子</td><td>9.2</td><td class="up">+59%</td><td class="up">+65%</td><td>2.0</td><td class="margin">37%</td><td>0.1</td></tr>
+        <tr><td>长芯博创</td><td>10.2</td><td class="up">+52%</td><td class="up">+54%</td><td>1.9</td><td class="margin">49%</td><td>0.2</td></tr>
+        <tr><td>太辰光</td><td>6.6</td><td class="up">+94%</td><td class="up">+44%</td><td>1.0</td><td class="margin">33%</td><td>0.0</td></tr>
+        <tr><td>腾景科技</td><td>2.6</td><td class="up">+51%</td><td class="up">+73%</td><td>0.4</td><td class="margin">41%</td><td>0.1</td></tr>
+        <tr><td>炬光科技</td><td>2.1</td><td>+4%</td><td>-5%</td><td>-0.6</td><td class="margin">43%</td><td>0.3</td></tr>
+        <tr><td>致尚科技</td><td>4.2</td><td class="up">+57%</td><td class="up">+67%</td><td>0.1</td><td class="margin">34%</td><td>0.4</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="call-notes" style="margin-top:10px" aria-label="无源器件业绩会要点">
+    <div class="call-head"><div class="call-title">业绩会要点</div><div class="call-meta">高端产品占比、光引擎产能与客户认证</div></div>
+    <details class="call-card" open>
+      <summary>产品结构与产能 <span class="call-hint">MPO · 光引擎 · 800G / 1.6T</span></summary>
+      <div class="call-body">
+        <div class="call-company"><b>仕佳光子</b><ul><li>上半年营收15亿元，其中光芯片及器件12.4亿元；MPO相关跳线、AWG及器件收入环比增长接近50%。</li><li>高附加值MPO线缆出货增长明显，MPO及线缆业务毛利率由约20%提升至<span class="em">接近30%甚至更高</span>。</li><li>100mW CW光源已获得500万订单并开始批量交付；预计2026年下半年放量、2027年预期大幅增长。</li></ul></div>
+        <div class="call-company"><b>产能安排</b>　公司自2026年二季度启动CW光源扩产，主要产能释放集中在2027年；核心MOCVD预计2026年底到货1台、2027年中到货1台，2027年合计达到约2台。</div>
+      </div>
+    </details>
+  </div>
+  <div class="subsector-note">注：表内为公司口径Q2数据；天孚、仕佳等含多个光通信产品线，不能将公司整体收入直接视作单一无源器件收入。联讯仪器、罗博特科为设备端公司，其预收增长可作为需求辅助信号，但不纳入本表横向可比。</div>
+</section>
 
 <!-- ── 标的汇总 ── -->
 <div id="sec-list" class="st" onclick="toggleSec(this)">📋 标的汇总（全产业链 · 20支）<span class="st-arrow">▾</span></div>
@@ -205,24 +392,24 @@ code{font-size:10px;background:var(--tag-bg);color:var(--tag);padding:1px 5px;bo
       <tr style="background:#f0fdf4">
         <td><strong>中际旭创</strong></td><td><code>300308</code></td><td>光模块龙头</td>
         <td><span class="a-super">🟢 核心仓</span></td>
-        <td style="font-size:11px">800G+1.6T双主线，2026E 1.6T贡献56%收入；北美大客户深度绑定</td>
-        <td><span style="font-size:10px;color:var(--up)">2026E归母净利372亿，目标价1171元，测算upside 91%</span></td>
+        <td style="font-size:11px">2Q26收入222.8亿、扣非73.7亿；1.6T占比与硅光渗透继续提升，2027年订单能见度增强</td>
+        <td><span style="font-size:10px;color:var(--up)">2Q26收入 +14% QoQ / +175% YoY；260602模型2026E净利355亿，待按2Q26重估</span></td>
       </tr>
       <tr style="background:#f0fdf4">
         <td><strong>新易盛</strong></td><td><code>300502</code></td><td>光模块（第二梯队）</td>
         <td><span class="a-na">—</span></td>
-        <td style="font-size:11px">1.6T快速放量，2026E 1.6T占34%，800G仍主力；性价比优势显著</td>
-        <td><span style="font-size:10px;color:var(--up)">2026E归母净利246亿，目标价907元，测算upside 90%</span></td>
+        <td style="font-size:11px">2Q26收入125.7亿、扣非47.4亿；800G仍为主力，1.6T放量并按2027年需求准备产能</td>
+        <td><span style="font-size:10px;color:var(--up)">2Q26收入 +51% QoQ / +97% YoY；260602模型2026E净利241亿，待按2Q26重估</span></td>
       </tr>
       <!-- 新光模块方案 -->
       <tr style="background:#fffbeb;border-top:2px solid var(--warn)">
         <td colspan="6" style="font-size:11px;font-weight:700;color:var(--warn);padding:5px 8px">🟡 新光模块方案（新进入者）</td>
       </tr>
       <tr><td><strong>东山精密</strong></td><td><code>002384</code></td><td>新光模块（代工）</td><td><span class="a-miss">观察</span></td><td style="font-size:11px">自研光芯片，光芯片扩产计划激进</td><td><span style="font-size:10px;color:var(--text2)">—</span></td></tr>
-      <tr><td><strong>华工科技</strong></td><td><code>000988</code></td><td>新光模块</td><td><span class="a-miss">观察</span></td><td style="font-size:11px">自研光芯片布局，产品覆盖400G/800G；海外LPO和阿里NPO是弹性项</td><td><span style="font-size:10px;color:var(--warn)">2026E 800G收入61亿；加LPO后净利弹性至32.9亿</span></td></tr>
-      <tr><td><strong>光迅科技</strong></td><td><code>002281</code></td><td>光模块（电信主）</td><td><span class="a-na">中性</span></td><td style="font-size:11px">数通份额偏低，电信侧稳定；AI受益有限，中东订单提供弹性</td><td><span style="font-size:10px;color:var(--warn)">2026E 800G收入68.8亿；中东调整后净利19.1亿</span></td></tr>
-      <tr><td><strong>联特科技</strong></td><td><code>301205</code></td><td>新光模块</td><td><span class="a-miss">观察</span></td><td style="font-size:11px">中速率模块为主，高端能力待验证</td><td><span style="font-size:10px;color:var(--text2)">—</span></td></tr>
-      <tr><td><strong>剑桥科技</strong></td><td><code>603083</code></td><td>新光模块</td><td><span class="a-miss">观察</span></td><td style="font-size:11px">400G数通切入，800G路线图中</td><td><span style="font-size:10px;color:var(--text2)">—</span></td></tr>
+      <tr><td><strong>华工科技</strong></td><td><code>000988</code></td><td>新光模块</td><td><span class="a-miss">观察</span></td><td style="font-size:11px">Q2受DSP与LPO driver约束，交付不足；自研硅光、CW/EML及国产DSP形成修复基础</td><td><span style="font-size:10px;color:var(--warn)">2Q26收入35.6亿、同比-17%；Q3交付满足率与1.6T/LPO兑现是核心验证</span></td></tr>
+      <tr><td><strong>光迅科技</strong></td><td><code>002281</code></td><td>光模块（电信主）</td><td><span class="a-na">中性</span></td><td style="font-size:11px">2Q收入与扣非改善，800G放量；仍需验证高端AI模块在收入和毛利中的真实贡献</td><td><span style="font-size:10px;color:var(--warn)">2Q26收入38.4亿、同比+27%；毛利率环比-2.3pct</span></td></tr>
+      <tr><td><strong>联特科技</strong></td><td><code>301205</code></td><td>新光模块</td><td><span class="a-miss">观察</span></td><td style="font-size:11px">收入高增但毛利率显著回落，高端产品能力与盈利质量仍需验证</td><td><span style="font-size:10px;color:var(--text2)">2Q26收入4.8亿、同比+80%；扣非同比-85%</span></td></tr>
+      <tr><td><strong>剑桥科技</strong></td><td><code>603083</code></td><td>新光模块</td><td><span class="a-miss">观察</span></td><td style="font-size:11px">400G数通切入、800G路线推进，Q2小基数盈利弹性开始体现</td><td><span style="font-size:10px;color:var(--up)">2Q26收入14.2亿、同比+24%；扣非同比+128%</span></td></tr>
       <tr><td><strong>环旭电子</strong></td><td><code>601231</code></td><td>新光模块（代工）</td><td><span class="a-na">中性</span></td><td style="font-size:11px">ODM属性，光模块毛利率较低</td><td><span style="font-size:10px;color:var(--text2)">—</span></td></tr>
       <tr><td><strong>立讯精密</strong></td><td><code>002475</code></td><td>新光模块（代工）</td><td><span class="a-na">中性</span></td><td style="font-size:11px">800G切入，规模体量大但光模块占比小</td><td><span style="font-size:10px;color:var(--text2)">—</span></td></tr>
       <!-- 无源器件 -->
@@ -232,8 +419,8 @@ code{font-size:10px;background:var(--tag-bg);color:var(--tag);padding:1px 5px;bo
       <tr style="background:#f0fdf4">
         <td><strong>天孚通信</strong></td><td><code>300394</code></td><td>光引擎/CPO核心</td>
         <td><span class="a-super">🟢 核心仓</span></td>
-        <td style="font-size:11px">1.6T光引擎代工：2025E 36.75万只→2026E 250万只；CPO主要受益方</td>
-        <td><span style="font-size:10px;color:var(--up)">2026E总收入140亿；CPO相关收入16.4亿，2027E放大至118亿</span></td>
+        <td style="font-size:11px">2Q26毛利率升至64.7%，光引擎仍是核心；1.6T与CPO方向不变，但旧模型已下调导入节奏</td>
+        <td><span style="font-size:10px;color:var(--up)">2Q26收入15.0亿、扣非6.9亿；260602模型2026E收入112亿、CPO收入8.5亿</span></td>
       </tr>
       <tr><td><strong>炬光科技</strong></td><td><code>688167</code></td><td>激光器光源</td><td><span class="a-miss">观察</span></td><td style="font-size:11px">半导体激光器，AI数据中心应用拓展</td><td><span style="font-size:10px;color:var(--text2)">—</span></td></tr>
       <tr><td><strong>光库科技</strong></td><td><code>300620</code></td><td>光纤器件</td><td><span class="a-na">中性</span></td><td style="font-size:11px">光隔离器/环形器为主，AI受益间接</td><td><span style="font-size:10px;color:var(--text2)">—</span></td></tr>
@@ -248,8 +435,8 @@ code{font-size:10px;background:var(--tag-bg);color:var(--tag);padding:1px 5px;bo
       <tr style="background:#fffbeb">
         <td><strong>源杰科技</strong></td><td><code>688498</code></td><td>CW 激光器（硅光核心）</td>
         <td><span class="a-miss">🟡 观察仓</span></td>
-        <td style="font-size:11px">硅光渗透率提升红利；2025E CW收入 4.1亿→2026E 17.9亿（+335%）</td>
-        <td><span style="font-size:10px;color:var(--warn)">2026E CW出货5136万只，市占率约24%；收入20.7亿</span></td>
+        <td style="font-size:11px">2Q26收入、扣非和毛利率同步跃升；100G EML已批量出货，CW与200G EML是后续增量</td>
+        <td><span style="font-size:10px;color:var(--warn)">2Q26收入5.7亿、毛利率82%；260602模型CW出货6118万只、市占率28.1%</span></td>
       </tr>
       <tr><td><strong>云南锗业</strong></td><td><code>002428</code></td><td>InP 衬底</td><td><span class="a-miss">观察</span></td><td style="font-size:11px">InP衬底供给稀缺，AI激光器原材料</td><td><span style="font-size:10px;color:var(--text2)">—</span></td></tr>
       <tr><td><strong>三安光电</strong></td><td><code>600703</code></td><td>InP 激光器</td><td><span class="a-miss">观察</span></td><td style="font-size:11px">EML激光器布局，产能爬坡中</td><td><span style="font-size:10px;color:var(--text2)">—</span></td></tr>
@@ -287,6 +474,26 @@ code{font-size:10px;background:var(--tag-bg);color:var(--tag);padding:1px 5px;bo
     <div class="chart-wrap" style="height:220px"><canvas id="c-demand"></canvas></div>
     <div style="font-size:10px;color:var(--text2);margin-top:5px">* 2024A：800G 974万；1.6T 6万　2026E：800G 5356万；1.6T 2556万</div>
   </div>
+</div>
+
+<div class="card" style="margin:14px 0;border-left:3px solid #0f766e">
+  <div style="display:flex;justify-content:space-between;gap:12px;align-items:flex-start;margin-bottom:9px">
+    <div><div style="font-size:12px;font-weight:700;color:#0f766e">2Q26新增全球出货口径对照</div><div style="font-size:10px;color:var(--text2);margin-top:2px">新来源截图，机构与发布日期待核验；仅作情景对照，不覆盖260602内部模型</div></div>
+    <span style="font-size:10px;padding:3px 7px;border-radius:10px;background:#fef3c7;color:#92400e;white-space:nowrap">来源待核验</span>
+  </div>
+  <div style="overflow-x:auto">
+    <table class="ctable" style="font-size:11px;min-width:720px">
+      <thead><tr><th>指标（万只）</th><th>2025</th><th>2026E</th><th>2027E</th><th>与原模型的主要差异</th></tr></thead>
+      <tbody>
+        <tr><td><strong>全球总出货</strong></td><td>44,949</td><td>54,833</td><td>69,076</td><td>包含低于400G产品，不能与AI高速模块TAM直接横比</td></tr>
+        <tr><td>800G</td><td>2,682</td><td>4,539</td><td>4,948</td><td>2026E较原实际出货CASE 5,356万只低约15%</td></tr>
+        <tr><td>1.6T</td><td>264</td><td>3,283</td><td>7,136</td><td>2026E较原实际出货CASE 2,556万只高约28%</td></tr>
+        <tr><td>800G + 1.6T</td><td>2,946</td><td><strong>7,822</strong></td><td><strong>12,083</strong></td><td>2026E合计接近原CASE 7,912万只，但结构更偏1.6T</td></tr>
+        <tr><td>整体SiPh渗透率</td><td>6%</td><td>10%</td><td>16%</td><td>分母含大量低速模块；分速率假设为400G 40%、800G 60%、1.6T 80%</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div style="font-size:10px;color:var(--text2);margin-top:7px">使用规则：原模型继续作为AI高速模块与光芯片供需基准；新口径用于观察全球全速率产品迁移，待取得原始报告后再决定是否纳入主情景。</div>
 </div>
 
 
@@ -1488,10 +1695,15 @@ code{font-size:10px;background:var(--tag-bg);color:var(--tag);padding:1px 5px;bo
 
   <!-- AXTI 最新表态 -->
   <div style="font-size:12px;font-weight:700;margin-top:22px;margin-bottom:4px">🌏 InP 上游视角：AXT Inc.（AXTI）最新业绩会表态</div>
-  <div style="font-size:11px;color:var(--text2);margin-bottom:10px">来源：AXTI Q3CY2025（2025-11）· Q4CY2025（2026-02）· Q1CY2026（2026-05）业绩电话会纪要 ｜ AXT 为全球最大 InP 衬底供应商之一（~40% 市占）</div>
+  <div style="font-size:11px;color:var(--text2);margin-bottom:10px">来源：AXTI Q3CY2025（2025-11）· Q4CY2025（2026-02）· Q1CY2026（2026-05）业绩电话会纪要，以及 <a href="https://investors.axt.com/Investors/news/news-details/2026/AXT-Inc--Announces-Second-Quarter-2026-Financial-Results/default.aspx" target="_blank" rel="noopener">Q2CY2026 官方业绩公告</a>（2026-07）</div>
   <table class="ctable" style="font-size:12px;margin-bottom:6px">
     <thead><tr><th style="width:15%">维度</th><th>最新核心表态</th><th style="width:22%">关键数据</th></tr></thead>
     <tbody>
+      <tr>
+        <td><span class="tag tag-t">Q2实际</span><br><strong>收入与盈利拐点</strong></td>
+        <td>Q2CY2026 收入 <strong>$47.6M</strong>，环比 +77%、同比 +165%；GAAP 毛利率 <strong>44.9%</strong>，创历史最高单季 InP 收入，GAAP 净利润 $11.1M</td>
+        <td><span class="yp">需求已从订单/指引转化为实际收入与利润</span></td>
+      </tr>
       <tr>
         <td><strong>积压订单</strong></td>
         <td>积压持续创历史新高，Q4CY25 超 $60M、Q1CY26 突破 $100M；客户延伸需求预测至 2030 年以后，几乎所有头部客户均在洽谈长期供应协议（LTA），超大规模云厂商也在推动其供应商与 AXT 签 LTA</td>
@@ -1514,8 +1726,8 @@ code{font-size:10px;background:var(--tag-bg);color:var(--tag);padding:1px 5px;bo
       </tr>
       <tr>
         <td><strong>中国需求</strong></td>
-        <td>中国光模块厂商加速推动激光二极管/光电探测器供应链本土化，拉动 AXT 中国区 InP 收入爆发：Q1CY2026 环比翻倍，Q2 预计再翻倍。数据中心快速取代 PON 成为中国 InP 主要应用。中国需求占全球 InP 总需求 Q2 约 30%、Q4 可能接近 40%</td>
-        <td>中国 InP 收入：Q1'26 环比 2×、Q2'26 预计再 2× | 占全球需求比重上升至 30–40%</td>
+        <td>此前业绩会称中国光模块厂商推动激光二极管/光电探测器供应链本土化，Q1CY2026 中国区 InP 收入环比翻倍；Q2 官方公告仅披露公司整体收入与“历史最高单季 InP 收入”，未单列中国区数据</td>
+        <td>原“Q2预计再翻倍”不再作为已验证事实；等待分地区/产品口径</td>
       </tr>
       <tr>
         <td><strong>出口管制风险</strong></td>
@@ -1533,7 +1745,7 @@ code{font-size:10px;background:var(--tag-bg);color:var(--tag);padding:1px 5px;bo
     <strong>横向共识：</strong>AXT 业绩会数据印证 ④ InP 角色 章节的核心判断——InP 衬底为跨越路线分歧的确定性瓶颈。积压订单 $100M+ 且仍在增长、产能 2026–2027 年连续翻倍，但供给增量滞后于需求至少 12–18 个月；叠加出口管制不确定性，<strong>InP 供需偏紧格局有望延续至 2027 年末 CPO 放量前后</strong>。A 股映射：云南锗业（衬底量产）、三安光电（6 英寸切入）受益逻辑与 AXT 增长曲线高度同步。
   </div>
 
-  <div style="font-size:9px;color:#94a3b8;margin-top:12px">数据来源：光芯片研究（整合国盛/华泰/招商/东吴/中邮/申万/长江等研报、AXT 公告、天风/西部纪要，均自 Alpha 派数据库）；图片来自该研究原文。AXTI 数据来自 Q3CY2025/Q4CY2025/Q1CY2026 业绩会纪要。本节为信息梳理，非投资建议。</div>
+  <div style="font-size:9px;color:#94a3b8;margin-top:12px">数据来源：光芯片研究（整合国盛/华泰/招商/东吴/中邮/申万/长江等研报、AXT 公告、天风/西部纪要，均自 Alpha 派数据库）；图片来自该研究原文。AXTI 历史表态来自 Q3CY2025/Q4CY2025/Q1CY2026 业绩会纪要，Q2CY2026 财务数据来自公司官方公告。本节为信息梳理，非投资建议。</div>
 </div>
 </div>
 
@@ -1590,6 +1802,19 @@ code{font-size:10px;background:var(--tag-bg);color:var(--tag);padding:1px 5px;bo
 <!-- ── 公司深度 Tab ── -->
 <div id="sec-company" class="st" onclick="toggleSec(this)">🏭 公司深度分析<span class="st-arrow">▾</span></div>
 <div class="sec-body" style="margin-bottom:16px">
+<div class="card" style="margin-bottom:14px;border-left:3px solid var(--accent)">
+  <div style="font-size:12px;font-weight:700;margin-bottom:4px">2Q26实际验证：旧模型进入重估阶段</div>
+  <div style="font-size:10px;color:var(--text2);margin-bottom:9px">以下实际值来自「季度业绩对比.xlsx」，预测仍保留260602模型口径；在完成全年模型重估前，不把单季集团收入直接外推为光模块单项收入。</div>
+  <table class="ctable" style="font-size:11px">
+    <thead><tr><th>公司</th><th>2Q26收入</th><th>2Q26扣非</th><th>毛利率</th><th>库存/备货信号</th><th>对旧模型的验证</th></tr></thead>
+    <tbody>
+      <tr><td><strong>中际旭创</strong></td><td>222.8亿</td><td>73.7亿</td><td>46.4%</td><td>2Q末存货198.3亿；1H披露原材料93.8亿</td><td>高端产品放量和备货强度得到验证；全年收入、利润模型需结合H2交付重估</td></tr>
+      <tr><td><strong>新易盛</strong></td><td>125.7亿</td><td>47.4亿</td><td>48.0%</td><td>2Q末存货116.6亿；1H披露原材料54.0亿</td><td>收入与盈利斜率强于Q1；1.6T占比和产能兑现仍是H2关键变量</td></tr>
+      <tr><td><strong>天孚通信</strong></td><td>15.0亿</td><td>6.9亿</td><td>64.7%</td><td>2Q末存货9.3亿；1H披露原材料5.9亿</td><td>收入同比略降但盈利能力提升，产品结构优于收入表观；CPO收入仍按旧模型谨慎处理</td></tr>
+      <tr><td><strong>源杰科技</strong></td><td>5.7亿</td><td>3.4亿</td><td>82.1%</td><td>2Q末存货2.1亿；合同负债1.5亿</td><td>100G EML与高毛利结构已兑现；后续转向验证CW、200G EML和订单持续性</td></tr>
+    </tbody>
+  </table>
+</div>
 <div class="card">
   <div class="tab-nav">
     <button class="tab-btn active" onclick="switchTab(this,'t-xc')">旭创（300308）</button>
@@ -1818,7 +2043,7 @@ code{font-size:10px;background:var(--tag-bg);color:var(--tag);padding:1px 5px;bo
 <div id="sec-hf" class="st" onclick="toggleSec(this)">📡 高频景气指标<span class="st-arrow">▾</span></div>
 <div class="sec-body" style="margin-bottom:16px">
 <div style="font-size:11px;color:var(--text2);background:var(--tag-bg);padding:8px 14px;border-radius:6px;border-left:3px solid var(--accent);margin-bottom:14px">
-  更新节奏：美股大客户季报（每季度）｜ 台股月营收 <strong>每月10日</strong>前后 ｜ 一季报/调研出货量 <strong>季度追踪</strong>
+  更新节奏：美股大客户季报（每季度）｜ 台股月营收 <strong>每月10日</strong>前后 ｜ 财报/调研出货量 <strong>季度追踪</strong>
 </div>
 <div class="b-grid">
   <div class="card">
@@ -1826,27 +2051,30 @@ code{font-size:10px;background:var(--tag-bg);color:var(--tag);padding:1px 5px;bo
     <table class="ctable" style="font-size:12px">
       <thead><tr><th>指标</th><th>当前状态</th><th>验证方向</th><th>更新时间</th></tr></thead>
       <tbody>
-        <tr><td><strong>800G 模块交期</strong></td><td><strong>16-20 周</strong></td><td><span class="yp">验证需求仍偏紧</span></td><td style="color:var(--text2)">2026-05</td></tr>
-        <tr><td><strong>1.6T 模块交期</strong></td><td>20-24 周</td><td><span class="yp">验证 1.6T 爬坡强度</span></td><td style="color:var(--text2)">2026-05</td></tr>
-        <tr><td><strong>200G EML 交期/报价</strong></td><td>待持续跟踪</td><td><span class="yn">验证核心瓶颈是否缓解</span></td><td style="color:var(--text2)">月度</td></tr>
-        <tr><td><strong>CW DFB 产能释放</strong></td><td>源杰/海外供应扩产</td><td>验证硅光渗透率与供应份额</td><td style="color:var(--text2)">季度</td></tr>
-        <tr><td><strong>美股季报 CapEx 指引</strong></td><td style="color:var(--text2)">2026Q2 待观察</td><td>验证云厂商 AI 资本开支</td><td style="color:var(--text2)">季度</td></tr>
-        <tr><td><strong>台股月营收</strong></td><td>每月10日前后</td><td>验证光模块链条订单景气</td><td style="color:var(--text2)">月度</td></tr>
+        <tr><td><strong>800G / 1.6T需求</strong></td><td><strong>订单能见度延伸至2027年</strong></td><td><span class="yp">中际、新易盛按客户需求准备产能</span></td><td style="color:var(--text2)">2Q26业绩会</td></tr>
+        <tr><td><strong>核心物料供应</strong></td><td>Q2后逐步缓解、整体仍紧</td><td><span class="yp">DSP、光芯片、PCB决定交付节奏</span></td><td style="color:var(--text2)">2Q26业绩会</td></tr>
+        <tr><td><strong>华工交付满足率</strong></td><td>Q2不足50% → 当前85%-90%</td><td><span class="yp">验证Q3收入与利润修复</span></td><td style="color:var(--text2)">2026-09</td></tr>
+        <tr><td><strong>200G EML</strong></td><td>仍是1.6T EML路线核心约束</td><td><span class="yn">跟踪扩产、交期及客户验证</span></td><td style="color:var(--text2)">2Q26更新</td></tr>
+        <tr><td><strong>CW / 硅光</strong></td><td>源杰100G EML量产，CW需求随硅光提升</td><td>验证高功率CW、200G EML及新增产能</td><td style="color:var(--text2)">2Q26更新</td></tr>
+        <tr><td><strong>北美云厂商CapEx</strong></td><td><strong>MSFT $41.0B / GOOGL $44.9B / META $31.1B</strong></td><td><span class="yp">三家单季合计约 $117B，AI基础设施投入仍在高位</span></td><td style="color:var(--text2)">CY2Q26实际</td></tr>
+        <tr><td><strong>台股光通信月营收</strong></td><td style="color:var(--text2)">待补统一公司篮子与公告口径</td><td>避免任意挑选个股造成样本偏差</td><td style="color:var(--text2)">待核验</td></tr>
       </tbody>
     </table>
+    <div style="font-size:9px;color:#94a3b8;margin-top:8px;line-height:1.6">云厂商官方来源：<a href="https://www.microsoft.com/en-us/investor/events/fy-2026/earnings-fy-2026-q4" target="_blank" rel="noopener">Microsoft FY26Q4</a> · <a href="https://www.sec.gov/Archives/edgar/data/1652044/000165204426000066/googexhibit991q22026.htm" target="_blank" rel="noopener">Alphabet CY2Q26</a> · <a href="https://investor.atmeta.com/investor-news/press-release-details/2026/Meta-Reports-Second-Quarter-2026-Results/default.aspx" target="_blank" rel="noopener">Meta CY2Q26</a></div>
   </div>
   <div class="card">
-    <div style="font-size:12px;font-weight:700;margin-bottom:10px">海外供应链验证（测算表口径）</div>
+    <div style="font-size:12px;font-weight:700;margin-bottom:10px">海外供应链验证（最新公司实际披露）</div>
     <table class="ctable" style="font-size:12px">
-      <thead><tr><th>公司</th><th>角色</th><th>2026E关键指标</th><th>验证含义</th></tr></thead>
+      <thead><tr><th>公司</th><th>最新季度实际</th><th>经营/产能信号</th><th>验证含义</th></tr></thead>
       <tbody>
-        <tr><td><strong>Lumentum (LITE)</strong></td><td>EML/CW/光模块</td><td>Datacom收入 $29.8亿；净利率22.4%</td><td><span class="yp">EML供给释放</span></td></tr>
-        <tr><td><strong>LITE 1.6T模块</strong></td><td>海外模块侧</td><td>2026E出货63万只，收入$5.36亿</td><td>验证1.6T海外放量</td></tr>
-        <tr><td><strong>Coherent (COHR)</strong></td><td>光芯片/模块</td><td>通信收入$85.0亿，YoY +182%</td><td><span class="yp">上游景气同步</span></td></tr>
-        <tr><td><strong>COHR 1.6T模块</strong></td><td>海外模块侧</td><td>2026E出货455万只，收入$41.8亿</td><td>硅光/1.6T兑现强度</td></tr>
-        <tr><td><strong>OCS/CPO</strong></td><td>下一代互联</td><td>LITE 2026E OCS $4.2亿，CPO/OIO $1.51亿</td><td>观察2027放量前奏</td></tr>
+        <tr><td><strong>Lumentum (LITE)</strong><br><span style="color:var(--text2);font-size:10px">FY26Q4</span></td><td>收入 <strong>$1.006B</strong>，QoQ +24.5%、YoY +109.3%；Non-GAAP GM 50.4%</td><td>1.6T云模块持续推进；获得首笔 ELS 订单，并开展 NPO 项目</td><td><span class="yp">激光器与模块需求同步强化</span></td></tr>
+        <tr><td><strong>Coherent (COHR)</strong><br><span style="color:var(--text2);font-size:10px">FY26Q4</span></td><td>收入 <strong>$2.05B</strong>，YoY +34%；Non-GAAP GM 40.2%</td><td>计划2026年底内部 InP 产出翻倍，2027年再翻倍以上；1.6T/3.2T/6.4T列为增长引擎</td><td><span class="yp">InP供给扩张但需求仍强</span></td></tr>
+        <tr><td><strong>AXT (AXTI)</strong><br><span style="color:var(--text2);font-size:10px">CY2Q26</span></td><td>收入 <strong>$47.6M</strong>，QoQ +77%、YoY +165%；GAAP GM 44.9%</td><td>创历史最高单季 InP 收入，数据中心光连接需求推动收入台阶式增长</td><td><span class="yp">上游衬底景气已兑现</span></td></tr>
+        <tr><td><strong>Marvell (MRVL)</strong><br><span style="color:var(--text2);font-size:10px">FY27Q2</span></td><td>收入 <strong>$2.739B</strong>，YoY +37%</td><td>数据中心收入增速加快至 YoY +46%</td><td>DSP/定制硅及互联需求延续</td></tr>
+        <tr><td><strong>Broadcom (AVGO)</strong><br><span style="color:var(--text2);font-size:10px">FY26Q3</span></td><td>AI半导体收入 <strong>$16.7B</strong>，YoY +221%</td><td>定制加速器与AI网络继续扩张</td><td>交换芯片/网络侧需求强验证</td></tr>
       </tbody>
     </table>
+    <div style="font-size:9px;color:#94a3b8;margin-top:8px;line-height:1.6">官方来源：<a href="https://investor.lumentum.com/financial-news-releases/news-details/2026/Lumentum-Announces-Fourth-Quarter-and-Full-Fiscal-Year-2026-Results/default.aspx" target="_blank" rel="noopener">Lumentum</a> · <a href="https://www.coherent.com/news/press-releases/fourth-quarter-and-fiscal-year-2026-results" target="_blank" rel="noopener">Coherent</a> / <a href="https://www.coherent.com/content/dam/coherent/site/en/documents/investors/investor-presentations/2026/august-12/investor-presentation-20260812.pdf" target="_blank" rel="noopener">投资者材料</a> · <a href="https://investors.axt.com/Investors/news/news-details/2026/AXT-Inc--Announces-Second-Quarter-2026-Financial-Results/default.aspx" target="_blank" rel="noopener">AXT</a> · <a href="https://investor.marvell.com/news-events/press-releases/detail/1031/marvell-technology-inc-reports-second-quarter-of-fiscal-year-2027-financial-results" target="_blank" rel="noopener">Marvell</a> · <a href="https://investors.broadcom.com/news-releases/news-release-details/broadcom-inc-announces-third-quarter-fiscal-year-2026-financial" target="_blank" rel="noopener">Broadcom</a></div>
   </div>
 </div>
 </div>
@@ -1856,10 +2084,10 @@ code{font-size:10px;background:var(--tag-bg);color:var(--tag);padding:1px 5px;bo
   <div>
     <div id="sec-catalyst" class="st" style="cursor:default">📅 催化剂跟踪</div>
     <div class="card">
-      <div class="tl-item"><div class="tl-dot tl-d-p"></div><div class="tl-date">2026-Q2</div><div class="tl-content"><div class="tl-evt">北美四大 Hyperscaler Q1 财报 CapEx 指引</div><div class="tl-meta">Meta/MSFT/GOOGL/AMZN；AI基建支出全年指引验证</div></div><span class="tl-st st-p">🕐 待观察</span></div>
-      <div class="tl-item"><div class="tl-dot tl-d-p"></div><div class="tl-date">2026-Q2</div><div class="tl-content"><div class="tl-evt">旭创/新易盛 2026Q1 出货量披露</div><div class="tl-meta">验证 1.6T 爬坡节奏是否符合预期</div></div><span class="tl-st st-p">🕐 待观察</span></div>
-      <div class="tl-item"><div class="tl-dot tl-d-p"></div><div class="tl-date">2026-H2</div><div class="tl-content"><div class="tl-evt">1.6T 大规模量产节点</div><div class="tl-meta">供给瓶颈（200G EML）解除时间点；新份额争夺</div></div><span class="tl-st st-p">🕐 待观察</span></div>
-      <div class="tl-item"><div class="tl-dot tl-d-p"></div><div class="tl-date">2026-H2</div><div class="tl-content"><div class="tl-evt">CPO 主流客户导入进展</div><div class="tl-meta">天孚/腾景送样验证结果；Meta/谷歌 CPO 路线明确化</div></div><span class="tl-st st-p">🕐 待观察</span></div>
+      <div class="tl-item"><div class="tl-dot tl-d-t"></div><div class="tl-date">2Q26已验证</div><div class="tl-content"><div class="tl-evt">龙头业绩与2027年订单能见度</div><div class="tl-meta">中际、新易盛收入与扣非高增，并按2027年客户需求准备产能</div></div><span class="tl-st st-t">✓ 已验证</span></div>
+      <div class="tl-item"><div class="tl-dot tl-d-t"></div><div class="tl-date">2026-Q3</div><div class="tl-content"><div class="tl-evt">核心物料缓解与交付修复</div><div class="tl-meta">重点观察华工交付满足率改善能否转化为收入、毛利和现金流</div></div><span class="tl-st st-t">📊 跟踪中</span></div>
+      <div class="tl-item"><div class="tl-dot tl-d-p"></div><div class="tl-date">2026-H2</div><div class="tl-content"><div class="tl-evt">1.6T / LPO规模交付</div><div class="tl-meta">验证DSP、200G EML、光芯片和PCB供应释放，以及新进入者份额</div></div><span class="tl-st st-p">🕐 待验证</span></div>
+      <div class="tl-item"><div class="tl-dot tl-d-p"></div><div class="tl-date">2027-H2</div><div class="tl-content"><div class="tl-evt">NPO / CPO商业化节点</div><div class="tl-meta">跟踪客户订单、良率、功耗和成本，不提前计入当前季度业绩</div></div><span class="tl-st st-p">🕐 待验证</span></div>
       <div class="tl-item"><div class="tl-dot tl-d-t"></div><div class="tl-date">持续跟踪</div><div class="tl-content"><div class="tl-evt">硅光渗透率进展</div><div class="tl-meta">800G/1.6T 硅光方案切换速度 → 直接影响源杰 CW 需求</div></div><span class="tl-st st-t">📊 跟踪中</span></div>
       <div class="tl-item"><div class="tl-dot tl-d-r"></div><div class="tl-date">持续跟踪</div><div class="tl-content"><div class="tl-evt">美国对华光芯片/模块出口管制</div><div class="tl-meta">光芯片（EML/VCSEL）及高端光模块潜在限制风险</div></div><span class="tl-st st-r">⚠ 风险</span></div>
     </div>
@@ -1870,8 +2098,9 @@ code{font-size:10px;background:var(--tag-bg);color:var(--tag);padding:1px 5px;bo
     <div class="card">
       <div style="font-size:10px;font-weight:700;color:var(--text2);margin-bottom:6px;text-transform:uppercase">核心逻辑</div>
       <div class="logic-box">
-        2026 年是光模块行业 <strong>1.6T 元年</strong>：有效需求从 125 万颗爆发至 3,000 万颗（+23×），旭创/新易盛的 1.6T 收入将分别占全年收入 55% / 34%。当前光芯片供给瓶颈在于 200G EML（2026E缺口约20.9%），CW DFB也仍偏紧，但硅光路线正在加速绕过部分 EML 约束。<br><br>
-        策略：旭创+天孚 双核心（1.6T 模块与光引擎分别是确定性与弹性的最优组合）；天孚另设进攻仓（CPO 放量时的战术性加仓）；源杰受益硅光渗透率，弹性极大但体量仍小。
+        <strong>2Q26验证结论：</strong>高端光模块景气已从需求预期进入财务兑现阶段，中际、新易盛收入与扣非继续高增，订单能见度延伸至2027年。行业主要矛盾由“有没有需求”转向“核心物料、产能和交付能否兑现”。华工Q2受物料约束，源杰则以收入、扣非和毛利率同步提升验证了高端光芯片景气。<br><br>
+        <strong>预测口径：</strong>260602模型继续作为800G、1.6T及光芯片供需基准，但已进入重估阶段。新全球出货口径显示2026E高速模块合计接近旧模型、结构更偏1.6T；在来源核验前仅作对照，不据此直接调整盈利预测。<br><br>
+        策略观察：中际、新易盛侧重业绩与订单确定性；天孚关注高毛利结构能否转化为收入加速；源杰从高弹性预期进入持续性验证；华工关注Q3交付修复。
       </div>
       <div style="font-size:10px;font-weight:700;color:var(--text2);margin-bottom:6px;margin-top:10px;text-transform:uppercase">持仓策略</div>
       <div class="strat-g">
@@ -1887,7 +2116,7 @@ code{font-size:10px;background:var(--tag-bg);color:var(--tag);padding:1px 5px;bo
         <div class="risk-i"><span class="rn">R4</span>硅光渗透率慢于预期 → 源杰证伪</div>
       </div>
       <div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--border);font-size:11px;color:var(--text2)">
-        <strong>下次更新关注点：</strong>旭创/新易盛 2026Q1 出货量 + 北美 Q2 CapEx 指引 + 1.6T 交期变化
+        <strong>下次更新关注点：</strong>3Q26交付修复与1.6T/LPO放量 + 北美最新CapEx + 台股月营收 + 新全球出货来源核验
       </div>
     </div>
   </div>
@@ -1896,7 +2125,7 @@ code{font-size:10px;background:var(--tag-bg);color:var(--tag);padding:1px 5px;bo
 </div><!-- /wrap -->
 
 <div style="text-align:center;padding:16px 0 28px;font-size:10px;color:var(--text2);border-top:1px solid var(--border);margin-top:8px">
-  光模块研究看板 · TMT 产业链二级研究 · 数据来源：内部测算表 260602(1) · 更新日期：2026-06-16
+  光模块研究看板 · TMT 产业链二级研究 · 预测基准：内部测算表 260602(1) · 2Q26实际数据截止：2026-09-02 · 看板更新：2026-09-07
 </div>
 
 <script>
@@ -2061,5 +2290,3 @@ initXcCharts();
 </script>
 </body>
 </html>
-
-

@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MLCC 上游原材料供应链全景图</title>
+<style>
+  :root {
+    --bg: #f8f9fa;
+    --card: #ffffff;
+    --border: #e9ecef;
+    --text-primary: #212529;
+    --text-secondary: #6c757d;
+    --accent: #2563eb;
+    --up: #16a34a;
+    --down: #dc2626;
+    --neutral: #d97706;
+    --up-bg: #f0fdf4;
+    --down-bg: #fef2f2;
+    --neutral-bg: #fffbeb;
+    --tag-bg: #eff6ff;
+    --tag-text: #1d4ed8;
+    --purple: #7e22ce;
+    --purple-bg: #fdf4ff;
+    --shadow: 0 1px 3px rgba(0,0,0,.08), 0 1px 2px rgba(0,0,0,.04);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+    background: var(--bg);
+    color: var(--text-primary);
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  .header {
+    background: var(--card);
+    border-bottom: 1px solid var(--border);
+    padding: 20px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: var(--shadow);
+  }
+  .header-left { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+  .sector-name { font-size: 22px; font-weight: 700; }
+  .outlook-badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 4px 12px; border-radius: 20px; font-size: 13px; font-weight: 600;
+  }
+  .outlook-up { background: var(--up-bg); color: var(--up); border: 1px solid #86efac; }
+  .header-meta { font-size: 12px; color: var(--text-secondary); display: flex; gap: 14px; align-items: center; }
+  .header-meta a { color: var(--accent); text-decoration: none; }
+  .header-meta a:hover { text-decoration: underline; }
+
+  .container { max-width: 1280px; margin: 0 auto; padding: 24px 32px; }
+
+  .note-banner {
+    background: var(--tag-bg); color: var(--tag-text);
+    border: 1px solid #bfdbfe; border-radius: 8px;
+    padding: 10px 16px; font-size: 12.5px; margin-bottom: 20px;
+  }
+
+  .section-title {
+    font-size: 15px; font-weight: 700; margin-bottom: 14px;
+    padding-bottom: 8px; border-bottom: 2px solid var(--accent);
+    display: flex; align-items: center; gap: 8px;
+  }
+
+  .kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 28px; }
+  .kpi-card { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 18px 20px; box-shadow: var(--shadow); }
+  .kpi-label { font-size: 12px; color: var(--text-secondary); margin-bottom: 6px; }
+  .kpi-value { font-size: 24px; font-weight: 700; margin-bottom: 4px; }
+  .kpi-sub { font-size: 12px; color: var(--text-secondary); }
+
+  /* ===== 供应链流程图 ===== */
+  .flow-card { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 24px; box-shadow: var(--shadow); margin-bottom: 28px; overflow-x: auto; }
+  .flow-row { display: flex; align-items: stretch; gap: 0; min-width: 1420px; }
+  .flow-stage { flex: 1; display: flex; flex-direction: column; gap: 8px; }
+  .flow-stage-label {
+    font-size: 11px; font-weight: 700; letter-spacing: 1px;
+    color: var(--text-secondary); text-transform: uppercase; margin-bottom: 2px;
+  }
+  .flow-arrow {
+    align-self: center; padding: 0 8px; color: var(--text-secondary);
+    font-size: 20px; font-weight: 700; flex-shrink: 0;
+  }
+  .flow-box {
+    border-radius: 8px; padding: 10px 12px; font-size: 12px;
+    border: 1px solid var(--border); background: var(--bg);
+  }
+  .flow-box .fb-title { font-weight: 700; font-size: 12.5px; margin-bottom: 2px; }
+  .flow-box .fb-sub { color: var(--text-secondary); font-size: 11.5px; line-height: 1.5; }
+  .fb-raw     { background: #f8fafc; border-color: #cbd5e1; }
+  .fb-prec    { background: #ecfeff; border-color: #67e8f9; }
+  .fb-material{ background: var(--tag-bg); border-color: #bfdbfe; }
+  .fb-equip   { background: var(--purple-bg); border-color: #d8b4fe; }
+  .fb-mid     { background: var(--up-bg); border-color: #86efac; }
+  .fb-down    { background: var(--neutral-bg); border-color: #fcd34d; }
+  .fb-code { font-family: "SF Mono", Consolas, monospace; color: var(--accent); font-weight: 600; font-size: 11px; }
+  .fb-gap { color: var(--down); font-weight: 600; font-size: 11px; }
+
+  /* ===== 环节卡片 ===== */
+  .chain-section { margin-bottom: 28px; }
+  .chain-card { background: var(--card); border: 1px solid var(--border); border-radius: 10px; box-shadow: var(--shadow); overflow: hidden; }
+  .chain-head {
+    padding: 16px 20px; display: flex; align-items: center; gap: 12px;
+    border-bottom: 1px solid var(--border); flex-wrap: wrap;
+  }
+  .chain-num {
+    width: 28px; height: 28px; border-radius: 8px; background: var(--accent); color: #fff;
+    display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 14px;
+    flex-shrink: 0;
+  }
+  .chain-name { font-size: 16px; font-weight: 700; }
+  .chain-cost { font-size: 12px; color: var(--text-secondary); }
+  .chain-body { padding: 20px; display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .chain-block h4 { font-size: 13px; font-weight: 600; color: var(--text-secondary); margin-bottom: 10px; }
+  .chain-block ul { padding-left: 18px; }
+  .chain-block li { font-size: 13px; margin-bottom: 6px; }
+  .full-width { grid-column: 1 / -1; }
+
+  table { width: 100%; border-collapse: collapse; }
+  th {
+    text-align: left; padding: 8px 12px; font-size: 12px; font-weight: 600;
+    color: var(--text-secondary); background: var(--bg);
+    border-bottom: 1px solid var(--border); white-space: nowrap;
+  }
+  td { padding: 9px 12px; font-size: 13px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: var(--bg); }
+  .code { font-family: "SF Mono", Consolas, monospace; font-size: 12px; color: var(--accent); font-weight: 600; white-space: nowrap; }
+
+  .tag { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; white-space: nowrap; }
+  .tag-src-note { background: var(--up-bg); color: var(--up); border: 1px solid #86efac; }
+  .tag-src-web  { background: var(--neutral-bg); color: var(--neutral); border: 1px solid #fcd34d; }
+  .tag-focus    { background: var(--up-bg); color: var(--up); border: 1px solid #86efac; }
+  .tag-watch    { background: var(--neutral-bg); color: var(--neutral); border: 1px solid #fcd34d; }
+  .tag-neutral  { background: var(--bg); color: var(--text-secondary); border: 1px solid var(--border); }
+  .tag-gap      { background: var(--down-bg); color: var(--down); border: 1px solid #fca5a5; }
+
+  .bar-wrap { display: flex; align-items: center; gap: 8px; }
+  .bar { height: 6px; background: var(--border); border-radius: 3px; width: 80px; overflow: hidden; }
+  .bar-fill { height: 100%; background: var(--accent); border-radius: 3px; }
+  .bar-pct { font-size: 12px; color: var(--text-secondary); min-width: 36px; }
+
+  .risk-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 28px; }
+  .judgment-card { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 20px; box-shadow: var(--shadow); }
+  .risk-item { display: flex; gap: 8px; margin-bottom: 8px; font-size: 13px; }
+  .risk-icon { color: var(--down); flex-shrink: 0; }
+  .opp-icon { color: var(--up); flex-shrink: 0; }
+
+  .footer { text-align: center; font-size: 12px; color: var(--text-secondary); padding: 20px 0 30px; }
+
+  @media (max-width: 900px) {
+    .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+    .chain-body { grid-template-columns: 1fr; }
+    .risk-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div class="header-left">
+    <span class="sector-name">MLCC 上游原材料供应链全景图</span>
+    <span class="outlook-badge outlook-up">🟢 行业上行</span>
+  </div>
+  <div class="header-meta">
+    <a href="passive-components-dashboard.html">← 返回行业看板</a>
+    <span>更新：2026-08-06</span>
+  </div>
+</header>
+
+<div class="container">
+
+  <div class="note-banner">
+    📌 <b>数据来源</b>：<span class="tag tag-src-note">纪要</span> = 9篇归档会议纪要/报告（华泰电子×3、国泰海通、野村、大摩、天风×2、东吴，2026年2-8月）；
+    <span class="tag tag-src-web">联网</span> = 2026-08-06 公开信息补充核实（主要用于设备、浆料、稀土等纪要未覆盖环节）。
+    原始资料位于 <code>workwork/knowledge/companies/其他/0 行业信息/</code>
+  </div>
+
+  <!-- ========== KPI 亮点 ========== -->
+  <div class="section-title">📊 供应链关键数字</div>
+  <div class="kpi-grid">
+    <div class="kpi-card">
+      <div class="kpi-label">陶瓷粉体成本占比（低容MLCC）</div>
+      <div class="kpi-value">40-50%</div>
+      <div class="kpi-sub">第一大成本项，高容占比更高 <span class="tag tag-src-note">纪要</span></div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">高端镍粉溢价</div>
+      <div class="kpi-value">3-5×</div>
+      <div class="kpi-sub">128nm/99.99%纯度 vs 普通镍粉 <span class="tag tag-src-note">纪要</span></div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">离型膜市场规模（2025）</div>
+      <div class="kpi-value">265亿元</div>
+      <div class="kpi-sub">→2032E 418亿元，CAGR 6.8% <span class="tag tag-src-note">纪要</span></div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">设备国产化率</div>
+      <div class="kpi-value">&lt;30%</div>
+      <div class="kpi-sub">日系设备交期1-2年 <span class="tag tag-src-web">联网</span></div>
+    </div>
+  </div>
+
+  <!-- ========== 全景流程图 ========== -->
+  <div class="section-title">🔗 产业链全景</div>
+  <div class="flow-card">
+    <div class="flow-row">
+      <div class="flow-stage">
+        <div class="flow-stage-label">最上游 · 基础原料</div>
+        <div class="flow-box fb-raw">
+          <div class="fb-title">陶瓷矿物</div>
+          <div class="fb-sub">重晶石 BaSO₄（贵州低锶矿）<br>钛精矿<br>天青石 SrSO₄ / 锆英砂</div>
+        </div>
+        <div class="flow-box fb-raw">
+          <div class="fb-title">金属原料</div>
+          <div class="fb-sub">镍矿（印尼，减产推价）<br>铜 / 银 / 钯（贵金属）</div>
+        </div>
+        <div class="flow-box fb-raw">
+          <div class="fb-title">石化原料</div>
+          <div class="fb-sub">PTA / MEG（石油基）<br>有机硅（硅油）/ 氟素</div>
+        </div>
+        <div class="flow-box fb-raw">
+          <div class="fb-title">稀土矿</div>
+          <div class="fb-sub">离子型稀土（中国主导）<br><span class="fb-gap">出口管制风险点</span></div>
+        </div>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-stage">
+        <div class="flow-stage-label">前驱体 / 中间体 · 高纯化为核心壁垒</div>
+        <div class="flow-box fb-prec">
+          <div class="fb-title">碳酸钡 + 钛白粉</div>
+          <div class="fb-sub">4N/5N碳酸钡（配方60%）<br><span class="fb-code">600367 红星发展</span> 全球40%+<br><span class="fb-code">002601 龙佰集团</span> 电子级钛白粉<br>＋5N碳酸锶掺杂（红星，全球唯一）</div>
+        </div>
+        <div class="flow-box fb-prec">
+          <div class="fb-title">超细镍粉 / 电极浆料</div>
+          <div class="fb-sub">80-120nm镍粉 <span class="fb-code">605376 博迁新材</span><br>铜浆/银浆/银钯浆（端电极）<br><span class="fb-gap">浆料A股无纯正标的</span></div>
+        </div>
+        <div class="flow-box fb-prec">
+          <div class="fb-title">PET基膜 + 离型剂</div>
+          <div class="fb-sub">光学级基膜 <span class="fb-code">002585双星 601208东材 000859国风</span><br>有机硅/氟素离型剂<br><span class="fb-gap">氟素国内空白</span></div>
+        </div>
+        <div class="flow-box fb-prec">
+          <div class="fb-title">高纯稀土氧化物</div>
+          <div class="fb-sub">钬/铈/钕/钐（分离提纯）<br><span class="fb-gap">无直接A股标的</span><br>＋PVB助剂 <span class="fb-code">600063 皖维高新</span></div>
+        </div>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-stage">
+        <div class="flow-stage-label">上游 · 核心材料</div>
+        <div class="flow-box fb-material">
+          <div class="fb-title">① 陶瓷粉体（钛酸钡）</div>
+          <div class="fb-sub">BaCO₃+TiO₂ 1200-1300℃固相合成，路径唯一<br>99.99%纯度 / 120nm以下<br>堺化学≈30% / Ferro≈20% / <span class="fb-code">国瓷300285</span>≈10%</div>
+        </div>
+        <div class="flow-box fb-material">
+          <div class="fb-title">② 电极材料</div>
+          <div class="fb-sub">内电极：镍浆（镍粉占成本80%）<br>端电极：铜/银底+镀镍+镀锡<br>银钯PME用于射频/军工高Q</div>
+        </div>
+        <div class="flow-box fb-material">
+          <div class="fb-title">③ 离型膜（核心耗材）</div>
+          <div class="fb-sub">基膜+离型剂占成本58%+<br>东丽/东洋纺/三井/帝人 CR5&gt;80%<br>市场265亿元（2025）</div>
+        </div>
+        <div class="flow-box fb-material">
+          <div class="fb-title">④ 配方掺杂粉</div>
+          <div class="fb-sub">85%基础粉+15%配方粉<br>实现X7R/X8R温度特性<br>车规/服务器高容必加</div>
+        </div>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-stage">
+        <div class="flow-stage-label">支撑 · 专用设备</div>
+        <div class="flow-box fb-equip">
+          <div class="fb-title">前道</div>
+          <div class="fb-sub">流延机 / 叠层机 / 切割机</div>
+        </div>
+        <div class="flow-box fb-equip">
+          <div class="fb-title">中后道</div>
+          <div class="fb-sub">烧结炉 / 端电极溅射电镀</div>
+        </div>
+        <div class="flow-box fb-equip">
+          <div class="fb-title">后道</div>
+          <div class="fb-sub">六面检测 / 测试分选</div>
+        </div>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-stage">
+        <div class="flow-stage-label">中游 · MLCC制造</div>
+        <div class="flow-box fb-mid">
+          <div class="fb-title">海外龙头</div>
+          <div class="fb-sub">村田 / 三星电机 / 太阳诱电 / TDK / 国巨 / 华新科</div>
+        </div>
+        <div class="flow-box fb-mid">
+          <div class="fb-title">大陆厂商</div>
+          <div class="fb-sub">三环集团 / 风华高科 / 微容（未上市）/ 达利凯普</div>
+        </div>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-stage">
+        <div class="flow-stage-label">下游 · 应用</div>
+        <div class="flow-box fb-down">
+          <div class="fb-title">AI服务器</div>
+          <div class="fb-sub">GB200→Rubin<br>单机柜45万→60万颗</div>
+        </div>
+        <div class="flow-box fb-down">
+          <div class="fb-title">汽车电子</div>
+          <div class="fb-sub">单车6千→1.8万颗<br>800V/L3驱动</div>
+        </div>
+        <div class="flow-box fb-down">
+          <div class="fb-title">消费/通信</div>
+          <div class="fb-sub">手机 / AIPC / 5G基站</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== 最上游↔上游 对应关系明细 ========== -->
+  <div class="section-title">🔬 最上游 ↔ 上游 对应关系明细（物料转化路径）</div>
+  <div class="flow-card">
+    <table>
+      <tr>
+        <th>最上游原料</th><th>中间体/前驱体</th><th>→ 上游材料</th>
+        <th>在MLCC中的作用</th><th>代表供应商 / A股</th><th>来源</th>
+      </tr>
+      <tr>
+        <td><b>重晶石</b> BaSO₄<br><span style="color:var(--text-secondary);font-size:12px">贵州低锶矿最优</span></td>
+        <td>高纯碳酸钡 BaCO₃<br><span style="color:var(--text-secondary);font-size:12px">4N/5N纯度壁垒</span></td>
+        <td>① 陶瓷粉体</td>
+        <td>合成钛酸钡的<b>钡源</b>（配方≈60%）；折算占MLCC总成本 <b>18%-24%</b>；BaCO₃+TiO₂ 于1200-1300℃固相反应，<b>化学路径唯一</b>，无高纯碳酸钡就造不出高端MLCC</td>
+        <td class="code">600367 红星发展<br><span style="color:var(--text-secondary);font-size:12px">全球40%+/国内60%，直供堺化学/村田/国瓷/风华</span></td>
+        <td><span class="tag tag-src-web">联网</span></td>
+      </tr>
+      <tr>
+        <td><b>钛精矿</b></td>
+        <td>电子级钛白粉 TiO₂</td>
+        <td>① 陶瓷粉体</td>
+        <td>合成钛酸钡的<b>钛源</b>（配方≈40%），与碳酸钡摩尔比约1:1</td>
+        <td class="code">002601 龙佰集团<br><span style="color:var(--text-secondary);font-size:12px">电子级批量供应</span></td>
+        <td><span class="tag tag-src-web">联网</span></td>
+      </tr>
+      <tr>
+        <td><b>天青石</b> SrSO₄</td>
+        <td>电子级碳酸锶 SrCO₃<br><span style="color:var(--text-secondary);font-size:12px">5N高纯</span></td>
+        <td>① 陶瓷粉体<br><span style="color:var(--text-secondary);font-size:12px">（掺杂改性）</span></td>
+        <td>合成钛酸锶 SrTiO₃ / 钛酸钡锶BST，用于<b>高压/高频/车规</b>改性，占MLCC成本 3%-5%</td>
+        <td class="code">600367 红星发展<br><span style="color:var(--text-secondary);font-size:12px">5N碳酸锶全球唯一规模量产</span></td>
+        <td><span class="tag tag-src-web">联网</span></td>
+      </tr>
+      <tr>
+        <td><b>锆英砂</b> ZrSiO₄</td>
+        <td>氧化锆 / 锆酸盐</td>
+        <td>① 陶瓷粉体<br><span style="color:var(--text-secondary);font-size:12px">（掺杂改性）</span></td>
+        <td>介质改性添加剂（耐压/温度特性调节）；价格上涨对MLCC形成成本支撑</td>
+        <td>—（纪要仅提示涨价，未映射标的）</td>
+        <td><span class="tag tag-src-note">纪要</span></td>
+      </tr>
+      <tr style="background:#fafcff">
+        <td><b>镍矿</b><br><span style="color:var(--text-secondary);font-size:12px">印尼为主，减产推价</span></td>
+        <td>高纯镍 → 超细镍粉<br><span style="color:var(--text-secondary);font-size:12px">80-200nm，PVD/化学法</span></td>
+        <td>② 电极材料<br><span style="color:var(--text-secondary);font-size:12px">·内电极</span></td>
+        <td>镍粉占内电极成本 <b>≈80%</b>；AI高容需≤120nm超细粉适配&lt;1μm介质层；高端溢价3-5倍</td>
+        <td class="code">605376 博迁新材<br><span style="color:var(--text-secondary);font-size:12px">三星AI供应链二供</span></td>
+        <td><span class="tag tag-src-note">纪要</span></td>
+      </tr>
+      <tr style="background:#fafcff">
+        <td><b>铜 / 银 / 钯</b></td>
+        <td>铜浆 / 银浆 / 银钯浆</td>
+        <td>② 电极材料<br><span style="color:var(--text-secondary);font-size:12px">·端电极（外电极）</span></td>
+        <td>端电极多层结构：底层铜或银 + 镀镍阻挡层 + 镀锡可焊层；<b>银钯PME贵金属电极</b>用于射频/军工高Q产品（达利凯普等）</td>
+        <td>浆料环节A股无纯正标的 <span class="tag tag-gap">缺口</span></td>
+        <td><span class="tag tag-src-web">联网</span></td>
+      </tr>
+      <tr>
+        <td><b>石油</b><br><span style="color:var(--text-secondary);font-size:12px">PTA / MEG</span></td>
+        <td>PET聚酯 → 光学级PET基膜</td>
+        <td>③ 离型膜<br><span style="color:var(--text-secondary);font-size:12px">·基膜</span></td>
+        <td>承载陶瓷膜片，均匀性/厚度决定浆料涂布质量；基膜+离型剂占离型膜成本 <b>58%+</b></td>
+        <td class="code">002585 双星新材<br>601208 东材科技<br>000859 国风新材</td>
+        <td><span class="tag tag-src-note">纪要</span></td>
+      </tr>
+      <tr>
+        <td><b>有机硅</b>（硅油）/ <b>氟素</b></td>
+        <td>离型剂<br><span style="color:var(--text-secondary);font-size:12px">有机硅UV固化 / 非硅 / 氟素</span></td>
+        <td>③ 离型膜<br><span style="color:var(--text-secondary);font-size:12px">·离型层</span></td>
+        <td>离型力控制：过高→绿片弯翘分层，过低→涂布不稳；<b>氟素型为最高端路线，国内尚未自主</b></td>
+        <td>氟素国内空白 <span class="tag tag-gap">缺口</span></td>
+        <td><span class="tag tag-src-note">纪要</span></td>
+      </tr>
+      <tr>
+        <td><b>稀土矿</b><br><span style="color:var(--text-secondary);font-size:12px">离子型，中国主导</span></td>
+        <td>高纯稀土氧化物<br><span style="color:var(--text-secondary);font-size:12px">钇/镝/钬/铈/钕/钐</span></td>
+        <td>④ 配方掺杂粉<br><span style="color:var(--text-secondary);font-size:12px">（占配方15%）</span></td>
+        <td>实现X7R/X8R温度特性：钬→耐高温、铈/镁→耐压长寿命、钕/钐→微型化高介电；<b>车规/服务器高容必加</b></td>
+        <td>无直接纯正标的 <span class="tag tag-gap">缺口</span><br><span style="color:var(--text-secondary);font-size:12px">出口管制为核心风险点</span></td>
+        <td><span class="tag tag-src-note">纪要</span></td>
+      </tr>
+      <tr>
+        <td><b>基础化工品</b></td>
+        <td>电子级溶剂（甲苯/乙醇）<br>PVB粘合剂 / 分散剂</td>
+        <td>浆料助剂<br><span style="color:var(--text-secondary);font-size:12px">（配套）</span></td>
+        <td>陶瓷浆料流延成型（膜厚精度±0.1μm），占成本10%-25%</td>
+        <td class="code">600063 皖维高新<br><span style="color:var(--text-secondary);font-size:12px">MLCC用PVB树脂</span></td>
+        <td><span class="tag tag-src-web">联网</span></td>
+      </tr>
+    </table>
+    <div style="margin-top:12px;font-size:12px;color:var(--text-secondary)">
+      💡 <b>关键结论</b>：最上游的"卡脖子"不在矿本身，而在<b>高纯化</b>——碳酸钡需4N/5N（红星发展国内60%）、碳酸锶5N（红星全球唯一）、镍粉80-120nm（博迁）、氟素离型剂（国内空白）。
+      高纯碳酸钡→钛酸钡的化学路径唯一且被"原子级锁死"，使<b>红星发展</b>成为整条链上弹性最上游的隐含标的（联网信息，建议后续纪要交叉验证）。
+    </div>
+  </div>
+
+  <!-- ========== 环节① 陶瓷粉体 ========== -->
+  <div class="chain-section">
+    <div class="section-title">🧱 环节拆解 · 四大核心材料</div>
+    <div class="chain-card">
+      <div class="chain-head">
+        <div class="chain-num">1</div>
+        <div class="chain-name">陶瓷粉体（钛酸钡 BaTiO₃）</div>
+        <div class="chain-cost">第一大成本项：低容MLCC中占 40%-50%，高容占比更高 <span class="tag tag-src-note">纪要</span></div>
+      </div>
+      <div class="chain-body">
+        <div class="chain-block">
+          <h4>技术与规格门槛</h4>
+          <ul>
+            <li>高端门槛：<b>99.99%纯度、120nm以下颗粒</b>；AI/车规高容需持续纳米化 <span class="tag tag-src-note">纪要</span></li>
+            <li>颗粒度决定膜厚：450nm→膜厚6μm+（车规）；300-350nm→2μm（用量最大）；150-160nm→1.2-2μm <span class="tag tag-src-note">纪要</span></li>
+            <li>实验室正向几十纳米颗粒度演进，尚未量产 <span class="tag tag-src-note">纪要</span></li>
+            <li>三星电机约50%外购成品粉（供应商含国瓷材料），车规粉自行调配 <span class="tag tag-src-note">纪要</span></li>
+          </ul>
+        </div>
+        <div class="chain-block">
+          <h4>全球竞争格局</h4>
+          <table>
+            <tr><th>厂商</th><th>市占率</th><th>备注</th></tr>
+            <tr><td>堺化学（日）</td><td><div class="bar-wrap"><div class="bar"><div class="bar-fill" style="width:100%"></div></div><span class="bar-pct">≈30%</span></div></td><td>全球第一</td></tr>
+            <tr><td>Ferro（美）</td><td><div class="bar-wrap"><div class="bar"><div class="bar-fill" style="width:67%"></div></div><span class="bar-pct">≈20%</span></div></td><td>全球第二</td></tr>
+            <tr><td><b>国瓷材料</b></td><td><div class="bar-wrap"><div class="bar"><div class="bar-fill" style="width:33%"></div></div><span class="bar-pct">≈10%</span></div></td><td>全球第四，高端仍依赖进口</td></tr>
+          </table>
+        </div>
+        <div class="chain-block full-width">
+          <h4>A股映射标的</h4>
+          <table>
+            <tr><th>代码</th><th>公司</th><th>核心看点</th><th>观点</th><th>来源</th></tr>
+            <tr>
+              <td class="code">300285</td><td><b>国瓷材料</b></td>
+              <td>国内粉体龙头（全球第四≈10%），供货村田/三星/风华/三环；可满足中低端，高端进口替代中</td>
+              <td><span class="tag tag-watch">🟡观察</span></td>
+              <td><span class="tag tag-src-note">纪要</span></td>
+            </tr>
+            <tr>
+              <td class="code">300408</td><td>三环集团</td>
+              <td>全产业链自给（自配粉体），成本优势显著</td>
+              <td><span class="tag tag-neutral">关联</span></td>
+              <td><span class="tag tag-src-web">联网</span></td>
+            </tr>
+            <tr>
+              <td class="code">600367<br>002601</td><td>红星发展 / 龙佰集团</td>
+              <td><b>更上游前驱体</b>：高纯碳酸钡（红星，全球40%+）+ 电子级钛白粉（龙佰）→ 钛酸钡唯一合成路径，详见上方「对应关系明细」</td>
+              <td><span class="tag tag-neutral">待跟踪</span></td>
+              <td><span class="tag tag-src-web">联网</span></td>
+            </tr>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== 环节② 电极材料 ========== -->
+  <div class="chain-section">
+    <div class="chain-card">
+      <div class="chain-head">
+        <div class="chain-num">2</div>
+        <div class="chain-name">电极材料（镍粉/镍浆 + 端电极）</div>
+        <div class="chain-cost">第二大成本构成 <span class="tag tag-src-note">纪要</span></div>
+      </div>
+      <div class="chain-body">
+        <div class="chain-block">
+          <h4>技术与瓶颈</h4>
+          <ul>
+            <li>高端镍粉为<b>最主要瓶颈</b>：需128nm超细镍粉、纯度99.99%，价格是普通镍粉 <b>3-5倍</b> <span class="tag tag-src-note">纪要</span></li>
+            <li>国内已实现镍系内电极（BME）工艺自主，但高端镍粉纯度和配方仍存不足 <span class="tag tag-src-note">纪要</span></li>
+            <li>印尼镍矿减产推动镍价上涨；镍/铜/银/钯电极金属价格整体高于上轮周期前，形成成本支撑 <span class="tag tag-src-note">纪要</span></li>
+            <li>浆料环节（镍浆/银浆/铜浆）<b>国产化率最低</b>，A股无纯正浆料标的 <span class="tag tag-src-web">联网</span></li>
+          </ul>
+        </div>
+        <div class="chain-block">
+          <h4>A股映射标的</h4>
+          <table>
+            <tr><th>代码</th><th>公司</th><th>核心看点</th><th>观点</th><th>来源</th></tr>
+            <tr>
+              <td class="code">605376</td><td><b>博迁新材</b></td>
+              <td>PVD法80nm超细镍粉全球稀缺，三星AI供应链二供，份额提升逻辑；大摩提示估值偏贵</td>
+              <td><span class="tag tag-watch">🟡观察</span></td>
+              <td><span class="tag tag-src-note">纪要</span></td>
+            </tr>
+            <tr>
+              <td class="code">300666</td><td>江丰电子</td>
+              <td>MLCC端电极镍/铜溅射靶材，配套PVD镀膜设备，扩产带动靶材订单</td>
+              <td><span class="tag tag-neutral">待跟踪</span></td>
+              <td><span class="tag tag-src-web">联网</span></td>
+            </tr>
+            <tr>
+              <td class="code">—</td><td>浆料（镍/银/铜浆）</td>
+              <td>国产化率最低环节，A股暂无纯正标的</td>
+              <td><span class="tag tag-gap">缺口</span></td>
+              <td><span class="tag tag-src-web">联网</span></td>
+            </tr>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== 环节③ 离型膜 ========== -->
+  <div class="chain-section">
+    <div class="chain-card">
+      <div class="chain-head">
+        <div class="chain-num">3</div>
+        <div class="chain-name">离型膜 / PET基膜（核心耗材）</div>
+        <div class="chain-cost">PET基膜+有机硅离型剂合计占成本 58%+ <span class="tag tag-src-note">纪要</span></div>
+      </div>
+      <div class="chain-body">
+        <div class="chain-block">
+          <h4>技术与市场</h4>
+          <ul>
+            <li>"小材料影响大良率"：离型力/基膜品质直接决定MLCC短路、容量偏移、烧结开裂等良率问题 <span class="tag tag-src-note">纪要</span></li>
+            <li>市场空间：2025年 <b>265亿元</b>（182亿㎡，+16.8%）→ 2026E 282亿 → 2032E 418亿（CAGR 6.8%） <span class="tag tag-src-note">纪要</span></li>
+            <li>基膜壁垒：17μm演进至超薄+纳米级超平滑，主流ABA三层共挤；氟素型离型层为最高端路线，<b>国内尚未自主</b> <span class="tag tag-src-note">纪要</span></li>
+            <li>全球格局：东丽/东洋纺/三井化学/帝人 <b>CR5>80%</b>；东丽扩产1.6倍，新产能已被村田、三星电机锁定 <span class="tag tag-src-note">纪要</span></li>
+          </ul>
+        </div>
+        <div class="chain-block">
+          <h4>A股映射标的（国产四小龙 + 新进入者）</h4>
+          <table>
+            <tr><th>代码</th><th>公司</th><th>核心看点</th><th>观点</th><th>来源</th></tr>
+            <tr>
+              <td class="code">002859</td><td><b>洁美科技</b></td>
+              <td>终端覆盖最广（国巨/华新科/风华/三环批量，三星村田验证通过）；产能4亿㎡+在建3亿㎡；载带国内市占90%+；大摩提示估值偏贵</td>
+              <td><span class="tag tag-focus">🟢关注</span></td>
+              <td><span class="tag tag-src-note">纪要</span></td>
+            </tr>
+            <tr>
+              <td class="code">300806</td><td><b>斯迪克</b></td>
+              <td>1μm介质超高端国产唯一突破（通过两家头部验证）；打通基膜/离型剂/涂布全链条；达产预计年销23亿元</td>
+              <td><span class="tag tag-watch">🟡观察</span></td>
+              <td><span class="tag tag-src-note">纪要</span></td>
+            </tr>
+            <tr>
+              <td class="code">002585</td><td>双星新材</td>
+              <td>PET基膜产能规模领先（一期5亿㎡ 2026年达成，规划20亿㎡）；2025年MLCC离型膜收入+148%；正推进村田/三星/太诱验证</td>
+              <td><span class="tag tag-neutral">⚪中性</span></td>
+              <td><span class="tag tag-src-note">纪要</span></td>
+            </tr>
+            <tr>
+              <td class="code">601208</td><td>东材科技</td>
+              <td>聚焦上游基膜（不做成品膜）：国内市占20-30%、全球10-15%，良率95%；板块毛利率32%</td>
+              <td><span class="tag tag-neutral">⚪中性</span></td>
+              <td><span class="tag tag-src-note">纪要</span></td>
+            </tr>
+            <tr>
+              <td class="code">000859</td><td>国风新材</td>
+              <td>新进入者：14.51亿投资11万吨光学级PET（含MLCC基膜6亿㎡），2026年7月设备完成安装，尚未形成规模收入</td>
+              <td><span class="tag tag-neutral">待跟踪</span></td>
+              <td><span class="tag tag-src-note">纪要</span></td>
+            </tr>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== 环节④ 稀土 ========== -->
+  <div class="chain-section">
+    <div class="chain-card">
+      <div class="chain-head">
+        <div class="chain-num">4</div>
+        <div class="chain-name">稀土氧化物（配方掺杂）</div>
+        <div class="chain-cost">配方粉占陶瓷材料 15%（85%基础粉+15%配方粉）<span class="tag tag-src-note">纪要</span></div>
+      </div>
+      <div class="chain-body">
+        <div class="chain-block">
+          <h4>元素用途与配方逻辑</h4>
+          <table>
+            <tr><th>稀土元素</th><th>功能</th></tr>
+            <tr><td><b>钬 Ho</b></td><td>耐高温（车规/服务器高温容值稳定）</td></tr>
+            <tr><td><b>铈 Ce / 镁 Mg</b></td><td>耐高压、长寿命</td></tr>
+            <tr><td><b>钕 Nd / 钐 Sm</b></td><td>微型化、高介电常数</td></tr>
+          </table>
+          <ul style="margin-top:10px">
+            <li>车规级、服务器高容MLCC<b>必须添加</b>；配方为企业核心专利 <span class="tag tag-src-note">纪要</span></li>
+          </ul>
+        </div>
+        <div class="chain-block">
+          <h4>供应风险与A股映射</h4>
+          <ul>
+            <li><b>稀土出口管制/中日关系是重要供应风险点</b>：村田曾因稀土供应变化评估提前涨价（倾向20-30%）<span class="tag tag-src-note">纪要</span></li>
+            <li>村田各工厂镝等稀土库存与断供风险已被机构重点跟踪 <span class="tag tag-src-note">纪要</span></li>
+            <li>国内稀土管控落地，日系原料储备受限 → 2027年海外高端产能进一步受限，利好国产替代 <span class="tag tag-src-web">联网</span></li>
+            <li>A股映射：MLCC级高纯稀土氧化物<b>暂无纪要明确的纯正标的</b>，上游资源端（北方稀土/中国稀土集团）仅为间接关联 <span class="tag tag-gap">缺口</span></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== 环节⑤ 设备 ========== -->
+  <div class="chain-section">
+    <div class="section-title">⚙️ 配套环节 · 专用设备 <span class="tag tag-src-web">联网 2026-08-06</span></div>
+    <div class="chain-card">
+      <div class="chain-head">
+        <div class="chain-num">5</div>
+        <div class="chain-name">MLCC 专用设备（国产化率&lt;30%，替代加速）</div>
+        <div class="chain-cost">流延+叠层+烧结占产线投资 70%+，叠层机单项占设备投入 40-50%</div>
+      </div>
+      <div class="chain-body">
+        <div class="chain-block full-width">
+          <h4>工序拆解与A股标的（日系交期1-2年，国产导入窗口期明确）</h4>
+          <table>
+            <tr><th>工序</th><th>设备</th><th>海外主导</th><th>A股标的</th><th>看点</th></tr>
+            <tr>
+              <td rowspan="2"><b>前道</b></td>
+              <td>流延机</td><td>日本平田（交期1.5-2年）</td>
+              <td class="code">300450 先导智能</td>
+              <td>国内少数量产超薄流延（攻关0.6μm），配套国瓷/风华/三环高端产线</td>
+            </tr>
+            <tr>
+              <td>叠层机（"皇冠明珠"）</td><td>日本田中/东芝</td>
+              <td class="code">002975 博杰股份<br>300461 田中精机</td>
+              <td>博杰（奥德维）：国内唯一全栈，二代千层叠层机批量落地，覆盖50%+设备价值量；田中精机：日系技术，国内市占≈40%</td>
+            </tr>
+            <tr>
+              <td><b>中道</b></td>
+              <td>烧结炉 / 端电极溅射电镀</td><td>日本东芝/京瓷（高端垄断）</td>
+              <td class="code">688788 顶立科技<br>002371 北方华创</td>
+              <td>顶立：1400℃气氛烧结炉替代进口；北方华创：端电极溅射/电镀设备主力</td>
+            </tr>
+            <tr>
+              <td><b>后道</b></td>
+              <td>检测 / 测试分选</td><td>欧姆龙/蔡司</td>
+              <td class="code">300567 精测电子<br>002975 博杰股份</td>
+              <td>精测：电容全参数测试仪（车规/AI级）；博杰六面检测速度超1万颗/分钟</td>
+            </tr>
+          </table>
+        </div>
+        <div class="chain-block full-width">
+          <h4>设备投资逻辑</h4>
+          <ul>
+            <li>扩产周期18-24个月+日系设备交期1-2年 → <b>国产设备导入为确定性趋势</b>，扩产先行、设备最先兑现业绩</li>
+            <li>博杰股份MLCC业务子公司2026Q1净利润已超2025全年（订单弹性验证）</li>
+            <li>注意：设备环节信息全部来自联网公开资料（2026-08-06），未在归档纪要中系统覆盖，建议后续补充设备专家纪要交叉验证</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== 风险与机会 ========== -->
+  <div class="section-title">🎯 供应风险与关注点</div>
+  <div class="risk-grid">
+    <div class="judgment-card">
+      <h4 style="font-size:13px;color:var(--text-secondary);margin-bottom:12px">⚠️ 供应链风险</h4>
+      <div class="risk-item"><span class="risk-icon">▸</span><span><b>稀土出口管制</b>：高端配方必需元素受地缘政治影响，村田/日系原料储备受限，可能引发供应扰动或提前涨价</span></div>
+      <div class="risk-item"><span class="risk-icon">▸</span><span><b>镍价上行</b>：印尼镍矿减产+高端镍粉3-5倍溢价，电极成本压力持续</span></div>
+      <div class="risk-item"><span class="risk-icon">▸</span><span><b>设备卡脖子</b>：高端流延/叠层/烧结设备依赖日本进口，交期1-2年且受出口限制，制约国内高端扩产节奏</span></div>
+      <div class="risk-item"><span class="risk-icon">▸</span><span><b>氟素离型膜未自主</b>：最高端离型层技术路线国内空白，超高端MLCC耗材仍依赖东丽等日系</span></div>
+    </div>
+    <div class="judgment-card">
+      <h4 style="font-size:13px;color:var(--text-secondary);margin-bottom:12px">✅ 核心关注标的（按环节确定性排序）</h4>
+      <div class="risk-item"><span class="opp-icon">▸</span><span><b>洁美科技 002859</b>：离型膜+载带双轮，客户验证最全（含村田/三星），耗材放量与设备投产同步</span></div>
+      <div class="risk-item"><span class="opp-icon">▸</span><span><b>博迁新材 605376</b>：80nm镍粉绑定三星AI供应链，份额提升确定性高（注意估值偏贵）</span></div>
+      <div class="risk-item"><span class="opp-icon">▸</span><span><b>国瓷材料 300285</b>：粉体全球第四，高端进口替代+AI/车规粉体放量</span></div>
+      <div class="risk-item"><span class="opp-icon">▸</span><span><b>斯迪克 300806</b>：1μm超高端唯一国产突破，弹性大但需验证放量节奏</span></div>
+      <div class="risk-item"><span class="opp-icon">▸</span><span><b>设备（博杰/先导/北方华创）</b>：国产化率&lt;30%+扩产潮，订单弹性最直接（联网信息，待纪要验证）</span></div>
+    </div>
+  </div>
+
+  <div class="footer">
+    MLCC上游供应链全景图 · 配套 <a href="passive-components-dashboard.html" style="color:var(--accent)">被动元件（MLCC）行业看板</a> 使用<br>
+    数据截止 2026-08-06 · 纪要类数据来源：9篇归档纪要（2026年2-8月）· 联网补充已单独标注
+  </div>
+
+</div>
+
+</body>
+</html>

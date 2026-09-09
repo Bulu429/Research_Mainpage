@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>被动元件（MLCC）行业看板</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+  :root {
+    --bg: #f8f9fa;
+    --card: #ffffff;
+    --border: #e9ecef;
+    --text-primary: #212529;
+    --text-secondary: #6c757d;
+    --accent: #2563eb;
+    --up: #16a34a;
+    --down: #dc2626;
+    --neutral: #d97706;
+    --up-bg: #f0fdf4;
+    --down-bg: #fef2f2;
+    --neutral-bg: #fffbeb;
+    --tag-bg: #eff6ff;
+    --tag-text: #1d4ed8;
+    --shadow: 0 1px 3px rgba(0,0,0,.08), 0 1px 2px rgba(0,0,0,.04);
+    --shadow-md: 0 4px 6px rgba(0,0,0,.07), 0 2px 4px rgba(0,0,0,.04);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+    background: var(--bg);
+    color: var(--text-primary);
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  .header {
+    background: var(--card);
+    border-bottom: 1px solid var(--border);
+    padding: 20px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: var(--shadow);
+  }
+  .header-left { display: flex; align-items: center; gap: 16px; }
+  .sector-name { font-size: 22px; font-weight: 700; color: var(--text-primary); }
+  .outlook-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 600;
+  }
+  .outlook-up    { background: var(--up-bg);      color: var(--up);      border: 1px solid #86efac; }
+  .outlook-down  { background: var(--down-bg);    color: var(--down);    border: 1px solid #fca5a5; }
+  .outlook-neutral{ background: var(--neutral-bg); color: var(--neutral); border: 1px solid #fcd34d; }
+  .header-meta { font-size: 12px; color: var(--text-secondary); }
+  .update-time { font-size: 12px; color: var(--text-secondary); }
+
+  .container { max-width: 1280px; margin: 0 auto; padding: 24px 32px; }
+
+  .section-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 14px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid var(--accent);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .section-title .icon { font-size: 16px; }
+
+  .kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-bottom: 28px;
+  }
+  .kpi-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 18px 20px;
+    box-shadow: var(--shadow);
+  }
+  .kpi-label { font-size: 12px; color: var(--text-secondary); margin-bottom: 6px; }
+  .kpi-value { font-size: 24px; font-weight: 700; color: var(--text-primary); margin-bottom: 4px; }
+  .kpi-trend {
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .trend-up   { color: var(--up); }
+  .trend-down { color: var(--down); }
+  .trend-flat { color: var(--text-secondary); }
+
+  .charts-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 16px;
+    margin-bottom: 28px;
+  }
+  .chart-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: var(--shadow);
+  }
+  .chart-card h3 { font-size: 13px; font-weight: 600; color: var(--text-secondary); margin-bottom: 14px; }
+  .chart-wrapper { position: relative; height: 220px; }
+
+  .table-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: var(--shadow);
+    margin-bottom: 20px;
+    overflow-x: auto;
+  }
+  .table-card h3 { font-size: 13px; font-weight: 600; color: var(--text-secondary); margin-bottom: 14px; }
+  table { width: 100%; border-collapse: collapse; }
+  th {
+    text-align: left;
+    padding: 8px 12px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    background: var(--bg);
+    border-bottom: 1px solid var(--border);
+    white-space: nowrap;
+  }
+  td {
+    padding: 10px 12px;
+    font-size: 13px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: middle;
+  }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: var(--bg); }
+
+  .share-bar-wrap { display: flex; align-items: center; gap: 8px; }
+  .share-bar {
+    height: 6px;
+    background: var(--border);
+    border-radius: 3px;
+    width: 80px;
+    overflow: hidden;
+  }
+  .share-bar-fill {
+    height: 100%;
+    background: var(--accent);
+    border-radius: 3px;
+  }
+  .share-pct { font-size: 12px; color: var(--text-secondary); min-width: 32px; }
+
+  .tag {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 600;
+  }
+  .tag-focus   { background: var(--up-bg);      color: var(--up);      border: 1px solid #86efac; }
+  .tag-watch   { background: var(--neutral-bg); color: var(--neutral); border: 1px solid #fcd34d; }
+  .tag-neutral { background: var(--bg);         color: var(--text-secondary); border: 1px solid var(--border); }
+  .tag-high    { background: #fdf4ff; color: #7e22ce; border: 1px solid #d8b4fe; }
+
+  .timeline { padding-left: 4px; }
+  .tl-item {
+    display: flex;
+    gap: 16px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .tl-item:last-child { border-bottom: none; }
+  .tl-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    margin-top: 5px;
+    flex-shrink: 0;
+  }
+  .tl-dot-pending  { background: var(--neutral); }
+  .tl-dot-verified { background: var(--up); }
+  .tl-dot-falsified{ background: var(--down); }
+  .tl-date { font-size: 12px; color: var(--text-secondary); white-space: nowrap; min-width: 76px; }
+  .tl-content { flex: 1; }
+  .tl-event { font-size: 13px; font-weight: 500; }
+  .tl-meta { font-size: 12px; color: var(--text-secondary); margin-top: 2px; }
+  .tl-status {
+    font-size: 11px;
+    padding: 2px 7px;
+    border-radius: 4px;
+    white-space: nowrap;
+    align-self: flex-start;
+    margin-top: 3px;
+  }
+  .status-pending   { background: var(--neutral-bg); color: var(--neutral); }
+  .status-verified  { background: var(--up-bg);      color: var(--up); }
+  .status-falsified { background: var(--down-bg);    color: var(--down); }
+
+  .bottom-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 28px;
+  }
+
+  .judgment-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: var(--shadow);
+  }
+  .judgment-text {
+    font-size: 14px;
+    line-height: 1.8;
+    color: var(--text-primary);
+    background: var(--bg);
+    border-radius: 6px;
+    padding: 14px 16px;
+    border-left: 3px solid var(--accent);
+    margin-bottom: 14px;
+  }
+  .risk-item {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 6px;
+    font-size: 13px;
+  }
+  .risk-icon { color: var(--down); flex-shrink: 0; }
+
+  .note-banner {
+    background: var(--tag-bg);
+    color: var(--tag-text);
+    border: 1px solid #bfdbfe;
+    border-radius: 8px;
+    padding: 10px 16px;
+    font-size: 12.5px;
+    margin-bottom: 20px;
+  }
+
+  /* ===== 上游供应链流程图 ===== */
+  .flow-card { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 24px; box-shadow: var(--shadow); margin-bottom: 20px; overflow-x: auto; }
+  .flow-row { display: flex; align-items: stretch; gap: 0; min-width: 1420px; }
+  .flow-stage { flex: 1; display: flex; flex-direction: column; gap: 8px; }
+  .flow-stage-label {
+    font-size: 11px; font-weight: 700; letter-spacing: 1px;
+    color: var(--text-secondary); text-transform: uppercase; margin-bottom: 2px;
+  }
+  .flow-arrow {
+    align-self: center; padding: 0 8px; color: var(--text-secondary);
+    font-size: 20px; font-weight: 700; flex-shrink: 0;
+  }
+  .flow-box {
+    border-radius: 8px; padding: 10px 12px; font-size: 12px;
+    border: 1px solid var(--border); background: var(--bg);
+  }
+  .flow-box .fb-title { font-weight: 700; font-size: 12.5px; margin-bottom: 2px; }
+  .flow-box .fb-sub { color: var(--text-secondary); font-size: 11.5px; line-height: 1.5; }
+  .fb-raw     { background: #f8fafc; border-color: #cbd5e1; }
+  .fb-prec    { background: #ecfeff; border-color: #67e8f9; }
+  .fb-material{ background: var(--tag-bg); border-color: #bfdbfe; }
+  .fb-equip   { background: #fdf4ff; border-color: #d8b4fe; }
+  .fb-mid     { background: var(--up-bg); border-color: #86efac; }
+  .fb-down    { background: var(--neutral-bg); border-color: #fcd34d; }
+  .fb-code { font-family: "SF Mono", Consolas, monospace; color: var(--accent); font-weight: 600; font-size: 11px; }
+  .fb-gap { color: var(--down); font-weight: 600; font-size: 11px; }
+  .tag-src-note { background: var(--up-bg); color: var(--up); border: 1px solid #86efac; }
+  .tag-src-web  { background: var(--neutral-bg); color: var(--neutral); border: 1px solid #fcd34d; }
+  .tag-gap      { background: var(--down-bg); color: var(--down); border: 1px solid #fca5a5; }
+  .code { font-family: "SF Mono", Consolas, monospace; font-size: 12px; color: var(--accent); font-weight: 600; white-space: nowrap; }
+
+  /* ===== 产品线导航 ===== */
+  .pline-nav { display: flex; align-items: center; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; }
+  .pline-label { font-size: 12px; color: var(--text-secondary); font-weight: 600; }
+  .pline-pill { padding: 4px 14px; border-radius: 20px; font-size: 12.5px; font-weight: 600; border: 1px solid var(--border); }
+  .pline-active { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .pline-todo { background: var(--card); color: var(--text-secondary); border-style: dashed; }
+
+  @media (max-width: 900px) {
+    .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+    .charts-grid { grid-template-columns: 1fr; }
+    .bottom-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div class="header-left">
+    <span class="sector-name" id="sectorName">被动元件（MLCC）</span>
+    <span class="outlook-badge outlook-up" id="outlookBadge">🟢 上行</span>
+  </div>
+  <div class="header-meta">
+    <a href="#supply-chain" style="color: var(--accent); text-decoration: none;">上游供应链 ↓</a>
+    <span style="margin: 0 8px; color: var(--border)">|</span>
+    <span>行业看板</span>
+    <span style="margin: 0 8px; color: var(--border)">|</span>
+    <span id="updateTime">更新：2026-08-06</span>
+  </div>
+</header>
+
+<div class="container">
+
+  <div class="note-banner">📌 本看板为<b>被动元件</b>行业看板，按产品线组织；当前全部章节均为 <b>MLCC 产品线</b>（首期），电阻/电感/钽电容等子品类后续以并列产品线扩展。数据源自8篇归档纪要/报告（华泰电子×3、国泰海通×1、野村东方国际×1、摩根士丹利×1、天风建筑建材×2），详见底稿「被动元件_看板.md」</div>
+
+  <div class="pline-nav">
+    <span class="pline-label">产品线：</span>
+    <span class="pline-pill pline-active">MLCC（本期）</span>
+    <span class="pline-pill pline-todo">电阻（规划）</span>
+    <span class="pline-pill pline-todo">电感（规划）</span>
+    <span class="pline-pill pline-todo">钽电容（规划）</span>
+  </div>
+
+  <div class="section-title"><span class="icon">📊</span>核心供需指标</div>
+  <div class="kpi-grid" id="kpiGrid"></div>
+
+  <div class="charts-grid">
+    <div class="chart-card">
+      <h3>MLCC头部厂商月度产能利用率跟踪（示意，%）</h3>
+      <div class="chart-wrapper">
+        <canvas id="trendChart"></canvas>
+      </div>
+    </div>
+    <div class="chart-card">
+      <h3>全球MLCC市占率分布（2025年，产值口径）</h3>
+      <div class="chart-wrapper">
+        <canvas id="shareChart"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-title"><span class="icon">🏭</span>竞争格局</div>
+  <div class="table-card">
+    <table id="competitorTable">
+      <thead>
+        <tr>
+          <th>公司</th>
+          <th>市占率</th>
+          <th>所在地</th>
+          <th>核心优势</th>
+          <th>最新动态</th>
+        </tr>
+      </thead>
+      <tbody id="competitorBody"></tbody>
+    </table>
+  </div>
+
+  <!-- ========== 上游供应链全景（2026-08-06 并入看板） ========== -->
+  <div class="section-title" id="supply-chain"><span class="icon">🔗</span>上游供应链全景
+    <span class="tag tag-neutral" style="font-size:11px">MLCC产品线</span>
+    <span style="font-size:12px;font-weight:400;color:var(--text-secondary)">
+      <span class="tag tag-src-note">纪要</span> = 归档纪要来源　<span class="tag tag-src-web">联网</span> = 2026-08-06公开信息补充　
+                <a href="mlcc-upstream-supply-chain.html" style="color:var(--accent);text-decoration:none">五大环节拆解详情 →</a>
+    </span>
+  </div>
+  <div class="flow-card">
+    <div class="flow-row">
+      <div class="flow-stage">
+        <div class="flow-stage-label">最上游 · 基础原料</div>
+        <div class="flow-box fb-raw">
+          <div class="fb-title">陶瓷矿物</div>
+          <div class="fb-sub">重晶石 BaSO₄（贵州低锶矿）<br>钛精矿<br>天青石 SrSO₄ / 锆英砂</div>
+        </div>
+        <div class="flow-box fb-raw">
+          <div class="fb-title">金属原料</div>
+          <div class="fb-sub">镍矿（印尼，减产推价）<br>铜 / 银 / 钯（贵金属）</div>
+        </div>
+        <div class="flow-box fb-raw">
+          <div class="fb-title">石化原料</div>
+          <div class="fb-sub">PTA / MEG（石油基）<br>有机硅（硅油）/ 氟素</div>
+        </div>
+        <div class="flow-box fb-raw">
+          <div class="fb-title">稀土矿</div>
+          <div class="fb-sub">离子型稀土（中国主导）<br><span class="fb-gap">出口管制风险点</span></div>
+        </div>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-stage">
+        <div class="flow-stage-label">前驱体 / 中间体 · 高纯化为核心壁垒</div>
+        <div class="flow-box fb-prec">
+          <div class="fb-title">碳酸钡 + 钛白粉</div>
+          <div class="fb-sub">4N/5N碳酸钡（配方60%）<br><span class="fb-code">600367 红星发展</span> 全球40%+<br><span class="fb-code">002601 龙佰集团</span> 电子级钛白粉<br>＋5N碳酸锶掺杂（红星，全球唯一）</div>
+        </div>
+        <div class="flow-box fb-prec">
+          <div class="fb-title">超细镍粉 / 电极浆料</div>
+          <div class="fb-sub">80-120nm镍粉 <span class="fb-code">605376 博迁新材</span><br>铜浆/银浆/银钯浆（端电极）<br><span class="fb-gap">浆料A股无纯正标的</span></div>
+        </div>
+        <div class="flow-box fb-prec">
+          <div class="fb-title">PET基膜 + 离型剂</div>
+          <div class="fb-sub">光学级基膜 <span class="fb-code">002585双星 601208东材 000859国风</span><br>有机硅/氟素离型剂<br><span class="fb-gap">氟素国内空白</span></div>
+        </div>
+        <div class="flow-box fb-prec">
+          <div class="fb-title">高纯稀土氧化物</div>
+          <div class="fb-sub">钬/铈/钕/钐（分离提纯）<br><span class="fb-gap">无直接A股标的</span><br>＋PVB助剂 <span class="fb-code">600063 皖维高新</span></div>
+        </div>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-stage">
+        <div class="flow-stage-label">上游 · 核心材料</div>
+        <div class="flow-box fb-material">
+          <div class="fb-title">① 陶瓷粉体（钛酸钡）</div>
+          <div class="fb-sub">BaCO₃+TiO₂ 1200-1300℃固相合成，路径唯一<br>99.99%纯度 / 120nm以下<br>堺化学≈30% / Ferro≈20% / <span class="fb-code">国瓷300285</span>≈10%</div>
+        </div>
+        <div class="flow-box fb-material">
+          <div class="fb-title">② 电极材料</div>
+          <div class="fb-sub">内电极：镍浆（镍粉占成本80%）<br>端电极：铜/银底+镀镍+镀锡<br>银钯PME用于射频/军工高Q</div>
+        </div>
+        <div class="flow-box fb-material">
+          <div class="fb-title">③ 离型膜（核心耗材）</div>
+          <div class="fb-sub">基膜+离型剂占成本58%+<br>东丽/东洋纺/三井/帝人 CR5&gt;80%<br>市场265亿元（2025）</div>
+        </div>
+        <div class="flow-box fb-material">
+          <div class="fb-title">④ 配方掺杂粉</div>
+          <div class="fb-sub">85%基础粉+15%配方粉<br>实现X7R/X8R温度特性<br>车规/服务器高容必加</div>
+        </div>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-stage">
+        <div class="flow-stage-label">支撑 · 专用设备</div>
+        <div class="flow-box fb-equip">
+          <div class="fb-title">前道（占投资70%+）</div>
+          <div class="fb-sub">流延机 <span class="fb-code">300450 先导智能</span><br>叠层机 <span class="fb-code">002975 博杰股份</span> / <span class="fb-code">300461 田中精机</span></div>
+        </div>
+        <div class="flow-box fb-equip">
+          <div class="fb-title">中后道</div>
+          <div class="fb-sub">烧结炉 <span class="fb-code">688788 顶立科技</span><br>端电极溅射 <span class="fb-code">002371 北方华创</span></div>
+        </div>
+        <div class="flow-box fb-equip">
+          <div class="fb-title">后道检测</div>
+          <div class="fb-sub">六面检测/测试 <span class="fb-code">002975 博杰</span> / <span class="fb-code">300567 精测电子</span><br><span class="fb-gap">国产化率&lt;30%，日系交期1-2年</span></div>
+        </div>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-stage">
+        <div class="flow-stage-label">中游 · MLCC制造</div>
+        <div class="flow-box fb-mid">
+          <div class="fb-title">海外龙头</div>
+          <div class="fb-sub">村田 / 三星电机 / 太阳诱电 / TDK / 国巨 / 华新科</div>
+        </div>
+        <div class="flow-box fb-mid">
+          <div class="fb-title">大陆厂商</div>
+          <div class="fb-sub"><span class="fb-code">300408</span> 三环集团 / <span class="fb-code">000636</span> 风华高科<br>微容（未上市）/ <span class="fb-code">301566</span> 达利凯普</div>
+        </div>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-stage">
+        <div class="flow-stage-label">下游 · 应用</div>
+        <div class="flow-box fb-down">
+          <div class="fb-title">AI服务器</div>
+          <div class="fb-sub">GB200→Rubin<br>单机柜45万→60万颗</div>
+        </div>
+        <div class="flow-box fb-down">
+          <div class="fb-title">汽车电子</div>
+          <div class="fb-sub">单车6千→1.8万颗<br>800V/L3驱动</div>
+        </div>
+        <div class="flow-box fb-down">
+          <div class="fb-title">消费/通信</div>
+          <div class="fb-sub">手机 / AIPC / 5G基站</div>
+        </div>
+      </div>
+    </div>
+    <div style="margin-top:14px;font-size:12px;color:var(--text-secondary)">
+      💡 <b>关键结论</b>：最上游的"卡脖子"不在矿本身，而在<b>高纯化</b>——碳酸钡需4N/5N（红星发展国内60%）、碳酸锶5N（红星全球唯一）、镍粉80-120nm（博迁）、氟素离型剂（国内空白）。
+      高纯碳酸钡→钛酸钡的化学路径唯一，<b>红星发展 600367</b> 为链条最上游隐含标的（<span class="tag tag-src-web">联网</span>，待纪要交叉验证）。
+    </div>
+  </div>
+
+  <div class="bottom-grid">
+
+    <div>
+      <div class="section-title"><span class="icon">📈</span>A股标的映射</div>
+      <div class="table-card">
+        <table>
+          <thead>
+            <tr>
+              <th>代码</th>
+              <th>公司名</th>
+              <th>产业链位置</th>
+              <th>海外对标</th>
+              <th>估值水位（08-05）</th>
+              <th>观点</th>
+            </tr>
+          </thead>
+          <tbody id="stockBody"></tbody>
+        </table>
+        <div style="font-size:11.5px;color:var(--text-secondary);margin-top:10px">估值：PE-TTM｜PB｜历史分位（上市以来，东财数据）；🔴分位&gt;90%高位 🟡60-90%。<b>7/11只标的PE分位&gt;90%，板块估值处历史高位，注意追高风险</b></div>
+      </div>
+    </div>
+
+    <div>
+      <div class="section-title"><span class="icon">📅</span>催化剂跟踪</div>
+      <div class="table-card">
+        <div class="timeline" id="catalystTimeline"></div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="section-title"><span class="icon">💡</span>当前判断</div>
+  <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 16px; margin-bottom: 28px;">
+    <div class="judgment-card">
+      <h3 style="font-size:13px; color:var(--text-secondary); margin-bottom:10px;">核心逻辑</h3>
+      <div class="judgment-text" id="coreLogic"></div>
+    </div>
+    <div class="judgment-card">
+      <h3 style="font-size:13px; color:var(--text-secondary); margin-bottom:10px;">主要风险</h3>
+      <div id="riskList"></div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const DATA = {
+  sector: "被动元件（MLCC）",
+  updateDate: "2026-08-06",
+  outlook: "up",
+  outlookLabel: "🟢 上行",
+
+  kpis: [
+    { label: "全球MLCC需求（2025）", value: "4.8", unit: "万亿颗", trend: "up", trendText: "2026E销量+5.5%，2027E+6%" },
+    { label: "AI相关MLCC需求CAGR", value: "30", unit: "%+ (26-30E)", trend: "up", trendText: "2027E较25年用量×2，2030E×3.3" },
+    { label: "高端高容MLCC现货涨幅", value: "15-20", unit: "%（累计）", trend: "up", trendText: "AI服务器用高容产品涨幅达50-60%" },
+    { label: "渠道MLCC库存", value: "4.8", unit: "个月", trend: "down", trendText: "健康水位5-7个月，5月环比降" },
+  ],
+
+  trendChart: {
+    labels: ["2025Q3", "2025Q4", "2026Q1", "2026Q2", "2026Q3E", "2026Q4E"],
+    datasets: [
+      {
+        label: "村田",
+        data: [90, 92, 95, 95, 96, 96],
+        borderColor: "#2563eb",
+        backgroundColor: "rgba(37,99,235,0.08)",
+        tension: 0.3,
+        fill: true,
+      },
+      {
+        label: "三星电机",
+        data: [98, 92, 90, 93, 95, 96],
+        borderColor: "#16a34a",
+        backgroundColor: "rgba(22,163,74,0.06)",
+        tension: 0.3,
+        fill: true,
+      },
+      {
+        label: "太阳诱电",
+        data: [85, 85, 85, 88, 90, 92],
+        borderColor: "#d97706",
+        backgroundColor: "rgba(217,119,6,0.06)",
+        tension: 0.3,
+        fill: true,
+      },
+    ],
+  },
+
+  shareChart: {
+    labels: ["村田", "三星电机", "太阳诱电", "国巨", "TDK", "三环集团", "风华高科", "其他"],
+    data:   [30, 18, 8, 5, 4.8, 2.4, 1.5, 30.3],
+    colors: ["#2563eb", "#16a34a", "#d97706", "#7e22ce", "#0891b2", "#dc2626", "#ea580c", "#94a3b8"],
+  },
+
+  competitors: [
+    { name: "村田 Murata", share: 30, location: "海外", advantage: "AI用MLCC市占约50%，高容良率90-95%，0402/47μF逼近物理极限", news: "2026年8月新厂房完工，达产后新增约20多亿颗高容产能" },
+    { name: "三星电机", share: 18, location: "海外", advantage: "AI用MLCC市占约40%，天津/菲律宾/釜山三基地，月产能931亿颗", news: "转产服务器高容MLCC，英伟达供应份额年内10-20%→30%+；8/1渠道普调约30%" },
+    { name: "太阳诱电", share: 8, location: "海外", advantage: "大尺寸特高容龙头，008004小型化基本垄断", news: "4月/5月两轮涨价，9月计划第三轮（大容量+20%）" },
+    { name: "国巨 Yageo", share: 5, location: "海外", advantage: "全球最大钽电容供应商，中低端MLCC+电阻优势", news: "7/1全系列电容普调10%-35%" },
+    { name: "TDK", share: 4.8, location: "海外", advantage: "2023Q4投资23亿人民币扩高端产线", news: "因供应紧张年内已上调20%-30%" },
+    { name: "三环集团", share: 2.4, location: "A股", advantage: "大尺寸高容（0805/106）已进浪潮/华为/联想供应链", news: "2026年1月月产能500亿颗满产，476高容工业级量产中，预计8/15前完成调价" },
+    { name: "风华高科", share: 1.5, location: "A股", advantage: "高容占比目标提升至50%", news: "7月中已完成10-30%调价，产能规划300亿→600亿颗（2028-2029释放）" },
+  ],
+
+  stocks: [
+    { code: "000636", name: "风华高科", position: "中游·MLCC制造（国内龙头，高容突破中）", peer: "三环集团、村田", valuation: "PE 217.6｜PB 5.4｜97.1% 🔴", rating: "focus" },
+    { code: "300408", name: "三环集团", position: "中游·MLCC制造（月产能500亿颗满产，大尺寸高容已进服务器供应链）", peer: "村田、三星电机", valuation: "PE 88.6｜PB 11.4｜98.9% 🔴", rating: "focus" },
+    { code: "002859", name: "洁美科技", position: "上游·离型膜+载带", peer: "东丽、东洋纺", valuation: "PE 126.8｜PB 9.6｜98.3% 🔴", rating: "focus" },
+    { code: "300285", name: "国瓷材料", position: "上游·陶瓷粉体（全球第四，市占约10%）", peer: "堺化学、Ferro", valuation: "PE 108.7｜PB 9.2｜99.0% 🔴", rating: "watch" },
+    { code: "605376", name: "博迁新材", position: "上游·镍粉镍浆（PVD法80纳米镍粉，三星AI二供）", peer: "昭荣化学、住友金属矿山", valuation: "PE 169.8｜PB 23.4｜76.1% 🔴", rating: "watch" },
+    { code: "300806", name: "斯迪克", position: "上游·离型膜（1微米超高端国产唯一突破）", peer: "东丽", valuation: "PE 441.3｜PB 12.5｜93.5% 🔴", rating: "watch" },
+    { code: "002138", name: "顺络电子", position: "电感/服务器钽电容（TLVR电感已研发）", peer: "Vicor、乾坤", valuation: "PE 40.7｜PB 6.1｜67.8% 🟡", rating: "watch" },
+    { code: "300726", name: "宏达电子", position: "钽电容（全球份额8-9%，量最大）", peer: "国巨", valuation: "PE 49.4｜PB 4.2｜70.9% 🟡", rating: "watch" },
+  ],
+
+  catalysts: [
+    { date: "2026-02中下旬", event: "行业库存拐点，转向补库存", impact: "正面", status: "verified" },
+    { date: "2026-04-25", event: "太阳诱电上调软端子车规级MLCC价格", impact: "正面", status: "verified" },
+    { date: "2026-05", event: "太阳诱电二次上调20-30%，消费级+6-15%", impact: "正面", status: "verified" },
+    { date: "2026-06-01", event: "华新科电阻/MLCC调价生效", impact: "正面", status: "verified" },
+    { date: "2026-07-01", event: "国巨电子全系列电容普调10-35%", impact: "正面", status: "verified" },
+    { date: "2026-07中", event: "风华高科完成调价10-30%", impact: "正面", status: "verified" },
+    { date: "2026-08-01", event: "三星电机渠道商/代理商普调约30%", impact: "正面", status: "verified" },
+    { date: "2026-08-15前", event: "三环集团预计完成调价", impact: "正面", status: "pending" },
+    { date: "2026-09-01", event: "太阳诱电年内第二轮大容量MLCC调价+20%", impact: "正面", status: "pending" },
+    { date: "2026下半年", event: "英伟达Rubin/Vera Rubin服务器放量", impact: "正面", status: "pending" },
+    { date: "2027年", event: "村田/三星电机高端新产能陆续投放", impact: "负面", status: "pending" },
+  ],
+
+  coreLogic: "本轮MLCC涨价是近十年第三轮周期，但由AI服务器+汽车电子双引擎驱动，与前两轮（日系减产驱动、疫情+新能源车驱动）性质不同。高端产品供给受物理制造极限（千层以上叠层、良率仅10%左右）和设备产能（日本进口设备10个月以上交期）双重刚性约束，2026年2-8月头部厂商已完成多轮实质性调价，BB值、稼动率、库存等指标交叉验证行情已进入普涨阶段，供需紧张预计持续到2027年。",
+  risks: [
+    "需求证伪风险：若英伟达Rubin/Vera Rubin服务器放量不及预期或AI资本开支增速放缓，高容MLCC需求增长逻辑将被削弱",
+    "产能超预期释放风险：村田/三星电机2027年新产能若提前投放或转产良率爬坡超预期，供需缺口可能提前收窄",
+    "国产替代进度不确定性：三环集团等高容突破若不及预期，国产替代对A股标的的业绩传导将延后",
+  ],
+};
+
+document.addEventListener("DOMContentLoaded", () => {
+  document.title = DATA.sector + " 行业看板";
+  document.getElementById("sectorName").textContent = DATA.sector;
+  document.getElementById("updateTime").textContent = "更新：" + DATA.updateDate;
+
+  const badge = document.getElementById("outlookBadge");
+  badge.textContent = DATA.outlookLabel;
+  badge.className = "outlook-badge outlook-" + DATA.outlook;
+
+  const kpiGrid = document.getElementById("kpiGrid");
+  DATA.kpis.forEach(k => {
+    const trendClass = k.trend === "up" ? "trend-up" : k.trend === "down" ? "trend-down" : "trend-flat";
+    const arrow = k.trend === "up" ? "↑" : k.trend === "down" ? "↓" : "→";
+    kpiGrid.innerHTML += `
+      <div class="kpi-card">
+        <div class="kpi-label">${k.label}</div>
+        <div class="kpi-value">${k.value}<span style="font-size:14px;font-weight:400;color:var(--text-secondary)">${k.unit}</span></div>
+        <div class="kpi-trend ${trendClass}">${arrow} ${k.trendText}</div>
+      </div>`;
+  });
+
+  new Chart(document.getElementById("trendChart"), {
+    type: "line",
+    data: DATA.trendChart,
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: { legend: { position: "top", labels: { font: { size: 12 } } } },
+      scales: {
+        x: { grid: { color: "#f1f5f9" }, ticks: { font: { size: 11 } } },
+        y: { grid: { color: "#f1f5f9" }, ticks: { font: { size: 11 } }, min: 70, max: 100 },
+      },
+    },
+  });
+
+  new Chart(document.getElementById("shareChart"), {
+    type: "doughnut",
+    data: {
+      labels: DATA.shareChart.labels,
+      datasets: [{ data: DATA.shareChart.data, backgroundColor: DATA.shareChart.colors, borderWidth: 2, borderColor: "#fff" }],
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { position: "right", labels: { font: { size: 11 }, padding: 8 } },
+      },
+      cutout: "60%",
+    },
+  });
+
+  const compBody = document.getElementById("competitorBody");
+  DATA.competitors.forEach(c => {
+    compBody.innerHTML += `
+      <tr>
+        <td><strong>${c.name}</strong></td>
+        <td>
+          <div class="share-bar-wrap">
+            <div class="share-bar"><div class="share-bar-fill" style="width:${c.share * 3}%"></div></div>
+            <span class="share-pct">${c.share}%</span>
+          </div>
+        </td>
+        <td><span class="tag tag-neutral">${c.location}</span></td>
+        <td>${c.advantage}</td>
+        <td style="color:var(--text-secondary)">${c.news}</td>
+      </tr>`;
+  });
+
+  const ratingMap = { "focus": "tag-focus", "watch": "tag-watch", "neutral": "tag-neutral" };
+  const ratingLabel = { "focus": "🟢 关注", "watch": "🟡 观察", "neutral": "⚪ 中性" };
+  const stockBody = document.getElementById("stockBody");
+  DATA.stocks.forEach(s => {
+    stockBody.innerHTML += `
+      <tr>
+        <td><code style="font-size:12px;background:var(--tag-bg);color:var(--tag-text);padding:2px 6px;border-radius:4px">${s.code}</code></td>
+        <td><strong>${s.name}</strong></td>
+        <td style="color:var(--text-secondary)">${s.position}</td>
+        <td>${s.peer}</td>
+        <td style="font-size:12px;white-space:nowrap">${s.valuation || "—"}</td>
+        <td><span class="tag ${ratingMap[s.rating] || 'tag-neutral'}">${ratingLabel[s.rating] || s.rating}</span></td>
+      </tr>`;
+  });
+
+  const statusMap = { "pending": ["tl-dot-pending","status-pending","🕐 待观察"], "verified": ["tl-dot-verified","status-verified","✅ 已验证"], "falsified": ["tl-dot-falsified","status-falsified","❌ 已证伪"] };
+  const timeline = document.getElementById("catalystTimeline");
+  DATA.catalysts.forEach(c => {
+    const [dotClass, statusClass, statusText] = statusMap[c.status] || statusMap["pending"];
+    timeline.innerHTML += `
+      <div class="tl-item">
+        <div class="tl-dot ${dotClass}"></div>
+        <div class="tl-date">${c.date}</div>
+        <div class="tl-content">
+          <div class="tl-event">${c.event}</div>
+          <div class="tl-meta">预期影响：${c.impact}</div>
+        </div>
+        <span class="tl-status ${statusClass}">${statusText}</span>
+      </div>`;
+  });
+
+  document.getElementById("coreLogic").textContent = DATA.coreLogic;
+
+  const riskList = document.getElementById("riskList");
+  DATA.risks.forEach(r => {
+    riskList.innerHTML += `<div class="risk-item"><span class="risk-icon">⚠</span><span>${r}</span></div>`;
+  });
+});
+</script>
+</body>
+</html>
