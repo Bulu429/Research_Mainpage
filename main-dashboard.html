@@ -168,21 +168,21 @@ h1 {
 .tag.red { color: var(--red); border-color: #d8aaa5; background: #fbefed; }
 .tag.violet { color: var(--violet); border-color: #c3b3d6; background: #f3eef8; }
 .layout {
-  display: grid;
-  grid-template-columns: 260px 1fr;
-  gap: 18px;
-  align-items: start;
+  display: block;
 }
 .nav {
-  position: sticky;
-  top: 16px;
-  padding: 14px;
+  position: static;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px;
+  margin-bottom: 18px;
 }
 .nav-title {
   font-size: 12px;
   color: var(--muted);
   font-weight: 700;
-  margin: 4px 6px 10px;
+  margin: 0 8px;
 }
 .nav a {
   display: flex;
@@ -195,7 +195,11 @@ h1 {
 }
 .nav a:hover { background: #f0f4ef; color: var(--ink); }
 .content { display: grid; gap: 18px; }
-.section { padding: 18px; }
+.section { position: relative; overflow: hidden; padding: 22px; }
+.section::before { content: ""; position: absolute; inset: 0 auto 0 0; width: 4px; background: var(--section-color, var(--green)); }
+.section-market { --section-color: var(--green); }
+.section-fundamentals { --section-color: var(--amber); }
+.section-tools { --section-color: var(--blue); }
 .section-head {
   display: flex;
   align-items: end;
@@ -264,6 +268,14 @@ h1 {
 .project:nth-child(3) .open { color: var(--amber); }
 .project:nth-child(4) .open { color: var(--red); }
 .project:nth-child(5) .open { color: var(--violet); }
+.project[data-tone="green"] .mark { background: var(--green); }
+.project[data-tone="green"] .open { color: var(--green); }
+.project[data-tone="blue"] .mark { background: var(--blue); }
+.project[data-tone="blue"] .open { color: var(--blue); }
+.project[data-tone="amber"] .mark { background: var(--amber); }
+.project[data-tone="amber"] .open { color: var(--amber); }
+.project[data-tone="red"] .mark { background: var(--red); }
+.project[data-tone="red"] .open { color: var(--red); }
 .link-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -296,14 +308,15 @@ h1 {
   padding: 18px 0 6px;
 }
 @media (max-width: 1040px) {
-  .command, .brief, .layout { grid-template-columns: 1fr; }
-  .nav { position: static; }
+  .command, .brief { grid-template-columns: 1fr; }
   .link-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 @media (max-width: 720px) {
   .shell { padding: 18px 14px 28px; }
   .topbar, .section-head { align-items: flex-start; flex-direction: column; }
   .meta { justify-content: flex-start; }
+  .nav { align-items: stretch; flex-direction: column; }
+  .nav-title { margin: 4px 8px; }
   .axis, .project-grid, .link-grid { grid-template-columns: 1fr; }
   .map { grid-template-columns: repeat(4, 1fr); }
 }
@@ -318,90 +331,70 @@ h1 {
     </div>
     <div class="meta">
       <span class="pill">A股 TMT 为主</span>
-      <span class="pill">周频监控 + 基本面研究</span>
-      <span class="pill">更新：2026-09-09</span>
+      <span class="pill">行情 · 基本面 · 工具</span>
+      <span class="pill">更新：2026-09-15</span>
     </div>
   </header>
 
   <div class="layout">
     <nav class="nav panel">
-      <div class="nav-title">快速导航</div>
-      <a href="#core"><span>核心入口</span><span>4</span></a>
-      <a href="#tools"><span>工具区</span><span>3</span></a>
+      <div class="nav-title">分区</div>
+      <a href="#market"><span>行情</span><span>2</span></a>
+      <a href="#fundamentals"><span>基本面</span><span>2</span></a>
+      <a href="#tools"><span>工具区</span><span>5</span></a>
     </nav>
 
     <div class="content">
-      <section id="core" class="section panel">
+      <section id="market" class="section panel section-market">
         <div class="section-head">
           <div>
-            <h2>核心入口</h2>
-            <div class="section-sub">入口按照“信号发现，基本面拆解，海外映射验证”排列。</div>
+            <h2>行情</h2>
+            <div class="section-sub">日频看变化，周频看趋势与产业链轮动。</div>
           </div>
-          <span class="tag green">总层入口</span>
+          <span class="tag green">市场信号</span>
         </div>
         <div class="project-grid">
-          <a class="project" href="monitoring/weekly-tmt-dashboard/dashboard/latest.html" target="_blank">
-            <div class="project-top">
-              <div>
-                <h3>TMT周频看板</h3>
-                <p>TMT产业链强弱、周度表现、放量、趋势、轮动信号与海外关注名单。</p>
-              </div>
-              <div class="mark">M</div>
-            </div>
-            <div class="project-foot"><span class="tag green">监控系统</span><span class="open">打开最新看板</span></div>
+          <a class="project" data-tone="green" href="monitoring/daily-tmt-dashboard/dashboard/latest.html" target="_blank">
+            <div class="project-top"><div><h3>TMT日频看板</h3><p>TMT池个股日频涨跌幅、换手率、放量、均线位置与阶段新高，快速识别当日异动。</p></div><div class="mark">D</div></div>
+            <div class="project-foot"><span class="tag green">日频行情</span><span class="open">打开最新看板</span></div>
           </a>
-          <a class="project" href="monitoring/daily-tmt-dashboard/dashboard/latest.html" target="_blank">
-            <div class="project-top">
-              <div>
-                <h3>TMT日频看板</h3>
-                <p>TMT池个股日频涨跌幅、换手率、放量、均线位置与阶段新高，纯行情技术面速览。</p>
-              </div>
-              <div class="mark">T</div>
-            </div>
-            <div class="project-foot"><span class="tag green">监控系统</span><span class="open">打开最新看板</span></div>
-          </a>
-          <a class="project" href="research/fundamentals/industry-dashboards/industry-fundamentals-entry.html">
-            <div class="project-top">
-              <div>
-                <h3>行业基本面入口</h3>
-                <p>国产算力、光模块、PCB、先进封装、存储/HBM、液冷等产业链框架和公司数据库，用于基本面验证。</p>
-              </div>
-              <div class="mark">I</div>
-            </div>
-            <div class="project-foot"><span class="tag amber">基本面项目</span><span class="open">进入行业入口</span></div>
-          </a>
-          <a class="project" href="research/fundamentals/us-mapping/us-mapping-dashboard.html" target="_blank">
-            <div class="project-top">
-              <div>
-                <h3>美股映射研究</h3>
-                <p>海外龙头、AI 基建主线和 A 股映射关系，用于交叉验证景气趋势和估值锚。</p>
-              </div>
-              <div class="mark">U</div>
-            </div>
-            <div class="project-foot"><span class="tag red">海外映射</span><span class="open">进入项目看板</span></div>
-          </a>
-          <a class="project" href="research/strategy/fund-holdings-dashboard/fund_dashboard.html" target="_blank">
-            <div class="project-top">
-              <div>
-                <h3>基金重仓看板</h3>
-                <p>基金持仓、重仓行业和个股视角，用于观察机构资金偏好与产业链拥挤度。</p>
-              </div>
-              <div class="mark">F</div>
-            </div>
-            <div class="project-foot"><span class="tag blue">策略研究</span><span class="open">打开看板</span></div>
+          <a class="project" data-tone="blue" href="monitoring/weekly-tmt-dashboard/dashboard/latest.html" target="_blank">
+            <div class="project-top"><div><h3>TMT周频看板</h3><p>TMT产业链强弱、周度表现、放量、趋势、轮动信号与海外关注名单。</p></div><div class="mark">W</div></div>
+            <div class="project-foot"><span class="tag blue">周频趋势</span><span class="open">打开最新看板</span></div>
           </a>
         </div>
       </section>
 
-      <section id="tools" class="section panel">
+      <section id="fundamentals" class="section panel section-fundamentals">
+        <div class="section-head">
+          <div>
+            <h2>基本面</h2>
+            <div class="section-sub">从行业景气到海外龙头，完成产业趋势与公司映射验证。</div>
+          </div>
+          <span class="tag amber">研究主线</span>
+        </div>
+        <div class="project-grid">
+          <a class="project" data-tone="amber" href="research/fundamentals/industry-dashboards/industry-fundamentals-entry.html">
+            <div class="project-top"><div><h3>行业基本面入口</h3><p>国产算力、光模块、PCB、先进封装、存储/HBM、液冷等产业链框架与公司数据库。</p></div><div class="mark">I</div></div>
+            <div class="project-foot"><span class="tag amber">行业研究</span><span class="open">进入行业入口</span></div>
+          </a>
+          <a class="project" data-tone="red" href="research/fundamentals/us-mapping/us-mapping-dashboard.html" target="_blank">
+            <div class="project-top"><div><h3>美股映射研究</h3><p>海外龙头、AI基建主线和A股映射关系，用于交叉验证景气趋势和估值锚。</p></div><div class="mark">U</div></div>
+            <div class="project-foot"><span class="tag red">海外映射</span><span class="open">进入项目看板</span></div>
+          </a>
+        </div>
+      </section>
+
+      <section id="tools" class="section panel section-tools">
         <div class="section-head">
           <div>
             <h2>工具区</h2>
-            <div class="section-sub">放置独立计算器和辅助研究工具，和核心看板分开管理。</div>
+            <div class="section-sub">策略观察、交叉验证、业绩跟踪与独立计算器统一放在这里。</div>
           </div>
           <span class="tag blue">研究工具</span>
         </div>
         <div class="link-grid">
+          <a class="mini" href="research/strategy/fund-holdings-dashboard/fund_dashboard.html" target="_blank"><div class="mini-row"><strong>基金重仓看板</strong><span class="tag blue">策略研究</span></div><small>观察基金持仓、重仓行业和个股偏好，以及产业链拥挤度。</small></a>
           <a class="mini" href="research/fundamentals/tokenomics-calculator/index.html" target="_blank"><div class="mini-row"><strong>Tokenomics Calculator</strong><span class="tag blue">计算器</span></div><small>AI 推理成本、收入上限和模型经济性测算工具。</small></a>
           <a class="mini" href="research/fundamentals/industry-dashboards/taiwan-electronics/taiwan-electronics-dashboard.html" target="_blank"><div class="mini-row"><strong>台股电子月度看板</strong><span class="tag blue">交叉验证</span></div><small>36家台股公司、13个产业链环节月营收追踪，含A股映射和累计YoY，领先A股财报2-4周。</small></a>
           <a class="mini" href="research/fundamentals/industry-dashboards/earnings-tracker/earnings-tracker-dashboard.html" target="_blank"><div class="mini-row"><strong>业绩跟踪看板</strong><span class="tag blue">业绩季</span></div><small>财报数据、机构观点摘要与股价反应速记，跨行业专题看板。</small></a>
