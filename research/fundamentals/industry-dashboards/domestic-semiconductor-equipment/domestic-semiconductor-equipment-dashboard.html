@@ -123,6 +123,10 @@ table.res td.num{text-align:right;font-variant-numeric:tabular-nums}
 .kpi em{display:block;font-size:10px;color:var(--text2);font-style:normal}
 .tag-est{display:inline-block;padding:0 5px;border-radius:3px;font-size:9px;font-weight:700;background:var(--warn-bg);color:var(--warn);border:1px solid #fcd34d;vertical-align:middle}
 .tag-src{display:inline-block;padding:0 5px;border-radius:3px;font-size:9px;font-weight:700;background:var(--up-bg);color:var(--up);border:1px solid #86efac;vertical-align:middle}
+.q2-hero{margin-bottom:18px;padding:18px 20px;border:1px solid #c4b5fd;border-radius:12px;background:linear-gradient(120deg,#f5f3ff 0%,#fff 55%,#f0fdf4 100%);box-shadow:var(--sh)}
+.q2-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:12px}.q2-kicker{font-size:10px;font-weight:800;letter-spacing:.8px;color:var(--accent)}.q2-title{font-size:20px;font-weight:800}.q2-date{font-size:10px;color:var(--text2);padding:4px 8px;border:1px solid #c4b5fd;border-radius:999px;background:#fff;white-space:nowrap}
+.q2-grid{display:grid;grid-template-columns:1.25fr 1fr;gap:10px;margin-bottom:12px}.q2-conclusion{padding:11px 13px;border-left:3px solid var(--accent);border-radius:7px;background:#fff;font-size:12px}.q2-points{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}.q2-point{padding:8px 9px;border:1px solid var(--border);border-radius:7px;background:rgba(255,255,255,.8);font-size:10.5px}.q2-point b{display:block;color:var(--accent);margin-bottom:3px}.q2-table{width:100%;border-collapse:collapse;font-size:11px;margin-top:7px}.q2-table th{padding:6px 7px;background:#ede9fe;color:#5b21b6;text-align:left;font-size:10px}.q2-table td{padding:7px;border-bottom:1px solid var(--border);vertical-align:top}.q2-table tr:last-child td{border-bottom:0}.q2-block{margin-top:11px;border:1px solid var(--border);border-radius:8px;background:#fff;overflow-x:auto}.q2-block-title{padding:7px 9px;background:#fafafa;font-size:11px;font-weight:800}.q2-foot{margin-top:9px;font-size:10px;color:var(--text2);line-height:1.55}.q2-judgment{margin-top:10px;padding:10px 12px;border-radius:7px;background:var(--warn-bg);border:1px solid #fcd34d;font-size:11px;color:#8a5a08}
+@media(max-width:900px){.q2-grid{grid-template-columns:1fr}.q2-points{grid-template-columns:1fr}}
 
 /* 通用按钮（原缺失，一并补上，保留在此次还原范围之外） */
 .btn{border:1px solid var(--accent);background:var(--card);color:var(--accent);border-radius:6px;padding:6px 14px;font-size:11.5px;font-weight:600;font-family:inherit;cursor:pointer;transition:background .15s,color .15s}
@@ -140,10 +144,32 @@ table.res td.num{text-align:right;font-variant-numeric:tabular-nums}
     <span class="badge-warn">🟡 建设中</span>
     <a class="back-link" href="../global-semiconductor-equipment/global-semiconductor-equipment-dashboard.html">全球半导体设备看板 →</a>
   </div>
-  <div class="hdr-meta">研究看板 · TMT 产业链<br>数据截至 2026-07</div>
+  <div class="hdr-meta">研究看板 · TMT 产业链<br>2Q26更新：2026-09-04</div>
 </header>
 
 <div class="wrap">
+
+<section id="sec-earnings-2q26" class="q2-hero" aria-labelledby="earnings-2q26-equipment-title">
+  <div class="q2-head"><div><div class="q2-kicker">EARNINGS SEASON · DOMESTIC EQUIPMENT</div><div id="earnings-2q26-equipment-title" class="q2-title">2Q26更新——国产半导体设备</div></div><div class="q2-date">报告整理至 2026-09-04</div></div>
+  <div class="q2-grid">
+    <div class="q2-conclusion"><b>季度结论：</b>收入与订单整体强，订单规模普遍显著高于单季收入；晶圆制造与封测公司的利润弹性更多来自<b>稼动率修复</b>，不只是“先进”标签。报告判断设备环节排序为<b>先进封装设备 ＞ 后道测试设备 ＞ 前道晶圆厂设备</b>。</div>
+    <div class="q2-points"><div class="q2-point"><b>订单</b>中科飞测合同负债增速相对更强；华海、精测及后道测试设备能见度较高。</div><div class="q2-point"><b>盈利</b>过去两年多数设备公司毛利率承压，后道设备相对更稳。</div><div class="q2-point"><b>估值</b>考虑扣非利润与研发资本化后，整体估值仍不低，需结合订单兑现筛选。</div></div>
+  </div>
+  <div class="q2-block"><div class="q2-block-title">前道设备：1H26经营与订单信号（人民币亿元）</div><table id="earnings-2q26-equipment-table" class="q2-table"><thead><tr><th>公司</th><th>1H26收入</th><th>合同负债+预收</th><th>订单 / 指引</th><th>产品与关键变量</th></tr></thead><tbody>
+    <tr><td><b>中微公司</b></td><td>67</td><td>28</td><td>上半年订单增速与收入大致匹配，报告预计下半年订单加速</td><td>高深宽比刻蚀、TSV刻蚀、先进封装；零部件与材料短缺是交付约束</td></tr>
+    <tr><td><b>拓荆科技</b></td><td>29</td><td>51</td><td>Q2扩产预期兑现；存储客户2027年设备发货有望加速</td><td>PECVD/ALD/SACVD；混合键合已在多家客户验证，量产仍取决于整线整合</td></tr>
+    <tr><td><b>盛美上海</b></td><td>37</td><td>7</td><td>上半年新增订单同比+105%；维持2026年收入72–88亿元指引</td><td>存储、逻辑与先进封装共同驱动，新产品覆盖面扩大</td></tr>
+    <tr><td><b>精测电子</b></td><td>18</td><td>7</td><td>半导体在手订单36.09亿元，同比+98%；后道电测订单约3亿元</td><td>量检测与后道电测；探针卡订单已达数千万元，放量节奏待跟踪</td></tr>
+    <tr><td><b>华海清科</b></td><td>26</td><td>21</td><td>5月末在手订单79亿元；前5月新增订单超40亿元</td><td>CMP等平台化布局；报告预计全年订单接近翻倍，2027年仍可能增长</td></tr>
+  </tbody></table></div>
+  <div class="q2-block"><div class="q2-block-title">后道测试设备：高景气但需核对交付、客户与盈利质量（人民币亿元）</div><table class="q2-table"><thead><tr><th>公司</th><th>1H26收入</th><th>合同负债+预收</th><th>能见度</th><th>风险与验证</th></tr></thead><tbody>
+    <tr><td><b>华峰测控</b></td><td>7.4</td><td>1.1</td><td>8200/8300部分新订单排期至2027年3–5月；8600订单预期在26H2增强</td><td>扩产后交期能否由6个月以上缩至3–4个月；高功率计算与存储测试兑现</td></tr>
+    <tr><td><b>精智达</b></td><td>8.0</td><td>0.3</td><td>原35亿元全年订单目标提前完成，报告记录目标上修至40–50亿元以上</td><td>18G FT、KGSD、HBM探针卡及高端SoC平台的验收和收入确认</td></tr>
+    <tr><td><b>金海通</b></td><td>6.0</td><td>0.06</td><td>报告判断2026年收入或超14亿元，AI相关需求在2027年可能更强</td><td>订单短、在手口径参考性有限；通富占上半年收入约20%，客户集中度需跟踪</td></tr>
+  </tbody></table></div>
+  <div class="q2-judgment"><b>报告判断，不等同公司披露：</b>先进封装设备优先级最高，后道测试次之；华海清科的订单与平台化能力值得重点跟踪，金海通可能具备相对估值弹性。反面约束是毛利率普遍未见趋势性上升、零部件短缺、研发资本化对利润质量的影响，以及高估值对兑现节奏的要求。</div>
+  <div class="q2-foot">来源：用户提供《20260904 2Q26财报分析_半导体制造.pptx》。表内数字与管理层表述来自报告对财报及法说会的汇总，本次未逐项回溯公告；“报告预计/判断”均为研究观点，不作为公司正式指引。原有CapEx与TAM测算器保留不变。</div>
+</section>
 
 <!-- ① 反推：市值 → CapEx -->
 <div class="st"><span>① 反推：给定市值，倒算隐含 CapEx 情景</span><span class="sub">市值÷PE→净利润÷净利率→所需营收，与该公司当前模型营收比较，等比缩放②输入区的三条产线</span></div>
