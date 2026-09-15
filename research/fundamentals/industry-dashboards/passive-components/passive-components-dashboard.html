@@ -46,6 +46,8 @@
     box-shadow: var(--shadow);
   }
   .header-left { display: flex; align-items: center; gap: 16px; }
+  .back-link { display: inline-flex; align-items: center; padding: 5px 10px; border: 1px solid var(--border); border-radius: 6px; color: var(--text-secondary); font-size: 12px; font-weight: 600; text-decoration: none; white-space: nowrap; }
+  .back-link:hover { color: var(--accent); border-color: var(--accent); }
   .sector-name { font-size: 22px; font-weight: 700; color: var(--text-primary); }
   .outlook-badge {
     display: inline-flex;
@@ -300,6 +302,7 @@
 
 <header class="header">
   <div class="header-left">
+    <a class="back-link" href="../industry-fundamentals-entry.html">← 行业基本面入口</a>
     <span class="sector-name" id="sectorName">被动元件（MLCC）</span>
     <span class="outlook-badge outlook-up" id="outlookBadge">🟢 上行</span>
   </div>
