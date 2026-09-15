@@ -119,7 +119,31 @@ code{font-size:10px;background:var(--tag-bg);color:var(--tag);padding:1px 5px;bo
 .risk-i{display:flex;gap:6px;margin-bottom:6px;font-size:12px}
 .rn{background:var(--dn-bg);color:var(--dn);font-size:10px;font-weight:700;padding:1px 5px;border-radius:3px;flex-shrink:0;margin-top:2px}
 
-@media(max-width:900px){.kpi-g{grid-template-columns:repeat(2,1fr)}.chart-row{grid-template-columns:1fr}.crit-g{grid-template-columns:1fr}.b-grid{grid-template-columns:1fr}.j-grid{grid-template-columns:1fr}.sum-grid{grid-template-columns:repeat(2,1fr)}}
+/* 2Q26 earnings module */
+.earn-hero{background:linear-gradient(135deg,#ecfeff 0%,#fff 52%,#f0fdf4 100%);border:1px solid #bae6fd;border-radius:12px;padding:18px 20px;margin-bottom:16px;box-shadow:var(--sh)}
+.earn-head{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:14px}
+.earn-title{font-size:18px;font-weight:800;letter-spacing:.1px}
+.earn-sub{font-size:11px;color:var(--text2);margin-top:3px}
+.earn-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.earn-kpi{background:rgba(255,255,255,.86);border:1px solid var(--border);border-radius:8px;padding:11px 12px}
+.earn-kpi .ek{font-size:10px;font-weight:700;color:var(--text2);margin-bottom:4px}
+.earn-kpi .ev{font-size:13px;font-weight:700;line-height:1.45}
+.earn-kpi .en{font-size:10px;color:var(--text2);margin-top:4px;line-height:1.45}
+.earn-split{display:grid;grid-template-columns:1.15fr .85fr;gap:12px;margin-bottom:14px}
+.earn-list{display:grid;gap:8px}
+.earn-item{padding:9px 11px;background:var(--bg);border-radius:7px;border-left:3px solid var(--accent);font-size:12px;line-height:1.65}
+.earn-item.warn{border-left-color:var(--warn);background:var(--warn-bg)}
+.earn-item.risk{border-left-color:var(--dn);background:var(--dn-bg)}
+.table-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.table-scroll .ctable{min-width:980px}
+.source-note{font-size:10px;color:var(--text2);padding:9px 11px;background:#f8fafc;border:1px dashed #cbd5e1;border-radius:7px;line-height:1.55}
+.callout-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.callout{border:1px solid var(--border);border-radius:8px;padding:11px 12px;background:#fff}
+.callout h4{font-size:12px;margin-bottom:5px;color:var(--accent)}
+.callout p,.callout li{font-size:11px;color:var(--text2);line-height:1.65}
+.callout ul{padding-left:16px}
+
+@media(max-width:900px){.kpi-g{grid-template-columns:repeat(2,1fr)}.chart-row{grid-template-columns:1fr}.crit-g{grid-template-columns:1fr}.b-grid{grid-template-columns:1fr}.j-grid{grid-template-columns:1fr}.sum-grid{grid-template-columns:repeat(2,1fr)}.earn-grid{grid-template-columns:repeat(2,1fr)}.earn-split,.callout-grid{grid-template-columns:1fr}}
 
 /* ── 折叠功能 ── */
 .st {
@@ -225,9 +249,9 @@ code{font-size:10px;background:var(--tag-bg);color:var(--tag);padding:1px 5px;bo
     <span class="hdr-title">PCB 产业链</span>
     <span class="hdr-sub">CCL · PCB · 铜箔 · 电子布 · 钻针 · 设备</span>
     <span class="badge-up">🟢 景气上行</span>
-    <span class="badge-tag">第二阶段：利润兑现</span>
+    <span class="badge-tag">2Q26：业绩分化验证</span>
   </div>
-  <div class="hdr-meta">研究看板 · TMT 产业链<br>数据截至 2026Q1 财报</div>
+  <div class="hdr-meta">研究看板 · TMT 产业链<br>2Q26报告更新：2026-09-04</div>
 </header>
 
 <div class="wrap">
@@ -235,27 +259,115 @@ code{font-size:10px;background:var(--tag-bg);color:var(--tag);padding:1px 5px;bo
 <!-- ── 当前判断速览 ── -->
 <div style="background:#1e293b;border-radius:10px;padding:14px 18px;margin-bottom:16px;display:flex;align-items:center;gap:24px;flex-wrap:wrap">
   <div style="flex:1;min-width:280px">
-    <div style="font-size:10px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:.5px;margin-bottom:5px">⚡ 当前判断速览（2026-05-20 调研更新）</div>
+    <div style="font-size:10px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:.5px;margin-bottom:5px">⚡ 当前判断速览（2Q26业绩报告更新）</div>
     <div style="font-size:13px;color:#f1f5f9;line-height:1.6">
-      AI PCB 已进入<strong style="color:#fb923c">第二阶段：利润兑现</strong>。2026Q1六环节全线超预期——钻针（鼎泰毛利率53%）、电子布（宏和55%）、设备（大族/芯碁+100%）均已验证。<br>
-      核心策略：<strong style="color:#4ade80">不买"扩产最多"，买"客户切换成本最高"</strong>。<br>
-      <span style="color:#fbbf24;font-size:12px">🔴 260520新增：鹏鼎CapEx 70-80亿→<strong style="color:#fbbf24">300亿</strong>（约4倍），是当前最大行业alpha；芯碁下周港交所聆讯。</span>
+      2Q26收入延续高增，多数PCB厂毛利率环比改善，说明上游涨价仍可向下游传导；但<strong style="color:#fb923c">扩产、折旧与原料涨价</strong>开始成为盈利分化的核心。<br>
+      报告相对看好：<strong style="color:#4ade80">沪电、广合、生益电子</strong>；主线映射为 ASIC（沪电/深南/生益电子）、Rubin（胜宏/沪电）与 mSAP（深南/鹏鼎）。<br>
+      <span style="color:#fbbf24;font-size:12px">观察点：产能集中在2026Q4—2027Q4释放，上游有效供给约束决定扩产能否兑现为利润。</span>
     </div>
   </div>
   <div style="display:flex;gap:8px;flex-shrink:0">
     <div style="background:#14532d;border:1px solid #166534;border-radius:7px;padding:8px 12px;text-align:center">
       <div style="font-size:9px;font-weight:700;color:#4ade80;margin-bottom:3px">🟢 核心仓</div>
-      <div style="font-size:11px;color:#f1f5f9;font-weight:600">胜宏科技<br>沪电股份</div>
+      <div style="font-size:11px;color:#f1f5f9;font-weight:600">沪电股份<br>广合科技</div>
     </div>
     <div style="background:#0c4a6e;border:1px solid #075985;border-radius:7px;padding:8px 12px;text-align:center">
       <div style="font-size:9px;font-weight:700;color:#38bdf8;margin-bottom:3px">🔵 进攻仓</div>
-      <div style="font-size:11px;color:#f1f5f9;font-weight:600">生益科技</div>
+      <div style="font-size:11px;color:#f1f5f9;font-weight:600">生益电子<br>深南电路</div>
     </div>
     <div style="background:#431407;border:1px solid #7c2d12;border-radius:7px;padding:8px 12px;text-align:center">
       <div style="font-size:9px;font-weight:700;color:#fb923c;margin-bottom:3px">🟡 观察仓</div>
-      <div style="font-size:11px;color:#f1f5f9;font-weight:600">鼎泰高科<br>宏和科技</div>
+      <div style="font-size:11px;color:#f1f5f9;font-weight:600">胜宏科技<br>鹏鼎控股</div>
     </div>
   </div>
+</div>
+
+<!-- ── 2Q26业绩更新 ── -->
+<section id="sec-earnings-2q26" class="earn-hero">
+  <div class="earn-head">
+    <div>
+      <div class="earn-title" id="earnings-2q26-title">2Q26业绩——PCB产业链</div>
+      <div class="earn-sub">基于《20260904 2Q26业绩_PCB》整理 · 报告封面日期 2026-09-01 · 页面更新 2026-09-04</div>
+    </div>
+    <span class="badge-tag">财务实际 + 报告判断</span>
+  </div>
+  <div class="earn-grid">
+    <div class="earn-kpi"><div class="ek">收入景气</div><div class="ev c-up">10家公司全部同比增长</div><div class="en">沪电 +68%、嘉立创 +60%、广合 +89%；报告预计下半年行业收入仍有约10%—15%环比增速。</div></div>
+    <div class="earn-kpi"><div class="ek">毛利率传导</div><div class="ev c-up">多数PCB厂环比改善</div><div class="en">沪电 +6pct、广合 +4pct；胜宏 -2pct、生益电子 -2pct，报告归因更偏前置人工与新增折旧。</div></div>
+    <div class="earn-kpi"><div class="ek">资本开支</div><div class="ev c-warn">2Q26单季合计 172.9亿元</div><div class="en">报告预计全年约600—700亿元；产能集中在2026Q4—2027Q4释放。</div></div>
+    <div class="earn-kpi"><div class="ek">估值筛选</div><div class="ev">沪电 / 广合 / 生益电子</div><div class="en">按报告“市值÷1H扣非”分别约77x / 77x / 89x；仅作横向温度计，不等于全年PE。</div></div>
+  </div>
+</section>
+
+<div class="st" onclick="toggleSec(this)">📊 2Q26 PCB公司财务对比（报告原表口径）</div>
+<div class="sec-body" style="margin-bottom:16px">
+  <div class="card">
+    <div class="table-scroll">
+      <table class="ctable" id="earnings-2q26-table">
+        <thead><tr><th>公司</th><th>2Q26收入</th><th>QoQ</th><th>YoY</th><th>毛利率</th><th>QoQ</th><th>YoY</th><th>2Q26扣非</th><th>QoQ</th><th>YoY</th><th>市值/1H扣非</th></tr></thead>
+        <tbody>
+          <tr><td><strong>胜宏科技</strong></td><td>61.1</td><td class="yp">+11%</td><td class="yp">+29%</td><td>32%</td><td class="yn">-2pct</td><td class="yn">-7pct</td><td>11.6</td><td class="yn">-8%</td><td class="yn">-5%</td><td>89x</td></tr>
+          <tr><td><strong>深南电路</strong></td><td>87.0</td><td class="yp">+32%</td><td class="yp">+53%</td><td>32%</td><td class="yp">+3pct</td><td class="yp">+5pct</td><td>13.9</td><td class="yp">+64%</td><td class="yp">+78%</td><td>101x</td></tr>
+          <tr style="background:#f0fdf4"><td><strong>沪电股份</strong></td><td>74.8</td><td class="yp">+20%</td><td class="yp">+68%</td><td>41%</td><td class="yp">+6pct</td><td class="yp">+4pct</td><td>16.3</td><td class="yp">+40%</td><td class="yp">+82%</td><td><strong>77x</strong></td></tr>
+          <tr><td><strong>鹏鼎控股</strong></td><td>92.3</td><td class="yp">+16%</td><td class="yp">+11%</td><td>25%</td><td class="yp">+2pct</td><td class="yp">+5pct</td><td>5.7</td><td class="yp">+74%</td><td class="yn">-16%</td><td>216x</td></tr>
+          <tr><td><strong>C嘉立创</strong></td><td>41.4</td><td class="yp">+37%</td><td class="yp">+60%</td><td>29%</td><td class="yp">+2pct</td><td class="yp">+1pct</td><td>6.4</td><td class="yp">+80%</td><td class="yp">+102%</td><td>91x</td></tr>
+          <tr><td><strong>景旺电子</strong></td><td>47.2</td><td class="yp">+21%</td><td class="yp">+26%</td><td>21%</td><td class="yp">+3pct</td><td class="yn">-1pct</td><td>2.8</td><td class="yp">+46%</td><td class="yn">-10%</td><td>207x</td></tr>
+          <tr style="background:#f0fdf4"><td><strong>生益电子</strong></td><td>33.7</td><td class="yp">+40%</td><td class="yp">+54%</td><td>34%</td><td class="yn">-2pct</td><td class="yp">+3pct</td><td>6.7</td><td class="yp">+52%</td><td class="yp">+103%</td><td><strong>89x</strong></td></tr>
+          <tr style="background:#f0fdf4"><td><strong>广合科技</strong></td><td>24.7</td><td class="yp">+29%</td><td class="yp">+89%</td><td>41%</td><td class="yp">+4pct</td><td class="yp">+4pct</td><td>5.5</td><td class="yp">+40%</td><td class="yp">+124%</td><td><strong>77x</strong></td></tr>
+          <tr><td><strong>红板科技</strong></td><td>11.4</td><td class="yp">+20%</td><td class="yp">+22%</td><td>24%</td><td class="yn">-1pct</td><td class="yn">-3pct</td><td>1.1</td><td class="yn">-8%</td><td>—</td><td>285x</td></tr>
+          <tr><td><strong>兴森科技</strong></td><td>22.2</td><td class="yp">+22%</td><td class="yp">+20%</td><td>22%</td><td class="yp">+3pct</td><td class="yp">+3pct</td><td>1.0</td><td class="yp">+243%</td><td class="yp">+142%</td><td>455x</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="source-note">金额单位：亿元；毛利率及其变化为报告原表值。“市值/1H扣非”是报告用于横向比较的静态倍数，不是预测PE。红板科技2Q26扣非同比原表为空，保留“—”。</div>
+  </div>
+</div>
+
+<div class="st" onclick="toggleSec(this)">🧭 2Q26结论、业绩会要点与验证框架</div>
+<div class="sec-body" style="margin-bottom:16px">
+  <div class="earn-split">
+    <div class="card">
+      <div class="tab-step-hd"><span class="step-num">1</span>行业结论<span class="step-note">报告判断</span></div>
+      <div class="earn-list">
+        <div class="earn-item"><strong>订单仍强，但盈利斜率分化。</strong>报告认为下半年PCB收入仍可延续环比增长；沪电、广合、生益电子的2Q26收入与扣非增速组合相对突出。</div>
+        <div class="earn-item"><strong>原材料涨价仍可传导。</strong>多数PCB企业毛利率环比改善；当前更需区分原料压力、新厂折旧与前置人工投入。</div>
+        <div class="earn-item warn"><strong>扩产的关键不是名义产能，而是有效产能。</strong>产能释放高峰在2026Q4—2027Q4，上游材料、设备与良率可能决定兑现速度。</div>
+        <div class="earn-item risk"><strong>下游库存天数抬升、上游库存下降。</strong>景气尚未被报告判定见顶，但后续需同时观察库存、价格传导和自由现金流。</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="tab-step-hd"><span class="step-num">2</span>选股映射<span class="step-note">非评级</span></div>
+      <table class="ctable">
+        <tbody>
+          <tr><td><strong>ASIC</strong></td><td>沪电、深南、生益电子</td></tr>
+          <tr><td><strong>Rubin传统供应</strong></td><td>胜宏、沪电</td></tr>
+          <tr><td><strong>Rubin新进入者</strong></td><td>景旺、鹏鼎、方正</td></tr>
+          <tr><td><strong>mSAP</strong></td><td>深南、鹏鼎 ＞ 景旺、红板、方正</td></tr>
+          <tr><td><strong>报告“超预期”</strong></td><td>沪电、广合、生益电子</td></tr>
+        </tbody>
+      </table>
+      <div class="source-note">以上为报告中的赛道映射与主观判断，需结合客户认证、产品结构、良率、资本开支和估值单独验证。</div>
+    </div>
+  </div>
+
+  <div class="callout-grid">
+    <div class="callout"><h4>胜宏科技</h4><ul><li>报告称2026年总CapEx不超过180亿元，并把接近1000亿元有效产能目标提前至2027年底。</li><li>核心高多层/HDI订单能见度进入2027；Q2毛利率压力主要来自前置人工和新增折旧。</li></ul></div>
+    <div class="callout"><h4>深南电路</h4><ul><li>AI PCB相关收入约50%；泰国、南通基地在下半年贡献，两个基地合计月折旧约2000万元。</li><li>无锡HDI预计2026Q4全线试产；ABF业务仍亏损，报告转述公司预期下半年盈亏平衡。</li></ul></div>
+    <div class="callout"><h4>鹏鼎控股 / 景旺电子</h4><ul><li>鹏鼎：上半年AI服务器业务收入接近10亿元，预计2026Q4需求集中释放；年度CapEx 168亿元。</li><li>景旺：金坛AI算力工厂预计2026Q4满产；mSAP计划年末形成5条线，并继续向下游传导原料涨价。</li></ul></div>
+    <div class="callout"><h4>海外供应链验证</h4><ul><li>报告调研称松下CCL年初至9月涨价约30%，主要增量来自价格，新增产能更多在2027—2028释放。</li><li>揖斐电可实时转嫁上游涨价；三井铜箔仍考虑继续提价；MEC称供应不短缺、毛利率约70%稳定。</li></ul></div>
+  </div>
+
+  <div class="card" style="margin-top:12px">
+    <div class="tab-step-hd"><span class="step-num">3</span>上游与设备观察<span class="step-note">2Q26报告摘要</span></div>
+    <div class="callout-grid">
+      <div class="earn-item"><strong>材料端：</strong>CCL收入环比高增，电子布/铜箔增速整体低于CCL；报告判断CCL、钻针、铜箔、电子布涨价尚未结束，PCB企业也未看到2027年底前明确止涨信号。</div>
+      <div class="earn-item"><strong>设备端：</strong>大族数控2Q26收入30亿元、环比+55%、同比+113%；芯碁收入6亿元、环比+15%、同比+43%。设备收入强，但毛利率弹性有限。</div>
+      <div class="earn-item warn"><strong>订单前瞻：</strong>合同负债与预收款占2Q收入比例在部分小型设备厂更高，报告列示东威303%、合锻169%、芯碁25%，需结合合同性质与交付周期理解。</div>
+      <div class="earn-item risk"><strong>资金压力：</strong>产业链扩产与再融资同步推进。报告的核心风险是产能、折旧和原料成本先行，而有效产出与现金回报滞后。</div>
+    </div>
+  </div>
+
+  <div class="source-note" style="margin-top:12px"><strong>口径与风险提示：</strong>本模块为卖方报告整理，财务表格按报告披露值录入；业绩会与海外调研内容属于报告转述，并非本看板独立核验的公司公告。报告含对未来产能、价格与盈利的预测，不能与已披露实际混同；投资判断不构成投资建议。</div>
 </div>
 
 <!-- ── 标的汇总 ── -->
@@ -1320,7 +1432,7 @@ code{font-size:10px;background:var(--tag-bg);color:var(--tag);padding:1px 5px;bo
 </div>
 
 <!-- ── 当前判断 ── -->
-<div class="st">💡 当前判断</div>
+<div class="st">💡 上一版判断（26Q1，历史保留）</div>
 <div class="j-grid">
   <div class="card"><div style="font-size:11px;font-weight:600;color:var(--text2);margin-bottom:8px;text-transform:uppercase;letter-spacing:.4px">核心逻辑</div>
     <div class="logic-box">AI PCB已进入<strong>第二阶段：利润兑现</strong>。2026Q1六环节全线超预期或符合预期，钻针（鼎泰毛利率53%）、电子布（宏和毛利率55%）、PCB设备（大族/芯碁增速100%+）验证景气深度。核心判断：<strong>不买"扩产最多"，买"客户切换成本最高"</strong>。</div>
