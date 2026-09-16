@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>重点标的业绩跟踪看板</title>
+<style>
+  :root {
+    --bg: #f8f9fa; --card: #ffffff; --border: #e9ecef;
+    --text-primary: #212529; --text-secondary: #6c757d; --accent: #2563eb;
+    --up: #16a34a; --down: #dc2626; --neutral: #d97706;
+    --up-bg: #f0fdf4; --down-bg: #fef2f2; --neutral-bg: #fffbeb;
+    --price-up: #dc2626; --price-down: #16a34a;
+    --shadow: 0 1px 3px rgba(0,0,0,.08), 0 1px 2px rgba(0,0,0,.04);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+    background: var(--bg); color: var(--text-primary); font-size: 14px; line-height: 1.6; }
+  .header { background: var(--card); border-bottom: 1px solid var(--border); padding: 20px 32px;
+    display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; box-shadow: var(--shadow); }
+  .header-left { display: flex; align-items: center; gap: 16px; }
+  .title { font-size: 22px; font-weight: 700; }
+  .meta { font-size: 12px; color: var(--text-secondary); }
+  .container { max-width: 1500px; margin: 0 auto; padding: 24px 32px; }
+  .kpi-row { display: grid; grid-template-columns: repeat(6, 1fr); gap: 14px; margin-bottom: 24px; }
+  .kpi { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 16px; box-shadow: var(--shadow); }
+  .kpi .num { font-size: 26px; font-weight: 700; }
+  .kpi .label { font-size: 12px; color: var(--text-secondary); margin-top: 4px; }
+  .kpi.beat .num { color: var(--up); }
+  .kpi.miss .num { color: var(--down); }
+  .kpi.pending .num { color: var(--text-secondary); }
+  .note-box { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 12px 16px;
+    margin-bottom: 16px; font-size: 12.5px; color: var(--text-secondary); }
+  .tabs { display: flex; gap: 4px; margin-bottom: 16px; border-bottom: 1px solid var(--border); }
+  .tab-btn { padding: 9px 18px; border: none; background: none; font-size: 13.5px; font-weight: 600;
+    color: var(--text-secondary); cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -1px; }
+  .tab-btn:hover { color: var(--text-primary); }
+  .tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
+  .filters { display: flex; gap: 10px; margin-bottom: 16px; flex-wrap: wrap; }
+  .filters select, .filters input { padding: 6px 10px; border: 1px solid var(--border); border-radius: 6px; font-size: 13px; }
+  table { width: 100%; table-layout: fixed; border-collapse: collapse; background: var(--card); border-radius: 10px; overflow: hidden; box-shadow: var(--shadow); }
+  th, td { padding: 10px 12px; text-align: left; border-bottom: 1px solid var(--border); font-size: 12.5px; overflow-wrap: break-word; }
+  th { background: #f1f3f5; cursor: pointer; user-select: none; font-weight: 600; color: var(--text-secondary); }
+  tr:hover td { background: #fafbfc; }
+  .tag { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 12px; font-weight: 600; white-space: nowrap; }
+  .tag.beat { background: var(--up-bg); color: var(--up); }
+  .tag.meet { background: var(--neutral-bg); color: var(--neutral); }
+  .tag.miss { background: var(--down-bg); color: var(--down); }
+  .tag.pending { background: #f1f3f5; color: var(--text-secondary); }
+  .pct-up { color: var(--price-up); font-weight: 600; }
+  .pct-down { color: var(--price-down); font-weight: 600; }
+  .pct-sub { font-size: 11px; color: var(--text-secondary); margin-left: 4px; }
+  .empty { text-align: center; padding: 60px 0; color: var(--text-secondary); }
+  .text-note { border-bottom: 1px dashed var(--accent); cursor: help; }
+  .sub-note { font-size: 12px; color: var(--text-secondary); margin-top: 10px; }
+  .tooltip {
+    position: fixed; z-index: 1000; max-width: 420px; background: var(--card);
+    border: 1px solid var(--border); border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,.12);
+    padding: 12px 14px; font-size: 12.5px; line-height: 1.7; color: var(--text-primary);
+    white-space: pre-line; display: none; pointer-events: none;
+  }
+</style>
+</head>
+<body>
+<div class="header">
+  <div class="header-left">
+    <div class="title">重点标的业绩跟踪看板</div>
+    <div class="meta">重点标的池 &amp; 全口径TMT池 &middot; 预告/中报后股价反应速记（含基准超额）</div>
+  </div>
+  <div class="meta">生成时间: 2026-08-19</div>
+</div>
+<div class="container">
+  <div class="kpi-row">
+    <div class="kpi"><div class="num">24</div><div class="label">重点标的数</div></div>
+    <div class="kpi beat"><div class="num">4</div><div class="label">超预期</div></div>
+    <div class="kpi beat"><div class="num">1</div><div class="label">略超预期</div></div>
+    <div class="kpi"><div class="num">4</div><div class="label">符合预期</div></div>
+    <div class="kpi miss"><div class="num">2</div><div class="label">低于预期</div></div>
+    <div class="kpi pending"><div class="num">13</div><div class="label">待披露/无结论</div></div>
+  </div>
+  <div class="note-box">
+    锚点日期 = 业绩预告日期（若有）否则用正式中报日期；Day1/Day1-5/Day1-10 = 锚点后第1个/1~5个/1~10个交易日个股涨跌幅，灰色小字为对应基准（行业/指数）涨跌幅，颜色数字上方为超额收益（个股-基准）。悬停鼠标查看预期说明/预告结果/股价反馈原文。
+  </div>
+  <div class="tabs">
+    <button class="tab-btn active" data-tab="price">重点标的-股价反应</button>
+    <button class="tab-btn" data-tab="earnings">重点标的-业绩vs预期</button>
+    <button class="tab-btn" data-tab="tmt">全口径TMT-股价反应</button>
+  </div>
+  <div class="filters" id="filters-price">
+    <select class="fRating" data-scope="price"><option value="">全部评价</option>
+      <option value="超预期">超预期</option><option value="略超预期">略超预期</option>
+      <option value="符合预期">符合预期</option><option value="低于预期">低于预期</option><option value="待披露">待披露</option>
+    </select>
+    <select class="fAnchor" data-scope="price"><option value="">全部锚点类型</option>
+      <option value="预告">业绩预告</option><option value="中报">正式中报</option>
+    </select>
+    <input class="fSearch" data-scope="price" placeholder="搜索代码/名称">
+  </div>
+  <div class="tab-panel" id="panel-price">
+    <table id="tbl">
+      <colgroup>
+        <col style="width:9%"><col style="width:13%"><col style="width:9%">
+        <col style="width:9%"><col style="width:6%">
+        <col style="width:13.5%"><col style="width:13.5%"><col style="width:13.5%">
+      </colgroup>
+      <thead>
+        <tr>
+          <th data-k="rating">评价</th><th data-k="name">名称</th><th data-k="industry">行业/基准</th>
+          <th data-k="anchor_date">锚点日期</th><th data-k="anchor_kind">类型</th>
+          <th data-k="day1_excess">Day1（超额）</th><th data-k="day1_5_excess">Day1-5（超额）</th><th data-k="day1_10_excess">Day1-10（超额）</th>
+        </tr>
+      </thead>
+      <tbody id="tbody"></tbody>
+    </table>
+    <div class="empty" id="emptyMsg" style="display:none;">暂无记录</div>
+  </div>
+  <div class="tab-panel" id="panel-earnings" style="display:none;">
+    <div class="filters" id="filters-earnings">
+      <select class="fRating" data-scope="earnings"><option value="">全部评价</option>
+        <option value="超预期">超预期</option><option value="略超预期">略超预期</option>
+        <option value="符合预期">符合预期</option><option value="低于预期">低于预期</option><option value="待披露">待披露</option>
+      </select>
+      <select class="fAnchor" data-scope="earnings"><option value="">全部锚点类型</option>
+        <option value="预告">业绩预告</option><option value="中报">正式中报</option>
+      </select>
+      <input class="fSearch" data-scope="earnings" placeholder="搜索代码/名称">
+    </div>
+    <table id="tbl2">
+      <colgroup>
+        <col style="width:9%"><col style="width:9%"><col style="width:11%">
+        <col style="width:9%">
+        <col style="width:15.5%"><col style="width:15.5%"><col style="width:15.5%"><col style="width:15.5%">
+      </colgroup>
+      <thead>
+        <tr>
+          <th data-k2="rating">评价</th><th data-k2="code">代码</th><th data-k2="name">名称</th>
+          <th data-k2="anchor_date">锚点日期</th>
+          <th>市场预期</th><th>预告结果</th><th>业绩结果</th><th>股价反馈</th>
+        </tr>
+      </thead>
+      <tbody id="tbody2"></tbody>
+    </table>
+    <div class="sub-note">悬停单元格查看完整文字；预告结果/业绩结果列含各自的文字描述，股价反馈列合并预告后与业绩后两段反馈</div>
+    <div class="empty" id="emptyMsg2" style="display:none;">暂无记录</div>
+  </div>
+  <div class="tab-panel" id="panel-tmt" style="display:none;">
+    <div class="filters" id="filters-tmt">
+      <select class="fRating" data-scope="tmt"><option value="">全部评价</option>
+        <option value="超预期">超预期</option><option value="略超预期">略超预期</option>
+        <option value="符合预期">符合预期</option><option value="低于预期">低于预期</option><option value="待披露">待披露</option>
+      </select>
+      <input class="fSearch" data-scope="tmt" placeholder="搜索代码/名称">
+    </div>
+    <table id="tbl3">
+      <colgroup>
+        <col style="width:9%"><col style="width:13%"><col style="width:11%">
+        <col style="width:9%">
+        <col style="width:14.5%"><col style="width:14.5%"><col style="width:14.5%">
+      </colgroup>
+      <thead>
+        <tr>
+          <th data-k3="rating">评价</th><th data-k3="name">名称</th><th data-k3="industry">行业/基准</th>
+          <th data-k3="anchor_date">锚点日期</th>
+          <th data-k3="day1_excess">Day1（超额）</th><th data-k3="day1_5_excess">Day1-5（超额）</th><th data-k3="day1_10_excess">Day1-10（超额）</th>
+        </tr>
+      </thead>
+      <tbody id="tbody3"></tbody>
+    </table>
+    <div class="sub-note">全口径TMT名单（原30余家，无个股定性文字，仅股价反应），与全口径页面 00_INDEX.md 互为补充</div>
+    <div class="empty" id="emptyMsg3" style="display:none;">暂无记录</div>
+  </div>
+</div>
+<div class="tooltip" id="tooltip"></div>
+<script>
+const FOCUS = [{"code": "002156.SZ", "name": "通富微电", "industry": "科创50", "anchor_date": "2026-07-15", "anchor_kind": "预告", "rating": "超预期", "rating_text": "超预期", "market_expect": "环增20-30%", "expect_note": "", "predict_result": "超预期", "predict_desc": "环比高增，相比其他的封测厂也有更高增速", "predict_price_reaction": "高开低走仅收涨1%，市场无视强业绩\n在之后的回调中相对抗跌", "actual_result": "", "actual_desc": "", "actual_price_reaction": "", "day1": 1.08, "day1_bench": -4.25, "day1_excess": 5.33, "day1_5": -11.01, "day1_5_bench": -5.3, "day1_5_excess": -5.7, "day1_10": -11.39, "day1_10_bench": -15.74, "day1_10_excess": 4.35, "seq": 0}, {"code": "300394.SZ", "name": "天孚通信", "industry": "通信", "anchor_date": "2026-07-18", "anchor_kind": "预告", "rating": "超预期", "rating_text": "超预期", "market_expect": "5.5亿利润", "expect_note": "", "predict_result": "超预期", "predict_desc": "6.0~7.9亿\n之前担心的物料问题缓解", "predict_price_reaction": "短期有小幅超额，但5天后回落\n市场没有特别在意业绩", "actual_result": "", "actual_desc": "", "actual_price_reaction": "", "day1": 1.03, "day1_bench": 0.27, "day1_excess": 0.75, "day1_5": -3.77, "day1_5_bench": -0.05, "day1_5_excess": -3.72, "day1_10": -19.09, "day1_10_bench": -10.43, "day1_10_excess": -8.67, "seq": 1}, {"code": "1801.HK", "name": "信达生物", "industry": "恒生生物科技", "anchor_date": "2026-08-05", "anchor_kind": "预告", "rating": "超预期", "rating_text": "超预期", "market_expect": "收入40-42亿", "expect_note": "", "predict_result": "超预期", "predict_desc": "Q2收入超60%", "predict_price_reaction": "股价先冲高回落后又冲高，收盘上涨4%，目前累计上涨10%+", "actual_result": "", "actual_desc": "", "actual_price_reaction": "", "day1": 4.15, "day1_bench": 1.12, "day1_excess": 3.03, "day1_5": 10.21, "day1_5_bench": 9.71, "day1_5_excess": 0.5, "day1_10": 11.48, "day1_10_bench": 9.64, "day1_10_excess": 1.84, "seq": 2}, {"code": "0981.HK", "name": "中芯国际", "industry": "科创50", "anchor_date": "2026-08-13", "anchor_kind": "中报", "rating": "超预期", "rating_text": "超预期", "market_expect": "2Q 收入+14% \n毛利率22%", "expect_note": "2Q有指引，有一定景气度，市场在意的是毛利率和ASP持续提升", "predict_result": "", "predict_desc": "", "predict_price_reaction": "", "actual_result": "超预期", "actual_desc": "2Q 收入+20% 毛利率25%\n3Q 收入inline 毛利率Beat", "actual_price_reaction": "高开 单日上涨4.8% 和华虹单日拉开15%", "day1": 0.22, "day1_bench": -1.11, "day1_excess": 1.33, "day1_5": 12.54, "day1_5_bench": 3.1, "day1_5_excess": 9.43, "day1_10": 12.54, "day1_10_bench": 3.1, "day1_10_excess": 9.43, "seq": 3}, {"code": "2162.HK", "name": "康诺亚-B", "industry": "恒生生物科技", "anchor_date": "2026-07-15", "anchor_kind": "预告", "rating": "略超预期", "rating_text": "略超预期", "market_expect": "产品收入3-3.5亿", "expect_note": "", "predict_result": "略超预期", "predict_desc": "产品收入3.9亿，里程碑收入约19亿，净利润超12亿", "predict_price_reaction": "预告后股价冲高回落，收盘下跌约1%，前期已累积一定超额涨幅", "actual_result": "", "actual_desc": "", "actual_price_reaction": "", "day1": 7.86, "day1_bench": 4.12, "day1_excess": 3.74, "day1_5": 7.74, "day1_5_bench": 1.22, "day1_5_excess": 6.52, "day1_10": -3.34, "day1_10_bench": 0.73, "day1_10_excess": -4.08, "seq": 4}, {"code": "000792.SZ", "name": "盐湖股份", "industry": "基础化工", "anchor_date": "2026-07-03", "anchor_kind": "预告", "rating": "符合预期", "rating_text": "符合预期", "market_expect": "环比持平微增", "expect_note": "", "predict_result": "符合预期", "predict_desc": "31.2亿", "predict_price_reaction": "跟随锂矿股下跌，业绩作用不明显", "actual_result": "", "actual_desc": "", "actual_price_reaction": "", "day1": -2.55, "day1_bench": -1.87, "day1_excess": -0.68, "day1_5": -13.55, "day1_5_bench": -8.58, "day1_5_excess": -4.97, "day1_10": -18.22, "day1_10_bench": -14.2, "day1_10_excess": -4.02, "seq": 5}, {"code": "601899.SH", "name": "紫金矿业", "industry": "有色金属", "anchor_date": "2026-07-10", "anchor_kind": "预告", "rating": "符合预期", "rating_text": "符合预期", "market_expect": "185-190亿", "expect_note": "", "predict_result": "符合预期", "predict_desc": "190亿", "predict_price_reaction": "持平微涨，业绩作用不明显", "actual_result": "", "actual_desc": "", "actual_price_reaction": "", "day1": 0.36, "day1_bench": 0.14, "day1_excess": 0.22, "day1_5": 5.9, "day1_5_bench": -2.64, "day1_5_excess": 8.54, "day1_10": 19.7, "day1_10_bench": 1.85, "day1_10_excess": 17.85, "seq": 6}, {"code": "000657.SZ", "name": "中钨高新", "industry": "有色金属", "anchor_date": "2026-07-14", "anchor_kind": "预告", "rating": "符合预期", "rating_text": "符合预期", "market_expect": "11-12亿", "expect_note": "", "predict_result": "符合预期", "predict_desc": "10.5-12.5亿", "predict_price_reaction": "次日涨8%，AI PCB情绪强", "actual_result": "", "actual_desc": "", "actual_price_reaction": "", "day1": 7.83, "day1_bench": 5.11, "day1_excess": 2.72, "day1_5": -19.2, "day1_5_bench": -4.15, "day1_5_excess": -15.05, "day1_10": -14.95, "day1_10_bench": 3.68, "day1_10_excess": -18.63, "seq": 7}, {"code": "688041.SH", "name": "海光信息", "industry": "科创50", "anchor_date": "2026-07-17", "anchor_kind": "预告", "rating": "符合预期", "rating_text": "符合预期", "market_expect": "收入 利润+60%", "expect_note": "", "predict_result": "符合预期", "predict_desc": "收入+65%\n利润+60%", "predict_price_reaction": "当天跟随大盘下跌，但而后修复，和指数基本同步", "actual_result": "", "actual_desc": "", "actual_price_reaction": "", "day1": -4.84, "day1_bench": -7.12, "day1_excess": 2.27, "day1_5": -2.62, "day1_5_bench": -3.1, "day1_5_excess": 0.47, "day1_10": -14.66, "day1_10_bench": -13.99, "day1_10_excess": -0.67, "seq": 8}, {"code": "3858.HK", "name": "佳鑫国际资源", "industry": "有色金属", "anchor_date": "2026-07-10", "anchor_kind": "预告", "rating": "低于预期", "rating_text": "略低于预期", "market_expect": "15亿左右", "expect_note": "", "predict_result": "略低于预期", "predict_desc": "14.5-15.5亿港币", "predict_price_reaction": "次日跌9%，板块情绪也差", "actual_result": "", "actual_desc": "", "actual_price_reaction": "", "day1": 2.04, "day1_bench": 0.14, "day1_excess": 1.9, "day1_5": -4.7, "day1_5_bench": -2.64, "day1_5_excess": -2.06, "day1_10": 15.76, "day1_10_bench": 1.85, "day1_10_excess": 13.91, "seq": 9}, {"code": "600487.SH", "name": "亨通光电", "industry": "通信", "anchor_date": "2026-07-14", "anchor_kind": "预告", "rating": "低于预期", "rating_text": "低于预期", "market_expect": "20~25亿利润", "expect_note": "", "predict_result": "低于预期", "predict_desc": "19.16~24.69亿\n环比增速低于市场预期", "predict_price_reaction": "平开后跟随大盘上涨6%，市场似乎不在意业绩；但后续继续下跌", "actual_result": "", "actual_desc": "", "actual_price_reaction": "", "day1": 6.24, "day1_bench": 5.25, "day1_excess": 0.99, "day1_5": -19.21, "day1_5_bench": -10.07, "day1_5_excess": -9.14, "day1_10": -20.65, "day1_10_bench": -7.81, "day1_10_excess": -12.84, "seq": 10}, {"code": "1164.HK", "name": "中广核矿业", "industry": "有色金属", "anchor_date": "2026-07-21", "anchor_kind": "预告", "rating": "待披露", "rating_text": "无", "market_expect": "微亏", "expect_note": "", "predict_result": "无", "predict_desc": "交付量及国际贸易毛利率不及预期", "predict_price_reaction": "次日涨9%，业绩作用不明显", "actual_result": "", "actual_desc": "", "actual_price_reaction": "", "day1": 4.61, "day1_bench": 4.36, "day1_excess": 0.25, "day1_5": 13.82, "day1_5_bench": 8.17, "day1_5_excess": 5.66, "day1_10": 14.52, "day1_10_bench": 8.43, "day1_10_excess": 6.09, "seq": 11}, {"code": "0700.HK", "name": "腾讯控股", "industry": "恒生科技", "anchor_date": "2026-08-12", "anchor_kind": "中报", "rating": "待披露", "rating_text": "业绩ok，不满意现金流/capex", "market_expect": "收入+11%，经调整OP+9%", "expect_note": "", "predict_result": "", "predict_desc": "", "predict_price_reaction": "", "actual_result": "业绩ok，不满意现金流/capex", "actual_desc": "总收入+11%，经调整OP+9%，扣掉AI投入后，OP+19%", "actual_price_reaction": "低开，偏弱，市场质疑FCF和capex，AI收入增速不高", "day1": -1.95, "day1_bench": -0.99, "day1_excess": -0.96, "day1_5": -6.03, "day1_5_bench": -1.77, "day1_5_excess": -4.27, "day1_10": -6.03, "day1_10_bench": -1.77, "day1_10_excess": -4.27, "seq": 12}, {"code": "6855.HK", "name": "亚盛医药", "industry": "恒生生物科技", "anchor_date": "2026-08-19", "anchor_kind": "中报", "rating": "待披露", "rating_text": "", "market_expect": "收入4亿左右", "expect_note": "", "predict_result": "", "predict_desc": "", "predict_price_reaction": "", "actual_result": "", "actual_desc": "", "actual_price_reaction": "", "day1": null, "day1_bench": null, "day1_excess": null, "day1_5": null, "day1_5_bench": null, "day1_5_excess": null, "day1_10": null, "day1_10_bench": null, "day1_10_excess": null, "seq": 13}, {"code": "1530.HK", "name": "三生制药", "industry": "恒生生物科技", "anchor_date": "2026-08-20", "anchor_kind": "中报", "rating": "待披露", "rating_text": "", "market_expect": "预期较差，市场没有量化数字", "expect_note": "预期较差，市场没有量化数字，内部预期收入下滑20%，净利润3-4亿。", "predict_result": "", "predict_desc": "", "predict_price_reaction": "", "actual_result": "", "actual_desc": "", "actual_price_reaction": "", "day1": null, "day1_bench": null, "day1_excess": null, "day1_5": null, "day1_5_bench": null, "day1_5_excess": null, "day1_10": null, "day1_10_bench": null, "day1_10_excess": null, "seq": 14}, {"code": "301611.SZ", "name": "珂玛科技", "industry": "科创50", "anchor_date": "2026-08-20", "anchor_kind": "中报", "rating": "待披露", "rating_text": "", "market_expect": "收入同比增长20%\n毛利率修复", "expect_note": "没有市场预期，市场关注度很低，个人最关注毛利率是否修复", "predict_result": "", "predict_desc": "", "predict_price_reaction": "", "actual_result": "", "actual_desc": "", "actual_price_reaction": "", "day1": null, "day1_bench": null, "day1_excess": null, "day1_5": null, "day1_5_bench": null, "day1_5_excess": null, "day1_10": null, "day1_10_bench": null, "day1_10_excess": null, "seq": 15}, {"code": "600276.SH", "name": "恒瑞医药", "industry": "恒生生物科技", "anchor_date": "2026-08-20", "anchor_kind": "中报", "rating": "待披露", "rating_text": "", "market_expect": "产品收入10%+", "expect_note": "", "predict_result": "", "predict_desc": "", "predict_price_reaction": "", "actual_result": "", "actual_desc": "", "actual_price_reaction": "", "day1": null, "day1_bench": null, "day1_excess": null, "day1_5": null, "day1_5_bench": null, "day1_5_excess": null, "day1_10": null, "day1_10_bench": null, "day1_10_excess": null, "seq": 16}, {"code": "688120.SH", "name": "华海清科", "industry": "科创50", "anchor_date": "2026-08-22", "anchor_kind": "中报", "rating": "待披露", "rating_text": "", "market_expect": "3.5-4亿利润", "expect_note": "不是很在乎业绩，比起业绩本身更加关注毛利率不能下滑", "predict_result": "", "predict_desc": "", "predict_price_reaction": "", "actual_result": "", "actual_desc": "", "actual_price_reaction": "", "day1": null, "day1_bench": null, "day1_excess": null, "day1_5": null, "day1_5_bench": null, "day1_5_excess": null, "day1_10": null, "day1_10_bench": null, "day1_10_excess": null, "seq": 17}, {"code": "300308.SZ", "name": "中际旭创", "industry": "通信", "anchor_date": "2026-08-24", "anchor_kind": "中报", "rating": "待披露", "rating_text": "", "market_expect": "70-80亿利润", "expect_note": "非常在乎业绩，此前因为港股没发预告", "predict_result": "", "predict_desc": "", "predict_price_reaction": "", "actual_result": "", "actual_desc": "", "actual_price_reaction": "", "day1": null, "day1_bench": null, "day1_excess": null, "day1_5": null, "day1_5_bench": null, "day1_5_excess": null, "day1_10": null, "day1_10_bench": null, "day1_10_excess": null, "seq": 18}, {"code": "600938.SH", "name": "中国海油", "industry": "石油石化", "anchor_date": "2026-08-27", "anchor_kind": "中报", "rating": "待披露", "rating_text": "", "market_expect": "450-500亿利润", "expect_note": "", "predict_result": "", "predict_desc": "", "predict_price_reaction": "", "actual_result": "", "actual_desc": "", "actual_price_reaction": "", "day1": null, "day1_bench": null, "day1_excess": null, "day1_5": null, "day1_5_bench": null, "day1_5_excess": null, "day1_10": null, "day1_10_bench": null, "day1_10_excess": null, "seq": 19}, {"code": "688630.SH", "name": "芯碁微装", "industry": "科创50", "anchor_date": "2026-08-27", "anchor_kind": "中报", "rating": "待披露", "rating_text": "", "market_expect": "1.6亿利润", "expect_note": "比较在乎业绩，但公司说2Q未放量，关注3Q和4Q的订单指引", "predict_result": "", "predict_desc": "", "predict_price_reaction": "", "actual_result": "", "actual_desc": "", "actual_price_reaction": "", "day1": null, "day1_bench": null, "day1_excess": null, "day1_5": null, "day1_5_bench": null, "day1_5_excess": null, "day1_10": null, "day1_10_bench": null, "day1_10_excess": null, "seq": 20}, {"code": "688702.SH", "name": "盛科通信-U", "industry": "科创50", "anchor_date": "2026-08-27", "anchor_kind": "中报", "rating": "待披露", "rating_text": "", "market_expect": "3亿收入", "expect_note": "关注度都在订单上，很少关注业绩本身", "predict_result": "", "predict_desc": "", "predict_price_reaction": "", "actual_result": "", "actual_desc": "", "actual_price_reaction": "", "day1": null, "day1_bench": null, "day1_excess": null, "day1_5": null, "day1_5_bench": null, "day1_5_excess": null, "day1_10": null, "day1_10_bench": null, "day1_10_excess": null, "seq": 21}, {"code": "601166.SH", "name": "兴业银行", "industry": "银行", "anchor_date": "2026-08-28", "anchor_kind": "中报", "rating": "待披露", "rating_text": "", "market_expect": "", "expect_note": "", "predict_result": "", "predict_desc": "", "predict_price_reaction": "", "actual_result": "", "actual_desc": "", "actual_price_reaction": "", "day1": null, "day1_bench": null, "day1_excess": null, "day1_5": null, "day1_5_bench": null, "day1_5_excess": null, "day1_10": null, "day1_10_bench": null, "day1_10_excess": null, "seq": 22}, {"code": "601939.SH", "name": "建设银行", "industry": "银行", "anchor_date": "2026-08-29", "anchor_kind": "中报", "rating": "待披露", "rating_text": "", "market_expect": "", "expect_note": "", "predict_result": "", "predict_desc": "", "predict_price_reaction": "", "actual_result": "", "actual_desc": "", "actual_price_reaction": "", "day1": null, "day1_bench": null, "day1_excess": null, "day1_5": null, "day1_5_bench": null, "day1_5_excess": null, "day1_10": null, "day1_10_bench": null, "day1_10_excess": null, "seq": 23}];
+const TMT = [{"code": "301165.SZ", "name": "锐捷网络", "industry": "通信", "bench_code": "801770.SI", "anchor_date": "2026-07-02", "anchor_kind": "预告", "rating": "超预期", "rating_text": "超预期", "day1": -0.78, "day1_bench": -7.36, "day1_excess": 6.58, "day1_5": 22.79, "day1_5_bench": -10.73, "day1_5_excess": 33.52, "day1_10": 17.2, "day1_10_bench": -9.3, "day1_10_excess": 26.5, "seq": 0}, {"code": "600105.SH", "name": "永鼎股份", "industry": "通信", "bench_code": "801770.SI", "anchor_date": "2026-07-06", "anchor_kind": "预告", "rating": "超预期", "rating_text": "超预期", "day1": -8.22, "day1_bench": -3.05, "day1_excess": -5.17, "day1_5": -10.07, "day1_5_bench": -1.66, "day1_5_excess": -8.41, "day1_10": -26.5, "day1_10_bench": -14.58, "day1_10_excess": -11.92, "seq": 1}, {"code": "000977.SZ", "name": "浪潮信息", "industry": "计算机", "bench_code": "801750.SI", "anchor_date": "2026-07-08", "anchor_kind": "预告", "rating": "超预期", "rating_text": "超预期", "day1": 10.01, "day1_bench": 2.44, "day1_excess": 7.56, "day1_5": 19.55, "day1_5_bench": 1.19, "day1_5_excess": 18.36, "day1_10": 24.77, "day1_10_bench": 0.63, "day1_10_excess": 24.14, "seq": 2}, {"code": "603893.SH", "name": "瑞芯微", "industry": "电子", "bench_code": "801080.SI", "anchor_date": "2026-07-08", "anchor_kind": "预告", "rating": "超预期", "rating_text": "超预期", "day1": 5.92, "day1_bench": -1.13, "day1_excess": 7.05, "day1_5": 13.74, "day1_5_bench": -2.77, "day1_5_excess": 16.51, "day1_10": 9.09, "day1_10_bench": -14.68, "day1_10_excess": 23.77, "seq": 3}, {"code": "301200.SZ", "name": "大族数控", "industry": "机械设备", "bench_code": "801890.SI", "anchor_date": "2026-07-09", "anchor_kind": "预告", "rating": "超预期", "rating_text": "超预期", "day1": 4.46, "day1_bench": 2.72, "day1_excess": 1.74, "day1_5": -0.64, "day1_5_bench": -4.23, "day1_5_excess": 3.59, "day1_10": -20.37, "day1_10_bench": -14.05, "day1_10_excess": -6.32, "seq": 4}, {"code": "301377.SZ", "name": "鼎泰高科", "industry": "机械设备", "bench_code": "801890.SI", "anchor_date": "2026-07-13", "anchor_kind": "预告", "rating": "超预期", "rating_text": "超预期", "day1": -6.26, "day1_bench": -5.89, "day1_excess": -0.37, "day1_5": -8.98, "day1_5_bench": -14.39, "day1_5_excess": 5.41, "day1_10": -15.06, "day1_10_bench": -16.07, "day1_10_excess": 1.01, "seq": 5}, {"code": "002636.SZ", "name": "金安国纪", "industry": "电子", "bench_code": "801080.SI", "anchor_date": "2026-07-14", "anchor_kind": "预告", "rating": "超预期", "rating_text": "超预期", "day1": 10.0, "day1_bench": 2.72, "day1_excess": 7.28, "day1_5": -16.6, "day1_5_bench": -18.01, "day1_5_excess": 1.41, "day1_10": -26.78, "day1_10_bench": -12.27, "day1_10_excess": -14.5, "seq": 6}, {"code": "600183.SH", "name": "生益科技", "industry": "电子", "bench_code": "801080.SI", "anchor_date": "2026-07-14", "anchor_kind": "预告", "rating": "超预期", "rating_text": "超预期", "day1": 10.0, "day1_bench": 2.72, "day1_excess": 7.28, "day1_5": -8.26, "day1_5_bench": -18.01, "day1_5_excess": 9.74, "day1_10": -6.29, "day1_10_bench": -12.27, "day1_10_excess": 5.98, "seq": 7}, {"code": "688183.SH", "name": "生益电子", "industry": "电子", "bench_code": "801080.SI", "anchor_date": "2026-07-14", "anchor_kind": "预告", "rating": "超预期", "rating_text": "超预期", "day1": 14.21, "day1_bench": 2.72, "day1_excess": 11.48, "day1_5": -8.1, "day1_5_bench": -18.01, "day1_5_excess": 9.91, "day1_10": -7.37, "day1_10_bench": -12.27, "day1_10_excess": 4.91, "seq": 8}, {"code": "002156.SZ", "name": "通富微电", "industry": "电子", "bench_code": "801080.SI", "anchor_date": "2026-07-15", "anchor_kind": "预告", "rating": "超预期", "rating_text": "超预期", "day1": 1.08, "day1_bench": -4.6, "day1_excess": 5.68, "day1_5": -11.01, "day1_5_bench": -12.25, "day1_5_excess": 1.24, "day1_10": -11.39, "day1_10_bench": -20.59, "day1_10_excess": 9.2, "seq": 9}, {"code": "600584.SH", "name": "长电科技", "industry": "电子", "bench_code": "801080.SI", "anchor_date": "2026-07-15", "anchor_kind": "预告", "rating": "超预期", "rating_text": "超预期", "day1": -9.97, "day1_bench": -4.6, "day1_excess": -5.37, "day1_5": -17.54, "day1_5_bench": -12.25, "day1_5_excess": -5.29, "day1_10": -25.19, "day1_10_bench": -20.59, "day1_10_excess": -4.6, "seq": 10}, {"code": "6869.HK", "name": "长飞光纤光缆", "industry": "通信", "bench_code": "801770.SI", "anchor_date": "2026-07-15", "anchor_kind": "预告", "rating": "超预期", "rating_text": "超预期", "day1": 1.62, "day1_bench": -1.96, "day1_excess": 3.59, "day1_5": -7.73, "day1_5_bench": -7.63, "day1_5_excess": -0.1, "day1_10": -28.98, "day1_10_bench": -21.94, "day1_10_excess": -7.04, "seq": 11}, {"code": "300394.SZ", "name": "天孚通信", "industry": "通信", "bench_code": "801770.SI", "anchor_date": "2026-07-20", "anchor_kind": "预告", "rating": "超预期", "rating_text": "超预期", "day1": 1.03, "day1_bench": 0.27, "day1_excess": 0.75, "day1_5": -3.77, "day1_5_bench": -0.05, "day1_5_excess": -3.72, "day1_10": -19.09, "day1_10_bench": -10.43, "day1_10_excess": -8.67, "seq": 12}, {"code": "300502.SZ", "name": "新易盛", "industry": "通信", "bench_code": "801770.SI", "anchor_date": "2026-07-20", "anchor_kind": "预告", "rating": "超预期", "rating_text": "超预期", "day1": 5.62, "day1_bench": 0.27, "day1_excess": 5.34, "day1_5": -1.42, "day1_5_bench": -0.05, "day1_5_excess": -1.37, "day1_10": -17.99, "day1_10_bench": -10.43, "day1_10_excess": -7.56, "seq": 13}, {"code": "002463.SZ", "name": "沪电股份", "industry": "电子", "bench_code": "801080.SI", "anchor_date": "2026-07-14", "anchor_kind": "预告", "rating": "略超预期", "rating_text": "略超预期", "day1": 10.0, "day1_bench": 2.72, "day1_excess": 7.28, "day1_5": -7.73, "day1_5_bench": -18.01, "day1_5_excess": 10.27, "day1_10": -5.74, "day1_10_bench": -12.27, "day1_10_excess": 6.53, "seq": 14}, {"code": "002916.SZ", "name": "深南电路", "industry": "电子", "bench_code": "801080.SI", "anchor_date": "2026-07-14", "anchor_kind": "预告", "rating": "略超预期", "rating_text": "略超预期", "day1": 3.91, "day1_bench": 2.72, "day1_excess": 1.19, "day1_5": -17.59, "day1_5_bench": -18.01, "day1_5_excess": 0.42, "day1_10": -10.2, "day1_10_bench": -12.27, "day1_10_excess": 2.07, "seq": 15}, {"code": "301308.SZ", "name": "江波龙", "industry": "电子", "bench_code": "801080.SI", "anchor_date": "2026-07-03", "anchor_kind": "预告", "rating": "符合预期", "rating_text": "符合预期", "day1": 3.14, "day1_bench": -0.78, "day1_excess": 3.92, "day1_5": 3.47, "day1_5_bench": 3.06, "day1_5_excess": 0.41, "day1_10": -22.63, "day1_10_bench": -13.75, "day1_10_excess": -8.88, "seq": 16}, {"code": "001389.SZ", "name": "广合科技", "industry": "电子", "bench_code": "801080.SI", "anchor_date": "2026-07-08", "anchor_kind": "预告", "rating": "符合预期", "rating_text": "符合预期", "day1": -1.56, "day1_bench": -1.13, "day1_excess": -0.43, "day1_5": 1.25, "day1_5_bench": -2.77, "day1_5_excess": 4.02, "day1_10": -5.12, "day1_10_bench": -14.68, "day1_10_excess": 9.56, "seq": 17}, {"code": "002384.SZ", "name": "东山精密", "industry": "电子", "bench_code": "801080.SI", "anchor_date": "2026-07-15", "anchor_kind": "预告", "rating": "符合预期", "rating_text": "符合预期", "day1": 0.81, "day1_bench": -4.6, "day1_excess": 5.42, "day1_5": -11.28, "day1_5_bench": -12.25, "day1_5_excess": 0.97, "day1_10": -26.75, "day1_10_bench": -20.59, "day1_10_excess": -6.16, "seq": 18}, {"code": "603083.SH", "name": "剑桥科技", "industry": "通信", "bench_code": "801770.SI", "anchor_date": "2026-07-15", "anchor_kind": "预告", "rating": "符合预期", "rating_text": "符合预期", "day1": 3.93, "day1_bench": -1.96, "day1_excess": 5.89, "day1_5": -14.57, "day1_5_bench": -7.63, "day1_5_excess": -6.94, "day1_10": -21.89, "day1_10_bench": -21.94, "day1_10_excess": 0.05, "seq": 19}, {"code": "603256.SH", "name": "宏和科技", "industry": "建筑材料", "bench_code": "801710.SI", "anchor_date": "2026-07-15", "anchor_kind": "预告", "rating": "符合预期", "rating_text": "符合预期", "day1": -7.69, "day1_bench": -1.72, "day1_excess": -5.97, "day1_5": -22.99, "day1_5_bench": -12.19, "day1_5_excess": -10.8, "day1_10": -27.86, "day1_10_bench": -15.26, "day1_10_excess": -12.6, "seq": 20}, {"code": "688041.SH", "name": "海光信息", "industry": "电子", "bench_code": "801080.SI", "anchor_date": "2026-07-17", "anchor_kind": "预告", "rating": "符合预期", "rating_text": "符合预期", "day1": -4.84, "day1_bench": -8.19, "day1_excess": 3.35, "day1_5": -2.62, "day1_5_bench": -8.13, "day1_5_excess": 5.51, "day1_10": -14.66, "day1_10_bench": -19.66, "day1_10_excess": 5.0, "seq": 21}, {"code": "300857.SZ", "name": "协创数据", "industry": "电子", "bench_code": "801080.SI", "anchor_date": "2026-07-20", "anchor_kind": "预告", "rating": "符合预期", "rating_text": "符合预期", "day1": 3.4, "day1_bench": -4.81, "day1_excess": 8.22, "day1_5": 8.29, "day1_5_bench": -0.69, "day1_5_excess": 8.98, "day1_10": 1.45, "day1_10_bench": -9.4, "day1_10_excess": 10.86, "seq": 22}, {"code": "603618.SH", "name": "杭电股份", "industry": "电力设备", "bench_code": "801730.SI", "anchor_date": "2026-07-06", "anchor_kind": "预告", "rating": "低于预期", "rating_text": "低于预期", "day1": -10.0, "day1_bench": -1.82, "day1_excess": -8.18, "day1_5": -28.14, "day1_5_bench": -8.87, "day1_5_excess": -19.28, "day1_10": -43.06, "day1_10_bench": -16.35, "day1_10_excess": -26.71, "seq": 23}, {"code": "601138.SH", "name": "工业富联", "industry": "电子", "bench_code": "801080.SI", "anchor_date": "2026-07-10", "anchor_kind": "预告", "rating": "低于预期", "rating_text": "低于预期", "day1": -4.69, "day1_bench": -5.32, "day1_excess": 0.64, "day1_5": -9.36, "day1_5_bench": -16.31, "day1_5_excess": 6.95, "day1_10": -9.56, "day1_10_bench": -23.12, "day1_10_excess": 13.55, "seq": 24}, {"code": "603986.SH", "name": "兆易创新", "industry": "电子", "bench_code": "801080.SI", "anchor_date": "2026-07-10", "anchor_kind": "预告", "rating": "低于预期", "rating_text": "低于预期", "day1": -7.76, "day1_bench": -5.32, "day1_excess": -2.44, "day1_5": -22.44, "day1_5_bench": -16.31, "day1_5_excess": -6.13, "day1_10": -31.88, "day1_10_bench": -23.12, "day1_10_excess": -8.77, "seq": 25}, {"code": "600487.SH", "name": "亨通光电", "industry": "通信", "bench_code": "801770.SI", "anchor_date": "2026-07-14", "anchor_kind": "预告", "rating": "低于预期", "rating_text": "低于预期", "day1": 6.24, "day1_bench": 5.25, "day1_excess": 0.99, "day1_5": -19.21, "day1_5_bench": -10.07, "day1_5_excess": -9.14, "day1_10": -20.65, "day1_10_bench": -7.81, "day1_10_excess": -12.84, "seq": 26}, {"code": "603296.SH", "name": "华勤技术", "industry": "电子", "bench_code": "801080.SI", "anchor_date": "2026-07-14", "anchor_kind": "预告", "rating": "低于预期", "rating_text": "低于预期", "day1": -1.77, "day1_bench": 2.72, "day1_excess": -4.49, "day1_5": -7.46, "day1_5_bench": -18.01, "day1_5_excess": 10.54, "day1_10": 9.77, "day1_10_bench": -12.27, "day1_10_excess": 22.05, "seq": 27}, {"code": "001309.SZ", "name": "德明利", "industry": "电子", "bench_code": "801080.SI", "anchor_date": "2026-07-15", "anchor_kind": "预告", "rating": "低于预期", "rating_text": "低于预期", "day1": -10.0, "day1_bench": -4.6, "day1_excess": -5.4, "day1_5": -30.98, "day1_5_bench": -12.25, "day1_5_excess": -18.73, "day1_10": -50.89, "day1_10_bench": -20.59, "day1_10_excess": -30.3, "seq": 28}, {"code": "600522.SH", "name": "中天科技", "industry": "通信", "bench_code": "801770.SI", "anchor_date": "2026-07-15", "anchor_kind": "预告", "rating": "低于预期", "rating_text": "低于预期", "day1": -4.44, "day1_bench": -1.96, "day1_excess": -2.47, "day1_5": -18.69, "day1_5_bench": -7.63, "day1_5_excess": -11.06, "day1_10": -29.65, "day1_10_bench": -21.94, "day1_10_excess": -7.71, "seq": 29}, {"code": "301217.SZ", "name": "铜冠铜箔", "industry": "电力设备", "bench_code": "801730.SI", "anchor_date": "2026-07-20", "anchor_kind": "预告", "rating": "低于预期", "rating_text": "低于预期", "day1": -20.0, "day1_bench": -0.48, "day1_excess": -19.52, "day1_5": -30.17, "day1_5_bench": 2.71, "day1_5_excess": -32.89, "day1_10": -35.98, "day1_10_bench": 4.35, "day1_10_excess": -40.33, "seq": 30}];
+const RATING_CLASS = {"超预期":"beat","略超预期":"beat","符合预期":"meet","低于预期":"miss","待披露":"pending"};
+const RATING_ORDER = {"超预期":0,"略超预期":1,"符合预期":2,"低于预期":3,"待披露":4};
+
+function pctPair(v, excess) {
+  if (v === null || v === undefined) return '-';
+  const cls = v > 0 ? 'pct-up' : (v < 0 ? 'pct-down' : '');
+  const main = `<span class="${cls}">${v > 0 ? '+' : ''}${v.toFixed(1)}%</span>`;
+  if (excess === null || excess === undefined) return main;
+  const ecls = excess > 0 ? 'pct-up' : (excess < 0 ? 'pct-down' : '');
+  return main + `<span class="pct-sub ${ecls}">超额${excess > 0 ? '+' : ''}${excess.toFixed(1)}%</span>`;
+}
+
+function noteCell(main, note) {
+  const shown = main || '-';
+  if (!note) return shown;
+  const short = shown.length > 14 ? shown.slice(0,14) + '…' : shown;
+  return `<span class="text-note" data-note="${encodeURIComponent(note)}">${short}</span>`;
+}
+
+function getFilters(scope) {
+  const rating = document.querySelector(`.fRating[data-scope="${scope}"]`).value;
+  const anchorEl = document.querySelector(`.fAnchor[data-scope="${scope}"]`);
+  const anchor = anchorEl ? anchorEl.value : '';
+  const q = document.querySelector(`.fSearch[data-scope="${scope}"]`).value.trim().toLowerCase();
+  return { rating, anchor, q };
+}
+
+function filterRows(data, scope) {
+  const { rating, anchor, q } = getFilters(scope);
+  return data.filter(c =>
+    (!rating || c.rating === rating) &&
+    (!anchor || c.anchor_kind === anchor) &&
+    (!q || c.code.toLowerCase().includes(q) || (c.name||'').toLowerCase().includes(q))
+  );
+}
+
+function sortRows(rows, key, asc) {
+  const numKeys = ['day1','day1_5','day1_10','day1_excess','day1_5_excess','day1_10_excess'];
+  rows.sort((a,b) => {
+    let av = a[key], bv = b[key];
+    if (key === 'rating') { av = RATING_ORDER[av]; bv = RATING_ORDER[bv]; }
+    if (numKeys.includes(key)) { if (av===null||av===undefined) av=-Infinity; if (bv===null||bv===undefined) bv=-Infinity; }
+    if (av === null || av === undefined) av = '';
+    if (bv === null || bv === undefined) bv = '';
+    if (av < bv) return asc ? -1 : 1;
+    if (av > bv) return asc ? 1 : -1;
+    return 0;
+  });
+  return rows;
+}
+
+let sortKey = 'seq', sortAsc = true;
+function render() {
+  let rows = sortRows(filterRows(FOCUS, 'price'), sortKey, sortAsc);
+  document.getElementById('tbody').innerHTML = rows.map(c => `
+    <tr>
+      <td><span class="tag ${RATING_CLASS[c.rating]||'pending'}">${c.rating}</span></td>
+      <td>${c.name||'-'}</td>
+      <td>${c.industry||'-'}</td>
+      <td>${c.anchor_date||'-'}</td>
+      <td>${c.anchor_kind||'-'}</td>
+      <td>${pctPair(c.day1, c.day1_excess)}</td>
+      <td>${pctPair(c.day1_5, c.day1_5_excess)}</td>
+      <td>${pctPair(c.day1_10, c.day1_10_excess)}</td>
+    </tr>`).join('');
+  document.getElementById('tbl').style.display = rows.length ? 'table' : 'none';
+  document.getElementById('emptyMsg').style.display = rows.length ? 'none' : 'block';
+}
+
+let sortKey2 = 'seq', sortAsc2 = true;
+function render2() {
+  let rows = sortRows(filterRows(FOCUS, 'earnings'), sortKey2, sortAsc2);
+  document.getElementById('tbody2').innerHTML = rows.map(c => {
+    const expectMain = c.market_expect || c.expect_note || '';
+    const expectNote = [c.market_expect, c.expect_note].filter(Boolean).join('\n');
+    const predictNote = [c.predict_result, c.predict_desc].filter(Boolean).join('：');
+    const actualNote = [c.actual_result, c.actual_desc].filter(Boolean).join('：');
+    const feedbackMain = c.actual_price_reaction || c.predict_price_reaction || '';
+    const feedbackNote = [
+      c.predict_price_reaction ? '预告后：' + c.predict_price_reaction : '',
+      c.actual_price_reaction ? '业绩后：' + c.actual_price_reaction : ''
+    ].filter(Boolean).join('\n');
+    return `
+    <tr>
+      <td><span class="tag ${RATING_CLASS[c.rating]||'pending'}">${c.rating}</span></td>
+      <td>${c.code}</td>
+      <td>${c.name||'-'}</td>
+      <td>${c.anchor_date||'-'}</td>
+      <td>${noteCell(expectMain, expectNote)}</td>
+      <td>${noteCell(c.predict_result, predictNote)}</td>
+      <td>${noteCell(c.actual_result, actualNote)}</td>
+      <td>${noteCell(feedbackMain, feedbackNote)}</td>
+    </tr>`;
+  }).join('');
+  document.getElementById('tbl2').style.display = rows.length ? 'table' : 'none';
+  document.getElementById('emptyMsg2').style.display = rows.length ? 'none' : 'block';
+}
+
+let sortKey3 = 'seq', sortAsc3 = true;
+function render3() {
+  let rows = sortRows(filterRows(TMT, 'tmt'), sortKey3, sortAsc3);
+  document.getElementById('tbody3').innerHTML = rows.map(c => `
+    <tr>
+      <td><span class="tag ${RATING_CLASS[c.rating]||'pending'}">${c.rating}</span></td>
+      <td>${c.name||'-'}</td>
+      <td>${c.industry||'-'}</td>
+      <td>${c.anchor_date||'-'}</td>
+      <td>${pctPair(c.day1, c.day1_excess)}</td>
+      <td>${pctPair(c.day1_5, c.day1_5_excess)}</td>
+      <td>${pctPair(c.day1_10, c.day1_10_excess)}</td>
+    </tr>`).join('');
+  document.getElementById('tbl3').style.display = rows.length ? 'table' : 'none';
+  document.getElementById('emptyMsg3').style.display = rows.length ? 'none' : 'block';
+}
+
+document.querySelectorAll('th[data-k]').forEach(th => {
+  th.addEventListener('click', () => {
+    const kk = th.dataset.k;
+    if (sortKey === kk) sortAsc = !sortAsc; else { sortKey = kk; sortAsc = true; }
+    render();
+  });
+});
+document.querySelectorAll('th[data-k2]').forEach(th => {
+  th.addEventListener('click', () => {
+    const kk = th.dataset.k2;
+    if (sortKey2 === kk) sortAsc2 = !sortAsc2; else { sortKey2 = kk; sortAsc2 = true; }
+    render2();
+  });
+});
+document.querySelectorAll('th[data-k3]').forEach(th => {
+  th.addEventListener('click', () => {
+    const kk = th.dataset.k3;
+    if (sortKey3 === kk) sortAsc3 = !sortAsc3; else { sortKey3 = kk; sortAsc3 = true; }
+    render3();
+  });
+});
+
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('.tab-panel').forEach(p => p.style.display = 'none');
+    document.getElementById('panel-' + btn.dataset.tab).style.display = '';
+  });
+});
+
+document.querySelectorAll('.fRating, .fAnchor').forEach(el => el.addEventListener('change', () => {
+  render(); render2(); render3();
+}));
+document.querySelectorAll('.fSearch').forEach(el => el.addEventListener('input', () => {
+  render(); render2(); render3();
+}));
+
+const tooltipEl = document.getElementById('tooltip');
+document.body.addEventListener('mouseover', e => {
+  const el = e.target.closest('.text-note');
+  if (!el) return;
+  tooltipEl.textContent = decodeURIComponent(el.dataset.note);
+  tooltipEl.style.display = 'block';
+});
+document.body.addEventListener('mousemove', e => {
+  if (tooltipEl.style.display !== 'block') return;
+  const pad = 16;
+  let x = e.clientX + pad, y = e.clientY + pad;
+  const maxX = window.innerWidth - tooltipEl.offsetWidth - pad;
+  const maxY = window.innerHeight - tooltipEl.offsetHeight - pad;
+  tooltipEl.style.left = Math.min(x, Math.max(pad, maxX)) + 'px';
+  tooltipEl.style.top = Math.min(y, Math.max(pad, maxY)) + 'px';
+});
+document.body.addEventListener('mouseout', e => {
+  if (e.target.closest('.text-note')) tooltipEl.style.display = 'none';
+});
+
+render(); render2(); render3();
+</script>
+</body>
+</html>
