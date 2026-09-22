@@ -1,0 +1,523 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>电子布 · PCB产业链</title>
+<style>
+:root {
+  --bg:#f8f9fa; --card:#fff; --border:#e9ecef;
+  --text:#212529; --text2:#6c757d;
+  --accent:#0891b2; --up:#16a34a; --dn:#dc2626; --warn:#d97706;
+  --up-bg:#f0fdf4; --dn-bg:#fef2f2; --warn-bg:#fffbeb;
+  --tag-bg:#ecfeff; --tag:#0e7490;
+  --sh: 0 1px 3px rgba(0,0,0,.08),0 1px 2px rgba(0,0,0,.04);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;background:var(--bg);color:var(--text);font-size:14px;line-height:1.6}
+
+/* header */
+.hdr{background:var(--card);border-bottom:1px solid var(--border);padding:14px 28px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:var(--sh)}
+.hdr-l{display:flex;align-items:center;gap:12px}
+.hdr-title{font-size:19px;font-weight:700}
+.hdr-sub{font-size:11px;color:var(--text2)}
+.back-link{display:inline-flex;align-items:center;gap:4px;font-size:11px;color:var(--text2);text-decoration:none;padding:4px 10px;border:1px solid var(--border);border-radius:6px;background:var(--bg);white-space:nowrap}.back-link:hover{color:var(--accent);border-color:var(--accent)}
+.badge-up{display:inline-flex;align-items:center;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600;background:var(--up-bg);color:var(--up);border:1px solid #86efac}
+.badge-tag{display:inline-flex;align-items:center;padding:3px 10px;border-radius:12px;font-size:11px;background:var(--tag-bg);color:var(--tag);border:1px solid #a5f3fc}
+.hdr-meta{font-size:11px;color:var(--text2);text-align:right}
+
+/* layout */
+.wrap{max-width:1360px;margin:0 auto;padding:20px 28px}
+
+/* section title */
+.st{font-size:13px;font-weight:700;margin-bottom:11px;padding-bottom:6px;border-bottom:2px solid var(--accent);display:flex;align-items:center;gap:6px}
+
+/* card */
+.card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:16px 18px;box-shadow:var(--sh)}
+
+/* kpi grid */
+.kpi-g{display:grid;grid-template-columns:repeat(4,1fr);gap:11px;margin-bottom:20px}
+.kpi .lbl{font-size:10px;color:var(--text2);text-transform:uppercase;letter-spacing:.4px;margin-bottom:4px}
+.kpi .val{font-size:19px;font-weight:700;margin-bottom:3px}
+.kpi .note{font-size:10px;color:var(--text2)}
+.c-up{color:var(--up)} .c-warn{color:var(--warn)} .c-dn{color:var(--dn)}
+
+/* criteria */
+.crit-g{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:20px}
+.crit .cl{font-size:10px;font-weight:700;color:var(--text2);text-transform:uppercase;margin-bottom:3px}
+.crit .cv{font-size:12px;font-weight:600;margin-bottom:2px}
+.crit .cn{font-size:10px;color:var(--text2)}
+
+/* ── TABS ── */
+.tab-nav{display:flex;gap:0;border-bottom:2px solid var(--border);margin-bottom:14px}
+.tab-btn{padding:8px 16px;font-size:12px;font-weight:600;color:var(--text2);background:none;border:none;cursor:pointer;white-space:nowrap;border-bottom:2px solid transparent;margin-bottom:-2px;transition:color .15s,border-color .15s}
+.tab-btn:hover{color:var(--accent)}
+.tab-btn.active{color:var(--accent);border-bottom-color:var(--accent)}
+.tab-pane{display:none}
+.tab-pane.active{display:block}
+
+/* company table */
+.ctable{width:100%;border-collapse:collapse;margin-bottom:14px;font-size:12px}
+.ctable th{text-align:left;padding:6px 8px;font-size:10px;font-weight:600;color:var(--text2);background:var(--bg);border-bottom:1px solid var(--border);white-space:nowrap}
+.ctable td{padding:8px 8px;border-bottom:1px solid var(--border);vertical-align:middle}
+.ctable tr:last-child td{border-bottom:none}
+.ctable tr:hover td{background:#fafbfc}
+.ctable td strong{white-space:nowrap}
+.tab-step-hd{display:flex;align-items:center;gap:10px;font-size:13px;font-weight:700;color:var(--text);padding:8px 12px;background:var(--bg);border-left:3px solid var(--accent);border-radius:0 6px 6px 0;margin-bottom:12px}
+.tab-step-hd .step-num{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:50%;background:var(--accent);color:#fff;font-size:11px;font-weight:800;flex-shrink:0}
+.tab-step-hd .step-note{margin-left:auto;font-size:10px;font-weight:400;color:var(--text2)}
+
+/* assessment badges */
+.a-super{display:inline-block;padding:1px 7px;border-radius:3px;font-size:10px;font-weight:700;background:var(--up-bg);color:var(--up);border:1px solid #86efac}
+.a-meet{display:inline-block;padding:1px 7px;border-radius:3px;font-size:10px;font-weight:700;background:var(--tag-bg);color:var(--tag);border:1px solid #a5f3fc}
+.a-miss{display:inline-block;padding:1px 7px;border-radius:3px;font-size:10px;font-weight:700;background:var(--warn-bg);color:var(--warn);border:1px solid #fcd34d}
+.a-na{display:inline-block;padding:1px 7px;border-radius:3px;font-size:10px;color:var(--text2);background:var(--bg);border:1px solid var(--border)}
+
+/* yoy numbers */
+.yp{color:var(--up);font-weight:600} .yn{color:var(--dn);font-weight:600}
+code{font-size:10px;background:var(--tag-bg);color:var(--tag);padding:1px 5px;border-radius:3px}
+
+/* segment summary */
+.seg-sum{font-size:12px;color:var(--text2);background:var(--bg);border-radius:6px;padding:10px 12px;border-left:3px solid var(--accent);margin-top:8px}
+
+/* charts row */
+.chart-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px}
+.chart-box{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:14px 16px}
+.chart-box h4{font-size:10px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:.4px;margin-bottom:10px}
+.chart-wrap{position:relative;height:180px}
+
+/* summary table */
+.sum-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;margin-bottom:20px}
+.sum-item{padding:10px 12px;border-radius:8px;background:var(--card);border:1px solid var(--border)}
+.sum-seg{font-size:10px;font-weight:700;color:var(--text2);margin-bottom:3px}
+.sum-val{font-size:12px;font-weight:600}
+.sum-note{font-size:10px;color:var(--text2);margin-top:2px}
+
+/* bottom grids */
+.b-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px}
+.tl-item{display:flex;gap:10px;padding:8px 0;border-bottom:1px solid var(--border)}
+.tl-item:last-child{border-bottom:none}
+.tl-dot{width:8px;height:8px;border-radius:50%;margin-top:5px;flex-shrink:0}
+.tl-d-p{background:var(--warn)} .tl-d-t{background:var(--accent)} .tl-d-r{background:var(--dn)}
+.tl-date{font-size:10px;color:var(--text2);white-space:nowrap;min-width:60px;margin-top:2px}
+.tl-evt{font-size:12px;font-weight:500}
+.tl-meta{font-size:10px;color:var(--text2);margin-top:1px}
+.tl-st{font-size:10px;padding:1px 6px;border-radius:3px;white-space:nowrap;align-self:flex-start;margin-top:2px}
+.st-p{background:var(--warn-bg);color:var(--warn)}
+.st-t{background:var(--tag-bg);color:var(--tag)}
+.st-r{background:var(--dn-bg);color:var(--dn)}
+
+.j-grid{display:grid;grid-template-columns:2fr 1fr;gap:12px;margin-bottom:20px}
+.logic-box{font-size:13px;line-height:1.8;background:var(--bg);border-radius:6px;padding:12px 14px;border-left:3px solid var(--accent);margin-bottom:10px}
+.strat-g{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.strat-i{padding:7px 9px;border-radius:6px;font-size:11px}
+.s-core{background:var(--up-bg);border:1px solid #86efac}
+.s-atk{background:var(--tag-bg);border:1px solid #a5f3fc}
+.s-wch{background:var(--warn-bg);border:1px solid #fcd34d}
+.strat-l{font-size:10px;font-weight:700;margin-bottom:2px}
+.risk-i{display:flex;gap:6px;margin-bottom:6px;font-size:12px}
+.rn{background:var(--dn-bg);color:var(--dn);font-size:10px;font-weight:700;padding:1px 5px;border-radius:3px;flex-shrink:0;margin-top:2px}
+
+/* 2Q26 earnings module */
+.earn-hero{background:linear-gradient(135deg,#ecfeff 0%,#fff 52%,#f0fdf4 100%);border:1px solid #bae6fd;border-radius:12px;padding:18px 20px;margin-bottom:16px;box-shadow:var(--sh)}
+.earn-head{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:14px}
+.earn-title{font-size:18px;font-weight:800;letter-spacing:.1px}
+.earn-sub{font-size:11px;color:var(--text2);margin-top:3px}
+.earn-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.earn-kpi{background:rgba(255,255,255,.86);border:1px solid var(--border);border-radius:8px;padding:11px 12px}
+.earn-kpi .ek{font-size:10px;font-weight:700;color:var(--text2);margin-bottom:4px}
+.earn-kpi .ev{font-size:13px;font-weight:700;line-height:1.45}
+.earn-kpi .en{font-size:10px;color:var(--text2);margin-top:4px;line-height:1.45}
+.earn-split{display:grid;grid-template-columns:1.15fr .85fr;gap:12px;margin-bottom:14px}
+.earn-list{display:grid;gap:8px}
+.earn-item{padding:9px 11px;background:var(--bg);border-radius:7px;border-left:3px solid var(--accent);font-size:12px;line-height:1.65}
+.earn-item.warn{border-left-color:var(--warn);background:var(--warn-bg)}
+.earn-item.risk{border-left-color:var(--dn);background:var(--dn-bg)}
+.table-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.table-scroll .ctable{min-width:980px}
+.source-note{font-size:10px;color:var(--text2);padding:9px 11px;background:#f8fafc;border:1px dashed #cbd5e1;border-radius:7px;line-height:1.55}
+.callout-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.callout{border:1px solid var(--border);border-radius:8px;padding:11px 12px;background:#fff}
+.callout h4{font-size:12px;margin-bottom:5px;color:var(--accent)}
+.callout p,.callout li{font-size:11px;color:var(--text2);line-height:1.65}
+.callout ul{padding-left:16px}
+
+@media(max-width:900px){.kpi-g{grid-template-columns:repeat(2,1fr)}.chart-row{grid-template-columns:1fr}.crit-g{grid-template-columns:1fr}.b-grid{grid-template-columns:1fr}.j-grid{grid-template-columns:1fr}.sum-grid{grid-template-columns:repeat(2,1fr)}.earn-grid{grid-template-columns:repeat(2,1fr)}.earn-split,.callout-grid{grid-template-columns:1fr}}
+
+/* ── 折叠功能 ── */
+.st {
+  cursor: pointer;
+  user-select: none;
+  justify-content: space-between;
+}
+.st-arrow {
+  font-size: 13px;
+  color: var(--text2);
+  transition: transform 0.25s ease;
+  display: inline-block;
+  flex-shrink: 0;
+}
+.sec-body {
+  overflow: hidden;
+  transition: max-height 0.35s cubic-bezier(0.4,0,0.2,1), opacity 0.25s ease;
+  max-height: 9999px;
+  opacity: 1;
+}
+.sec-body.collapsed {
+  max-height: 0 !important;
+  opacity: 0;
+}
+.st.collapsed .st-arrow {
+  transform: rotate(-90deg);
+}
+
+/* ── Tooltip（修订历史 / 数据冲突）── */
+.tip-host {
+  border-bottom: 1px dashed var(--accent);
+  cursor: help;
+  display: inline;
+}
+.tip-host::after {
+  content: '▲';
+  font-size: 7px;
+  color: var(--accent);
+  vertical-align: super;
+  margin-left: 2px;
+  opacity: 0.65;
+}
+.tip-bubble {
+  display: none;
+  position: fixed;
+  z-index: 9999;
+  background: #1e293b;
+  color: #f1f5f9;
+  border-radius: 8px;
+  padding: 10px 13px;
+  font-size: 11px;
+  line-height: 1.5;
+  min-width: 240px;
+  max-width: 320px;
+  box-shadow: 0 6px 20px rgba(0,0,0,.3);
+  pointer-events: none;
+}
+.tip-bubble.visible { display: block; }
+.tip-title {
+  font-size: 10px;
+  font-weight: 700;
+  color: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: .5px;
+  margin-bottom: 7px;
+  padding-bottom: 5px;
+  border-bottom: 1px solid rgba(255,255,255,.1);
+}
+.tip-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 0;
+  border-bottom: 1px solid rgba(255,255,255,.05);
+}
+.tip-row:last-of-type { border-bottom: none; }
+.tip-date { color: #94a3b8; white-space: nowrap; min-width: 44px; font-size: 10px; }
+.tip-val  { font-weight: 600; flex: 1; }
+.tip-delta-up { color: #4ade80; font-size: 10px; }
+.tip-delta-dn { color: #f87171; font-size: 10px; }
+.tip-delta-eq { color: #94a3b8; font-size: 10px; }
+.tip-src  { color: #64748b; font-size: 10px; white-space: nowrap; }
+.tip-note {
+  font-size: 10px;
+  color: #94a3b8;
+  margin-top: 7px;
+  padding-top: 6px;
+  border-top: 1px solid rgba(255,255,255,.1);
+  line-height: 1.6;
+}
+.tip-conflict-row { display: flex; flex-direction: column; gap: 3px; padding: 4px 0; border-bottom: 1px solid rgba(255,255,255,.05); }
+.tip-conflict-row:last-of-type { border-bottom: none; }
+.tip-conflict-src { color: #fbbf24; font-size: 10px; }
+.tip-conflict-val { font-size: 11px; }
+.tip-chosen { color: #4ade80; font-size: 10px; margin-top: 5px; padding-top: 5px; border-top: 1px solid rgba(255,255,255,.1); }
+
+
+.split-header{display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap;margin:18px 0 22px}
+.split-header h1{font-size:28px;line-height:1.25;margin:3px 0 5px}
+.split-header p{color:var(--text2);font-size:12px;margin:0}
+.split-nav{display:flex;gap:7px;flex-wrap:wrap;margin:12px 0 18px}
+.split-nav a{font-size:12px;font-weight:700;padding:7px 11px;border:1px solid var(--border);border-radius:6px;background:var(--card);color:var(--text2);text-decoration:none}
+.split-nav a:hover,.split-nav a[aria-current="page"]{color:var(--accent);border-color:var(--accent);background:var(--tag-bg)}
+.split-source{font-size:11px;color:var(--text2);margin:24px 0;padding:12px;border:1px solid var(--border);border-radius:6px;background:var(--bg)}
+.split-main .tab-pane{display:block}
+.svg-chart,.svg-chart svg{width:100%;height:100%;display:block}
+@media(max-width:800px){.split-header h1{font-size:22px}.split-main .ctable{display:block;overflow-x:auto}}
+</style><style>
+/* industry-dashboard-shell:start */
+:root{--bg:#f4f6f1;--card:#fff;--paper:#fff;--border:#dce2d8;--line:#dce2d8;
+ --text:#1d292c;--text-primary:#1d292c;--text2:#667477;--text-secondary:#667477;
+ --accent:#247052;--deep:#23483f;--green:#247052}
+body{background:#f4f6f1!important;font-family:"Microsoft YaHei","PingFang SC","Segoe UI",sans-serif}
+.industry-shell{position:relative;z-index:101;display:flex;align-items:center;gap:10px 14px;
+ flex-wrap:wrap;padding:11px max(20px,calc((100vw - 1280px)/2));background:#23483f;
+ color:#fff;font:500 12px/1.5 "Microsoft YaHei","PingFang SC",sans-serif}
+.industry-shell *{box-sizing:border-box}
+.industry-shell a{color:#d7f2df!important;text-decoration:none!important;font-weight:700}
+.industry-shell a:hover{text-decoration:underline!important}
+.industry-shell__name{font-weight:800;font-size:13px;color:#fff}
+.industry-shell__kind{border:1px solid #91bd9e;border-radius:999px;padding:2px 8px;color:#e9f8ed}
+.industry-shell__asof{margin-left:auto;color:#e2efe5}
+body a[data-industry-legacy-back="1"]{display:none!important}
+@media(max-width:680px){.industry-shell{padding:10px 15px}.industry-shell__asof{margin-left:0;width:100%}}
+/* industry-dashboard-shell:end */
+</style></head>
+<body><!-- industry-dashboard-shell:start --><nav class="industry-shell" aria-label="行业看板统一导航"><a href="../industry-fundamentals-entry.html">行业看板</a><span aria-hidden="true">/</span><span class="industry-shell__name">电子布 · PCB产业链</span><span class="industry-shell__kind">环节专题</span><span class="industry-shell__asof">数据日期与口径见正文</span></nav><!-- industry-dashboard-shell:end --><!-- industry-review:start --><aside class="industry-review" style="padding:10px 20px;background:#fff8e5;color:#665424;font-size:12px;line-height:1.7;border-bottom:1px solid #e7ddbc"><strong>口径说明 · 页面修订2026-09-22</strong>｜需求4600、供给2640的情景缺口约42.6%；实际供给需结合各厂投产与认证，不将规划产能全部当已投产。</aside><!-- industry-review:end --><div class="wrap split-main">
+<header class="split-header"><div><a class="back-link" href="../industry-fundamentals-entry.html" data-industry-legacy-back="1">← 行业基本面入口</a><h1>电子布</h1><p>高端布规格、织机约束与供需格局。</p></div><a class="back-link" href="PCB-dashboard.html">返回 PCB 总览</a></header>
+<nav class="split-nav" aria-label="PCB看板导航"><a href="PCB-dashboard.html">总览</a><a href="pcb-manufacturing-dashboard.html">PCB 制造</a><a href="ccl-dashboard.html">CCL 覆铜板</a><a href="electronic-cloth-dashboard.html" aria-current="page">电子布</a><a href="drill-dashboard.html">钻针</a><a href="pcb-equipment-dashboard.html">PCB 设备</a></nav>
+
+<div class="st">电子布 · 竞争格局与跟踪数据</div>
+<div class="card"><div class="tab-pane active" id="tab-cloth">
+    <table class="ctable">
+      <thead><tr><th>公司</th><th>代码</th><th>披露状态</th><th>26Q2收入</th><th>收入YoY</th><th>26Q2毛利率</th><th>毛利率YoY</th><th>26Q2扣非</th><th>扣非YoY</th><th>口径 / 跟踪点</th></tr></thead>
+      <tbody>
+        <tr><td><strong>宏和科技</strong></td><td><code>603256</code></td><td><span class="a-meet">已披露</span></td><td>6.06亿</td><td><span class="yp">+99.0%</span></td><td>62.0%</td><td><span class="yp">+28.0pct</span></td><td>2.35亿</td><td><span class="yp">+325.7%</span></td><td style="color:var(--text2)">公司整体口径，非电子布单产品利润</td></tr>
+        <tr><td><strong>菲利华</strong></td><td><code>300395</code></td><td><span class="a-meet">已披露</span></td><td>6.86亿</td><td><span class="yp">+36.8%</span></td><td>49.5%</td><td><span class="yp">+0.9pct</span></td><td>1.39亿</td><td><span class="yp">+28.5%</span></td><td style="color:var(--text2)">石英材料及电子布等公司整体口径</td></tr>
+        <tr><td><strong>中材科技</strong></td><td><code>002080</code></td><td><span class="a-meet">已披露</span></td><td>94.03亿</td><td><span class="yp">+20.2%</span></td><td>21.5%</td><td><span class="yp">+0.4pct</span></td><td>6.44亿</td><td><span class="yp">+15.6%</span></td><td style="color:var(--text2)">玻纤、风电叶片及隔膜等公司整体口径</td></tr>
+      </tbody>
+    </table>
+    <div style="font-size:11px;color:var(--text2);padding:8px 10px;background:#f8fafc;border-radius:6px;margin:8px 0"><strong>26Q2财务口径：</strong>本表为26Q2单季度合并报表，YoY对比25Q2。宏和数据取 <a title="本地研究底稿，未随公开看板发布" aria-disabled="true">季度对比工作簿</a>；菲利华、中材收入及毛利率取 <a title="本地研究底稿，未随公开看板发布" aria-disabled="true">产业链工作簿</a>，扣非分别按 <a href="https://disc.static.szse.cn/download/disc/disk03/finalpage/2026-08-21/d488efaf-d064-4b5e-ab75-6060e9a7c2a5.PDF">菲利华半年报</a>和 <a href="https://disc.static.szse.cn/disc/disk03/finalpage/2026-08-18/8574aa65-18bd-4f05-af40-d22adc758aff.PDF">中材科技半年报</a>减一季报计算。业绩状态只表示已披露，不代表超预期。</div>
+    <div style="font-size:11px;color:var(--text2);margin:10px 0">下方价格、产能及供需测算沿用前期调研，尚未按26Q2财报逐项验证。</div>
+    <!-- 价格分层体系 -->
+    <div style="margin-top:16px;margin-bottom:6px;font-weight:700;font-size:12px;color:var(--accent)">▍ 产品价格分层体系（26年5月）</div>
+    <table class="ctable">
+      <thead><tr><th>产品类型</th><th>当前价格</th><th>代表用途</th><th>核心供应商</th><th>壁垒</th></tr></thead>
+      <tbody>
+        <tr><td>普通7628厚布</td><td><strong>6.6元/米</strong> <span style="color:var(--text2);font-size:10px">↑ 持续涨价</span></td><td>标准FR-4 CCL</td><td>巨石/中材/国际复材</td><td style="color:var(--text2)">低</td></tr>
+        <tr><td>薄布（1080/2116）</td><td><strong>~9元/米</strong></td><td>多层PCB中间层</td><td>宏和/国际复材</td><td>中</td></tr>
+        <tr><td>Low-Dk一代</td><td><strong>25-30元/米</strong></td><td>AI服务器主板（M7级CCL）</td><td>宏和/中材/国际复材</td><td style="color:var(--up)">高</td></tr>
+        <tr><td>Low-Dk二代</td><td><strong>100-110元/米</strong></td><td>AI服务器主板（M8级CCL）</td><td>国际复材/中材</td><td style="color:var(--up)">极高</td></tr>
+        <tr><td>Low-CTE</td><td><strong>80-240元/米</strong>（均价100元）</td><td>ABF载板/BT载板</td><td><strong>宏和（核心）</strong></td><td style="color:var(--up)">极高</td></tr>
+        <tr style="background:#fefce8"><td><strong>Q布（石英布）</strong></td><td><strong>~220元/米</strong></td><td>正交背板/LPU/Rubin Ultra</td><td><strong>菲利华（独家）</strong></td><td style="color:var(--dn);font-weight:700">最高·独家</td></tr>
+      </tbody>
+    </table>
+    <div style="font-size:11px;color:var(--text2);margin:4px 0 12px;padding:6px 10px;background:#f8f9fa;border-radius:5px">
+      普通布→Q布价格跨越33倍；当前月缺口3,000-4,000万米（占需求10%+），库存降至<strong>7天</strong>（近乎零库存）
+    </div>
+
+    <!-- 厂商月产能对比 -->
+    <div style="margin-top:4px;margin-bottom:6px;font-weight:700;font-size:12px;color:var(--accent)">▍ 厂商AI电子布月产能对比（前期26Q2调研口径，待复核）</div>
+    <table class="ctable">
+      <thead><tr><th>公司</th><th>Low-Dk一代</th><th>Low-Dk二代</th><th>Low-CTE</th><th>Q布</th><th>主要客户</th></tr></thead>
+      <tbody>
+        <tr><td><strong>宏和科技</strong> <code>603256</code></td><td>60万米/月</td><td>5-10万米/月</td><td><span class="yp"><strong>25-30万米/月</strong></span></td><td>—</td><td>利森诺科(ABF)、三菱瓦斯(BT)、谷歌TPU</td></tr>
+        <tr><td><strong>国际复材</strong></td><td>少量</td><td><span class="yp"><strong>40-50万米/月</strong></span></td><td>少量</td><td>—</td><td>Resonac（已获认证）</td></tr>
+        <tr><td>中材科技 <code>002080</code></td><td>120万米+/月</td><td>扩产中</td><td>10-15万米/月</td><td>小批量</td><td>国内云厂综合</td></tr>
+        <tr style="background:#fefce8"><td><strong>菲利华</strong> <code>300395</code></td><td>—</td><td>—</td><td>—</td><td><strong>独家</strong></td><td>英伟达/深南/健鼎等</td></tr>
+        <tr><td>中国巨石</td><td>普通布绝对龙头</td><td>研发中</td><td>研发中</td><td>—</td><td>综合客户</td></tr>
+      </tbody>
+    </table>
+    <div style="font-size:11px;color:var(--dn);margin:4px 0 12px;padding:6px 10px;background:#fef2f2;border-radius:5px;border-left:3px solid var(--dn)">
+      ⚠ <strong>二代布缺口警示：</strong>2026年需求4,600万米，供给仅2,640万米/年（220万米/月），缺口达<strong>43%</strong>
+    </div>
+
+    <!-- 织机瓶颈 -->
+    <div style="margin-top:4px;margin-bottom:6px;font-weight:700;font-size:12px;color:var(--accent)">▍ 织机瓶颈量化（最硬的供给约束）</div>
+    <table class="ctable">
+      <thead><tr><th>维度</th><th>数据</th><th>含义</th></tr></thead>
+      <tbody>
+        <tr><td>Toyota织机交期</td><td><span class="yn"><strong>2026年1月订→2028Q3到货；当前订→2030年下半年</strong></span></td><td>交期从1年暴增至4年+</td></tr>
+        <tr><td>AI布单台年产效</td><td><strong>7-8万米</strong>（vs 普通布28-30万米）</td><td>效率仅普通布的 <strong style="color:var(--dn)">1/4</strong></td></tr>
+        <tr><td>2027年AI布所需织机</td><td>~3,000台</td><td>Toyota仅能供给约2,400台，<strong>缺口600台</strong></td></tr>
+        <tr><td>国产织机（万利/日发/泰坦）</td><td style="color:var(--warn)">良率稳定性不足</td><td>短期1-2年内不能规模替代丰田</td></tr>
+      </tbody>
+    </table>
+
+    <!-- 菲利华Q布独立逻辑 -->
+    <div style="margin-top:14px;margin-bottom:6px;font-weight:700;font-size:12px;color:var(--accent)">▍ 石英电子布（Q布）独立逻辑 — 菲利华2027年期权</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px">
+      <div style="padding:10px 12px;background:#fefce8;border-radius:8px;border:1px solid #fde68a">
+        <div style="font-weight:700;font-size:12px;margin-bottom:6px;color:#92400e">性能壁垒（不可替代）</div>
+        <div style="font-size:11px;color:var(--text2);line-height:1.7">
+          介电损耗DF：<strong>1-2‱</strong>（vs Low-Dk二代12-14‱，vs M9要求≤7‱）<br>
+          热膨胀系数：<strong>0.55PPM</strong>（vs PTFE 50-200PPM）<br>
+          → 唯一同时满足低损耗+低膨胀的方案
+        </div>
+      </div>
+      <div style="padding:10px 12px;background:#eff6ff;border-radius:8px;border:1px solid #93c5fd">
+        <div style="font-weight:700;font-size:12px;margin-bottom:6px;color:#1d4ed8">应用时间线（2027年才兑现）</div>
+        <div style="font-size:11px;color:var(--text2);line-height:1.7">
+          2026年Q3-Q4：LPU推理引擎 + 正交背板起量<br>
+          <strong>2027年：Rubin Ultra全面采用（最大场景）</strong><br>
+          NVL72单柜950米；若1.5万柜→新增1,400万米需求<br>
+          2025年菲利华Q布收入：<strong>0.98亿元</strong>（微小基数）
+        </div>
+      </div>
+    </div>
+
+    <div class="seg-sum"><strong>双重逻辑并存：</strong>普通布/AI布（宏和/国际复材/中材）受益于当下景气；菲利华Q布是完全不同的2027年期权——现在收入微小，但Rubin Ultra落地后将是最大应用场景。织机交期暴增至4年+、AI布产效仅普通布1/4，是整个AI PCB供应链的最上游瓶颈，普通布涨价逻辑持续至2026年底，二代布缺口43%是最强的供需信号。</div>
+    <div class="chart-row" style="margin-top:14px">
+      <div class="chart-box"><h4>电子布 — 季度收入（亿元）</h4><div class="chart-wrap"><div id="c-cloth-rev" class="svg-chart"></div></div></div>
+      <div class="chart-box"><h4>电子布 — 毛利率（%）</h4><div class="chart-wrap"><div id="c-cloth-gm" class="svg-chart"></div></div></div>
+    </div>
+  </div></div>
+<p class="split-source">本页由原 PCB 研究看板的「电子布」分栏迁出，原有表格及季度图表数据保留。公司财务表及季度趋势已更新至 2026Q2；其余产品、价格和产能资料保留原调研日期，2Q26 跨环节更新见 <a href="PCB-dashboard.html">PCB 总览</a>。<a title="本地研究底稿，未随公开看板发布" aria-disabled="true">查看拆分前历史完整版</a>。</p>
+</div>
+<script>const QTR = ['23Q1','23Q2','23Q3','23Q4','24Q1','24Q2','24Q3','24Q4','25Q1','25Q2','25Q3','25Q4','26Q1','26Q2'];
+const COLORS = ['#0891b2','#16a34a','#8b5cf6','#d97706','#f43f5e','#64748b'];
+
+// ── 修订历史 & 数据冲突 数据字典 ──
+// 维护说明：每次数字更新时，把旧值连同来源移入 records，新值写入看板表格
+// type: 'history' = 同一指标的时间修订序列
+// type: 'conflict' = 多来源说法不同，需标注采用哪个
+const tipData = {
+
+  'dingtech-capacity': {
+    type: 'history',
+    label: '鼎泰高科 — 月产量修订记录',
+    records: [
+      { date: '2026Q1实际', value: '1.3亿支/月', delta: '↑', source: '鼎泰高科纪要' },
+      { date: '2025年11月底', value: '1.15亿支/月', delta: '↑', source: '2025Q3交流会' },
+      { date: '2025Q4', value: '1.1亿支/月', delta: '↑', source: '鼎泰高科纪要' },
+      { date: '2025H1', value: '~1.0亿支/月', delta: '↑', source: '鼎泰高科纪要' },
+      { date: '2024均', value: '~8,500万支/月', delta: '—', source: '鼎泰高科纪要' },
+    ],
+    note: '目标：2026年中1.5亿→2026年底2亿→2027年极限2.5亿 | 持续上修=供不应求确认'
+  },
+
+  'ccl-fr4-price': {
+    type: 'history',
+    label: 'FR-4 CCL 价格（元/张）修订记录',
+    records: [
+      { date: '2026年Q1', value: '150-200元/张', delta: '↑', source: '中金/国泰海通研报' },
+      { date: '2026年1月', value: '日本龙头宣布3月起涨30%', delta: '↑', source: '开源研报' },
+      { date: '2025年底', value: '累计涨价25个点以上', delta: '↑', source: '开源研报' },
+      { date: '2025年中', value: '120-130元/张', delta: '↑', source: '建滔4轮涨价' },
+      { date: '2025年初', value: '~100元/张', delta: '—', source: '中金研报' },
+    ],
+    note: '2021年历史高点210-220元/张；本轮接近但未超历史高点 | 建滔2025年共涨4轮，2026年已涨2轮'
+  },
+
+  'diamond-drill-status': {
+    type: 'conflict',
+    label: '金刚石钻针 — 替代威胁评估',
+    sources: [
+      { source: '市场担忧', value: '金刚石钻针可能替代传统钨钢针，改变鼎泰/金洲竞争格局' },
+      { source: '研报核实（天风/长江机械）', value: '实验室阶段，全球年产仅~56万只（月均不足5万支），是鼎泰单月产量的0.04%' },
+      { source: '行业定位', value: '补充方案而非替代；传统钨钢+TEC/PVD涂层升级仍是主流且成本更优' },
+    ],
+    chosen: '短期1-2年内不影响竞争格局；主要参与者（沃尔德/四方达）仍在少数客户测试中，未进小批量出货',
+    note: '⚠ 长期（3年+）技术路线仍有不确定性，需持续跟踪测试进展'
+  },
+
+  'zhongwu-aip-share': {
+    type: 'conflict',
+    label: 'AI PCB钻针市占率 — 来源分歧',
+    sources: [
+      { source: '中钨金洲纪要260512（自述）', value: '80%+（AiP PCB，0.2mm以上规格）' },
+      { source: '鼎泰高科纪要（自述）',       value: '全球最大，目标40%+（全规格PCB钻针）' },
+      { source: '产量推算交叉验证',            value: '鼎泰1.3亿 vs 金洲9,000万 → 产量比≈59:41，80%不可信' },
+    ],
+    chosen: '金洲80%可能特指AiP载板最后一道通孔工序（极小径超长径比），金洲是该子分类唯一批量供应商；整体AI PCB钻针份额两强接近，实际以产量比59:41更可信',
+    note: '⚠ 自述市占率存在口径选择偏差，企业倾向于选对自己最有利的子分类'
+  }
+
+};
+
+// ── Tooltip 渲染逻辑 ──
+const tipBubble = document.createElement('div');
+tipBubble.className = 'tip-bubble';
+document.body.appendChild(tipBubble);
+
+function buildTipHtml(key) {
+  const d = tipData[key];
+  if (!d) return '';
+  const icon = d.type === 'history' ? '📅' : '⚠️';
+  let html = `<div class="tip-title">${icon} ${d.label}</div>`;
+  if (d.type === 'history') {
+    d.records.forEach(r => {
+      const dc = r.delta === '↑' ? 'tip-delta-up' : r.delta === '↓' ? 'tip-delta-dn' : 'tip-delta-eq';
+      html += `<div class="tip-row">
+        <span class="tip-date">${r.date}</span>
+        <span class="tip-val">${r.value}</span>
+        <span class="${dc}">${r.delta}</span>
+        <span class="tip-src">${r.source}</span>
+      </div>`;
+    });
+  } else if (d.type === 'conflict') {
+    d.sources.forEach(s => {
+      html += `<div class="tip-conflict-row">
+        <span class="tip-conflict-src">来源：${s.source}</span>
+        <span class="tip-conflict-val">${s.value}</span>
+      </div>`;
+    });
+    if (d.chosen) html += `<div class="tip-chosen">✓ 采用：${d.chosen}</div>`;
+  }
+  if (d.note) html += `<div class="tip-note">${d.note}</div>`;
+  return html;
+}
+
+function positionTip(e) {
+  const bw = tipBubble.offsetWidth, bh = tipBubble.offsetHeight;
+  const x = e.clientX + 14, y = e.clientY + 14;
+  tipBubble.style.left = (x + bw > window.innerWidth - 10 ? e.clientX - bw - 14 : x) + 'px';
+  tipBubble.style.top  = (y + bh > window.innerHeight - 10 ? e.clientY - bh - 14 : y) + 'px';
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('[data-tip]').forEach(el => {
+    el.classList.add('tip-host');
+    el.addEventListener('mouseenter', e => {
+      tipBubble.innerHTML = buildTipHtml(el.dataset.tip);
+      tipBubble.classList.add('visible');
+      positionTip(e);
+    });
+    el.addEventListener('mousemove', positionTip);
+    el.addEventListener('mouseleave', () => tipBubble.classList.remove('visible'));
+  });
+});
+
+
+
+function renderTrend(id, companies, metric) {
+  const host = document.getElementById(id); if (!host) return;
+  const W=700,H=220,left=39,right=12,top=37,bottom=29;
+  const vals=companies.flatMap(c=>c[metric]).map(v=>metric==='gm'?v*100:v);
+  const lo=metric==='gm'?Math.floor((Math.min(...vals)-2)/5)*5:0;
+  const hi=Math.ceil((Math.max(...vals)+2)/5)*5;
+  const x=i=>left+(W-left-right)*i/(QTR.length-1);
+  const y=v=>top+(H-top-bottom)*(hi-v)/(hi-lo);
+  const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  let svg=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${metric==='gm'?'季度毛利率':'季度收入'}趋势图" preserveAspectRatio="xMidYMid meet">`;
+  for(let i=0;i<=4;i++){const v=lo+(hi-lo)*i/4, yy=y(v);svg+=`<line x1="${left}" y1="${yy}" x2="${W-right}" y2="${yy}" stroke="#e5eaf0"/><text x="${left-5}" y="${yy+3}" text-anchor="end" fill="#64748b" font-size="9">${v.toFixed(0)}${metric==='gm'?'%':''}</text>`;}
+  QTR.forEach((q,i)=>{if(i%2===0||i===QTR.length-1)svg+=`<text x="${x(i)}" y="${H-8}" text-anchor="middle" fill="#64748b" font-size="9">${q}</text>`;});
+  companies.forEach((c,i)=>{const color=COLORS[i%COLORS.length],vs=c[metric].map(v=>metric==='gm'?v*100:v);svg+=`<polyline points="${vs.map((v,j)=>`${x(j)},${y(v)}`).join(' ')}" fill="none" stroke="${color}" stroke-width="2.4" stroke-linejoin="round"/><circle cx="${x(vs.length-1)}" cy="${y(vs.at(-1))}" r="3.5" fill="${color}"/>`;});
+  let lx=left;companies.forEach((c,i)=>{svg+=`<line x1="${lx}" y1="15" x2="${lx+13}" y2="15" stroke="${COLORS[i%COLORS.length]}" stroke-width="3"/><text x="${lx+17}" y="18" fill="#334155" font-size="10">${esc(c.name)}</text>`;lx+=Math.max(80,28+String(c.name).length*11);});
+  host.innerHTML=svg+'</svg>';
+}
+function mkRevChart(id, companies){renderTrend(id,companies,'rev')}
+function mkGmChart(id, companies){renderTrend(id,companies,'gm')}
+function renderCapex(){
+  const host=document.getElementById('c-pcb-capex');if(!host)return;
+  const years=['2018','2019','2020','2021','2022','2023','2024','2025','2026E'];
+  const series=[
+    ['鹏鼎控股',[40.4,38.5,54.5,69.7,43.4,35.1,28.4,66.3,168],'#7c3aed'],
+    ['胜宏科技',[11.6,14.8,21,15.4,10.6,6.4,8.3,66.2,200],'#dc2626'],
+    ['深南电路',[11.8,21.8,24.9,26.6,33.8,32.5,25.3,37.7,94.3],'#0891b2'],
+    ['沪电股份',[2.7,4.4,3.7,5,8.8,8.1,21.5,32,70.4],'#16a34a'],
+    ['景旺电子',[5.3,9.2,18.8,23.9,18.9,14.5,18.5,27.7,60.9],'#d97706'],
+    ['生益电子',[2.7,5.8,10.7,9.8,6.9,6.2,4.2,16.4,49.2],'#94a3b8']];
+  const W=700,H=240,L=37,R=10,T=27,B=45,max=700,step=(W-L-R)/years.length,bw=step*.55;
+  const y=v=>H-B-(H-T-B)*v/max;
+  let svg=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="PCB厂资本开支堆叠柱状图" preserveAspectRatio="none">`;
+  for(let v=0;v<=700;v+=175){let yy=y(v);svg+=`<line x1="${L}" y1="${yy}" x2="${W-R}" y2="${yy}" stroke="#e5eaf0"/><text x="${L-5}" y="${yy+3}" text-anchor="end" fill="#64748b" font-size="9">${v}</text>`;}
+  years.forEach((yr,j)=>{let sum=0,x=L+step*j+(step-bw)/2;series.forEach(s=>{let val=s[1][j],h=y(sum)-y(sum+val);svg+=`<rect x="${x}" y="${y(sum+val)}" width="${bw}" height="${h}" fill="${s[2]}"><title>${s[0]} ${yr}：${val}亿元</title></rect>`;sum+=val;});svg+=`<text x="${x+bw/2}" y="${H-B+14}" text-anchor="middle" fill="#64748b" font-size="9">${yr}</text>`;});
+  let lx=L;series.forEach(s=>{svg+=`<rect x="${lx}" y="${H-17}" width="8" height="8" fill="${s[2]}"/><text x="${lx+11}" y="${H-9}" fill="#334155" font-size="9">${s[0]}</text>`;lx+=100;});host.innerHTML=svg+'</svg>';
+}
+
+const D = {
+  cloth: [
+    {"name": "宏和科技", "rev": [1.22262, 1.65968, 2.08593, 1.64332, 1.89922, 2.1777, 2.11105, 2.15837, 2.45995, 3.04373, 3.02092, 3.18574, 4.421, 6.05739], "gm": [0.16375, 0.044743, 0.052112, 0.122223, 0.121682, 0.177326, 0.18991, 0.19991, 0.280625, 0.340246, 0.349183, 0.434706, 0.556546, 0.62035]},
+    {"name": "菲利华", "rev": [4.99176, 5.23581, 4.71862, 5.95924, 4.10249, 5.04662, 3.98648, 4.28252, 4.06261, 5.01584, 4.73681, 6.34824, 6.21733, 6.861], "gm": [0.45571, 0.544803, 0.514381, 0.46805, 0.396374, 0.454698, 0.412324, 0.415884, 0.499553, 0.486242, 0.484682, 0.439259, 0.507405, 0.495455]},
+    {"name": "中材科技", "rev": [42.55054, 81.24383, 58.52294, 76.57726, 44.30318, 61.09894, 62.7047, 71.73167, 55.05599, 78.25842, 83.69177, 84.9487, 68.54349, 94.03017], "gm": [0.280829, 0.239138, 0.224394, 0.25203, 0.19434, 0.176709, 0.168009, 0.151734, 0.185417, 0.211195, 0.190699, 0.170327, 0.209424, 0.215493]},
+  ],
+};
+
+mkRevChart('c-cloth-rev', D.cloth);
+mkGmChart('c-cloth-gm', D.cloth);
+
+</script></body></html>

@@ -246,13 +246,31 @@ code{font-size:10px;background:var(--tag-bg);color:var(--tag);padding:1px 5px;bo
 .gap-fill{height:100%;border-radius:5px}
 @media(max-width:900px){.tech-cmp-g{grid-template-columns:1fr}}
 </style>
-</head>
-<body>
+<style>
+/* industry-dashboard-shell:start */
+:root{--bg:#f4f6f1;--card:#fff;--paper:#fff;--border:#dce2d8;--line:#dce2d8;
+ --text:#1d292c;--text-primary:#1d292c;--text2:#667477;--text-secondary:#667477;
+ --accent:#247052;--deep:#23483f;--green:#247052}
+body{background:#f4f6f1!important;font-family:"Microsoft YaHei","PingFang SC","Segoe UI",sans-serif}
+.industry-shell{position:relative;z-index:101;display:flex;align-items:center;gap:10px 14px;
+ flex-wrap:wrap;padding:11px max(20px,calc((100vw - 1280px)/2));background:#23483f;
+ color:#fff;font:500 12px/1.5 "Microsoft YaHei","PingFang SC",sans-serif}
+.industry-shell *{box-sizing:border-box}
+.industry-shell a{color:#d7f2df!important;text-decoration:none!important;font-weight:700}
+.industry-shell a:hover{text-decoration:underline!important}
+.industry-shell__name{font-weight:800;font-size:13px;color:#fff}
+.industry-shell__kind{border:1px solid #91bd9e;border-radius:999px;padding:2px 8px;color:#e9f8ed}
+.industry-shell__asof{margin-left:auto;color:#e2efe5}
+body a[data-industry-legacy-back="1"]{display:none!important}
+@media(max-width:680px){.industry-shell{padding:10px 15px}.industry-shell__asof{margin-left:0;width:100%}}
+/* industry-dashboard-shell:end */
+</style></head>
+<body><!-- industry-dashboard-shell:start --><nav class="industry-shell" aria-label="行业看板统一导航"><a href="../industry-fundamentals-entry.html">行业看板</a><span aria-hidden="true">/</span><span class="industry-shell__name">先进封装研究看板</span><span class="industry-shell__kind">行业总览</span><span class="industry-shell__asof">数据日期与口径见正文</span></nav><!-- industry-dashboard-shell:end --><!-- industry-review:start --><aside class="industry-review" style="padding:10px 20px;background:#fff8e5;color:#665424;font-size:12px;line-height:1.7;border-bottom:1px solid #e7ddbc"><strong>口径说明 · 页面修订2026-09-22</strong>｜财务、估值和调研资料分别截至原模块日期。国内CoWoS-L产能/良率与CoWoS-S占比，以及甬矽量产/利用率存在已披露冲突；维持待核，不据此推算确定份额。</aside><!-- industry-review:end -->
 
 <!-- ── Header ── -->
 <div class="hdr">
   <div class="hdr-l">
-    <a class="back-link" href="../industry-fundamentals-entry.html">← 行业基本面入口</a>
+    <a class="back-link" href="../industry-fundamentals-entry.html" data-industry-legacy-back="1">← 行业基本面入口</a>
     <div class="hdr-title">🔬 先进封装</div>
     <div class="hdr-sub">CoWoS · TSV · Hybrid Bonding · RDL · 2.5D/3D Packaging</div>
     <span class="badge-up">🟢 AI算力驱动封装重构</span>
@@ -504,7 +522,7 @@ code{font-size:10px;background:var(--tag-bg);color:var(--tag);padding:1px 5px;bo
 </div>
 
 <div class="card" style="margin-bottom:16px">
-  <div style="font-weight:700;font-size:12px;margin-bottom:8px">主要客户产能分配（2027E，台积电口径）</div>
+  <div style="font-weight:700;font-size:12px;margin-bottom:8px">主要客户产能分配（2027E，含台积电及非台厂商）</div><p style="color:#765d20">口径核验：AMD含非台27万、AWS含非台0.36万；总额与主要分项未勾稽，NVDA差13.2万、AMD差2万、AVGO差8.6万、AWS差3.24万。差额待核，不是新增订单。</p>
   <table class="ctable">
     <thead><tr><th>客户</th><th class="num">总量（万片）</th><th class="num">份额</th><th class="num">YoY</th><th>CoWoS类型细分 · 用途</th></tr></thead>
     <tbody>

@@ -148,14 +148,32 @@ code{font-size:10px;background:var(--tag-bg);color:var(--tag);padding:1px 5px;bo
 .img-lightbox.visible{display:flex}
 .img-lightbox img{max-width:92vw;max-height:92vh;border-radius:6px;box-shadow:0 10px 40px rgba(0,0,0,.5)}
 </style>
-</head>
-<body>
+<style>
+/* industry-dashboard-shell:start */
+:root{--bg:#f4f6f1;--card:#fff;--paper:#fff;--border:#dce2d8;--line:#dce2d8;
+ --text:#1d292c;--text-primary:#1d292c;--text2:#667477;--text-secondary:#667477;
+ --accent:#247052;--deep:#23483f;--green:#247052}
+body{background:#f4f6f1!important;font-family:"Microsoft YaHei","PingFang SC","Segoe UI",sans-serif}
+.industry-shell{position:relative;z-index:101;display:flex;align-items:center;gap:10px 14px;
+ flex-wrap:wrap;padding:11px max(20px,calc((100vw - 1280px)/2));background:#23483f;
+ color:#fff;font:500 12px/1.5 "Microsoft YaHei","PingFang SC",sans-serif}
+.industry-shell *{box-sizing:border-box}
+.industry-shell a{color:#d7f2df!important;text-decoration:none!important;font-weight:700}
+.industry-shell a:hover{text-decoration:underline!important}
+.industry-shell__name{font-weight:800;font-size:13px;color:#fff}
+.industry-shell__kind{border:1px solid #91bd9e;border-radius:999px;padding:2px 8px;color:#e9f8ed}
+.industry-shell__asof{margin-left:auto;color:#e2efe5}
+body a[data-industry-legacy-back="1"]{display:none!important}
+@media(max-width:680px){.industry-shell{padding:10px 15px}.industry-shell__asof{margin-left:0;width:100%}}
+/* industry-dashboard-shell:end */
+</style></head>
+<body><!-- industry-dashboard-shell:start --><nav class="industry-shell" aria-label="行业看板统一导航"><a href="../industry-fundamentals-entry.html">行业看板</a><span aria-hidden="true">/</span><span class="industry-shell__name">国产存储研究看板</span><span class="industry-shell__kind">行业总览</span><span class="industry-shell__asof">数据日期与口径见正文</span></nav><!-- industry-dashboard-shell:end --><!-- industry-review:start --><aside class="industry-review" style="padding:10px 20px;background:#fff8e5;color:#665424;font-size:12px;line-height:1.7;border-bottom:1px solid #e7ddbc"><strong>口径说明 · 页面修订2026-09-22</strong>｜财务主要截至2026Q1。Lam/KLA/TEL/Advantest四家26Q1沿用上季的占位值已在表格显式标注，并从最新季度图表点隐藏；原数组保留备查，不按新增实际计算增长。长存长鑫CapEx为情景。</aside><!-- industry-review:end -->
 
-<div class="img-lightbox" id="imgLightbox"><img id="imgLightboxPic" src="" alt=""></div>
+<div class="img-lightbox" id="imgLightbox"><img id="imgLightboxPic" src="domestic-storage-dashboard.html" alt=""></div>
 
 <header class="hdr">
   <div class="hdr-l">
-    <a class="back-link" href="../industry-fundamentals-entry.html">← 行业基本面入口</a>
+    <a class="back-link" href="../industry-fundamentals-entry.html" data-industry-legacy-back="1">← 行业基本面入口</a>
     <span class="hdr-title">国产存储产业链</span>
     <span class="hdr-sub">长存长鑫扩产 · 先进封装与HBM设备 · 先进制程 · 缺货涨价</span>
     <span class="badge-warn">🟡 结构分化</span>
@@ -707,13 +725,13 @@ code{font-size:10px;background:var(--tag-bg);color:var(--tag);padding:1px 5px;bo
     <tbody>
       <tr><td><code>AMAT.O</code></td><td><strong>应用材料</strong></td><td>79.10亿美元</td><td class="yp">+11.4%</td><td>49.9%</td></tr>
       <tr><td><code>ASML.O</code></td><td><strong>阿斯麦</strong></td><td>101.04亿美元</td><td class="yp">+20.4%</td><td>53.0%</td></tr>
-      <tr><td><code>LRCX.O</code></td><td>拉姆研究</td><td>53.45亿美元<span class="cap-pending"></span></td><td class="yp">+13.2%</td><td>49.6%</td></tr>
-      <tr><td><code>KLAC.O</code></td><td>科天半导体(KLA)</td><td>32.97亿美元<span class="cap-pending"></span></td><td class="yp">+7.6%</td><td>61.5%</td></tr>
-      <tr><td><code>8035.T</code></td><td>东京电子</td><td>42.44亿美元<span class="cap-pending"></span></td><td class="yn">-3.9%</td><td>45.2%</td></tr>
-      <tr><td><code>6857.T</code></td><td>爱德万测试</td><td>17.71亿美元<span class="cap-pending"></span></td><td class="yp">+13.2%</td><td>62.2%</td></tr>
+      <tr><td><code>LRCX.O</code></td><td>拉姆研究</td><td>53.45亿美元<small>（沿用上季，非本季实际）</small></td><td class="yp" title="占位对应值，非26Q1新增观测">+13.2%</td><td>49.6%</td></tr>
+      <tr><td><code>KLAC.O</code></td><td>科天半导体(KLA)</td><td>32.97亿美元<small>（沿用上季，非本季实际）</small></td><td class="yp" title="占位对应值，非26Q1新增观测">+7.6%</td><td>61.5%</td></tr>
+      <tr><td><code>8035.T</code></td><td>东京电子</td><td>42.44亿美元<small>（沿用上季，非本季实际）</small></td><td class="yn" title="占位对应值，非26Q1新增观测">-3.9%</td><td>45.2%</td></tr>
+      <tr><td><code>6857.T</code></td><td>爱德万测试</td><td>17.71亿美元<small>（沿用上季，非本季实际）</small></td><td class="yp" title="占位对应值，非26Q1新增观测">+13.2%</td><td>62.2%</td></tr>
     </tbody>
   </table>
-  <div style="font-size:10px;color:var(--text2);margin:-4px 0 14px">注：标*的拉姆研究/KLA/东京电子/爱德万测试最新一季（26Q1）财报尚未发布，数据库中为上一季度数值的占位延续，仅AMAT/ASML为已发布实际数据；下方两张趋势图中可见对应公司曲线末端走平。</div>
+  <div style="font-size:10px;color:var(--text2);margin:-4px 0 14px">注：标*的拉姆研究/KLA/东京电子/爱德万测试最新一季（26Q1）原底稿未收录，数据库中为上一季度数值的占位延续（不代表截至今天仍未发布），仅AMAT/ASML为已发布实际数据；下方两张趋势图已隐藏这四家的26Q1占位点，原值仅保存在数据数组供追溯。</div>
 
   <div class="chart-row">
     <div class="chart-box"><h4>六大设备龙头季度营收（亿美元，21Q1-26Q1）</h4><div class="chart-wrap" style="height:240px"><canvas id="c-overseas-rev"></canvas></div></div>
@@ -1005,7 +1023,7 @@ code{font-size:10px;background:var(--tag-bg);color:var(--tag);padding:1px 5px;bo
     data: {
       labels,
       datasets: Object.keys(rev).map((name, i) => ({
-        label: name, data: rev[name],
+        label: name, data: rev[name].map((v,j)=> j===labels.length-1 && ['拉姆研究','科天半导体(KLA)','东京电子','爱德万测试'].includes(name) ? null : v),
         borderColor: colors[i], backgroundColor: 'transparent',
         tension: 0.25, pointRadius: 0, borderWidth: 1.5,
       }))
@@ -1039,7 +1057,7 @@ code{font-size:10px;background:var(--tag-bg);color:var(--tag);padding:1px 5px;bo
     data: {
       labels,
       datasets: Object.keys(gm).map((name, i) => ({
-        label: name, data: gm[name],
+        label: name, data: gm[name].map((v,j)=> j===labels.length-1 && ['拉姆研究','科天半导体(KLA)','东京电子','爱德万测试'].includes(name) ? null : v),
         borderColor: colors[i], backgroundColor: 'transparent',
         tension: 0.25, pointRadius: 0, borderWidth: 1.5, spanGaps: true,
       }))

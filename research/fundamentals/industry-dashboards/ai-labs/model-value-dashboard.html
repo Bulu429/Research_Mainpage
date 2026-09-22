@@ -1,0 +1,536 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>模型性价比 · AI Labs 看板</title>
+<style>
+:root{--ink:#17211e;--muted:#687570;--bg:#f4f3ee;--panel:#ffffff;--panel2:#edf2ee;--line:#d7ded9;--z:#e45732;--m:#168b70;--gold:#9b7119;--danger:#b33f3f;--shadow:0 16px 42px rgba(31,48,42,.09)}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:radial-gradient(circle at 12% 0,#e5eee8 0,transparent 31%),radial-gradient(circle at 90% 2%,#f5e8de 0,transparent 26%),var(--bg);color:var(--ink);font:14px/1.7 "Noto Serif SC","Source Han Serif SC","Microsoft YaHei",serif}.shell{max-width:1320px;margin:auto;padding:0 28px 56px}.top{position:sticky;top:0;z-index:20;margin:0 -28px;padding:14px 28px;display:flex;align-items:center;justify-content:space-between;background:rgba(244,243,238,.9);backdrop-filter:blur(18px);border-bottom:1px solid var(--line)}.back{color:var(--muted);text-decoration:none;font:600 12px/1 sans-serif}.back:hover{color:var(--ink)}.stamp{font:11px/1.2 ui-monospace,Consolas,monospace;color:var(--muted);letter-spacing:.08em}.hero{padding:56px 0 30px;display:grid;grid-template-columns:1.35fr .65fr;gap:34px;align-items:end}.eyebrow{font:700 12px/1 sans-serif;letter-spacing:.22em;color:var(--gold);text-transform:uppercase}.hero h1{font-size:clamp(42px,7vw,84px);line-height:.98;margin:14px 0 20px;letter-spacing:-.055em;max-width:900px}.hero h1 em{font-style:normal;color:var(--z)}.lede{max-width:820px;color:#465650;font-size:17px}.hero-note{border-left:1px solid var(--line);padding-left:24px;color:var(--muted)}.hero-note strong{display:block;color:var(--ink);font-size:24px;margin-bottom:6px}.nav{display:flex;gap:8px;flex-wrap:wrap;border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:11px 0;margin-bottom:26px}.tab{appearance:none;border:0;background:transparent;color:var(--muted);padding:10px 14px;border-radius:999px;cursor:pointer;font:700 13px/1 sans-serif}.tab:hover{color:var(--ink);background:#e7ebe7}.tab.active{background:var(--ink);color:#fff}.pane{display:none}.pane.active{display:block;animation:rise .35s ease both}@keyframes rise{from{opacity:0;transform:translateY(8px)}}.grid{display:grid;gap:16px}.g4{grid-template-columns:repeat(4,1fr)}.g3{grid-template-columns:repeat(3,1fr)}.g2{grid-template-columns:repeat(2,1fr)}.card{--tone:var(--gold);position:relative;background:linear-gradient(150deg,#fff,#fafbf8);border:1px solid var(--line);border-radius:18px;padding:22px;box-shadow:var(--shadow);overflow:hidden}.card:before{content:"";position:absolute;inset:0 auto auto 0;width:100%;height:2px;background:linear-gradient(90deg,var(--tone,var(--gold)),transparent)}.label{font:700 11px/1.3 sans-serif;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}.value{font:700 clamp(24px,3vw,38px)/1.1 sans-serif;margin:12px 0 7px}.delta{font:600 12px/1.5 sans-serif;color:var(--tone,var(--gold))}.note{color:var(--muted);font-size:12px}.section-head{display:flex;align-items:end;justify-content:space-between;gap:18px;margin:34px 0 14px}.section-head h2{font-size:26px;line-height:1.2;margin:0}.section-head p{margin:0;color:var(--muted);max-width:700px}.company{display:flex;gap:12px;align-items:center}.sigil{width:42px;height:42px;border-radius:13px;display:grid;place-items:center;background:var(--tone);color:#fff;font:900 16px/1 sans-serif}.company h3{margin:0;font-size:19px}.company small{color:var(--muted);font:12px/1.4 sans-serif}.bar-row{display:grid;grid-template-columns:150px 1fr 72px;gap:12px;align-items:center;margin:13px 0}.track{height:10px;border-radius:10px;background:#e4e9e5;overflow:hidden}.fill{height:100%;width:var(--w);background:var(--tone);border-radius:10px}.bar-row b{text-align:right;font:700 12px/1 sans-serif}.callout{margin-top:16px;padding:15px 17px;border-radius:12px;background:#fbfaf5;border:1px dashed var(--line);color:#52615d}.callout strong{color:var(--tone)}table{width:100%;border-collapse:collapse;min-width:720px}th,td{text-align:left;border-bottom:1px solid var(--line);padding:12px 10px;vertical-align:top}th{color:var(--muted);font:700 11px/1.3 sans-serif;letter-spacing:.08em;text-transform:uppercase}td b{font-family:ui-monospace,Consolas,monospace}.table-wrap{overflow:auto}.pill{display:inline-block;border:1px solid var(--line);border-radius:999px;padding:3px 9px;color:#4f5e59;font:700 11px/1.4 sans-serif}.source{font-size:12px;color:var(--muted)}.source a{color:#126e5a}.timeline{border-left:1px solid var(--line);margin-left:7px;padding-left:24px}.event{position:relative;padding:0 0 22px}.event:before{content:"";position:absolute;left:-29px;top:7px;width:9px;height:9px;border-radius:50%;background:var(--tone);box-shadow:0 0 0 5px var(--bg)}.event time{font:700 11px/1 sans-serif;color:var(--tone)}.event h4{margin:6px 0 3px;font-size:15px}.event p{margin:0;color:var(--muted)}.thesis{font-size:18px;line-height:1.75;border-left:3px solid var(--tone);padding-left:18px}.risk{display:flex;gap:12px;margin:13px 0}.risk i{font-style:normal;color:var(--danger)}.footnote{margin-top:30px;padding-top:18px;border-top:1px solid var(--line);color:var(--muted);font-size:11px}.z{--tone:var(--z)}.m{--tone:var(--m)}.gold{--tone:var(--gold)}.arr-feature{padding:26px 28px 20px;margin-bottom:18px}.arr-head{display:flex;justify-content:space-between;gap:18px;align-items:start;margin-bottom:8px}.arr-head h2{margin:4px 0 5px;font-size:28px;line-height:1.2}.arr-head p{margin:0;color:var(--muted)}.arr-legend{display:flex;gap:14px;flex-wrap:wrap;font:700 12px/1.4 sans-serif}.arr-legend span{display:flex;align-items:center;gap:7px}.arr-legend i{width:24px;height:3px;border-radius:4px;background:var(--tone)}.arr-chart{width:100%;height:auto;display:block}.arr-chart text{font-family:ui-monospace,Consolas,monospace;fill:var(--muted);font-size:12px}.arr-chart .gridline{stroke:#dfe4df;stroke-width:1}.arr-chart .zline{fill:none;stroke:var(--z);stroke-width:5;stroke-linecap:round;stroke-linejoin:round}.arr-chart .mline{fill:none;stroke:var(--m);stroke-width:5;stroke-linecap:round;stroke-linejoin:round}.arr-chart .weekline{fill:none;stroke:var(--z);stroke-width:2;stroke-dasharray:6 6}.arr-chart .zpoint{fill:#fff;stroke:var(--z);stroke-width:4}.arr-chart .mpoint{fill:#fff;stroke:var(--m);stroke-width:4}.arr-chart .weekpoint{fill:#fff;stroke:var(--z);stroke-width:2;stroke-dasharray:3 2}.arr-chart .value-label{fill:var(--ink);font-weight:700;font-size:13px}.arr-milestones{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:4px}.arr-milestones div{padding:10px 12px;background:#f5f6f2;border:1px solid var(--line);border-radius:10px}.arr-milestones b{display:block;font:800 15px/1.4 sans-serif}.arr-milestones small{color:var(--muted)}
+@media(max-width:920px){.hero,.g4,.g3,.g2{grid-template-columns:1fr 1fr}.hero{align-items:start}.hero-note{border-left:0;padding-left:0}.g4 .card:last-child{grid-column:span 2}}
+@media(max-width:620px){.shell{padding:0 16px 40px}.top{margin:0 -16px;padding:13px 16px}.hero,.g4,.g3,.g2{grid-template-columns:1fr}.g4 .card:last-child{grid-column:auto}.hero{padding-top:42px}.stamp{display:none}.bar-row{grid-template-columns:112px 1fr 58px}.section-head,.arr-head{display:block}.section-head p{margin-top:8px}.arr-legend{margin-top:12px}.arr-feature{padding:20px 14px 16px}.arr-milestones{grid-template-columns:1fr 1fr}}
+.arr-chart .alline{fill:none;stroke:#7c3aed;stroke-width:5;stroke-linecap:round;stroke-linejoin:round}
+.arr-chart .kmline{fill:none;stroke:#be185d;stroke-width:3;stroke-dasharray:6 5;stroke-linecap:round;stroke-linejoin:round}
+.arr-chart .alpoint{fill:#fff;stroke:#7c3aed;stroke-width:4}
+.arr-chart .bypoint{fill:#fff;stroke:#2f6fd0;stroke-width:4}
+.arr-chart .kmpoint{fill:#be185d;stroke:none}
+.arr-chart .dspoint{fill:#0e7490;stroke:none}
+.pr-chart{width:100%;display:block;margin:6px 0 4px}
+.pr-chart text{font:600 12px/1 ui-monospace,Consolas,monospace;fill:var(--muted)}
+.pr-chart .pr-zgl{fill:none;stroke:#e45732;stroke-width:4.5;stroke-linecap:round;stroke-linejoin:round}
+.pr-chart .pr-dsl{fill:none;stroke:#0e7490;stroke-width:3;stroke-dasharray:8 5;stroke-linecap:round;stroke-linejoin:round}
+.pr-chart .pr-mml{fill:none;stroke:#168b70;stroke-width:3;stroke-dasharray:3 4;stroke-linecap:round;stroke-linejoin:round}
+.pr-chart .pr-kml{fill:none;stroke:#be185d;stroke-width:4.5;stroke-linecap:round;stroke-linejoin:round}
+.pr-chart .pr-zgp{fill:#fff;stroke:#e45732;stroke-width:4}
+.pr-chart .pr-dsp{fill:#0e7490;stroke:none}
+.pr-chart .pr-mmp{fill:#fff;stroke:#168b70;stroke-width:4}
+.pr-chart .pr-kmp{fill:#be185d;stroke:none}
+.pr-chart .value-label text{fill:var(--ink);font-weight:700;font-size:13px;font-family:"Noto Serif SC",sans-serif}
+.pr-chart .pr-note{fill:#9b7119;font-weight:700;font-size:12px;font-family:"Noto Serif SC",sans-serif}
+/* ===== 逐家价格史：单块密排（仅本区块生效） ===== */
+@media(max-width:1000px){table{min-width:0}}
+.pricebook{padding:20px 20px 12px}
+.pricebook .pb-head{margin:0 0 13px;align-items:center}
+.pricebook .pb-head h2{font-size:23px}
+.pricebook .pb-head p{font-size:12.5px;max-width:660px}
+.pb-stamp{font:600 11px/1 ui-monospace,Consolas,monospace;color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:5px 10px;white-space:nowrap}
+.pb-cols{column-count:2;column-gap:14px}
+.pbi{--tone:var(--gold);break-inside:avoid;-webkit-column-break-inside:avoid;page-break-inside:avoid;background:#fbfcf9;border:1px solid var(--line);border-radius:12px;padding:10px 12px 11px;margin:0 0 12px}
+.pbi .label{font-size:10.5px;margin-bottom:4px}
+.pbi .table-wrap{overflow:visible}
+.pbi table{min-width:0;width:100%;font-size:12.5px}
+.pbi th,.pbi td{padding:4px 6px;font-size:12.5px;line-height:1.45;vertical-align:middle;border-bottom:1px solid #e8ece8}
+.pbi th{padding:3px 6px;font-size:10px;letter-spacing:.04em}
+.pbi tbody tr:last-child td{border-bottom:0}
+.pbi th:nth-child(1),.pbi td:nth-child(1){overflow-wrap:anywhere}
+.pbi th:nth-child(2),.pbi td:nth-child(2),.pbi th:nth-child(3),.pbi td:nth-child(3){white-space:nowrap}
+.pbi td b{font-size:12.5px}
+.pbi .note{margin:6px 0 0;font-size:11.5px;line-height:1.62}
+.pbi .callout{margin:0;padding:9px 11px;font-size:11.5px;line-height:1.62;border-radius:10px}
+@media(max-width:900px){.pb-cols{column-count:1}.pricebook .pb-head{display:block}.pb-stamp{display:inline-block;margin-top:8px;white-space:normal}}
+</style>
+<style>
+/* industry-dashboard-shell:start */
+:root{--bg:#f4f6f1;--card:#fff;--paper:#fff;--border:#dce2d8;--line:#dce2d8;
+ --text:#1d292c;--text-primary:#1d292c;--text2:#667477;--text-secondary:#667477;
+ --accent:#247052;--deep:#23483f;--green:#247052}
+body{background:#f4f6f1!important;font-family:"Microsoft YaHei","PingFang SC","Segoe UI",sans-serif}
+.industry-shell{position:relative;z-index:101;display:flex;align-items:center;gap:10px 14px;
+ flex-wrap:wrap;padding:11px max(20px,calc((100vw - 1280px)/2));background:#23483f;
+ color:#fff;font:500 12px/1.5 "Microsoft YaHei","PingFang SC",sans-serif}
+.industry-shell *{box-sizing:border-box}
+.industry-shell a{color:#d7f2df!important;text-decoration:none!important;font-weight:700}
+.industry-shell a:hover{text-decoration:underline!important}
+.industry-shell__name{font-weight:800;font-size:13px;color:#fff}
+.industry-shell__kind{border:1px solid #91bd9e;border-radius:999px;padding:2px 8px;color:#e9f8ed}
+.industry-shell__asof{margin-left:auto;color:#e2efe5}
+body a[data-industry-legacy-back="1"]{display:none!important}
+@media(max-width:680px){.industry-shell{padding:10px 15px}.industry-shell__asof{margin-left:0;width:100%}}
+/* industry-dashboard-shell:end */
+
+/* ==== KILLLINE-STYLE-START（tab: killline）—— 作用域隔离，勿与看板类名混用 ==== */
+#killline{font-family:"SF Mono",Menlo,Consolas,"Courier New","Microsoft YaHei",monospace;-webkit-font-smoothing:antialiased;padding:2px 0 4px}
+#killline{--kl-paper:#f4f3ee; --kl-ink:#16150f; --kl-ink2:#5c5a50; --kl-line:#c9c6ba; --kl-hair:#dedbcf;
+  --kl-red:#c0392b; --kl-green:#1a7f5a;}
+#killline *{box-sizing:border-box;margin:0;padding:0}
+#killline .kl-sheet{max-width:1300px;margin:0 auto}
+#killline header{border-bottom:2px solid var(--kl-ink);padding-bottom:9px;margin-bottom:16px;
+  display:flex;justify-content:space-between;align-items:flex-end;gap:20px;flex-wrap:wrap}
+#killline h1{font-size:17px;letter-spacing:2.4px;font-weight:700;text-transform:uppercase}
+#killline .kl-sub{font-size:10.5px;color:var(--kl-ink2);line-height:1.65;margin-top:6px;max-width:860px}
+#killline .kl-stamp{font-size:9.5px;color:var(--kl-ink2);text-align:right;line-height:1.6;white-space:nowrap;
+  border:1px solid var(--kl-line);padding:5px 9px;border-radius:3px}
+#killline .kl-stamp b{color:var(--kl-red)}
+#killline .kl-layout{display:flex;gap:16px;align-items:flex-start}
+#killline .kl-col-chart{flex:1;min-width:0}
+#killline .kl-card{border:1px solid var(--kl-ink);background:#fbfaf6;border-radius:4px;padding:12px 12px 8px;margin-bottom:14px}
+#killline .kl-card h2{font-size:11px;letter-spacing:1.6px;text-transform:uppercase;margin-bottom:2px}
+#killline .kl-card .kl-cap{font-size:9.5px;color:var(--kl-ink2);margin-bottom:6px;line-height:1.6}
+#killline svg.kl-chart{width:100%;height:auto;display:block}
+#killline .kl-plot-bg{fill:#fbfaf6}
+#killline .kl-grid{stroke:var(--kl-hair);stroke-width:.8;shape-rendering:crispEdges}
+#killline .kl-grid-major{stroke:#b8b4a3}
+#killline text.kl-ax{font-family:inherit;font-size:9px;fill:var(--kl-ink2)}
+#killline text.kl-tick-major{fill:var(--kl-ink);font-weight:700}
+#killline text.kl-axtitle{font-family:inherit;font-size:10px;fill:var(--kl-ink);letter-spacing:.6px}
+#killline .kl-med{stroke:var(--kl-ink2);stroke-width:1;stroke-dasharray:4 4;opacity:.75}
+#killline .kl-median-tag rect{fill:var(--kl-paper);stroke:var(--kl-line);stroke-width:.8}
+#killline .kl-median-tag text{font-family:inherit;font-size:8.5px;fill:var(--kl-ink2)}
+#killline .kl-kill-area{fill:var(--kl-red);fill-opacity:.055}
+#killline .kl-kill-line{fill:none;stroke:var(--kl-red);stroke-width:2.1;stroke-dasharray:9 5;stroke-linejoin:round}
+#killline .kl-kill-tag{font-family:inherit;font-size:9.5px;fill:var(--kl-red);font-weight:700;letter-spacing:.5px}
+#killline .kl-dot{opacity:.9;stroke:#fbfaf6;stroke-width:1.1}
+#killline .kl-dot:hover{opacity:1;stroke:var(--kl-ink);stroke-width:1.6}
+#killline .kl-dot.kl-on-frontier{stroke-width:1.6;stroke:#fbfaf6}
+#killline .kl-lead{stroke:#b3ae9c;stroke-width:.7;stroke-dasharray:2 2}
+#killline .kl-dlab{font-family:inherit;font-size:8.2px;fill:var(--kl-ink2);font-weight:700;
+  paint-order:stroke;stroke:#fbfaf6;stroke-width:2.4px;stroke-linejoin:round}
+#killline .kl-dlab.kl-hl{fill:var(--kl-ink)}
+#killline g.kl-q-good rect{fill:#e8f3ea;stroke:#a9cdb6}
+#killline g.kl-q-bad rect{fill:#f6f2df;stroke:#d8cf9e}
+#killline g.kl-q-dead rect{fill:#f9e8e4;stroke:#dcae9f}
+#killline text.kl-qz{font-family:inherit;font-size:9.5px;font-weight:700;fill:var(--kl-ink)}
+#killline text.kl-qe{font-family:inherit;font-size:7.5px;fill:var(--kl-ink2);letter-spacing:.7px}
+#killline .kl-side{width:250px;flex:0 0 250px;border:1px solid var(--kl-ink);background:#fbfaf6;border-radius:4px;padding:11px}
+#killline .kl-side h3{font-size:10.5px;letter-spacing:1.5px;text-transform:uppercase;
+  border-bottom:1px solid var(--kl-line);padding-bottom:6px;margin-bottom:8px}
+#killline .kl-vrow{display:flex;align-items:center;gap:6px;font-size:9.5px;padding:3.2px 0;border-bottom:1px dotted var(--kl-hair)}
+#killline .kl-sw{width:9px;height:9px;border-radius:2px;flex:0 0 9px}
+#killline .kl-vname{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#killline .kl-vcount{color:var(--kl-ink2);flex:0 0 auto}
+#killline .kl-vbest{display:none}
+#killline .kl-side .kl-note{font-size:8.6px;color:var(--kl-ink2);line-height:1.6;margin-top:9px;padding-top:8px;border-top:1px solid var(--kl-line)}
+#killline .kl-findings{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:4px}
+#killline .kl-f{border:1px solid var(--kl-ink);background:#fbfaf6;border-radius:4px;padding:10px 11px}
+#killline .kl-f .kl-k{font-size:9px;color:var(--kl-ink2);letter-spacing:1px;text-transform:uppercase}
+#killline .kl-f .kl-v{font-size:20px;font-weight:700;margin:3px 0 2px;letter-spacing:-.3px}
+#killline .kl-f .kl-v.kl-red{color:var(--kl-red)}
+#killline .kl-f .kl-v.kl-green{color:var(--kl-green)}
+#killline .kl-f p{font-size:9.2px;color:var(--kl-ink2);line-height:1.6}
+#killline .kl-source{margin-top:14px;border-top:1px solid var(--kl-line);padding-top:9px;
+  font-size:9px;color:var(--kl-ink2);line-height:1.7}
+#killline .kl-source b{color:var(--kl-ink)}
+#killline .kl-sheet{max-width:none;margin:0}
+#killline .kl-card:last-of-type{margin-bottom:0}
+@media(max-width:1000px){
+#killline .kl-layout{flex-direction:column}
+#killline .kl-side{width:100%;flex:0 0 auto}
+#killline .kl-findings{grid-template-columns:1fr 1fr}
+}
+@media(max-width:680px){
+#killline header{flex-direction:column;align-items:flex-start}
+#killline .kl-stamp{white-space:normal;text-align:left}
+#killline .kl-findings{grid-template-columns:1fr}
+}
+/* ==== KILLLINE-STYLE-END ==== */
+
+
+</style></head>
+<body><!-- industry-dashboard-shell:start --><nav class="industry-shell" aria-label="行业看板统一导航"><a href="../industry-fundamentals-entry.html">行业看板</a><span aria-hidden="true">/</span><span class="industry-shell__name">模型性价比 · AI Labs 看板</span><span class="industry-shell__kind">专题研究</span><span class="industry-shell__asof">数据日期与口径见正文</span></nav><!-- industry-dashboard-shell:end --><!-- industry-review:start --><aside class="industry-review" style="padding:10px 20px;background:#fff8e5;color:#665424;font-size:12px;line-height:1.7;border-bottom:1px solid #e7ddbc"><strong>口径说明 · 页面修订2026-09-22</strong>｜价格记录截至2026-09-22，官方标准价、促销、地区价及媒体记录并存。篮子为100K输入+1K输出；排名只在该负载假设下成立，逐项现价与能力指数尚待原始来源复核。</aside><!-- industry-review:end --><main class="shell">
+<header class="top"><a class="back" href="../industry-fundamentals-entry.html" data-industry-legacy-back="1">← 行业基本面入口</a><div class="stamp">AI LABS / PRICE × CAPABILITY MAP / 2026-09-22</div></header>
+<section class="hero"><div><div class="eyebrow">AI Labs · Price × Capability</div><h1>模型性价比<br><em>价格 × 能力象限</em></h1><p class="lede">把 32 个主流模型的「价格」与「能力」放进同一个坐标系：横轴是一次标准调用（<b>100K 输入 + 1K 输出</b>）的美元成本，纵轴是 <b>Artificial Analysis 智能指数 v4.3</b>。红色虚线为 <b>Pareto 效率前沿</b>——线以左，每一分钱都买到最多能力；线以右，同样能力有人比你便宜。第二个 tab 是中国模型 API 定价史：12 个月内从集体降价走到 K 型分化。</p></div><aside class="hero-note"><strong>性价比最优</strong>同为 $0.0155 的篮子成本，智谱 GLM-5.3-Flash 给 42 分，DeepSeek V4.1 Flash 给 39 分——中低价段的锚点已从 DeepSeek 移到智谱。但 DeepSeek 在<b>速度</b>（236 vs 94 tokens/s）与<b>缓存价</b>（$0.003 vs $0.03）上仍领先约 10 倍，不能只看能力分。</aside></section>
+
+<nav class="nav" aria-label="看板章节">
+  <button class="tab active" data-tab="killline">模型性价比象限</button><button class="tab" data-tab="pricing">定价史</button>
+</nav>
+
+<section class="pane active" id="killline">
+<div class="kl-sheet">
+  <header>
+    <div>
+      <h1>The Value Map · Price vs. Capability</h1>
+      <p class="kl-sub">
+        复刻 ZenMux「Token 经济学」价值地图，把纵轴从<b>平台日用量</b>换成公开可查的
+        <b>Artificial Analysis 智能指数 v4.3</b>。（用量是 ZenMux 平台私有数据，无法复现；能力分可查、可验证。）
+        横轴沿用原文口径：一次标准 Coding / Agent 调用 = <b>100K 输入 + 1K 输出</b> token 的美元成本。
+        红色虚线为 <b>Pareto 效率前沿</b>（即性价比前沿）：线以左 = 每一分钱都买到最多能力；线以右 = 同样能力，有人比你便宜。
+        <b>智谱、DeepSeek、MiniMax、Anthropic、OpenAI 五家的模型全部标注名称</b>，其余厂商只标前沿成员与代表机型。
+      </p>
+    </div>
+    <div class="kl-stamp">
+      32 MODELS · 14 VENDORS<br>
+      五家全标注 · 16 个<br>
+      价格口径 2026-09-22<br>
+      <b>性价比最优：GLM-5.3-Flash</b>
+    </div>
+  </header>
+
+  <div class="kl-layout">
+    <div class="kl-col-chart">
+      <div class="kl-card">
+        <h2>① 价格 × 智能 —— 性价比象限图</h2>
+        <p class="kl-cap">点大小 = 每美元获得的智能指数（越大越划算）。虚十字为中位数，分四象限。细虚线引线 = 标签外移后的归属连线。悬停看明细。<b>红色虚线 = Pareto 前沿（性价比前沿）</b>，成员依次为：Qwen3.8-Flash-Next → GLM-5.3-Flash → Step 5 Preview → Muse Spark 1.3 → Claude Opus 5 → Claude Fable 5.1（图中简标 Fable 5.1）。最右端 Fable 5.1 与 GPT-6 Astra 完全重合（篮子成本同为 $1.05、智能指数同为 53），两色点叠在一点上。</p>
+        <svg viewBox="0 0 1080 566" class="kl-chart">
+<rect x="0" y="0" width="1080" height="566" class="kl-plot-bg"/>
+<line x1="96.0" y1="76" x2="96.0" y2="488" class="kl-grid"/>
+<text x="96.0" y="504" class="kl-ax" text-anchor="middle">$0.005</text>
+<line x1="194.4" y1="76" x2="194.4" y2="488" class="kl-grid kl-grid-major"/>
+<text x="194.4" y="504" class="kl-ax kl-tick-major" text-anchor="middle">$0.01</text>
+<line x1="292.9" y1="76" x2="292.9" y2="488" class="kl-grid"/>
+<text x="292.9" y="504" class="kl-ax" text-anchor="middle">$0.02</text>
+<line x1="423.0" y1="76" x2="423.0" y2="488" class="kl-grid"/>
+<text x="423.0" y="504" class="kl-ax" text-anchor="middle">$0.05</text>
+<line x1="521.4" y1="76" x2="521.4" y2="488" class="kl-grid kl-grid-major"/>
+<text x="521.4" y="504" class="kl-ax kl-tick-major" text-anchor="middle">$0.10</text>
+<line x1="619.9" y1="76" x2="619.9" y2="488" class="kl-grid"/>
+<text x="619.9" y="504" class="kl-ax" text-anchor="middle">$0.20</text>
+<line x1="750.0" y1="76" x2="750.0" y2="488" class="kl-grid"/>
+<text x="750.0" y="504" class="kl-ax" text-anchor="middle">$0.50</text>
+<line x1="848.4" y1="76" x2="848.4" y2="488" class="kl-grid kl-grid-major"/>
+<text x="848.4" y="504" class="kl-ax kl-tick-major" text-anchor="middle">$1.00</text>
+<line x1="96" y1="466.3" x2="906" y2="466.3" class="kl-grid"/>
+<text x="88" y="469.8" class="kl-ax" text-anchor="end">20</text>
+<line x1="96" y1="412.1" x2="906" y2="412.1" class="kl-grid"/>
+<text x="88" y="415.6" class="kl-ax" text-anchor="end">25</text>
+<line x1="96" y1="357.9" x2="906" y2="357.9" class="kl-grid"/>
+<text x="88" y="361.4" class="kl-ax" text-anchor="end">30</text>
+<line x1="96" y1="303.7" x2="906" y2="303.7" class="kl-grid"/>
+<text x="88" y="307.2" class="kl-ax" text-anchor="end">35</text>
+<line x1="96" y1="249.5" x2="906" y2="249.5" class="kl-grid"/>
+<text x="88" y="253.0" class="kl-ax" text-anchor="end">40</text>
+<line x1="96" y1="195.3" x2="906" y2="195.3" class="kl-grid"/>
+<text x="88" y="198.8" class="kl-ax" text-anchor="end">45</text>
+<line x1="96" y1="141.1" x2="906" y2="141.1" class="kl-grid"/>
+<text x="88" y="144.6" class="kl-ax" text-anchor="end">50</text>
+<line x1="96" y1="86.8" x2="906" y2="86.8" class="kl-grid"/>
+<text x="88" y="90.3" class="kl-ax" text-anchor="end">55</text>
+<polygon points="212.8,488.0 212.8,249.5 256.7,227.8 525.2,206.1 557.9,162.7 756.9,130.2 855.3,108.5 906.0,488.0" class="kl-kill-area"/>
+<polyline points="212.8,249.5 256.7,227.8 525.2,206.1 557.9,162.7 756.9,130.2 855.3,108.5" class="kl-kill-line"/>
+<g class="kl-q-good"><rect x="106.0" y="98.0" width="142" height="30" rx="3"/><text x="114.0" y="111.0" class="kl-qz">低价 · 高能</text><text x="114.0" y="123.0" class="kl-qe">VALUE PLAYS</text></g>
+<g class="kl-q-good"><rect x="606.0" y="78.0" width="142" height="30" rx="3"/><text x="614.0" y="91.0" class="kl-qz">高价 · 高能</text><text x="614.0" y="103.0" class="kl-qe">PREMIUM</text></g>
+<g class="kl-q-bad"><rect x="106.0" y="476.0" width="142" height="30" rx="3"/><text x="114.0" y="489.0" class="kl-qz">低价 · 低能</text><text x="114.0" y="501.0" class="kl-qe">CHEAP · IGNORED</text></g>
+<g class="kl-q-dead"><rect x="754.0" y="476.0" width="142" height="30" rx="3"/><text x="762.0" y="489.0" class="kl-qz">高价 · 低能</text><text x="762.0" y="501.0" class="kl-qe">DEAD ZONE</text></g>
+<line x1="507.6" y1="76" x2="507.6" y2="488" class="kl-med"/>
+<line x1="96" y1="244.1" x2="906" y2="244.1" class="kl-med"/>
+<circle cx="855.3" cy="108.5" r="4.0" fill="#d97757" class="kl-dot kl-on-frontier"><title>Claude Fable 5.1 · Anthropic&#10;篮子成本 $1.05&#10;智能指数 53.0&#10;每美元智能 50&#10;输入 $10.00 / 输出 $50.00 / 1M</title></circle>
+<circle cx="855.3" cy="108.5" r="4.0" fill="#10a37f" class="kl-dot"><title>GPT-6 Astra · OpenAI&#10;篮子成本 $1.05&#10;智能指数 53.0&#10;每美元智能 50&#10;输入 $10.00 / 输出 $50.00 / 1M</title></circle>
+<circle cx="756.9" cy="130.2" r="5.5" fill="#d97757" class="kl-dot kl-on-frontier"><title>Claude Opus 5 · Anthropic&#10;篮子成本 $0.525&#10;智能指数 51.0&#10;每美元智能 97&#10;输入 $5.00 / 输出 $25.00 / 1M</title></circle>
+<circle cx="756.9" cy="227.8" r="5.1" fill="#d97757" class="kl-dot"><title>Claude Opus 4.8 · Anthropic&#10;篮子成本 $0.525&#10;智能指数 42.0&#10;每美元智能 80&#10;输入 $5.00 / 输出 $25.00 / 1M</title></circle>
+<circle cx="725.2" cy="173.6" r="5.9" fill="#10a37f" class="kl-dot"><title>GPT-5.6 Sol · OpenAI&#10;篮子成本 $0.420&#10;智能指数 47.0&#10;每美元智能 112&#10;输入 $4.00 / 输出 $20.00 / 1M</title></circle>
+<circle cx="684.4" cy="206.1" r="6.4" fill="#be185d" class="kl-dot"><title>Kimi K3 · Moonshot&#10;篮子成本 $0.315&#10;智能指数 44.0&#10;每美元智能 140&#10;输入 $3.00 / 输出 $15.00 / 1M</title></circle>
+<circle cx="628.1" cy="227.8" r="7.2" fill="#10a37f" class="kl-dot"><title>GPT-5.6 Terra · OpenAI&#10;篮子成本 $0.212&#10;智能指数 42.0&#10;每美元智能 198&#10;输入 $2.00 / 输出 $12.00 / 1M</title></circle>
+<circle cx="628.1" cy="357.9" r="6.4" fill="#4285f4" class="kl-dot"><title>Gemini 3.1 Pro Prev. · Google&#10;篮子成本 $0.212&#10;智能指数 30.0&#10;每美元智能 142&#10;输入 $2.00 / 输出 $12.00 / 1M</title></circle>
+<circle cx="626.8" cy="271.2" r="7.0" fill="#d97757" class="kl-dot"><title>Claude Sonnet 5 · Anthropic&#10;篮子成本 $0.210&#10;智能指数 38.0&#10;每美元智能 181&#10;输入 $2.00 / 输出 $10.00 / 1M</title></circle>
+<circle cx="624.1" cy="184.4" r="7.5" fill="#1f2937" class="kl-dot"><title>Grok 4.7 · xAI&#10;篮子成本 $0.206&#10;智能指数 46.0&#10;每美元智能 223&#10;输入 $2.00 / 输出 $6.00 / 1M</title></circle>
+<circle cx="624.1" cy="206.1" r="7.4" fill="#1f2937" class="kl-dot"><title>Grok 4.6 · xAI&#10;篮子成本 $0.206&#10;智能指数 44.0&#10;每美元智能 214&#10;输入 $2.00 / 输出 $6.00 / 1M</title></circle>
+<circle cx="624.1" cy="195.3" r="7.5" fill="#7c3aed" class="kl-dot"><title>Qwen3.8 Max · Alibaba&#10;篮子成本 $0.206&#10;智能指数 45.0&#10;每美元智能 218&#10;输入 $2.00 / 输出 $6.00 / 1M</title></circle>
+<circle cx="624.1" cy="249.5" r="7.2" fill="#7c3aed" class="kl-dot"><title>Qwen3.8 2.4T A95B · Alibaba&#10;篮子成本 $0.206&#10;智能指数 40.0&#10;每美元智能 194&#10;输入 $2.00 / 输出 $6.00 / 1M</title></circle>
+<circle cx="573.6" cy="195.3" r="8.3" fill="#dc2626" class="kl-dot"><title>GLM-5.3 · Z.ai&#10;篮子成本 $0.144&#10;智能指数 45.0&#10;每美元智能 312&#10;输入 $1.40 / 输出 $4.40 / 1M</title></circle>
+<circle cx="557.9" cy="162.7" r="8.7" fill="#6366f1" class="kl-dot kl-on-frontier"><title>Muse Spark 1.3 · Meta&#10;篮子成本 $0.129&#10;智能指数 48.0&#10;每美元智能 371&#10;输入 $1.25 / 输出 $4.25 / 1M</title></circle>
+<circle cx="525.2" cy="206.1" r="9.0" fill="#0891b2" class="kl-dot kl-on-frontier"><title>Step 5 Preview · StepFun&#10;篮子成本 $0.103&#10;智能指数 44.0&#10;每美元智能 428&#10;输入 $1.00 / 输出 $2.70 / 1M</title></circle>
+<circle cx="487.5" cy="238.6" r="9.5" fill="#4285f4" class="kl-dot"><title>Gemini 3.8 Flash · Google&#10;篮子成本 $0.0788&#10;智能指数 41.0&#10;每美元智能 521&#10;输入 $0.75 / 输出 $3.75 / 1M</title></circle>
+<circle cx="479.1" cy="401.3" r="8.6" fill="#be185d" class="kl-dot"><title>Kimi K2.7 Code · Moonshot&#10;篮子成本 $0.0742&#10;智能指数 26.0&#10;每美元智能 350&#10;输入 $0.71 / 输出 $3.21 / 1M</title></circle>
+<circle cx="466.6" cy="292.8" r="9.5" fill="#4d6bfe" class="kl-dot"><title>DeepSeek V4 Pro 0813 · DeepSeek&#10;篮子成本 $0.0680&#10;智能指数 36.0&#10;每美元智能 530&#10;输入 $0.66 / 输出 $1.98 / 1M</title></circle>
+<circle cx="464.6" cy="314.5" r="9.4" fill="#dc2626" class="kl-dot"><title>GLM-5.2 · Z.ai&#10;篮子成本 $0.0670&#10;智能指数 34.0&#10;每美元智能 507&#10;输入 $0.65 / 输出 $2.04 / 1M</title></circle>
+<circle cx="385.0" cy="227.8" r="11.3" fill="#dc2626" class="kl-dot"><title>GLM-5.3-FlashX · Z.ai&#10;篮子成本 $0.0382&#10;智能指数 42.0&#10;每美元智能 1098&#10;输入 $0.37 / 输出 $1.25 / 1M</title></circle>
+<circle cx="365.2" cy="412.1" r="10.4" fill="#7c3aed" class="kl-dot"><title>Qwen3.7 Plus · Alibaba&#10;篮子成本 $0.0333&#10;智能指数 25.0&#10;每美元智能 751&#10;输入 $0.32 / 输出 $1.28 / 1M</title></circle>
+<circle cx="361.8" cy="444.6" r="10.1" fill="#4285f4" class="kl-dot"><title>Gemini 3.5 Flash-Lite · Google&#10;篮子成本 $0.0325&#10;智能指数 22.0&#10;每美元智能 677&#10;输入 $0.30 / 输出 $2.50 / 1M</title></circle>
+<circle cx="356.0" cy="368.7" r="10.9" fill="#168b70" class="kl-dot"><title>MiniMax M3 · MiniMax&#10;篮子成本 $0.0312&#10;智能指数 29.0&#10;每美元智能 930&#10;输入 $0.30 / 输出 $1.20 / 1M</title></circle>
+<circle cx="356.0" cy="444.6" r="10.2" fill="#84cc16" class="kl-dot"><title>KAT-Coder-Pro V2 · KwaiKAT&#10;篮子成本 $0.0312&#10;智能指数 22.0&#10;每美元智能 705&#10;输入 $0.30 / 输出 $1.20 / 1M</title></circle>
+<circle cx="310.6" cy="303.7" r="12.1" fill="#4d6bfe" class="kl-dot"><title>DeepSeek V4 Flash 0731 · DeepSeek&#10;篮子成本 $0.0227&#10;智能指数 35.0&#10;每美元智能 1545&#10;输入 $0.22 / 输出 $0.66 / 1M</title></circle>
+<circle cx="301.1" cy="282.0" r="12.3" fill="#10a37f" class="kl-dot"><title>GPT-5.6 Luna · OpenAI&#10;篮子成本 $0.0212&#10;智能指数 37.0&#10;每美元智能 1745&#10;输入 $0.20 / 输出 $1.20 / 1M</title></circle>
+<circle cx="257.6" cy="260.3" r="13.2" fill="#4d6bfe" class="kl-dot"><title>DeepSeek V4.1 Flash · DeepSeek&#10;篮子成本 $0.0156&#10;智能指数 39.0&#10;每美元智能 2500&#10;输入 $0.15 / 输出 $0.60 / 1M</title></circle>
+<circle cx="256.7" cy="227.8" r="13.4" fill="#dc2626" class="kl-dot kl-on-frontier"><title>GLM-5.3-Flash · Z.ai&#10;篮子成本 $0.0155&#10;智能指数 42.0&#10;每美元智能 2710&#10;输入 $0.15 / 输出 $0.50 / 1M</title></circle>
+<circle cx="245.0" cy="412.1" r="12.4" fill="#f97316" class="kl-dot"><title>MiMo-V2.5 · Xiaomi&#10;篮子成本 $0.0143&#10;智能指数 25.0&#10;每美元智能 1751&#10;输入 $0.14 / 输出 $0.28 / 1M</title></circle>
+<circle cx="237.4" cy="412.1" r="12.5" fill="#0ea5e9" class="kl-dot"><title>Hy3 · Tencent&#10;篮子成本 $0.0135&#10;智能指数 25.0&#10;每美元智能 1848&#10;输入 $0.13 / 输出 $0.53 / 1M</title></circle>
+<circle cx="212.8" cy="249.5" r="14.0" fill="#7c3aed" class="kl-dot kl-on-frontier"><title>Qwen3.8-Flash-Next · Alibaba&#10;篮子成本 $0.0114&#10;智能指数 40.0&#10;每美元智能 3515&#10;输入 $0.11 / 输出 $0.38 / 1M</title></circle>
+<line x1="257.6" y1="260.3" x2="305.3" y2="248.1" class="kl-lead"/>
+<line x1="525.2" y1="206.1" x2="503.6" y2="192.9" class="kl-lead"/>
+<line x1="212.8" y1="249.5" x2="184.7" y2="289.1" class="kl-lead"/>
+<text x="612.9" y="231.3" class="kl-dlab kl-hl" text-anchor="end">GPT-5.6 Terra</text>
+<text x="639.8" y="261.1" class="kl-dlab kl-hl" text-anchor="start">Claude Sonnet 5</text>
+<text x="865.3" y="101.5" class="kl-dlab kl-hl" text-anchor="start">Fable 5.1</text>
+<text x="745.4" y="121.7" class="kl-dlab kl-hl" text-anchor="end">Claude Opus 5</text>
+<text x="845.3" y="101.5" class="kl-dlab kl-hl" text-anchor="end">GPT-6 Astra</text>
+<text x="737.1" y="164.7" class="kl-dlab kl-hl" text-anchor="start">GPT-5.6 Sol</text>
+<text x="319.5" y="266.7" class="kl-dlab kl-hl" text-anchor="start">GPT-5.6 Luna</text>
+<text x="305.3" y="252.1" class="kl-dlab kl-hl" text-anchor="start">DeepSeek V4.1 Flash</text>
+<text x="482.2" y="313.4" class="kl-dlab kl-hl" text-anchor="start">DeepSeek V4 Pro 0813</text>
+<text x="290.5" y="307.2" class="kl-dlab kl-hl" text-anchor="end">DeepSeek V4 Flash 0731</text>
+<text x="559.3" y="184.0" class="kl-dlab kl-hl" text-anchor="end">GLM-5.3</text>
+<text x="276.1" y="211.4" class="kl-dlab kl-hl" text-anchor="start">GLM-5.3-Flash</text>
+<text x="480.1" y="302.1" class="kl-dlab kl-hl" text-anchor="start">GLM-5.2</text>
+<text x="372.9" y="354.9" class="kl-dlab kl-hl" text-anchor="start">MiniMax M3</text>
+<text x="768.0" y="219.7" class="kl-dlab kl-hl" text-anchor="start">Claude Opus 4.8</text>
+<text x="402.2" y="213.5" class="kl-dlab kl-hl" text-anchor="start">GLM-5.3-FlashX</text>
+<text x="637.6" y="173.9" class="kl-dlab" text-anchor="start">Grok 4.7</text>
+<text x="503.6" y="196.9" class="kl-dlab" text-anchor="end">Step 5 Preview</text>
+<text x="572.6" y="151.0" class="kl-dlab" text-anchor="start">Muse Spark 1.3</text>
+<text x="487.5" y="264.1" class="kl-dlab" text-anchor="middle">Gemini 3.8 Flash</text>
+<text x="184.7" y="293.1" class="kl-dlab" text-anchor="middle">Qwen3.8-Flash-Next</text>
+<text x="696.8" y="196.7" class="kl-dlab" text-anchor="start">Kimi K3</text>
+<text x="501" y="526" class="kl-axtitle" text-anchor="middle">标准调用篮子成本 · 100K input + 1K output（美元，对数轴）</text>
+<text x="40" y="282" class="kl-axtitle" transform="rotate(-90 40 282)" text-anchor="middle">Artificial Analysis 智能指数 v4.3</text>
+<g class="kl-median-tag"><rect x="512.6" y="464" width="128" height="15" rx="2"/><text x="517.6" y="475">中位成本 $0.0907 · 中位智能 40</text></g>
+<text x="401.6" y="156.2" class="kl-kill-tag">性价比前沿 = Pareto 效率前沿</text>
+</svg>
+      </div>
+      <div class="kl-card">
+        <h2>② 价格 × 输出速度</h2>
+        <p class="kl-cap">同样口径下的速度轴。DeepSeek 的优势在智能上已被 GLM-5.3-Flash 反超，但在速度与缓存上仍然领先（V4.1 Flash 236 t/s、缓存 $0.003 vs GLM-5.3-Flash 94 t/s、$0.03）。</p>
+        <svg viewBox="0 0 1080 552" class="kl-chart">
+<rect x="0" y="0" width="1080" height="552" class="kl-plot-bg"/>
+<line x1="96.0" y1="76" x2="96.0" y2="488" class="kl-grid"/>
+<text x="96.0" y="504" class="kl-ax" text-anchor="middle">$0.005</text>
+<line x1="194.4" y1="76" x2="194.4" y2="488" class="kl-grid kl-grid-major"/>
+<text x="194.4" y="504" class="kl-ax kl-tick-major" text-anchor="middle">$0.01</text>
+<line x1="292.9" y1="76" x2="292.9" y2="488" class="kl-grid"/>
+<text x="292.9" y="504" class="kl-ax" text-anchor="middle">$0.02</text>
+<line x1="423.0" y1="76" x2="423.0" y2="488" class="kl-grid"/>
+<text x="423.0" y="504" class="kl-ax" text-anchor="middle">$0.05</text>
+<line x1="521.4" y1="76" x2="521.4" y2="488" class="kl-grid kl-grid-major"/>
+<text x="521.4" y="504" class="kl-ax kl-tick-major" text-anchor="middle">$0.10</text>
+<line x1="619.9" y1="76" x2="619.9" y2="488" class="kl-grid"/>
+<text x="619.9" y="504" class="kl-ax" text-anchor="middle">$0.20</text>
+<line x1="750.0" y1="76" x2="750.0" y2="488" class="kl-grid"/>
+<text x="750.0" y="504" class="kl-ax" text-anchor="middle">$0.50</text>
+<line x1="848.4" y1="76" x2="848.4" y2="488" class="kl-grid kl-grid-major"/>
+<text x="848.4" y="504" class="kl-ax kl-tick-major" text-anchor="middle">$1.00</text>
+<line x1="96" y1="488.0" x2="906" y2="488.0" class="kl-grid"/>
+<text x="88" y="491.5" class="kl-ax" text-anchor="end">25</text>
+<line x1="96" y1="421.0" x2="906" y2="421.0" class="kl-grid"/>
+<text x="88" y="424.5" class="kl-ax" text-anchor="end">40</text>
+<line x1="96" y1="363.2" x2="906" y2="363.2" class="kl-grid"/>
+<text x="88" y="366.7" class="kl-ax" text-anchor="end">60</text>
+<line x1="96" y1="290.4" x2="906" y2="290.4" class="kl-grid"/>
+<text x="88" y="293.9" class="kl-ax" text-anchor="end">100</text>
+<line x1="96" y1="223.4" x2="906" y2="223.4" class="kl-grid"/>
+<text x="88" y="226.9" class="kl-ax" text-anchor="end">160</text>
+<line x1="96" y1="159.8" x2="906" y2="159.8" class="kl-grid"/>
+<text x="88" y="163.3" class="kl-ax" text-anchor="end">250</text>
+<line x1="96" y1="92.8" x2="906" y2="92.8" class="kl-grid"/>
+<text x="88" y="96.3" class="kl-ax" text-anchor="end">400</text>
+<circle cx="855.3" cy="343.3" r="4.0" fill="#d97757" class="kl-dot"><title>Claude Fable 5.1 · Anthropic&#10;69 tokens/s&#10;篮子成本 $1.05&#10;智能 53.0</title></circle>
+<circle cx="855.3" cy="343.3" r="4.0" fill="#10a37f" class="kl-dot"><title>GPT-6 Astra · OpenAI&#10;69 tokens/s&#10;篮子成本 $1.05&#10;智能 53.0</title></circle>
+<circle cx="756.9" cy="360.9" r="5.5" fill="#d97757" class="kl-dot"><title>Claude Opus 5 · Anthropic&#10;61 tokens/s&#10;篮子成本 $0.525&#10;智能 51.0</title></circle>
+<circle cx="756.9" cy="333.3" r="5.1" fill="#d97757" class="kl-dot"><title>Claude Opus 4.8 · Anthropic&#10;74 tokens/s&#10;篮子成本 $0.525&#10;智能 42.0</title></circle>
+<circle cx="725.2" cy="327.7" r="5.9" fill="#10a37f" class="kl-dot"><title>GPT-5.6 Sol · OpenAI&#10;77 tokens/s&#10;篮子成本 $0.420&#10;智能 47.0</title></circle>
+<circle cx="684.4" cy="410.7" r="6.4" fill="#be185d" class="kl-dot"><title>Kimi K3 · Moonshot&#10;43 tokens/s&#10;篮子成本 $0.315&#10;智能 44.0</title></circle>
+<circle cx="628.1" cy="280.8" r="7.2" fill="#10a37f" class="kl-dot"><title>GPT-5.6 Terra · OpenAI&#10;107 tokens/s&#10;篮子成本 $0.212&#10;智能 42.0</title></circle>
+<circle cx="628.1" cy="259.7" r="6.4" fill="#4285f4" class="kl-dot"><title>Gemini 3.1 Pro Prev. · Google&#10;124 tokens/s&#10;篮子成本 $0.212&#10;智能 30.0</title></circle>
+<circle cx="626.8" cy="320.4" r="7.0" fill="#d97757" class="kl-dot"><title>Claude Sonnet 5 · Anthropic&#10;81 tokens/s&#10;篮子成本 $0.210&#10;智能 38.0</title></circle>
+<circle cx="624.1" cy="347.5" r="7.4" fill="#1f2937" class="kl-dot"><title>Grok 4.6 · xAI&#10;67 tokens/s&#10;篮子成本 $0.206&#10;智能 44.0</title></circle>
+<circle cx="624.1" cy="424.6" r="7.5" fill="#7c3aed" class="kl-dot"><title>Qwen3.8 Max · Alibaba&#10;39 tokens/s&#10;篮子成本 $0.206&#10;智能 45.0</title></circle>
+<circle cx="624.1" cy="421.0" r="7.2" fill="#7c3aed" class="kl-dot"><title>Qwen3.8 2.4T A95B · Alibaba&#10;40 tokens/s&#10;篮子成本 $0.206&#10;智能 40.0</title></circle>
+<circle cx="573.6" cy="360.9" r="8.3" fill="#dc2626" class="kl-dot"><title>GLM-5.3 · Z.ai&#10;61 tokens/s&#10;篮子成本 $0.144&#10;智能 45.0</title></circle>
+<circle cx="557.9" cy="165.0" r="8.7" fill="#6366f1" class="kl-dot"><title>Muse Spark 1.3 · Meta&#10;241 tokens/s&#10;篮子成本 $0.129&#10;智能 48.0</title></circle>
+<circle cx="525.2" cy="302.3" r="9.0" fill="#0891b2" class="kl-dot"><title>Step 5 Preview · StepFun&#10;92 tokens/s&#10;篮子成本 $0.103&#10;智能 44.0</title></circle>
+<circle cx="487.5" cy="114.3" r="9.5" fill="#4285f4" class="kl-dot"><title>Gemini 3.8 Flash · Google&#10;344 tokens/s&#10;篮子成本 $0.0788&#10;智能 41.0</title></circle>
+<circle cx="479.1" cy="358.5" r="8.6" fill="#be185d" class="kl-dot"><title>Kimi K2.7 Code · Moonshot&#10;62 tokens/s&#10;篮子成本 $0.0742&#10;智能 26.0</title></circle>
+<circle cx="466.6" cy="279.4" r="9.5" fill="#4d6bfe" class="kl-dot"><title>DeepSeek V4 Pro 0813 · DeepSeek&#10;108 tokens/s&#10;篮子成本 $0.0680&#10;智能 36.0</title></circle>
+<circle cx="385.0" cy="191.6" r="11.3" fill="#dc2626" class="kl-dot"><title>GLM-5.3-FlashX · Z.ai&#10;200 tokens/s&#10;篮子成本 $0.0382&#10;智能 42.0</title></circle>
+<circle cx="365.2" cy="343.3" r="10.4" fill="#7c3aed" class="kl-dot"><title>Qwen3.7 Plus · Alibaba&#10;69 tokens/s&#10;篮子成本 $0.0333&#10;智能 25.0</title></circle>
+<circle cx="361.8" cy="95.7" r="10.1" fill="#4285f4" class="kl-dot"><title>Gemini 3.5 Flash-Lite · Google&#10;392 tokens/s&#10;篮子成本 $0.0325&#10;智能 22.0</title></circle>
+<circle cx="356.0" cy="215.6" r="10.9" fill="#168b70" class="kl-dot"><title>MiniMax M3 · MiniMax&#10;169 tokens/s&#10;篮子成本 $0.0312&#10;智能 29.0</title></circle>
+<circle cx="310.6" cy="174.8" r="12.1" fill="#4d6bfe" class="kl-dot"><title>DeepSeek V4 Flash 0731 · DeepSeek&#10;225 tokens/s&#10;篮子成本 $0.0227&#10;智能 35.0</title></circle>
+<circle cx="301.1" cy="219.0" r="12.3" fill="#10a37f" class="kl-dot"><title>GPT-5.6 Luna · OpenAI&#10;165 tokens/s&#10;篮子成本 $0.0212&#10;智能 37.0</title></circle>
+<circle cx="257.6" cy="168.0" r="13.2" fill="#4d6bfe" class="kl-dot"><title>DeepSeek V4.1 Flash · DeepSeek&#10;236 tokens/s&#10;篮子成本 $0.0156&#10;智能 39.0</title></circle>
+<circle cx="256.7" cy="299.2" r="13.4" fill="#dc2626" class="kl-dot"><title>GLM-5.3-Flash · Z.ai&#10;94 tokens/s&#10;篮子成本 $0.0155&#10;智能 42.0</title></circle>
+<circle cx="245.0" cy="444.2" r="12.4" fill="#f97316" class="kl-dot"><title>MiMo-V2.5 · Xiaomi&#10;34 tokens/s&#10;篮子成本 $0.0143&#10;智能 25.0</title></circle>
+<circle cx="237.4" cy="305.4" r="12.5" fill="#0ea5e9" class="kl-dot"><title>Hy3 · Tencent&#10;90 tokens/s&#10;篮子成本 $0.0135&#10;智能 25.0</title></circle>
+<circle cx="212.8" cy="360.9" r="14.0" fill="#7c3aed" class="kl-dot"><title>Qwen3.8-Flash-Next · Alibaba&#10;61 tokens/s&#10;篮子成本 $0.0114&#10;智能 40.0</title></circle>
+<line x1="725.2" y1="327.7" x2="756.3" y2="308.8" class="kl-lead"/>
+<text x="745.4" y="352.3" class="kl-dlab kl-hl" text-anchor="end">Claude Opus 5</text>
+<text x="768.0" y="325.2" class="kl-dlab kl-hl" text-anchor="start">Claude Opus 4.8</text>
+<text x="639.8" y="310.4" class="kl-dlab kl-hl" text-anchor="start">Claude Sonnet 5</text>
+<text x="756.3" y="312.8" class="kl-dlab kl-hl" text-anchor="start">GPT-5.6 Sol</text>
+<text x="641.4" y="270.5" class="kl-dlab kl-hl" text-anchor="start">GPT-5.6 Terra</text>
+<text x="865.3" y="336.3" class="kl-dlab kl-hl" text-anchor="start">Fable 5.1</text>
+<text x="855.3" y="363.3" class="kl-dlab kl-hl" text-anchor="middle">GPT-6 Astra</text>
+<text x="301.1" y="198.7" class="kl-dlab kl-hl" text-anchor="middle">GPT-5.6 Luna</text>
+<text x="328.7" y="159.7" class="kl-dlab kl-hl" text-anchor="start">DeepSeek V4 Flash 0731</text>
+<text x="276.1" y="282.8" class="kl-dlab kl-hl" text-anchor="start">GLM-5.3-Flash</text>
+<text x="402.2" y="177.3" class="kl-dlab kl-hl" text-anchor="start">GLM-5.3-FlashX</text>
+<text x="356.0" y="242.5" class="kl-dlab kl-hl" text-anchor="middle">MiniMax M3</text>
+<text x="257.6" y="146.8" class="kl-dlab kl-hl" text-anchor="middle">DeepSeek V4.1 Flash</text>
+<text x="466.6" y="261.9" class="kl-dlab kl-hl" text-anchor="middle">DeepSeek V4 Pro 0813</text>
+<text x="573.6" y="344.6" class="kl-dlab kl-hl" text-anchor="middle">GLM-5.3</text>
+<text x="508.2" y="305.8" class="kl-dlab" text-anchor="end">Step 5 Preview</text>
+<text x="343.7" y="99.2" class="kl-dlab" text-anchor="end">Gemini 3.5 Flash-Lite</text>
+<text x="696.8" y="401.3" class="kl-dlab" text-anchor="start">Kimi K3</text>
+<text x="572.6" y="153.3" class="kl-dlab" text-anchor="start">Muse Spark 1.3</text>
+<text x="501" y="526" class="kl-axtitle" text-anchor="middle">标准调用篮子成本（美元，对数轴）</text>
+<text x="40" y="282" class="kl-axtitle" transform="rotate(-90 40 282)" text-anchor="middle">输出速度 · tokens/s（对数轴）</text>
+</svg>
+      </div>
+    </div>
+
+    <aside class="kl-side">
+      <h3>Makers · 14</h3>
+      <div class="kl-vrow"><span class="kl-sw" style="background:#7c3aed"></span><span class="kl-vname">Alibaba</span><span class="kl-vcount">4</span><span class="kl-vbest">Qwen3.8-Flash-Next</span></div>
+<div class="kl-vrow"><span class="kl-sw" style="background:#dc2626"></span><span class="kl-vname">Z.ai ★</span><span class="kl-vcount">4</span><span class="kl-vbest">GLM-5.3-Flash</span></div>
+<div class="kl-vrow"><span class="kl-sw" style="background:#4d6bfe"></span><span class="kl-vname">DeepSeek ★</span><span class="kl-vcount">3</span><span class="kl-vbest">DeepSeek V4.1 Flash</span></div>
+<div class="kl-vrow"><span class="kl-sw" style="background:#0ea5e9"></span><span class="kl-vname">Tencent</span><span class="kl-vcount">1</span><span class="kl-vbest">Hy3</span></div>
+<div class="kl-vrow"><span class="kl-sw" style="background:#f97316"></span><span class="kl-vname">Xiaomi</span><span class="kl-vcount">1</span><span class="kl-vbest">MiMo-V2.5</span></div>
+<div class="kl-vrow"><span class="kl-sw" style="background:#10a37f"></span><span class="kl-vname">OpenAI ★</span><span class="kl-vcount">4</span><span class="kl-vbest">GPT-5.6 Luna</span></div>
+<div class="kl-vrow"><span class="kl-sw" style="background:#168b70"></span><span class="kl-vname">MiniMax ★</span><span class="kl-vcount">1</span><span class="kl-vbest">MiniMax M3</span></div>
+<div class="kl-vrow"><span class="kl-sw" style="background:#84cc16"></span><span class="kl-vname">KwaiKAT</span><span class="kl-vcount">1</span><span class="kl-vbest">KAT-Coder-Pro V2</span></div>
+<div class="kl-vrow"><span class="kl-sw" style="background:#4285f4"></span><span class="kl-vname">Google</span><span class="kl-vcount">3</span><span class="kl-vbest">Gemini 3.5 Flash-Lite</span></div>
+<div class="kl-vrow"><span class="kl-sw" style="background:#0891b2"></span><span class="kl-vname">StepFun</span><span class="kl-vcount">1</span><span class="kl-vbest">Step 5 Preview</span></div>
+<div class="kl-vrow"><span class="kl-sw" style="background:#6366f1"></span><span class="kl-vname">Meta</span><span class="kl-vcount">1</span><span class="kl-vbest">Muse Spark 1.3</span></div>
+<div class="kl-vrow"><span class="kl-sw" style="background:#be185d"></span><span class="kl-vname">Moonshot</span><span class="kl-vcount">2</span><span class="kl-vbest">Kimi K2.7 Code</span></div>
+<div class="kl-vrow"><span class="kl-sw" style="background:#1f2937"></span><span class="kl-vname">xAI</span><span class="kl-vcount">2</span><span class="kl-vbest">Grok 4.7</span></div>
+<div class="kl-vrow"><span class="kl-sw" style="background:#d97757"></span><span class="kl-vname">Anthropic ★</span><span class="kl-vcount">4</span><span class="kl-vbest">Claude Sonnet 5</span></div>
+      <p class="kl-note">按最高「每美元智能」排序。各厂商点色对应左图；标 <b>★</b> 的五家为全模型标注名称。</p>
+      <p class="kl-note">未纳入：豆包 Seed 2.1 系列、文心 ERNIE 5.1 —— 有定价但 Artificial Analysis 尚未给出独立智能分，无法进入能力轴。</p>
+    </aside>
+  </div>
+
+  <div class="kl-findings">
+    <div class="kl-f">
+      <div class="kl-k">性价比王座易主</div>
+      <div class="kl-v kl-red">GLM-5.3-Flash</div>
+      <p>同样 $0.0155 的篮子成本，智谱给 <b>42 分</b>，DeepSeek V4.1 Flash 给 <b>39 分</b>。6 月原文的「斩杀线」是 DeepSeek V4 Pro（$0.044），如今中低价段被智谱接走。</p>
+    </div>
+    <div class="kl-f">
+      <div class="kl-k">同能力最大价差</div>
+      <div class="kl-v kl-red">33.9×</div>
+      <p>同为 42 分：GLM-5.3-Flash $0.0155 ｜ GPT-5.6 Terra $0.212 ｜ Claude Opus 4.8 $0.525。价格差 34 倍，能力一模一样。</p>
+    </div>
+    <div class="kl-f">
+      <div class="kl-k">中低价段性价比</div>
+      <div class="kl-v kl-green">2 / 2 中国</div>
+      <p>前沿线最便宜的两点均为中国模型：Qwen3.8-Flash-Next（阿里）、GLM-5.3-Flash（智谱）。中国厂商已从「平替」变成「价格锚点制定者」。</p>
+    </div>
+    <div class="kl-f">
+      <div class="kl-k">最高能力档跳价</div>
+      <div class="kl-v">4× / +3 分</div>
+      <p>从 44 分（Step 5 Preview $0.103）到 51 分（Claude Opus 5 $0.525），价格涨 5 倍只换 7 分。53 分档（Fable 5.1 / GPT-6 Astra）单价 $1.05，是最便宜 42 分档的 <b>68 倍</b>。</p>
+    </div>
+  </div>
+
+  <p class="kl-source">
+    <b>口径与来源</b>：篮子成本 P = 0.1 × 输入价 + 0.001 × 输出价（美元/百万 token），与 ZenMux 原文完全一致 —— 用该公式反算原文锚点，DeepSeek V4 Pro 得 $0.04437、GLM 5.2 得 $0.1444，与文中数字逐位吻合。
+    价格为厂商官方**国际站标价**（美元）；DeepSeek 取闲时档、GPT/Claude/Gemini 取标准档（&lt;272K 上下文档），不含 batch 与缓存折扣。智能分取 Artificial Analysis Intelligence Index v4.3 各模型最高推理档。
+    <br>
+    <b>存疑标注</b>：① Qwen3.8-Flash-Next 无官方美元价，按国内价 ¥0.8/¥2.7 以 ¥7.1/USD 折算，为估算值；② GLM-5.3-FlashX 为 GLM-5.3-Flash 同基座加速版，智能分沿用 Flash 的 42（AA 未单独评测）；③ GPT-5.6 Sol 官方标价 $4/$20，OpenRouter 渠道价为 $2/$10，本图取官方价，故 Sol 的性价比被低估；④ 小米 MiMo-V2.5-Pro 各源报价分歧过大（$0.30 / $0.44 / $1.00 输入），已剔除。
+    <br>
+    <b>与原文的差别</b>：原文 111 个模型 / 17 家厂商，本图 32 个 / 14 家 —— 只收录「能同时拿到官方美元定价 + 独立智能分」的模型，宁可少不可混口径。原文纵轴是平台真实用量（含产品包装、默认集成、路径依赖等噪声），本图纵轴是模型能力本身，因此两张图的「右上象限」含义不同：原文是「贵但被市场接受」，本图是「贵但确实最强」。
+  </p>
+</div>
+</section>
+
+<section class="pane" id="pricing">
+  <article class="card arr-feature gold">
+    <div class="arr-head"><div><div class="label">模型定价史 · API 价格</div><h2>中国模型 API 定价｜元 / 百万 tokens</h2><p>取各家<b>主力或旗舰文本模型的官方标价</b>（输入价，缓存未命中）。同一时点、同一档位的横向对比才有效；分档计费取 0–32K 档。</p></div><div class="arr-legend"><span class="z"><i></i>智谱 GLM</span><span style="--tone:#0e7490"><i></i>DeepSeek</span><span class="m"><i></i>MiniMax</span><span style="--tone:#be185d"><i></i>月之暗面 Kimi</span></div></div>
+    <svg class="pr-chart" viewBox="0 0 940 350" role="img" aria-label="中国主要模型旗舰输入价走势">
+      <g><line class="gridline" x1="70" y1="305" x2="900" y2="305"/><line class="gridline" x1="70" y1="243" x2="900" y2="243"/><line class="gridline" x1="70" y1="181" x2="900" y2="181"/><line class="gridline" x1="70" y1="119" x2="900" y2="119"/><line class="gridline" x1="70" y1="57" x2="900" y2="57"/></g>
+      <g text-anchor="end"><text x="60" y="309">0</text><text x="60" y="247">5</text><text x="60" y="185">10</text><text x="60" y="123">15</text><text x="60" y="61">20</text></g>
+      <g text-anchor="middle"><text x="90" y="334">2025-10</text><text x="235" y="334">2025-12</text><text x="381" y="334">2026-02</text><text x="526" y="334">2026-04</text><text x="672" y="334">2026-06</text><text x="890" y="334">2026-09</text></g>
+      <path class="pr-zgl" d="M90 280 L235 280 L381 255 L526 231 L672 206 L890 206"/>
+      <path class="pr-dsl" d="M90 280 L235 280 L526 293 L890 293"/>
+      <path class="pr-mml" d="M90 279 L381 279 L672 279 L890 279"/>
+      <path class="pr-kml" d="M90 255 L308 255 L526 224 L672 224 L744 57 L890 57"/>
+      <g><circle class="pr-zgp" cx="90" cy="280" r="6"/><circle class="pr-zgp" cx="235" cy="280" r="6"/><circle class="pr-zgp" cx="381" cy="255" r="6"/><circle class="pr-zgp" cx="526" cy="231" r="6"/><circle class="pr-zgp" cx="672" cy="206" r="6"/><circle class="pr-zgp" cx="890" cy="206" r="6"/></g>
+      <g><circle class="pr-dsp" cx="90" cy="280" r="4.5"/><circle class="pr-dsp" cx="235" cy="280" r="4.5"/><circle class="pr-dsp" cx="526" cy="293" r="4.5"/><circle class="pr-dsp" cx="890" cy="293" r="4.5"/></g>
+      <g><circle class="pr-mmp" cx="90" cy="279" r="6"/><circle class="pr-mmp" cx="381" cy="279" r="6"/><circle class="pr-mmp" cx="672" cy="279" r="6"/><circle class="pr-mmp" cx="890" cy="279" r="6"/></g>
+      <g><circle class="pr-kmp" cx="90" cy="255" r="4.5"/><circle class="pr-kmp" cx="308" cy="255" r="4.5"/><circle class="pr-kmp" cx="526" cy="224" r="4.5"/><circle class="pr-kmp" cx="672" cy="224" r="4.5"/><circle class="pr-kmp" cx="744" cy="57" r="4.5"/><circle class="pr-kmp" cx="890" cy="57" r="4.5"/></g>
+      <g text-anchor="end" class="value-label"><text x="876" y="51">¥20 Kimi K3</text><text x="876" y="200">¥8.0 智谱</text><text x="876" y="273">¥2.1 MiniMax</text><text x="876" y="304">¥1.0 DeepSeek</text></g>
+      <g><text class="pr-note" x="596" y="46">价差 12 个月内由 2 倍拉到 20 倍</text></g>
+    </svg>
+    <div class="arr-milestones"><div><b>智谱 ¥2 → ¥8</b><small>GLM-4.7 → GLM-5.2｜2026 年内 4 轮提价，累计 +300%；同期 API 调用量 +400%</small></div><div><b>DeepSeek ¥2 → ¥1</b><small>V3.2 → V4.1-Flash｜8 月峰谷上调后由新架构拉回，闲时输入回到 ¥1</small></div><div><b>MiniMax 稳在 ¥2.1</b><small>M2 → M3｜一年未动，靠推理效率守性价比</small></div><div><b>Kimi ¥4 → ¥20</b><small>K2.5 → K3｜输出价 ¥100，为中国当前最贵主力模型</small></div></div>
+    <div class="source">2025 年底四家输入价收敛在 ¥2–4，此后 12 个月分叉为 ¥1 至 ¥20，左侧线段高度重叠。<b>线型说明</b>：智谱、Kimi 为实线，DeepSeek、MiniMax 为虚线，仅用于区分重叠线段，不代表数据质量差异。来源：bigmodel.cn、platform.moonshot.cn、DeepSeek 官方定价页、MiniMax 开放平台现行价目；历史节点以券商研报（广发、长江、平安、华鑫、国盛、中信建投、万联、国金、华安、长城、德邦、东方、华龙等）与官方发布材料交叉核对，Alpha派 检索。<b>口径注意：（1）本图只画输入价（缓存未命中），输出价差异更大——2026-09 Kimi K3 输出 ¥100 是 DeepSeek V4.1-Flash 闲时 ¥4 的 25 倍；（2）智谱、Kimi 取国内站人民币价，与海外站美元价不是同一价目（GLM-5.2 国内 ¥8/¥28，海外 $1.4/$4.4）；（3）DeepSeek 自 2026/08/17 起实行峰谷定价，本图取空闲时段价，高峰时段翻倍；V4.1-Flash（2026/09/10 上线）闲时输入价回到 ¥1（8 月调价后为 ¥1.5），旧版 V4-Flash 已下线；（4）各模型上下文窗口、分档规则不同，本图只作量级与方向参照，不构成选型建议。</b></div>
+  </article>
+
+  <article class="card pricebook">
+  <div class="section-head pb-head"><div><h2>逐家价格史</h2><p>单位统一为元 / 百万 tokens（缓存未命中、非促销）。同一模型的历次调价按发布时间排列，取该代主力档位；无公开标价或不按 token 计费者单列说明。</p></div><span class="pb-stamp">11 家 · 单位：元 / 百万 tokens · 截至 2026-09-21</span></div>
+  <div class="pb-cols">
+  <div class="pbi z"><div class="label">智谱 Z.ai · 02513.HK</div>
+      <div class="table-wrap"><table><thead><tr><th>模型</th><th>时间</th><th>输入</th><th>输出</th><th>方向</th></tr></thead><tbody><tr><td>GLM-3-Turbo</td><td>2023-10</td><td>1</td><td>2</td><td>基准</td></tr><tr><td>GLM-4-Plus</td><td>2025-04</td><td>5</td><td>5</td><td>↑</td></tr><tr><td>GLM-4.5-Air</td><td>2025-07</td><td>0.8</td><td>6</td><td>轻量 ↓</td></tr><tr><td>GLM-4.6V</td><td>2025-10</td><td>1</td><td>3</td><td>↓ 50%</td></tr><tr><td>GLM-4.7</td><td>2025-12</td><td>2</td><td>8</td><td>—</td></tr><tr><td><b>GLM-5</b></td><td>2026-02</td><td><b>4</b></td><td><b>18</b></td><td><b>↑ 100%</b></td></tr><tr><td>GLM-5-Turbo</td><td>2026-03</td><td>5</td><td>22</td><td>↑ 20%</td></tr><tr><td>GLM-5.1</td><td>2026-04</td><td>6</td><td>24</td><td>↑ 10%</td></tr><tr><td>GLM-5.2</td><td>2026-06</td><td>8</td><td>28</td><td>↑ 33%</td></tr><tr><td>GLM-5.3</td><td>2026-08</td><td>8</td><td>28</td><td>持平</td></tr><tr><td>GLM-5.3-Flash</td><td>2026-08</td><td>0.8</td><td>2.8</td><td>开源低价</td></tr><tr><td><b>GLM-5.3-FlashX</b></td><td>2026-09</td><td><b>2</b></td><td><b>7</b></td><td><b>极速档 ↑150%</b></td></tr></tbody></table></div>
+      <p class="note"><b>四轮提价的完整链条</b>：GLM-5（+100%）→ GLM-5-Turbo（+20%）→ GLM-5.1（+10%）→ GLM-5.2（+33%），旗舰输入价从 ¥2 到 ¥8，累计 +300%。同期海外版 Coding Plan 月费由 49/149/469 元升至 118/538/1078 元。<b>分档规则</b>：GLM-5 及以后按输入 0–32K / 32K+ 两档，本表取 0–32K；GLM-4.7 按输入与输出长度交叉三档，本表取 2/8。<br><b>9 月新增「极速档」</b>：GLM-5.3-FlashX（2026-09-18 上线）基座与 Flash 相同（320B 总参 / 18B 激活），凭约 10 万张国产 AI 芯片的推理集群把生成速度提到最高 200 tokens/s（约为 Flash 的 5 倍），价格同步提到 Flash 的 2.5 倍（¥2 / ¥7，缓存命中 ¥0.57）。智谱自述由 GLM-5.3 驱动的 agent 在两周内把端到端吞吐优化至 3.2 倍。同一代模型按<b>速度</b>而非能力拆档销售，是 2026 年「智能 / 价格 / 速度」分档定价的典型样本。</p>
+    </div>
+  <div class="pbi m"><div class="label">MiniMax · 00100.HK</div>
+      <div class="table-wrap"><table><thead><tr><th>模型</th><th>时间</th><th>输入</th><th>输出</th><th>方向</th></tr></thead><tbody><tr><td>abab-6.5s</td><td>2024-08</td><td>1</td><td>1</td><td>大幅降价</td></tr><tr><td>MiniMax-Text-01</td><td>2025-01</td><td>1</td><td>8</td><td>—</td></tr><tr><td>MiniMax-M1</td><td>2025-06</td><td>2.4</td><td>24</td><td>推理旗舰</td></tr><tr><td>MiniMax-M2</td><td>2025-10</td><td>2.1</td><td>8.4</td><td>↓</td></tr><tr><td>MiniMax-M2.5</td><td>2026-02</td><td>2.1</td><td>8.4</td><td>持平</td></tr><tr><td>MiniMax-M3</td><td>2026-06</td><td>2.1</td><td>8.4</td><td>持平</td></tr></tbody></table></div>
+      <p class="note"><b>一年未动价</b>：从 M2 到 M3 三代替换，输入 ¥2.1 / 输出 ¥8.4 始终未变（M3 为限时五折后价，优先模式 ¥3.15 / ¥12.6）。M2 起以约 100 亿激活参数（总 230B）把输出价压到 Claude Sonnet 4.5 的 8%。三家里唯一靠效率而非调价抢份额的。</p>
+    </div>
+  <div class="pbi"><div class="label">DeepSeek</div>
+      <div class="table-wrap"><table><thead><tr><th>模型</th><th>时间</th><th>输入</th><th>输出</th><th>方向</th></tr></thead><tbody><tr><td>DeepSeek-V2</td><td>2024-05</td><td>1</td><td>2</td><td>点燃价格战</td></tr><tr><td>DeepSeek-V3</td><td>2024-12</td><td>2</td><td>8</td><td>↑</td></tr><tr><td>DeepSeek-R1</td><td>2025-01</td><td>4</td><td>16</td><td>推理溢价</td></tr><tr><td>DeepSeek-V3.1</td><td>2025-08</td><td>4</td><td>12</td><td>V3/R1 合体</td></tr><tr><td>DeepSeek-V3.2-Exp</td><td>2025-09</td><td>2</td><td>3</td><td><b>↓ 50%+</b></td></tr><tr><td>DeepSeek-V3.2</td><td>2025-12</td><td>2</td><td>3</td><td>持平</td></tr><tr><td>DeepSeek-V4-Flash</td><td>2026-04</td><td>1</td><td>2</td><td><b>↓ 50%</b></td></tr><tr><td>DeepSeek-V4-Pro</td><td>2026-04</td><td>4.5</td><td>13.5</td><td>前沿档</td></tr><tr><td>DeepSeek-V4-Flash</td><td>2026-08-17</td><td>1.5</td><td>4.5</td><td>峰谷定价 ↑</td></tr><tr><td><b>DeepSeek-V4.1-Flash</b></td><td>2026-09-10</td><td><b>1</b></td><td><b>4</b></td><td><b>新架构 ↓</b></td></tr></tbody></table></div>
+      <p class="note"><b>与智谱完全相反的路径</b>：V3.2-Exp 一次性永久降价 50%+，V4-Flash 再降 50%；2026/08/17 起改行<b>峰谷定价</b>（高峰为北京时间 9–12 点、14–18 点，价格为空闲时段两倍），V4-Pro 高峰约 ¥9 / ¥27，月度价格一度较 5 月低点高出 11 倍。<br><b>9/10 的 V4.1-Flash 是架构换代，不只是调价</b>：552B 参数 MoE，全新的 Causal-Encoder-Decoder <b>非对称</b>结构（输入激活仅 8B、输出激活 16B），原生支持多模态视觉理解；KV Cache 大幅压缩使 HBM 需求降至上一代的 1/4、SSD 需求降至 1/8（相对初代模型累计缩小 437 倍）。降本直接反映到价目——闲时输入价由 ¥1.5 回落至 ¥1、输出由 ¥4.5 降至 ¥4，缓存命中输入价 −60% 至 ¥0.02。旧版 V4-Flash 与 V4-Flash-Vision-Exp 同日下线（模型名统一为 deepseek-flash）；<b>9/14 12:00 起，指向 V4-Pro 的 API 请求全部路由至 V4.1-Flash 并按 Flash 单价计费</b>，公司计划有序下线 V4-Pro。官方披露的 19 项测评中 14 项超过 V4-Pro，Agentic Benchmark 上超过 GLM-5.3 与 Kimi-K3，端到端吞吐可达 409.5 tokens/s。<br><b>口径注意</b>：V4-Pro 三个口径并存——研报「低至 ¥4.5/¥13.5」为闲时价、¥9/¥27 为高峰价、另见 $1.32/$3.96 的美元报价；被路由后用户实际适用 Flash 价。</p>
+    </div>
+  <div class="pbi"><div class="label">月之暗面 Kimi · Moonshot</div>
+      <div class="table-wrap"><table><thead><tr><th>模型</th><th>时间</th><th>输入</th><th>输出</th><th>方向</th></tr></thead><tbody><tr><td>moonshot-v1-8k</td><td>2025-04 降价后</td><td>2</td><td>10</td><td>↓</td></tr><tr><td>moonshot-v1-32k</td><td>2025-04 降价后</td><td>5</td><td>20</td><td>↓</td></tr><tr><td>moonshot-v1-128k</td><td>2025-04 降价后</td><td>10</td><td>30</td><td>↓</td></tr><tr><td>Kimi K2（128K 高速）</td><td>2025-07</td><td>—</td><td>回调至 64</td><td>↑</td></tr><tr><td>Kimi K2.5</td><td>2026-01</td><td>4.0</td><td>21.0</td><td>—</td></tr><tr><td>Kimi K2.6</td><td>2026-04</td><td>6.5</td><td>27.0</td><td>↑</td></tr><tr><td>Kimi K2.7 Code</td><td>2026-06</td><td>6.5</td><td>27.0</td><td>—</td></tr><tr><td>Kimi K2.7 Code 高速版</td><td>2026-06</td><td>13.0</td><td>54.0</td><td>普通版 2 倍</td></tr><tr><td><b>Kimi K3</b></td><td>2026-07</td><td><b>20.0</b></td><td><b>100.0</b></td><td><b>↑ 208%</b></td></tr></tbody></table></div>
+      <p class="note"><b>今夏涨幅最猛的一家</b>：K3 输出价 ¥100，是前代旗舰的 3 倍多，也是当前中国最贵的主力文本模型。K2.5 及 moonshot-v1 全系已于 2026/08/31 下线（模型 ID 失效）。缓存命中折扣较大（K3 命中价 ¥1.10，约为标价 1/18），长前缀场景实际成本低于标价。</p>
+    </div>
+  <div class="pbi"><div class="label">阶跃星辰 StepFun</div>
+      <div class="table-wrap"><table><thead><tr><th>模型</th><th>时间</th><th>输入</th><th>输出</th><th>方向</th></tr></thead><tbody><tr><td>Step-R1-V-Mini</td><td>2025-04</td><td>—</td><td>8</td><td>多模态推理</td></tr><tr><td>Step 3</td><td>2025-07</td><td>1.5</td><td>4 → 10</td><td>限时价 / 最高档</td></tr><tr><td>step-1o-turbo-vision</td><td>—</td><td>2.5</td><td>8</td><td>视觉</td></tr><tr><td>step-3.5-flash</td><td>2026-03</td><td>0.7</td><td>2.1</td><td><b>大幅 ↓</b></td></tr><tr><td>step-3.7-flash</td><td>2026-08</td><td>1.35</td><td>8.1</td><td>↑</td></tr></tbody></table></div>
+      <p class="note"><b>多模态路线的定价波动</b>：Step 3（321B 总参 / 38B 激活）开源时推限时输入 ¥1.5 / 输出 ¥4，但阶梯最高档（4K–64K 输入）输出 ¥10，较上一代 Step-R1-V-Mini 的 ¥8 上涨；同时最大上下文由 100K 缩至 64K。2026 年 flash 线把入门价压到 ¥0.7，性价比重估。<b>缺口</b>：阶跃从未披露 ARR，也未见完整历史价目表，本表由研报与官网现行价拼接。</p>
+    </div>
+  <div class="pbi"><div class="label">百川智能 Baichuan</div>
+      <div class="table-wrap"><table><thead><tr><th>模型</th><th>时间</th><th>输入</th><th>输出</th><th>方向</th></tr></thead><tbody><tr><td>Baichuan4</td><td>2024-05</td><td>100</td><td>100</td><td>基准</td></tr><tr><td>Baichuan4（现行）</td><td>至 2026-09</td><td>100</td><td>100</td><td><b>两年未调</b></td></tr></tbody></table></div>
+      <p class="note"><b>价格战里唯一站着不动的</b>：Baichuan4 自 2024 年 5 月发布起维持输入输出各 ¥100，两年多未调整，是全行业价格暴涨暴跌之外的特例。同期公司转向医疗垂直，2024/11 自述 B 轮在推进但至今无金额披露。<b>缺口</b>：除 Baichuan4 外的模型未见公开定价。</p>
+    </div>
+  <div class="pbi"><div class="label">零一万物 01.AI</div>
+      <div class="table-wrap"><table><thead><tr><th>模型</th><th>时间</th><th>价格</th><th>说明</th></tr></thead><tbody><tr><td>Yi-Lightning</td><td>2024-10</td><td>0.99</td><td>元 / 百万 tokens，此后未更新</td></tr></tbody></table></div>
+      <p class="note"><b>最后一次定价停留在 2024 年 10 月</b>：¥0.99 的低价此后没有跟随后续任何一轮降价或涨价。现调用 Yi-Lightning 时平台会按输入智能路由到 DeepSeek-V3、Qwen-30B-A3B 等第三方模型——<b>实质已从自研定价转为转售路由</b>，自有模型的独立定价能力基本退出。<b>口径存疑</b>：¥0.99 未明确是输入、输出还是统一价，来源为媒体报道，未在官方定价页核实。</p>
+    </div>
+  <div class="pbi"><div class="label">面壁智能 ModelBest</div>
+      <div class="callout"><strong>数据缺口</strong><br>面壁以 MiniCPM 系列端侧小模型为主，走开源权重与本地部署路线，<b>未建立面向公众的按 token 计价 API 定价页</b>。商用授权以企业协议方式提供，不公开单价。故无法纳入本表横向对比——不是因为价格为零或免费，而是<b>不存在可比的公开标价</b>。不做估算填补。</div>
+    </div>
+  <div class="pbi"><div class="label">生数科技 Shengshu · Vidu（视频，按秒计费）</div>
+      <div class="table-wrap"><table><thead><tr><th>模型</th><th>分辨率</th><th>单价</th><th>说明</th></tr></thead><tbody><tr><td>Vidu Q3-Pro</td><td>1080p</td><td>1.00 元 / 秒</td><td>旗舰</td></tr><tr><td>Vidu Q3-Pro</td><td>720p</td><td>0.9375 元 / 秒</td><td>—</td></tr><tr><td>Vidu Q3-Pro</td><td>540p</td><td>0.4375 元 / 秒</td><td>—</td></tr><tr><td>Vidu Q3-Turbo</td><td>1080p</td><td>0.25–0.4375 元 / 秒</td><td>约为 Pro 版一半</td></tr></tbody></table></div>
+      <p class="note"><b>唯一按秒而非按 token 计费的一家</b>：Vidu 是视频生成模型，定价单位与其他 10 家不可比，故单列。海外参考口径下 Vidu Q3 约 $0.07/秒，处于全球视频 API 的低价档（对比 Veo 3.1 约 $0.09、Sora 2 约 $0.10）——<b>中国厂商在视频生成上同样走低价路线，与文本模型 2026 年涨价方向相反</b>。历史价格序列未见公开披露。</p>
+    </div>
+  <div class="pbi"><div class="label">无问芯穹 Infinigence</div>
+      <div class="callout"><strong>数据缺口</strong><br>无问芯穹是 AI Infra 厂商（异构算力调度与推理优化），<b>不出售自有大模型 API</b>，因而不存在模型输入/输出单价。其商业模式是按算力资源计费，与 token 定价不同维度。首期看板仅记录其融资与运营指标，本页不适用。</div>
+    </div>
+  <div class="pbi gold"><div class="label">硅基流动 SiliconFlow（聚合平台，转售定价）</div>
+      <div class="table-wrap"><table><thead><tr><th>模型（转售）</th><th>平台输入</th><th>平台输出</th><th>相对原厂</th></tr></thead><tbody><tr><td>DeepSeek-V4-Flash</td><td>1.00</td><td>2.00</td><td>约官方闲时 50%<br>原厂 09-10 已换代</td></tr><tr><td>DeepSeek-V4-Pro</td><td>12.00</td><td>24.00</td><td>高于官方闲时</td></tr><tr><td>Qwen3.5-35B-A3B</td><td>0.40</td><td>3.20</td><td>低价开源档</td></tr><tr><td>GLM-5.2</td><td>8.00</td><td>28.00</td><td>与原厂一致</td></tr><tr><td>Kimi-K2.7-Code</td><td>6.50</td><td>27.00</td><td>与原厂一致</td></tr><tr><td>MiniMax-M2.5</td><td>2.10</td><td>8.40</td><td>与原厂一致</td></tr></tbody></table></div>
+      <p class="note"><b>平台定价 vs 原厂定价是两套体系</b>：聚合平台对开源模型有自主定价权（DeepSeek-V4-Flash 输出 ¥2 显著低于官方闲时价），但转售闭源或原厂主推模型时基本对齐原厂，不构成价格竞争。<b>引用时必须标明是平台价还是原厂价</b>——同一模型名在两处可能差一倍。<b>另需注意跨表时效</b>：原厂已于 2026/09/10 以 V4.1-Flash 替换 V4-Flash 并下调闲时价，聚合平台的上架与调价通常滞后，跨表比较前须核对双方是否同一代模型。</p>
+    </div>
+  </div>
+</article>
+
+<div class="section-head"><div><h2>2026 年：从集体降价到集体涨价</h2><p>2024–2025 日均 token 价格下降超 90%，2026 年 2 月起反向。9 家厂商、超 15 次调价，最高单次涨幅 463%。</p></div></div>
+  <div class="table-wrap card"><table><thead><tr><th>时间</th><th>厂商</th><th>项目</th><th>幅度</th><th>备注</th></tr></thead><tbody><tr><td>2026-01</td><td>月之暗面</td><td>Kimi Coding Plan</td><td>计费方式变更</td><td>由按 Prompt 切换为按 Token</td></tr><tr><td>2026-02-12</td><td><b>智谱</b></td><td>GLM Coding Plan</td><td><b>+30% 起</b></td><td>GLM-5 发布当日，本轮涨价起点</td></tr><tr><td>2026-03-13</td><td>腾讯云</td><td>混元 HY2.0 Instruct</td><td><b>+463%（输入）</b></td><td>¥0.0008 → ¥0.004505 / 千 tokens；同时 GLM-5、MiniMax 2.5、Kimi 2.5 结束免费公测转正式计费</td></tr><tr><td>2026-03-16</td><td>智谱</td><td>GLM-5-Turbo</td><td>+20%</td><td>一个月内第二次</td></tr><tr><td>2026-04-08</td><td>智谱</td><td>GLM-5.1</td><td>+10%</td><td>年内第三次；海外版月费近乎翻倍</td></tr><tr><td>2026-04-09</td><td>腾讯云</td><td>AI 算力 / 容器 / EMR</td><td>+5%</td><td>—</td></tr><tr><td>2026-04-18</td><td>阿里云</td><td>AI 算力卡 / CPFS 存储</td><td>+5%～34% / +30%</td><td>算力卡最高 +34%</td></tr><tr><td>2026-04-18</td><td>百度智能云</td><td>AI 算力 / 并行文件存储</td><td>+5%～30% / +30%</td><td>与阿里同日生效</td></tr><tr><td>2026-05</td><td>字节跳动</td><td>豆包订阅</td><td>68 / 200 / 500 元每月</td><td>C 端由免费转三档付费</td></tr><tr><td>2026-07</td><td>月之暗面</td><td>Kimi K3</td><td>输出 +208%</td><td>¥100/百万 tokens</td></tr><tr><td>2026-08</td><td>智谱</td><td>GLM Coding Plan 改版</td><td>+141%～261%</td><td>Lite/Pro/Max 由 49/149/469 升至 118/538/1078 元</td></tr><tr><td>2026-08-16</td><td><b>DeepSeek</b></td><td>V4-Flash API</td><td><b>峰值较 5 月低点 +1,100%</b></td><td>引入峰谷定价（高峰为闲时 2 倍）；9/10 又下调闲时缓存命中价 60%</td></tr><tr><td>2026-08-26</td><td>阿里 / 智谱</td><td>Qwen3.8-Flash / GLM-5.3-Flash</td><td>反向低价</td><td>开源 flash 线：Qwen ¥0.8/¥2.7，GLM ¥0.8/¥2.8</td></tr><tr><td>2026-09-10</td><td><b>DeepSeek</b></td><td>V4.1-Flash 发布</td><td><b>闲时 −33% / 输出 −11%</b></td><td>架构换代降价：552B MoE 新结构使 KV Cache 压缩、HBM 需求降至 1/4；闲时输入 ¥1.5 → ¥1、输出 ¥4.5 → ¥4；V4-Flash 同日下线，9/14 起 V4-Pro 请求被路由至此</td></tr><tr><td>2026-09-18</td><td><b>智谱</b></td><td>GLM-5.3-FlashX</td><td><b>+150% / +150%</b></td><td>极速档：¥0.8/¥2.8 → ¥2/¥7，速度由约 40 提至最高 200 tokens/s；同代模型按速度拆档，定价权回到厂商</td></tr></tbody></table></div>
+  <div class="callout"><strong>为什么反转</strong>：Agent 与长上下文把单次任务的 token 消耗抬高数十倍，中国日均 token 调用量由 2025 年 3 月的百亿级升至 2026 年 3 月的 <b>140 万亿</b>（两年增超 1000 倍），而算力供给受制于国产芯片产能与交付周期。厂商选择用峰谷定价把批量任务导向夜间，而不是继续全线补贴。<strong>关键证据</strong>：智谱提价 83% 后调用量反增 400%——说明在这个阶段<b>价格不是需求的主要约束</b>。</div>
+
+  <div class="section-head"><div><h2>2026-09 当前价格梯队</h2><p>各家现行标准价（缓存未命中）。含非看板主体的云厂商与平台，作横向参照——不纳入会导致「中国最便宜」的误读。</p></div></div>
+  <div class="table-wrap card"><table><thead><tr><th>厂商</th><th>主力/旗舰模型</th><th>输入</th><th>输出</th><th>档位</th></tr></thead><tbody><tr><td>月之暗面</td><td>Kimi K3</td><td><b>20.00</b></td><td><b>100.00</b></td><td>最贵主力</td></tr><tr><td>智谱</td><td>GLM-5.2 / 5.3</td><td>8.00</td><td>28.00</td><td>技术定价</td></tr><tr><td>腾讯</td><td>Hy4 preview</td><td>6.00</td><td>18.00</td><td>参照</td></tr><tr><td>阿里</td><td>Qwen3.7 Max</td><td>6.00</td><td>18.00</td><td>参照（限时五折）</td></tr><tr><td>DeepSeek</td><td>V4-Pro</td><td>4.50 / 9.00</td><td>13.50 / 27.00</td><td>闲时 / 高峰 · 已路由</td></tr><tr><td>MiniMax</td><td>M3</td><td>2.10</td><td>8.40</td><td>性价比</td></tr><tr><td>智谱</td><td>GLM-5.3-FlashX</td><td>2.00</td><td>7.00</td><td>极速档 200 tok/s</td></tr><tr><td>阶跃星辰</td><td>step-3.7-flash</td><td>1.35</td><td>8.10</td><td>多模态</td></tr><tr><td>DeepSeek</td><td>V4.1-Flash</td><td>1.00 / 2.00</td><td>4.00 / 8.00</td><td>闲时 / 高峰</td></tr><tr><td>阿里 / 智谱</td><td>Qwen3.8-Flash / GLM-5.3-Flash</td><td>0.80</td><td>2.70 / 2.80</td><td>开源低价</td></tr><tr><td>字节</td><td>豆包 Seed 1.6 Flash</td><td>0.075</td><td>0.75</td><td>参照，地板价</td></tr></tbody></table></div>
+  <p class="note">同输入价跨度 <b>267 倍</b>（¥0.075 → ¥20）。同样一项典型任务，选用不同模型成本差距据测算接近 <b>60 倍</b>。梯队分化意味着「国产模型 = 便宜」这个 2024 年的结论已经失效——能否被调用，取决于任务价值而非单价高低。</p>
+
+  <div class="section-head"><div><h2>两年价格战：24 个月时间线</h2><p>从 2024 年 5 月点燃到 2026 年反转，完整节点。</p></div></div>
+  <div class="grid g2">
+    <article class="card"><div class="timeline">
+      <div class="event"><time>2024-05</time><h4>价格战点燃</h4><p>DeepSeek-V2 定价 ¥1/¥2，约为 GPT-4 Turbo 的 1%。同月字节豆包 pro-32k 报 ¥0.0008/千 tokens（较行业低 99.3%），阿里通义 Qwen-Long 输入降 97% 至 ¥0.0005/千，百度文心 Speed/Lite 全面免费，腾讯混元-lite 转免费。</p></div>
+      <div class="event"><time>2024-08</time><h4>MiniMax 跟进</h4><p>abab-6.5s 输入输出统一下调至 ¥1/百万 tokens。</p></div>
+      <div class="event"><time>2024-12</time><h4>V3 与 R1</h4><p>DeepSeek-V3 定价 ¥2/¥8；2025-01 R1 上市即以 $0.55/$2.19 震出推理溢价，触发英伟达单日市值大幅回撤。</p></div>
+      <div class="event"><time>2025-02</time><h4>首次峰谷尝试</h4><p>DeepSeek 推出夜间折扣（UTC 16:30–00:30），V3 降 50%、R1 降 75%。同月智谱与月之暗面先后下调部分 API 价格。</p></div>
+      <div class="event"><time>2025-08</time><h4>折扣退场</h4><p>DeepSeek-V3.1 将 V3 与 R1 合并为单一模型与价目，夜间折扣静默取消，对已按夜间排程的开发者构成实质涨价。</p></div>
+      <div class="event"><time>2025-09/12</time><h4>降至地板</h4><p>V3.2-Exp 永久降价 50%+ 至 ¥2/¥3，为三家中最低。行业平均 API 输出价已在一年内升 48%——<b>均价上行与个别厂商降价同时发生</b>。</p></div>
+      <div class="event"><time>2026-02</time><h4>智谱转身</h4><p>GLM-5 发布当日提价，输入输出升至 ¥4/¥18（+100%/+125%），GLM Coding Plan 涨 30% 起。本轮涨价的起点，也是「价格内卷→技术定价」的分界。</p></div>
+      <div class="event"><time>2026-03</time><h4>云厂商集体跟进</h4><p>腾讯混元 HY2.0 输入涨 463%，阿里云与百度智能云同日宣布 AI 算力与存储涨 5%–34%，4/18 生效。三周内三大云厂商调价，成本压力从厂商端传导至用户端。</p></div>
+      <div class="event"><time>2026-08</time><h4>K 型分化定型</h4><p>智谱 Coding Plan 再涨 141%–261%，Kimi K3 输出 ¥100；DeepSeek 反向引入峰谷定价并预告「大幅上调」，同时阿里、智谱用开源 flash 线（¥0.8）守住低价入口。行业平均输出价升至 ¥21.9（较 1Q25 +79%）。</p></div>
+      <div class="event"><time>2026-09</time><h4>分化而非收敛</h4><p>9/10 DeepSeek 发布<b>V4.1-Flash</b>：552B MoE 非对称新架构把 KV Cache 压到上一代的 1/4 HBM 需求，闲时输入价随之回落至 ¥1、输出降至 ¥4，9/14 起 V4-Pro 请求被全部路由至此。9/18 智谱推出<b>极速档 GLM-5.3-FlashX</b>（¥2 / ¥7，最高 200 tokens/s），用速度而非能力拆档提价。一个用架构降本继续降价，一个用速度拆档继续提价——涨价的技术理由从「更聪明」扩展到「更快」，降价的技术理由回到「更省」。同期智谱 GLM-5.3 维持 ¥8/¥28 高位。同一市场里，最贵与最便宜相差 267 倍，且两侧都在扩大优势。</p></div>
+    </div></article>
+    <article class="card gold"><div class="label">口径与存疑</div>
+      <div class="table-wrap"><table><thead><tr><th>项目</th><th>冲突/处理</th></tr></thead><tbody><tr><td>GLM-5.2 价格</td><td>国内站 ¥8/¥28；研报引海外站 $1.4/$4.4（折约 ¥10/¥31）。<b>两站定价体系不同，不可混用</b></td></tr><tr><td>DeepSeek V4-Pro</td><td>三个口径并存：研报「低至 ¥4.5/¥13.5」（闲时）、¥9/¥27（高峰）、$1.32/$3.96。<b>本页并列不取单一值</b></td></tr><tr><td>DeepSeek V3 输入价</td><td>¥0.5 与 ¥2 两个数值流传，实为不同时点（含/不含缓存命中）。采信 ¥2 为缓存未命中标价</td></tr><tr><td>DeepSeek V4.1-Flash</td><td>峰谷双价：闲时 ¥1/¥4、高峰 ¥2/¥8（缓存命中 ¥0.02/¥0.04）。<b>本页只取闲时价，高峰需 ×2</b>。与 V4-Flash 的 4 月首发价（¥1/¥2）不可直接比——中间隔了 8/17 的峰谷上调</td></tr><tr><td>智谱 GLM-4.5-Air 输出</td><td>¥2（短输出档）与 ¥6（长输出档）并存，本表取主力档 ¥6</td></tr><tr><td>阶跃 Step 3 输出</td><td>¥4（限时优惠）与 ¥10（阶梯最高档）并存，本页两者都列</td></tr><tr><td>零一万物 Yi-Lightning</td><td>¥0.99 未标明输入/输出/统一价，来自媒体转述，未在官方页核实</td></tr><tr><td>行业平均输出价</td><td>¥12.2 → ¥21.9 序列出自第三方（Artificial Analysis 与国内监测平台口径），<b>单一来源，仅作趋势参照</b></td></tr><tr><td>MiniMax M2/M2.5</td><td>美元口径 $0.30/$1.20 与人民币 ¥2.1/¥8.4 基本一致；第三方站另列 $0.26/$1.02，为不同档位</td></tr><tr><td>百川 Baichuan4</td><td>¥100/¥100 已两年未调，为媒体与官方价目表交叉确认，但未见近期官方页直接核验</td></tr><tr><td>面壁 / 无问芯穹</td><td><b>无公开可比标价</b>，非零价，已按数据缺口标注</td></tr></tbody></table></div>
+      <div class="source">方法论：本页优先列示缓存未命中、非批处理的标准价；<b>部分为促销价、研报或媒体记录，来源与例外以各行说明为准，未逐项完成官方复核</b>。缓存命中价通常为标价的 1/5～1/18，长前缀场景实际成本显著低于标价，横向比较时若混入缓存价会失真。分档计费模型取主力档并注明。历史节点以研报与官方发布材料交叉核对；Alpha派 两轮累计检索 51 份相关研报（广发、华创、国盛、中银、国泰海通、招商、浙商、长江、平安、华鑫、中信建投、万联、国金、华安、长城、德邦、东方、华龙等），原整理记录称核心调价幅度有多个来源；本次未逐条复核其独立性。首次建立：2026-09-21，同日补入 DeepSeek V4.1-Flash 节点。</div>
+    </article>
+  </div>
+</section>
+
+<footer class="footnote">模型性价比 · AI Labs 看板｜首次建立：2026-09-22｜数据截点 2026-09-22｜从「中国模型」看板拆出独立成板｜仅用于研究记录，不构成投资建议。</footer>
+</main><script>
+document.querySelectorAll('.tab').forEach(btn=>btn.addEventListener('click',()=>{document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));document.querySelectorAll('.pane').forEach(x=>x.classList.remove('active'));btn.classList.add('active');document.getElementById(btn.dataset.tab).classList.add('active');history.replaceState(null,'','#'+btn.dataset.tab)}));
+const initial=location.hash.slice(1);if(initial&&document.getElementById(initial)){document.querySelector(`[data-tab="${initial}"]`)?.click()}
+</script></body></html>

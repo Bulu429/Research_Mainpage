@@ -1,0 +1,488 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CCL 覆铜板 · PCB产业链</title>
+<style>
+:root {
+  --bg:#f8f9fa; --card:#fff; --border:#e9ecef;
+  --text:#212529; --text2:#6c757d;
+  --accent:#0891b2; --up:#16a34a; --dn:#dc2626; --warn:#d97706;
+  --up-bg:#f0fdf4; --dn-bg:#fef2f2; --warn-bg:#fffbeb;
+  --tag-bg:#ecfeff; --tag:#0e7490;
+  --sh: 0 1px 3px rgba(0,0,0,.08),0 1px 2px rgba(0,0,0,.04);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;background:var(--bg);color:var(--text);font-size:14px;line-height:1.6}
+
+/* header */
+.hdr{background:var(--card);border-bottom:1px solid var(--border);padding:14px 28px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:var(--sh)}
+.hdr-l{display:flex;align-items:center;gap:12px}
+.hdr-title{font-size:19px;font-weight:700}
+.hdr-sub{font-size:11px;color:var(--text2)}
+.back-link{display:inline-flex;align-items:center;gap:4px;font-size:11px;color:var(--text2);text-decoration:none;padding:4px 10px;border:1px solid var(--border);border-radius:6px;background:var(--bg);white-space:nowrap}.back-link:hover{color:var(--accent);border-color:var(--accent)}
+.badge-up{display:inline-flex;align-items:center;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600;background:var(--up-bg);color:var(--up);border:1px solid #86efac}
+.badge-tag{display:inline-flex;align-items:center;padding:3px 10px;border-radius:12px;font-size:11px;background:var(--tag-bg);color:var(--tag);border:1px solid #a5f3fc}
+.hdr-meta{font-size:11px;color:var(--text2);text-align:right}
+
+/* layout */
+.wrap{max-width:1360px;margin:0 auto;padding:20px 28px}
+
+/* section title */
+.st{font-size:13px;font-weight:700;margin-bottom:11px;padding-bottom:6px;border-bottom:2px solid var(--accent);display:flex;align-items:center;gap:6px}
+
+/* card */
+.card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:16px 18px;box-shadow:var(--sh)}
+
+/* kpi grid */
+.kpi-g{display:grid;grid-template-columns:repeat(4,1fr);gap:11px;margin-bottom:20px}
+.kpi .lbl{font-size:10px;color:var(--text2);text-transform:uppercase;letter-spacing:.4px;margin-bottom:4px}
+.kpi .val{font-size:19px;font-weight:700;margin-bottom:3px}
+.kpi .note{font-size:10px;color:var(--text2)}
+.c-up{color:var(--up)} .c-warn{color:var(--warn)} .c-dn{color:var(--dn)}
+
+/* criteria */
+.crit-g{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:20px}
+.crit .cl{font-size:10px;font-weight:700;color:var(--text2);text-transform:uppercase;margin-bottom:3px}
+.crit .cv{font-size:12px;font-weight:600;margin-bottom:2px}
+.crit .cn{font-size:10px;color:var(--text2)}
+
+/* ── TABS ── */
+.tab-nav{display:flex;gap:0;border-bottom:2px solid var(--border);margin-bottom:14px}
+.tab-btn{padding:8px 16px;font-size:12px;font-weight:600;color:var(--text2);background:none;border:none;cursor:pointer;white-space:nowrap;border-bottom:2px solid transparent;margin-bottom:-2px;transition:color .15s,border-color .15s}
+.tab-btn:hover{color:var(--accent)}
+.tab-btn.active{color:var(--accent);border-bottom-color:var(--accent)}
+.tab-pane{display:none}
+.tab-pane.active{display:block}
+
+/* company table */
+.ctable{width:100%;border-collapse:collapse;margin-bottom:14px;font-size:12px}
+.ctable th{text-align:left;padding:6px 8px;font-size:10px;font-weight:600;color:var(--text2);background:var(--bg);border-bottom:1px solid var(--border);white-space:nowrap}
+.ctable td{padding:8px 8px;border-bottom:1px solid var(--border);vertical-align:middle}
+.ctable tr:last-child td{border-bottom:none}
+.ctable tr:hover td{background:#fafbfc}
+.ctable td strong{white-space:nowrap}
+.tab-step-hd{display:flex;align-items:center;gap:10px;font-size:13px;font-weight:700;color:var(--text);padding:8px 12px;background:var(--bg);border-left:3px solid var(--accent);border-radius:0 6px 6px 0;margin-bottom:12px}
+.tab-step-hd .step-num{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:50%;background:var(--accent);color:#fff;font-size:11px;font-weight:800;flex-shrink:0}
+.tab-step-hd .step-note{margin-left:auto;font-size:10px;font-weight:400;color:var(--text2)}
+
+/* assessment badges */
+.a-super{display:inline-block;padding:1px 7px;border-radius:3px;font-size:10px;font-weight:700;background:var(--up-bg);color:var(--up);border:1px solid #86efac}
+.a-meet{display:inline-block;padding:1px 7px;border-radius:3px;font-size:10px;font-weight:700;background:var(--tag-bg);color:var(--tag);border:1px solid #a5f3fc}
+.a-miss{display:inline-block;padding:1px 7px;border-radius:3px;font-size:10px;font-weight:700;background:var(--warn-bg);color:var(--warn);border:1px solid #fcd34d}
+.a-na{display:inline-block;padding:1px 7px;border-radius:3px;font-size:10px;color:var(--text2);background:var(--bg);border:1px solid var(--border)}
+
+/* yoy numbers */
+.yp{color:var(--up);font-weight:600} .yn{color:var(--dn);font-weight:600}
+code{font-size:10px;background:var(--tag-bg);color:var(--tag);padding:1px 5px;border-radius:3px}
+
+/* segment summary */
+.seg-sum{font-size:12px;color:var(--text2);background:var(--bg);border-radius:6px;padding:10px 12px;border-left:3px solid var(--accent);margin-top:8px}
+
+/* charts row */
+.chart-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px}
+.chart-box{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:14px 16px}
+.chart-box h4{font-size:10px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:.4px;margin-bottom:10px}
+.chart-wrap{position:relative;height:180px}
+
+/* summary table */
+.sum-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;margin-bottom:20px}
+.sum-item{padding:10px 12px;border-radius:8px;background:var(--card);border:1px solid var(--border)}
+.sum-seg{font-size:10px;font-weight:700;color:var(--text2);margin-bottom:3px}
+.sum-val{font-size:12px;font-weight:600}
+.sum-note{font-size:10px;color:var(--text2);margin-top:2px}
+
+/* bottom grids */
+.b-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px}
+.tl-item{display:flex;gap:10px;padding:8px 0;border-bottom:1px solid var(--border)}
+.tl-item:last-child{border-bottom:none}
+.tl-dot{width:8px;height:8px;border-radius:50%;margin-top:5px;flex-shrink:0}
+.tl-d-p{background:var(--warn)} .tl-d-t{background:var(--accent)} .tl-d-r{background:var(--dn)}
+.tl-date{font-size:10px;color:var(--text2);white-space:nowrap;min-width:60px;margin-top:2px}
+.tl-evt{font-size:12px;font-weight:500}
+.tl-meta{font-size:10px;color:var(--text2);margin-top:1px}
+.tl-st{font-size:10px;padding:1px 6px;border-radius:3px;white-space:nowrap;align-self:flex-start;margin-top:2px}
+.st-p{background:var(--warn-bg);color:var(--warn)}
+.st-t{background:var(--tag-bg);color:var(--tag)}
+.st-r{background:var(--dn-bg);color:var(--dn)}
+
+.j-grid{display:grid;grid-template-columns:2fr 1fr;gap:12px;margin-bottom:20px}
+.logic-box{font-size:13px;line-height:1.8;background:var(--bg);border-radius:6px;padding:12px 14px;border-left:3px solid var(--accent);margin-bottom:10px}
+.strat-g{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.strat-i{padding:7px 9px;border-radius:6px;font-size:11px}
+.s-core{background:var(--up-bg);border:1px solid #86efac}
+.s-atk{background:var(--tag-bg);border:1px solid #a5f3fc}
+.s-wch{background:var(--warn-bg);border:1px solid #fcd34d}
+.strat-l{font-size:10px;font-weight:700;margin-bottom:2px}
+.risk-i{display:flex;gap:6px;margin-bottom:6px;font-size:12px}
+.rn{background:var(--dn-bg);color:var(--dn);font-size:10px;font-weight:700;padding:1px 5px;border-radius:3px;flex-shrink:0;margin-top:2px}
+
+/* 2Q26 earnings module */
+.earn-hero{background:linear-gradient(135deg,#ecfeff 0%,#fff 52%,#f0fdf4 100%);border:1px solid #bae6fd;border-radius:12px;padding:18px 20px;margin-bottom:16px;box-shadow:var(--sh)}
+.earn-head{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:14px}
+.earn-title{font-size:18px;font-weight:800;letter-spacing:.1px}
+.earn-sub{font-size:11px;color:var(--text2);margin-top:3px}
+.earn-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.earn-kpi{background:rgba(255,255,255,.86);border:1px solid var(--border);border-radius:8px;padding:11px 12px}
+.earn-kpi .ek{font-size:10px;font-weight:700;color:var(--text2);margin-bottom:4px}
+.earn-kpi .ev{font-size:13px;font-weight:700;line-height:1.45}
+.earn-kpi .en{font-size:10px;color:var(--text2);margin-top:4px;line-height:1.45}
+.earn-split{display:grid;grid-template-columns:1.15fr .85fr;gap:12px;margin-bottom:14px}
+.earn-list{display:grid;gap:8px}
+.earn-item{padding:9px 11px;background:var(--bg);border-radius:7px;border-left:3px solid var(--accent);font-size:12px;line-height:1.65}
+.earn-item.warn{border-left-color:var(--warn);background:var(--warn-bg)}
+.earn-item.risk{border-left-color:var(--dn);background:var(--dn-bg)}
+.table-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.table-scroll .ctable{min-width:980px}
+.source-note{font-size:10px;color:var(--text2);padding:9px 11px;background:#f8fafc;border:1px dashed #cbd5e1;border-radius:7px;line-height:1.55}
+.callout-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.callout{border:1px solid var(--border);border-radius:8px;padding:11px 12px;background:#fff}
+.callout h4{font-size:12px;margin-bottom:5px;color:var(--accent)}
+.callout p,.callout li{font-size:11px;color:var(--text2);line-height:1.65}
+.callout ul{padding-left:16px}
+
+@media(max-width:900px){.kpi-g{grid-template-columns:repeat(2,1fr)}.chart-row{grid-template-columns:1fr}.crit-g{grid-template-columns:1fr}.b-grid{grid-template-columns:1fr}.j-grid{grid-template-columns:1fr}.sum-grid{grid-template-columns:repeat(2,1fr)}.earn-grid{grid-template-columns:repeat(2,1fr)}.earn-split,.callout-grid{grid-template-columns:1fr}}
+
+/* ── 折叠功能 ── */
+.st {
+  cursor: pointer;
+  user-select: none;
+  justify-content: space-between;
+}
+.st-arrow {
+  font-size: 13px;
+  color: var(--text2);
+  transition: transform 0.25s ease;
+  display: inline-block;
+  flex-shrink: 0;
+}
+.sec-body {
+  overflow: hidden;
+  transition: max-height 0.35s cubic-bezier(0.4,0,0.2,1), opacity 0.25s ease;
+  max-height: 9999px;
+  opacity: 1;
+}
+.sec-body.collapsed {
+  max-height: 0 !important;
+  opacity: 0;
+}
+.st.collapsed .st-arrow {
+  transform: rotate(-90deg);
+}
+
+/* ── Tooltip（修订历史 / 数据冲突）── */
+.tip-host {
+  border-bottom: 1px dashed var(--accent);
+  cursor: help;
+  display: inline;
+}
+.tip-host::after {
+  content: '▲';
+  font-size: 7px;
+  color: var(--accent);
+  vertical-align: super;
+  margin-left: 2px;
+  opacity: 0.65;
+}
+.tip-bubble {
+  display: none;
+  position: fixed;
+  z-index: 9999;
+  background: #1e293b;
+  color: #f1f5f9;
+  border-radius: 8px;
+  padding: 10px 13px;
+  font-size: 11px;
+  line-height: 1.5;
+  min-width: 240px;
+  max-width: 320px;
+  box-shadow: 0 6px 20px rgba(0,0,0,.3);
+  pointer-events: none;
+}
+.tip-bubble.visible { display: block; }
+.tip-title {
+  font-size: 10px;
+  font-weight: 700;
+  color: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: .5px;
+  margin-bottom: 7px;
+  padding-bottom: 5px;
+  border-bottom: 1px solid rgba(255,255,255,.1);
+}
+.tip-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 0;
+  border-bottom: 1px solid rgba(255,255,255,.05);
+}
+.tip-row:last-of-type { border-bottom: none; }
+.tip-date { color: #94a3b8; white-space: nowrap; min-width: 44px; font-size: 10px; }
+.tip-val  { font-weight: 600; flex: 1; }
+.tip-delta-up { color: #4ade80; font-size: 10px; }
+.tip-delta-dn { color: #f87171; font-size: 10px; }
+.tip-delta-eq { color: #94a3b8; font-size: 10px; }
+.tip-src  { color: #64748b; font-size: 10px; white-space: nowrap; }
+.tip-note {
+  font-size: 10px;
+  color: #94a3b8;
+  margin-top: 7px;
+  padding-top: 6px;
+  border-top: 1px solid rgba(255,255,255,.1);
+  line-height: 1.6;
+}
+.tip-conflict-row { display: flex; flex-direction: column; gap: 3px; padding: 4px 0; border-bottom: 1px solid rgba(255,255,255,.05); }
+.tip-conflict-row:last-of-type { border-bottom: none; }
+.tip-conflict-src { color: #fbbf24; font-size: 10px; }
+.tip-conflict-val { font-size: 11px; }
+.tip-chosen { color: #4ade80; font-size: 10px; margin-top: 5px; padding-top: 5px; border-top: 1px solid rgba(255,255,255,.1); }
+
+
+.split-header{display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap;margin:18px 0 22px}
+.split-header h1{font-size:28px;line-height:1.25;margin:3px 0 5px}
+.split-header p{color:var(--text2);font-size:12px;margin:0}
+.split-nav{display:flex;gap:7px;flex-wrap:wrap;margin:12px 0 18px}
+.split-nav a{font-size:12px;font-weight:700;padding:7px 11px;border:1px solid var(--border);border-radius:6px;background:var(--card);color:var(--text2);text-decoration:none}
+.split-nav a:hover,.split-nav a[aria-current="page"]{color:var(--accent);border-color:var(--accent);background:var(--tag-bg)}
+.split-source{font-size:11px;color:var(--text2);margin:24px 0;padding:12px;border:1px solid var(--border);border-radius:6px;background:var(--bg)}
+.split-main .tab-pane{display:block}
+.svg-chart,.svg-chart svg{width:100%;height:100%;display:block}
+.global-ccl{margin:18px 0 20px;padding:16px;border:1px solid #cbd5e1;border-radius:10px;background:#fff}
+.global-ccl h3{font-size:16px;margin:0 0 6px;color:var(--text)}
+.global-ccl p{font-size:11px;color:var(--text2);line-height:1.6;margin:0 0 12px}
+.global-ccl .global-scroll{overflow-x:auto}
+.global-ccl table{width:100%;min-width:850px;border-collapse:collapse;font-size:11px;line-height:1.55}
+.global-ccl th,.global-ccl td{border-bottom:1px solid #e2e8f0;padding:9px 8px;text-align:left;vertical-align:top}
+.global-ccl th{background:#f1f5f9;color:#334155;white-space:nowrap}
+.global-ccl td:first-child{font-weight:700;white-space:nowrap}
+.global-ccl tbody tr:hover{background:#f8fafc}
+.global-ccl .scope{color:#64748b}
+.global-ccl .scope strong{color:#0f766e}
+.global-ccl .global-note{margin-top:10px;padding:9px 10px;background:#f8fafc;border:1px solid #e2e8f0;border-radius:6px}
+@media(max-width:800px){.split-header h1{font-size:22px}.split-main .ctable{display:block;overflow-x:auto}}
+</style><style>
+/* industry-dashboard-shell:start */
+:root{--bg:#f4f6f1;--card:#fff;--paper:#fff;--border:#dce2d8;--line:#dce2d8;
+ --text:#1d292c;--text-primary:#1d292c;--text2:#667477;--text-secondary:#667477;
+ --accent:#247052;--deep:#23483f;--green:#247052}
+body{background:#f4f6f1!important;font-family:"Microsoft YaHei","PingFang SC","Segoe UI",sans-serif}
+.industry-shell{position:relative;z-index:101;display:flex;align-items:center;gap:10px 14px;
+ flex-wrap:wrap;padding:11px max(20px,calc((100vw - 1280px)/2));background:#23483f;
+ color:#fff;font:500 12px/1.5 "Microsoft YaHei","PingFang SC",sans-serif}
+.industry-shell *{box-sizing:border-box}
+.industry-shell a{color:#d7f2df!important;text-decoration:none!important;font-weight:700}
+.industry-shell a:hover{text-decoration:underline!important}
+.industry-shell__name{font-weight:800;font-size:13px;color:#fff}
+.industry-shell__kind{border:1px solid #91bd9e;border-radius:999px;padding:2px 8px;color:#e9f8ed}
+.industry-shell__asof{margin-left:auto;color:#e2efe5}
+body a[data-industry-legacy-back="1"]{display:none!important}
+@media(max-width:680px){.industry-shell{padding:10px 15px}.industry-shell__asof{margin-left:0;width:100%}}
+/* industry-dashboard-shell:end */
+</style></head>
+<body><!-- industry-dashboard-shell:start --><nav class="industry-shell" aria-label="行业看板统一导航"><a href="../industry-fundamentals-entry.html">行业看板</a><span aria-hidden="true">/</span><span class="industry-shell__name">CCL 覆铜板 · PCB产业链</span><span class="industry-shell__kind">环节专题</span><span class="industry-shell__asof">数据日期与口径见正文</span></nav><!-- industry-dashboard-shell:end --><!-- industry-review:start --><aside class="industry-review" style="padding:10px 20px;background:#fff8e5;color:#665424;font-size:12px;line-height:1.7;border-bottom:1px solid #e7ddbc"><strong>口径说明 · 页面修订2026-09-22</strong>｜按各表2026H1/2Q26范围使用；公司总营收与CCL分部收入不同，149.04和147.75亿港元不得直接替换；待补金额不按零。</aside><!-- industry-review:end --><div class="wrap split-main">
+<header class="split-header"><div><a class="back-link" href="../industry-fundamentals-entry.html" data-industry-legacy-back="1">← 行业基本面入口</a><h1>CCL 覆铜板</h1><p>高速材料代际、价格传导与公司竞争格局。</p></div><a class="back-link" href="PCB-dashboard.html">返回 PCB 总览</a></header>
+<nav class="split-nav" aria-label="PCB看板导航"><a href="PCB-dashboard.html">总览</a><a href="pcb-manufacturing-dashboard.html">PCB 制造</a><a href="ccl-dashboard.html" aria-current="page">CCL 覆铜板</a><a href="electronic-cloth-dashboard.html">电子布</a><a href="drill-dashboard.html">钻针</a><a href="pcb-equipment-dashboard.html">PCB 设备</a></nav>
+
+<div class="st">CCL 覆铜板 · 竞争格局与跟踪数据</div>
+<div class="card"><div class="tab-pane active" id="tab-ccl">
+    <table class="ctable">
+      <thead><tr><th>公司</th><th>代码</th><th>披露状态</th><th>26Q2收入</th><th>收入YoY</th><th>26Q2毛利率</th><th>毛利率YoY</th><th>26Q2扣非</th><th>扣非YoY</th><th>口径 / 跟踪点</th></tr></thead>
+      <tbody>
+        <tr><td><strong>生益科技</strong></td><td><code>600183</code></td><td><span class="a-meet">已披露</span></td><td>108.84亿</td><td><span class="yp">+54.0%</span></td><td>32.6%</td><td><span class="yp">+5.8pct</span></td><td>18.25亿</td><td><span class="yp">+122.9%</span></td><td style="color:var(--text2)">公司整体口径，包含生益电子贡献</td></tr>
+        <tr><td><strong>南亚新材</strong></td><td><code>688519</code></td><td><span class="a-meet">已披露</span></td><td>23.91亿</td><td><span class="yp">+76.8%</span></td><td>21.7%</td><td><span class="yp">+9.0pct</span></td><td>3.05亿</td><td><span class="yp">+367.8%</span></td><td style="color:var(--text2)">覆铜板业务；公司整体口径</td></tr>
+        <tr><td><strong>建滔积层板</strong></td><td><code>1888.HK</code></td><td><span class="a-na">仅半年报</span></td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td style="color:var(--text2)">港股仅披露26H1，见下方独立口径；不并入单季度图</td></tr>
+      </tbody>
+    </table>
+    <div style="font-size:11px;color:var(--text2);padding:8px 10px;background:#f8fafc;border-radius:6px;margin:8px 0"><strong>26Q2财务口径：</strong>A股两家公司为26Q2单季度合并报表，YoY对比25Q2；收入、毛利率及扣非取项目 <a title="本地研究底稿，未随公开看板发布" aria-disabled="true">PCB季度业绩对比.xlsx</a> 缓存值。建滔只列单独的26H1港元数据。业绩状态只表示已披露，不代表超预期。</div>
+    <div class="seg-sum"><strong>建滔积层板 26H1（港元）：</strong>收入149.04亿港元，同比+55%；毛利率30.7%，同比约+12.3pct；归母利润28.87亿港元，同比+209%。此为半年累计，且利润指标是归母而非扣非，不与上表26Q2 A股单季度扣非直接比较。<a href="https://www.kblaminates.com/en/upload/portal/20260824/202608241223596609.pdf">公司中期业绩公告</a>。</div>
+    <section class="global-ccl" id="global-ccl-vendors" aria-labelledby="global-ccl-title">
+      <h3 id="global-ccl-title">全球 CCL 厂商对照 · 2026 年 9 月核验</h3>
+      <p>补充台湾、韩国、日本及欧美厂商。财务数字优先使用覆铜板产品或材料事业收入；期间和币种保留原披露口径。产品型号只说明技术布局，不代表该产品已贡献特定收入。</p>
+      <div class="global-scroll"><table>
+        <thead><tr><th>厂商 / 地区</th><th>最新可核财务规模</th><th>业务口径</th><th>技术与应用线索</th><th>一手来源</th></tr></thead>
+        <tbody>
+          <tr><td>建滔积层板<br><small>中国香港 · 1888.HK</small></td><td><strong>147.75 亿港元</strong><br>2026H1</td><td class="scope">积层板事业收入，<strong>含上游材料</strong>；不等于纯 CCL 销售额</td><td>覆铜板及铜箔、树脂、电子布等垂直产业链</td><td><a href="https://www.kblaminates.com/en/upload/portal/20260824/202608241223596609.pdf" target="_blank" rel="noopener">2026H1 公告</a></td></tr>
+          <tr><td>台光电 EMC<br><small>中国台湾 · 2383.TW</small></td><td><strong>472.24 亿新台币</strong><br>2026H1；其中 Q2 为 278.67 亿</td><td class="scope"><strong>CCL 产品收入</strong>；同期半固化片 325.86 亿新台币，合并收入 803.42 亿新台币</td><td>覆铜板与半固化片双产品线；财报按产品拆分，可继续跟踪结构</td><td><a href="https://www.emctw.com/upload/media/New_Investors/Financial_Information/Quarterly_Results/Consolidated/EN/2026/273512_115Q2_%E5%90%88%E4%BD%B5_%E5%AE%8C%E7%A8%BF%E8%B2%A1%E5%A0%B1_word_IMSv1_EN.pdf" target="_blank" rel="noopener">2026Q2 财报附注 17</a></td></tr>
+          <tr><td>联茂 ITEQ<br><small>中国台湾 · 6213.TW</small></td><td><strong>149.74 亿新台币</strong><br>2026H1；其中 Q2 为 82.82 亿</td><td class="scope"><strong>CCL 产品收入</strong>；同期玻纤胶片 56.24 亿新台币，合并收入 206.73 亿新台币</td><td>高速低损耗、封装及射频基板；应用覆盖数据中心、网通与汽车电子</td><td><a href="https://www.iteqcorp.com/wp-content/uploads/2026/08/2026Q2%E8%B2%A1%E5%8B%99%E5%A0%B1%E5%91%8A.pdf" target="_blank" rel="noopener">2026Q2 财报附注 20</a> · <a href="https://www.iteqcorp.com/wp-content/uploads/2026/08/2026Q2.pdf" target="_blank" rel="noopener">法说资料</a></td></tr>
+          <tr><td>斗山电子材料 BG<br><small>韩国 · Doosan</small></td><td><strong>6,173 亿韩元</strong><br>2026Q1</td><td class="scope">电子材料事业净销售额，<strong>含 CCL 等</strong>；此处仅使用已核验的一季度法定披露</td><td>封装基板、网络板与柔性板用 CCL</td><td><a href="https://kind.krx.co.kr/external/2026/05/15/001638/20260515003623/11013.htm" target="_blank" rel="noopener">韩国交易所 Q1 报告</a></td></tr>
+          <tr><td>台燿 TUC<br><small>中国台湾 · 6274.TW</small></td><td>待提取可比产品收入</td><td class="scope">官网提供 2026Q2 法说资料；此表暂不以合并收入替代 CCL 收入</td><td>ThunderClad 5Q/5R 极低损耗、400G 超低损耗系列；高速数字与高频材料</td><td><a href="https://www.tuc.com.tw/zh-tw/products2" target="_blank" rel="noopener">官方产品矩阵</a> · <a href="https://www.tuc.com.tw/zh-tw/corporate/id/133" target="_blank" rel="noopener">法说资料</a></td></tr>
+          <tr><td>Panasonic Industry<br><small>日本</small></td><td>未单独披露 CCL 收入</td><td class="scope">集团业务口径较宽，不与独立 CCL 厂商收入直接比较</td><td>MEGTRON 8：面向 800GbE 高速网络设备的低传输损耗多层板材料</td><td><a href="https://na.industrial.panasonic.com/products/electronic-materials/circuit-board-materials/series/148029" target="_blank" rel="noopener">MEGTRON 8 产品页</a></td></tr>
+          <tr><td>Isola<br><small>欧美 · 非上市</small></td><td>未公开可比收入</td><td class="scope">私营公司；只列官网可核的产品性能</td><td>Tachyon 100G、I-Tera MT40；后者 Df 0.0031，用于高速数字与射频板</td><td><a href="https://www.isola-group.com/pcb-laminates-prepreg/i-tera-mt40/" target="_blank" rel="noopener">I-Tera MT40 产品页</a></td></tr>
+          <tr><td>Rogers<br><small>美国 · ROG</small></td><td>未单独披露 CCL 收入</td><td class="scope">Advanced Electronics Solutions 覆盖多类产品，不作为 CCL 销售额</td><td>RO4000/RO3000 高频覆铜材料；偏射频、微波、天线等特殊应用</td><td><a href="https://www.rogerscorp.com/advanced-electronics-solutions/ro4000-series-laminates" target="_blank" rel="noopener">RO4000 产品页</a></td></tr>
+        </tbody>
+      </table></div>
+      <p class="global-note"><strong>阅读口径：</strong>H1 与 Q1 不能直接比较，港元、新台币、韩元未换汇；“CCL 产品收入”“事业收入”“集团收入”也不能混排为全球份额。各公司财报未统一披露高速产品占比、平方米产能与 ASP，因此本表不推算全球排名或 M8/M9 销售额。</p>
+    </section>
+    <div style="font-size:11px;padding:8px 10px;background:#ecfeff;border-radius:6px;border:1px solid #a5f3fc;margin-top:8px;margin-bottom:4px">
+      📈 <strong>FR-4 CCL价格走势：</strong><span data-tip="ccl-fr4-price" style="font-weight:600">2025初100元→年中120-130元→2026年Q1 150-200元/张</span>（2021年高点210-220元，本轮接近但未超）；建滔2025年涨价4轮，2026年已涨2轮，日本龙头2026年1月宣布3月起涨30%
+    </div>
+    <div class="seg-sum"><strong>先前研究判断，产能与价格待复核：</strong>生益是A股M8 CCL绝对龙头，常熟Q2满产后M8产能翻倍；南亚新材规模小但高速放量（全球首批NV M5代送样，4-5月关键窗口）；建滔积层板为全球最大CCL厂（全球~20%份额），CCL涨价最直接受益方。<strong>M9成本是M8的1.5倍，PTFE是M9的2倍+</strong>，材料迭代带来CCL ASP持续上台阶。</div>
+    <div class="chart-row" style="margin-top:14px">
+      <div class="chart-box"><h4>CCL — 季度收入（亿元）</h4><div class="chart-wrap"><div id="c-ccl-rev" class="svg-chart"></div></div></div>
+      <div class="chart-box"><h4>CCL — 毛利率（%）</h4><div class="chart-wrap"><div id="c-ccl-gm" class="svg-chart"></div></div></div>
+    </div>
+  </div></div>
+<p class="split-source">本页由原 PCB 研究看板的「CCL 覆铜板」分栏迁出，原有表格及季度图表数据保留。公司财务表及季度趋势已更新至 2026Q2；其余产品、价格和产能资料保留原调研日期，2Q26 跨环节更新见 <a href="PCB-dashboard.html">PCB 总览</a>。<a title="本地研究底稿，未随公开看板发布" aria-disabled="true">查看拆分前历史完整版</a>。</p>
+</div>
+<script>const QTR = ['23Q1','23Q2','23Q3','23Q4','24Q1','24Q2','24Q3','24Q4','25Q1','25Q2','25Q3','25Q4','26Q1','26Q2'];
+const COLORS = ['#0891b2','#16a34a','#8b5cf6','#d97706','#f43f5e','#64748b'];
+
+// ── 修订历史 & 数据冲突 数据字典 ──
+// 维护说明：每次数字更新时，把旧值连同来源移入 records，新值写入看板表格
+// type: 'history' = 同一指标的时间修订序列
+// type: 'conflict' = 多来源说法不同，需标注采用哪个
+const tipData = {
+
+  'dingtech-capacity': {
+    type: 'history',
+    label: '鼎泰高科 — 月产量修订记录',
+    records: [
+      { date: '2026Q1实际', value: '1.3亿支/月', delta: '↑', source: '鼎泰高科纪要' },
+      { date: '2025年11月底', value: '1.15亿支/月', delta: '↑', source: '2025Q3交流会' },
+      { date: '2025Q4', value: '1.1亿支/月', delta: '↑', source: '鼎泰高科纪要' },
+      { date: '2025H1', value: '~1.0亿支/月', delta: '↑', source: '鼎泰高科纪要' },
+      { date: '2024均', value: '~8,500万支/月', delta: '—', source: '鼎泰高科纪要' },
+    ],
+    note: '目标：2026年中1.5亿→2026年底2亿→2027年极限2.5亿 | 持续上修=供不应求确认'
+  },
+
+  'ccl-fr4-price': {
+    type: 'history',
+    label: 'FR-4 CCL 价格（元/张）修订记录',
+    records: [
+      { date: '2026年Q1', value: '150-200元/张', delta: '↑', source: '中金/国泰海通研报' },
+      { date: '2026年1月', value: '日本龙头宣布3月起涨30%', delta: '↑', source: '开源研报' },
+      { date: '2025年底', value: '累计涨价25个点以上', delta: '↑', source: '开源研报' },
+      { date: '2025年中', value: '120-130元/张', delta: '↑', source: '建滔4轮涨价' },
+      { date: '2025年初', value: '~100元/张', delta: '—', source: '中金研报' },
+    ],
+    note: '2021年历史高点210-220元/张；本轮接近但未超历史高点 | 建滔2025年共涨4轮，2026年已涨2轮'
+  },
+
+  'diamond-drill-status': {
+    type: 'conflict',
+    label: '金刚石钻针 — 替代威胁评估',
+    sources: [
+      { source: '市场担忧', value: '金刚石钻针可能替代传统钨钢针，改变鼎泰/金洲竞争格局' },
+      { source: '研报核实（天风/长江机械）', value: '实验室阶段，全球年产仅~56万只（月均不足5万支），是鼎泰单月产量的0.04%' },
+      { source: '行业定位', value: '补充方案而非替代；传统钨钢+TEC/PVD涂层升级仍是主流且成本更优' },
+    ],
+    chosen: '短期1-2年内不影响竞争格局；主要参与者（沃尔德/四方达）仍在少数客户测试中，未进小批量出货',
+    note: '⚠ 长期（3年+）技术路线仍有不确定性，需持续跟踪测试进展'
+  },
+
+  'zhongwu-aip-share': {
+    type: 'conflict',
+    label: 'AI PCB钻针市占率 — 来源分歧',
+    sources: [
+      { source: '中钨金洲纪要260512（自述）', value: '80%+（AiP PCB，0.2mm以上规格）' },
+      { source: '鼎泰高科纪要（自述）',       value: '全球最大，目标40%+（全规格PCB钻针）' },
+      { source: '产量推算交叉验证',            value: '鼎泰1.3亿 vs 金洲9,000万 → 产量比≈59:41，80%不可信' },
+    ],
+    chosen: '金洲80%可能特指AiP载板最后一道通孔工序（极小径超长径比），金洲是该子分类唯一批量供应商；整体AI PCB钻针份额两强接近，实际以产量比59:41更可信',
+    note: '⚠ 自述市占率存在口径选择偏差，企业倾向于选对自己最有利的子分类'
+  }
+
+};
+
+// ── Tooltip 渲染逻辑 ──
+const tipBubble = document.createElement('div');
+tipBubble.className = 'tip-bubble';
+document.body.appendChild(tipBubble);
+
+function buildTipHtml(key) {
+  const d = tipData[key];
+  if (!d) return '';
+  const icon = d.type === 'history' ? '📅' : '⚠️';
+  let html = `<div class="tip-title">${icon} ${d.label}</div>`;
+  if (d.type === 'history') {
+    d.records.forEach(r => {
+      const dc = r.delta === '↑' ? 'tip-delta-up' : r.delta === '↓' ? 'tip-delta-dn' : 'tip-delta-eq';
+      html += `<div class="tip-row">
+        <span class="tip-date">${r.date}</span>
+        <span class="tip-val">${r.value}</span>
+        <span class="${dc}">${r.delta}</span>
+        <span class="tip-src">${r.source}</span>
+      </div>`;
+    });
+  } else if (d.type === 'conflict') {
+    d.sources.forEach(s => {
+      html += `<div class="tip-conflict-row">
+        <span class="tip-conflict-src">来源：${s.source}</span>
+        <span class="tip-conflict-val">${s.value}</span>
+      </div>`;
+    });
+    if (d.chosen) html += `<div class="tip-chosen">✓ 采用：${d.chosen}</div>`;
+  }
+  if (d.note) html += `<div class="tip-note">${d.note}</div>`;
+  return html;
+}
+
+function positionTip(e) {
+  const bw = tipBubble.offsetWidth, bh = tipBubble.offsetHeight;
+  const x = e.clientX + 14, y = e.clientY + 14;
+  tipBubble.style.left = (x + bw > window.innerWidth - 10 ? e.clientX - bw - 14 : x) + 'px';
+  tipBubble.style.top  = (y + bh > window.innerHeight - 10 ? e.clientY - bh - 14 : y) + 'px';
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('[data-tip]').forEach(el => {
+    el.classList.add('tip-host');
+    el.addEventListener('mouseenter', e => {
+      tipBubble.innerHTML = buildTipHtml(el.dataset.tip);
+      tipBubble.classList.add('visible');
+      positionTip(e);
+    });
+    el.addEventListener('mousemove', positionTip);
+    el.addEventListener('mouseleave', () => tipBubble.classList.remove('visible'));
+  });
+});
+
+
+
+function renderTrend(id, companies, metric) {
+  const host = document.getElementById(id); if (!host) return;
+  const W=700,H=220,left=39,right=12,top=37,bottom=29;
+  const vals=companies.flatMap(c=>c[metric]).map(v=>metric==='gm'?v*100:v);
+  const lo=metric==='gm'?Math.floor((Math.min(...vals)-2)/5)*5:0;
+  const hi=Math.ceil((Math.max(...vals)+2)/5)*5;
+  const x=i=>left+(W-left-right)*i/(QTR.length-1);
+  const y=v=>top+(H-top-bottom)*(hi-v)/(hi-lo);
+  const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  let svg=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${metric==='gm'?'季度毛利率':'季度收入'}趋势图" preserveAspectRatio="xMidYMid meet">`;
+  for(let i=0;i<=4;i++){const v=lo+(hi-lo)*i/4, yy=y(v);svg+=`<line x1="${left}" y1="${yy}" x2="${W-right}" y2="${yy}" stroke="#e5eaf0"/><text x="${left-5}" y="${yy+3}" text-anchor="end" fill="#64748b" font-size="9">${v.toFixed(0)}${metric==='gm'?'%':''}</text>`;}
+  QTR.forEach((q,i)=>{if(i%2===0||i===QTR.length-1)svg+=`<text x="${x(i)}" y="${H-8}" text-anchor="middle" fill="#64748b" font-size="9">${q}</text>`;});
+  companies.forEach((c,i)=>{const color=COLORS[i%COLORS.length],vs=c[metric].map(v=>metric==='gm'?v*100:v);svg+=`<polyline points="${vs.map((v,j)=>`${x(j)},${y(v)}`).join(' ')}" fill="none" stroke="${color}" stroke-width="2.4" stroke-linejoin="round"/><circle cx="${x(vs.length-1)}" cy="${y(vs.at(-1))}" r="3.5" fill="${color}"/>`;});
+  let lx=left;companies.forEach((c,i)=>{svg+=`<line x1="${lx}" y1="15" x2="${lx+13}" y2="15" stroke="${COLORS[i%COLORS.length]}" stroke-width="3"/><text x="${lx+17}" y="18" fill="#334155" font-size="10">${esc(c.name)}</text>`;lx+=Math.max(80,28+String(c.name).length*11);});
+  host.innerHTML=svg+'</svg>';
+}
+function mkRevChart(id, companies){renderTrend(id,companies,'rev')}
+function mkGmChart(id, companies){renderTrend(id,companies,'gm')}
+function renderCapex(){
+  const host=document.getElementById('c-pcb-capex');if(!host)return;
+  const years=['2018','2019','2020','2021','2022','2023','2024','2025','2026E'];
+  const series=[
+    ['鹏鼎控股',[40.4,38.5,54.5,69.7,43.4,35.1,28.4,66.3,168],'#7c3aed'],
+    ['胜宏科技',[11.6,14.8,21,15.4,10.6,6.4,8.3,66.2,200],'#dc2626'],
+    ['深南电路',[11.8,21.8,24.9,26.6,33.8,32.5,25.3,37.7,94.3],'#0891b2'],
+    ['沪电股份',[2.7,4.4,3.7,5,8.8,8.1,21.5,32,70.4],'#16a34a'],
+    ['景旺电子',[5.3,9.2,18.8,23.9,18.9,14.5,18.5,27.7,60.9],'#d97706'],
+    ['生益电子',[2.7,5.8,10.7,9.8,6.9,6.2,4.2,16.4,49.2],'#94a3b8']];
+  const W=700,H=240,L=37,R=10,T=27,B=45,max=700,step=(W-L-R)/years.length,bw=step*.55;
+  const y=v=>H-B-(H-T-B)*v/max;
+  let svg=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="PCB厂资本开支堆叠柱状图" preserveAspectRatio="none">`;
+  for(let v=0;v<=700;v+=175){let yy=y(v);svg+=`<line x1="${L}" y1="${yy}" x2="${W-R}" y2="${yy}" stroke="#e5eaf0"/><text x="${L-5}" y="${yy+3}" text-anchor="end" fill="#64748b" font-size="9">${v}</text>`;}
+  years.forEach((yr,j)=>{let sum=0,x=L+step*j+(step-bw)/2;series.forEach(s=>{let val=s[1][j],h=y(sum)-y(sum+val);svg+=`<rect x="${x}" y="${y(sum+val)}" width="${bw}" height="${h}" fill="${s[2]}"><title>${s[0]} ${yr}：${val}亿元</title></rect>`;sum+=val;});svg+=`<text x="${x+bw/2}" y="${H-B+14}" text-anchor="middle" fill="#64748b" font-size="9">${yr}</text>`;});
+  let lx=L;series.forEach(s=>{svg+=`<rect x="${lx}" y="${H-17}" width="8" height="8" fill="${s[2]}"/><text x="${lx+11}" y="${H-9}" fill="#334155" font-size="9">${s[0]}</text>`;lx+=100;});host.innerHTML=svg+'</svg>';
+}
+
+const D = {
+  ccl: [
+    {"name": "生益科技", "rev": [37.55868, 41.24853, 44.66789, 42.38562, 44.2326, 52.06249, 51.15287, 56.43534, 56.11371, 70.68526, 79.33658, 78.17583, 81.41456, 108.84156], "gm": [0.197408, 0.188826, 0.199575, 0.183825, 0.213003, 0.217835, 0.22869, 0.220946, 0.246009, 0.268521, 0.281445, 0.257766, 0.281013, 0.326303]},
+    {"name": "南亚新材", "rev": [6.96884, 7.76734, 8.19556, 6.89657, 6.56687, 9.54604, 8.33115, 9.17135, 9.52451, 13.52605, 13.58278, 15.64495, 18.32161, 23.91494], "gm": [0.091081, 0.024038, 0.027327, 0.028385, 0.082965, 0.113962, 0.065317, 0.079681, 0.099656, 0.126283, 0.108934, 0.130012, 0.151965, 0.216762]},
+  ],
+};
+
+mkRevChart('c-ccl-rev', D.ccl);
+mkGmChart('c-ccl-gm', D.ccl);
+
+</script></body></html>

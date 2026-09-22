@@ -1,0 +1,531 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>中国模型 · AI Labs 看板</title>
+<style>
+:root{--ink:#17211e;--muted:#687570;--bg:#f4f3ee;--panel:#ffffff;--panel2:#edf2ee;--line:#d7ded9;--z:#e45732;--m:#168b70;--gold:#9b7119;--danger:#b33f3f;--shadow:0 16px 42px rgba(31,48,42,.09)}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:radial-gradient(circle at 12% 0,#e5eee8 0,transparent 31%),radial-gradient(circle at 90% 2%,#f5e8de 0,transparent 26%),var(--bg);color:var(--ink);font:14px/1.7 "Noto Serif SC","Source Han Serif SC","Microsoft YaHei",serif}.shell{max-width:1320px;margin:auto;padding:0 28px 56px}.top{position:sticky;top:0;z-index:20;margin:0 -28px;padding:14px 28px;display:flex;align-items:center;justify-content:space-between;background:rgba(244,243,238,.9);backdrop-filter:blur(18px);border-bottom:1px solid var(--line)}.back{color:var(--muted);text-decoration:none;font:600 12px/1 sans-serif}.back:hover{color:var(--ink)}.stamp{font:11px/1.2 ui-monospace,Consolas,monospace;color:var(--muted);letter-spacing:.08em}.hero{padding:56px 0 30px;display:grid;grid-template-columns:1.35fr .65fr;gap:34px;align-items:end}.eyebrow{font:700 12px/1 sans-serif;letter-spacing:.22em;color:var(--gold);text-transform:uppercase}.hero h1{font-size:clamp(42px,7vw,84px);line-height:.98;margin:14px 0 20px;letter-spacing:-.055em;max-width:900px}.hero h1 em{font-style:normal;color:var(--z)}.lede{max-width:820px;color:#465650;font-size:17px}.hero-note{border-left:1px solid var(--line);padding-left:24px;color:var(--muted)}.hero-note strong{display:block;color:var(--ink);font-size:24px;margin-bottom:6px}.nav{display:flex;gap:8px;flex-wrap:wrap;border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:11px 0;margin-bottom:26px}.tab{appearance:none;border:0;background:transparent;color:var(--muted);padding:10px 14px;border-radius:999px;cursor:pointer;font:700 13px/1 sans-serif}.tab:hover{color:var(--ink);background:#e7ebe7}.tab.active{background:var(--ink);color:#fff}.pane{display:none}.pane.active{display:block;animation:rise .35s ease both}@keyframes rise{from{opacity:0;transform:translateY(8px)}}.grid{display:grid;gap:16px}.g4{grid-template-columns:repeat(4,1fr)}.g3{grid-template-columns:repeat(3,1fr)}.g2{grid-template-columns:repeat(2,1fr)}.card{--tone:var(--gold);position:relative;background:linear-gradient(150deg,#fff,#fafbf8);border:1px solid var(--line);border-radius:18px;padding:22px;box-shadow:var(--shadow);overflow:hidden}.card:before{content:"";position:absolute;inset:0 auto auto 0;width:100%;height:2px;background:linear-gradient(90deg,var(--tone,var(--gold)),transparent)}.label{font:700 11px/1.3 sans-serif;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}.value{font:700 clamp(24px,3vw,38px)/1.1 sans-serif;margin:12px 0 7px}.delta{font:600 12px/1.5 sans-serif;color:var(--tone,var(--gold))}.note{color:var(--muted);font-size:12px}.section-head{display:flex;align-items:end;justify-content:space-between;gap:18px;margin:34px 0 14px}.section-head h2{font-size:26px;line-height:1.2;margin:0}.section-head p{margin:0;color:var(--muted);max-width:700px}.company{display:flex;gap:12px;align-items:center}.sigil{width:42px;height:42px;border-radius:13px;display:grid;place-items:center;background:var(--tone);color:#fff;font:900 16px/1 sans-serif}.company h3{margin:0;font-size:19px}.company small{color:var(--muted);font:12px/1.4 sans-serif}.bar-row{display:grid;grid-template-columns:150px 1fr 72px;gap:12px;align-items:center;margin:13px 0}.track{height:10px;border-radius:10px;background:#e4e9e5;overflow:hidden}.fill{height:100%;width:var(--w);background:var(--tone);border-radius:10px}.bar-row b{text-align:right;font:700 12px/1 sans-serif}.callout{margin-top:16px;padding:15px 17px;border-radius:12px;background:#fbfaf5;border:1px dashed var(--line);color:#52615d}.callout strong{color:var(--tone)}table{width:100%;border-collapse:collapse;min-width:720px}th,td{text-align:left;border-bottom:1px solid var(--line);padding:12px 10px;vertical-align:top}th{color:var(--muted);font:700 11px/1.3 sans-serif;letter-spacing:.08em;text-transform:uppercase}td b{font-family:ui-monospace,Consolas,monospace}.table-wrap{overflow:auto}.pill{display:inline-block;border:1px solid var(--line);border-radius:999px;padding:3px 9px;color:#4f5e59;font:700 11px/1.4 sans-serif}.source{font-size:12px;color:var(--muted)}.source a{color:#126e5a}.timeline{border-left:1px solid var(--line);margin-left:7px;padding-left:24px}.event{position:relative;padding:0 0 22px}.event:before{content:"";position:absolute;left:-29px;top:7px;width:9px;height:9px;border-radius:50%;background:var(--tone);box-shadow:0 0 0 5px var(--bg)}.event time{font:700 11px/1 sans-serif;color:var(--tone)}.event h4{margin:6px 0 3px;font-size:15px}.event p{margin:0;color:var(--muted)}.thesis{font-size:18px;line-height:1.75;border-left:3px solid var(--tone);padding-left:18px}.risk{display:flex;gap:12px;margin:13px 0}.risk i{font-style:normal;color:var(--danger)}.footnote{margin-top:30px;padding-top:18px;border-top:1px solid var(--line);color:var(--muted);font-size:11px}.z{--tone:var(--z)}.m{--tone:var(--m)}.gold{--tone:var(--gold)}.arr-feature{padding:26px 28px 20px;margin-bottom:18px}.arr-head{display:flex;justify-content:space-between;gap:18px;align-items:start;margin-bottom:8px}.arr-head h2{margin:4px 0 5px;font-size:28px;line-height:1.2}.arr-head p{margin:0;color:var(--muted)}.arr-legend{display:flex;gap:14px;flex-wrap:wrap;font:700 12px/1.4 sans-serif}.arr-legend span{display:flex;align-items:center;gap:7px}.arr-legend i{width:24px;height:3px;border-radius:4px;background:var(--tone)}.arr-chart{width:100%;height:auto;display:block}.arr-chart text{font-family:ui-monospace,Consolas,monospace;fill:var(--muted);font-size:12px}.arr-chart .gridline{stroke:#dfe4df;stroke-width:1}.arr-chart .zline{fill:none;stroke:var(--z);stroke-width:5;stroke-linecap:round;stroke-linejoin:round}.arr-chart .mline{fill:none;stroke:var(--m);stroke-width:5;stroke-linecap:round;stroke-linejoin:round}.arr-chart .weekline{fill:none;stroke:var(--z);stroke-width:2;stroke-dasharray:6 6}.arr-chart .zpoint{fill:#fff;stroke:var(--z);stroke-width:4}.arr-chart .mpoint{fill:#fff;stroke:var(--m);stroke-width:4}.arr-chart .weekpoint{fill:#fff;stroke:var(--z);stroke-width:2;stroke-dasharray:3 2}.arr-chart .value-label{fill:var(--ink);font-weight:700;font-size:13px}.arr-milestones{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:4px}.arr-milestones div{padding:10px 12px;background:#f5f6f2;border:1px solid var(--line);border-radius:10px}.arr-milestones b{display:block;font:800 15px/1.4 sans-serif}.arr-milestones small{color:var(--muted)}
+@media(max-width:920px){.hero,.g4,.g3,.g2{grid-template-columns:1fr 1fr}.hero{align-items:start}.hero-note{border-left:0;padding-left:0}.g4 .card:last-child{grid-column:span 2}}
+@media(max-width:620px){.shell{padding:0 16px 40px}.top{margin:0 -16px;padding:13px 16px}.hero,.g4,.g3,.g2{grid-template-columns:1fr}.g4 .card:last-child{grid-column:auto}.hero{padding-top:42px}.stamp{display:none}.bar-row{grid-template-columns:112px 1fr 58px}.section-head,.arr-head{display:block}.section-head p{margin-top:8px}.arr-legend{margin-top:12px}.arr-feature{padding:20px 14px 16px}.arr-milestones{grid-template-columns:1fr 1fr}}
+.arr-chart .alline{fill:none;stroke:#7c3aed;stroke-width:5;stroke-linecap:round;stroke-linejoin:round}
+.arr-chart .kmline{fill:none;stroke:#be185d;stroke-width:3;stroke-dasharray:6 5;stroke-linecap:round;stroke-linejoin:round}
+.arr-chart .alpoint{fill:#fff;stroke:#7c3aed;stroke-width:4}
+.arr-chart .bypoint{fill:#fff;stroke:#2f6fd0;stroke-width:4}
+.arr-chart .kmpoint{fill:#be185d;stroke:none}
+.arr-chart .dspoint{fill:#0e7490;stroke:none}
+.pr-chart{width:100%;display:block;margin:6px 0 4px}
+.pr-chart text{font:600 12px/1 ui-monospace,Consolas,monospace;fill:var(--muted)}
+.pr-chart .pr-zgl{fill:none;stroke:#e45732;stroke-width:4.5;stroke-linecap:round;stroke-linejoin:round}
+.pr-chart .pr-dsl{fill:none;stroke:#0e7490;stroke-width:3;stroke-dasharray:8 5;stroke-linecap:round;stroke-linejoin:round}
+.pr-chart .pr-mml{fill:none;stroke:#168b70;stroke-width:3;stroke-dasharray:3 4;stroke-linecap:round;stroke-linejoin:round}
+.pr-chart .pr-kml{fill:none;stroke:#be185d;stroke-width:4.5;stroke-linecap:round;stroke-linejoin:round}
+.pr-chart .pr-zgp{fill:#fff;stroke:#e45732;stroke-width:4}
+.pr-chart .pr-dsp{fill:#0e7490;stroke:none}
+.pr-chart .pr-mmp{fill:#fff;stroke:#168b70;stroke-width:4}
+.pr-chart .pr-kmp{fill:#be185d;stroke:none}
+.pr-chart .value-label text{fill:var(--ink);font-weight:700;font-size:13px;font-family:"Noto Serif SC",sans-serif}
+.pr-chart .pr-note{fill:#9b7119;font-weight:700;font-size:12px;font-family:"Noto Serif SC",sans-serif}
+/* ===== 逐家价格史：单块密排（仅本区块生效） ===== */
+@media(max-width:1000px){table{min-width:0}}
+.pricebook{padding:20px 20px 12px}
+.pricebook .pb-head{margin:0 0 13px;align-items:center}
+.pricebook .pb-head h2{font-size:23px}
+.pricebook .pb-head p{font-size:12.5px;max-width:660px}
+.pb-stamp{font:600 11px/1 ui-monospace,Consolas,monospace;color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:5px 10px;white-space:nowrap}
+.pb-cols{column-count:2;column-gap:14px}
+.pbi{--tone:var(--gold);break-inside:avoid;-webkit-column-break-inside:avoid;page-break-inside:avoid;background:#fbfcf9;border:1px solid var(--line);border-radius:12px;padding:10px 12px 11px;margin:0 0 12px}
+.pbi .label{font-size:10.5px;margin-bottom:4px}
+.pbi .table-wrap{overflow:visible}
+.pbi table{min-width:0;width:100%;font-size:12.5px}
+.pbi th,.pbi td{padding:4px 6px;font-size:12.5px;line-height:1.45;vertical-align:middle;border-bottom:1px solid #e8ece8}
+.pbi th{padding:3px 6px;font-size:10px;letter-spacing:.04em}
+.pbi tbody tr:last-child td{border-bottom:0}
+.pbi th:nth-child(1),.pbi td:nth-child(1){overflow-wrap:anywhere}
+.pbi th:nth-child(2),.pbi td:nth-child(2),.pbi th:nth-child(3),.pbi td:nth-child(3){white-space:nowrap}
+.pbi td b{font-size:12.5px}
+.pbi .note{margin:6px 0 0;font-size:11.5px;line-height:1.62}
+.pbi .callout{margin:0;padding:9px 11px;font-size:11.5px;line-height:1.62;border-radius:10px}
+@media(max-width:900px){.pb-cols{column-count:1}.pricebook .pb-head{display:block}.pb-stamp{display:inline-block;margin-top:8px;white-space:normal}}
+</style>
+<style>
+/* industry-dashboard-shell:start */
+:root{--bg:#f4f6f1;--card:#fff;--paper:#fff;--border:#dce2d8;--line:#dce2d8;
+ --text:#1d292c;--text-primary:#1d292c;--text2:#667477;--text-secondary:#667477;
+ --accent:#247052;--deep:#23483f;--green:#247052}
+body{background:#f4f6f1!important;font-family:"Microsoft YaHei","PingFang SC","Segoe UI",sans-serif}
+.industry-shell{position:relative;z-index:101;display:flex;align-items:center;gap:10px 14px;
+ flex-wrap:wrap;padding:11px max(20px,calc((100vw - 1280px)/2));background:#23483f;
+ color:#fff;font:500 12px/1.5 "Microsoft YaHei","PingFang SC",sans-serif}
+.industry-shell *{box-sizing:border-box}
+.industry-shell a{color:#d7f2df!important;text-decoration:none!important;font-weight:700}
+.industry-shell a:hover{text-decoration:underline!important}
+.industry-shell__name{font-weight:800;font-size:13px;color:#fff}
+.industry-shell__kind{border:1px solid #91bd9e;border-radius:999px;padding:2px 8px;color:#e9f8ed}
+.industry-shell__asof{margin-left:auto;color:#e2efe5}
+body a[data-industry-legacy-back="1"]{display:none!important}
+@media(max-width:680px){.industry-shell{padding:10px 15px}.industry-shell__asof{margin-left:0;width:100%}}
+/* industry-dashboard-shell:end */
+</style></head>
+<body><!-- industry-dashboard-shell:start --><nav class="industry-shell" aria-label="行业看板统一导航"><a href="../industry-fundamentals-entry.html">行业看板</a><span aria-hidden="true">/</span><span class="industry-shell__name">中国模型 · AI Labs 看板</span><span class="industry-shell__kind">专题研究</span><span class="industry-shell__asof">数据日期与口径见正文</span></nav><!-- industry-dashboard-shell:end --><!-- industry-review:start --><aside class="industry-review" style="padding:10px 20px;background:#fff8e5;color:#665424;font-size:12px;line-height:1.7;border-bottom:1px solid #e7ddbc"><strong>口径说明 · 页面修订2026-09-22</strong>｜材料日期至2026-09；ARR/会计收入及公司/第三方口径分开。智谱旧MaaS日期和阿里8月美元值存在差异，已断线或标范围待核；不作为精确增长率依据。</aside><!-- industry-review:end --><main class="shell">
+<header class="top"><a class="back" href="../industry-fundamentals-entry.html" data-industry-legacy-back="1">← 行业基本面入口</a><div class="stamp">AI LABS / CN FRONTIER MODEL WATCH / 2026-09-21</div></header>
+<section class="hero"><div><div class="eyebrow">AI Labs · China frontier models</div><h1>中国模型<br><em>商业化观察站</em></h1><p class="lede">首期深挖智谱与 MiniMax，并把两家放回全球 ARR 坐标与中国模型资本化全景里看。先看 ARR 斜率，再看收入确认、推理毛利和资金消耗能否跟上。</p></div><aside class="hero-note"><strong>ARR 先行</strong>截至 2026 年 9 月上半月，智谱全业务口径 ARR 为 18 亿美元（历史MaaS平台约17亿元人民币的对应日期存在2025/12与2026/07两种记录，待核）；2026 年末目标由 24 亿上调至 30 亿美元。MiniMax 8 月 ARR 超过 8 亿美元。均非审计收入。</aside></section>
+
+<nav class="nav" aria-label="看板章节">
+  <button class="tab active" data-tab="overview">总览</button><button class="tab" data-tab="zhipu">智谱</button><button class="tab" data-tab="minimax">MiniMax</button><button class="tab" data-tab="deepseek">DeepSeek</button><button class="tab" data-tab="moonshot">月之暗面</button><button class="tab" data-tab="stepfun">阶跃星辰</button><button class="tab" data-tab="baichuan">百川智能</button><button class="tab" data-tab="lingyi">零一万物</button><button class="tab" data-tab="modelbest">面壁智能</button><button class="tab" data-tab="shengshu">生数科技</button><button class="tab" data-tab="wuwen">无问芯穹</button><button class="tab" data-tab="siliconflow">硅基流动</button><button class="tab" data-tab="compare">横向比较</button><button class="tab" data-tab="risks">风险与资料源</button>
+</nav>
+
+<section class="pane active" id="overview">
+  <article class="card arr-feature gold">
+    <div class="arr-head"><div><div class="label">中国阵营 ARR 坐标</div><h2>中国模型 ARR 对比｜US$ million</h2><p>6 家同图，只作量级与斜率参照。实线＝公司披露口径，虚线＝券商 / 第三方跟踪口径，两者不可直接比较；各家时点亦不相同。</p></div><div class="arr-legend"><span class="z"><i></i>智谱 Z.ai</span><span class="m"><i></i>MiniMax</span><span style="--tone:#2f6fd0"><i></i>字节跳动</span><span style="--tone:#7c3aed"><i></i>阿里巴巴</span><span style="--tone:#0e7490"><i></i>DeepSeek</span><span style="--tone:#be185d"><i></i>月之暗面</span><span class="gold"><i></i>智谱周度 / 指引</span></div></div>
+    <svg class="arr-chart" viewBox="0 0 940 350" role="img" aria-label="中国主要大模型公司 ARR 对比曲线">
+      <g><line class="gridline" x1="70" y1="305" x2="900" y2="305"/><line class="gridline" x1="70" y1="257" x2="900" y2="257"/><line class="gridline" x1="70" y1="209" x2="900" y2="209"/><line class="gridline" x1="70" y1="161" x2="900" y2="161"/><line class="gridline" x1="70" y1="113" x2="900" y2="113"/><line class="gridline" x1="70" y1="65" x2="900" y2="65"/></g>
+      <g text-anchor="end"><text x="60" y="309">0</text><text x="60" y="261">1,000</text><text x="60" y="213">2,000</text><text x="60" y="165">3,000</text><text x="60" y="117">4,000</text><text x="60" y="69">5,000</text></g>
+      <g text-anchor="middle"><text x="95" y="334">2025-12</text><text x="308" y="334">2026-03</text><text x="521" y="334">2026-06</text><text x="592" y="334">2026-07</text><text x="663" y="334">2026-08</text><text x="734" y="334">2026-09</text><text x="890" y="334">FY26E</text></g>
+      <path class="zline" d="M592 257 L663 228 L734 219"/>
+      <path class="mline" d="M166 298 L663 267"/>
+      <path class="alline" d="M237 252 L521 238"/>
+      <path class="kmline" d="M308 300 L450 295 L521 291"/>
+      <path class="weekline" style="stroke:var(--gold)" d="M663 228 L700 209 L890 161"/>
+      <g><circle class="zpoint" cx="95" cy="293" r="7"/><circle class="zpoint" cx="308" cy="293" r="7"/><circle class="zpoint" cx="521" cy="280" r="7"/><circle class="zpoint" cx="592" cy="257" r="7"/><circle class="zpoint" cx="663" cy="228" r="7"/><circle class="zpoint" cx="734" cy="219" r="7"/></g>
+      <g><circle class="mpoint" cx="166" cy="298" r="7"/><circle class="mpoint" cx="663" cy="267" r="7"/></g>
+      <g><circle class="alpoint" cx="237" cy="252" r="7"/><circle class="alpoint" cx="521" cy="238" r="7"/><line x1="663" x2="663" y1="190" y2="199" stroke="#7c3aed" stroke-width="5"><title>8月原记录$2.2bn与$2.4bn不一致，区间仅显示待核范围，非统计置信区间</title></line></g>
+      <g><circle class="kmpoint" cx="308" cy="300" r="4.5"/><circle class="kmpoint" cx="450" cy="295" r="4.5"/><circle class="kmpoint" cx="521" cy="291" r="4.5"/></g>
+      <g><circle class="dspoint" cx="592" cy="283" r="4.5"/><circle class="bypoint" cx="592" cy="113" r="7"/></g>
+      <g><circle class="weekpoint" style="stroke:var(--gold)" cx="700" cy="209" r="6"/><circle class="weekpoint" style="stroke:var(--gold)" cx="890" cy="161" r="6"/></g>
+      <g class="value-label"><text x="600" y="106" text-anchor="start">$4.0bn</text><text x="655" y="190" text-anchor="end">$2.2–2.4bn 待核</text><text x="746" y="232" text-anchor="start">$1.8bn</text><text x="676" y="280" text-anchor="start">$800m</text><text x="529" y="310" text-anchor="start">$300m</text><text x="600" y="299" text-anchor="start">$450m</text><text x="708" y="202" text-anchor="start">$2.0bn 周度</text><text x="884" y="150" text-anchor="end">$3.0bn 年度指引</text></g>
+    </svg>
+    <div class="arr-milestones"><div><b>字节跳动 ~$4.0bn</b><small>2026-07 · AI 相关年化收入，约九成来自 B 端</small></div><div><b>阿里巴巴 $2.2–2.4bn 待核</b><small>2026-08 · 原记录图为$2.2bn、文字为$2.4bn（¥160亿）；汇率/日期待核</small></div><div><b>智谱 $1.8bn</b><small>2026-09 全业务口径（MaaS $1.6bn）；FY26 年末指引由 $2.4bn 上调至 $3.0bn</small></div><div><b>中国 ≈ 美国 1/10</b><small>Rhodium：7 家合计约 $10.7bn，OpenAI+Anthropic 超 $100bn</small></div></div>
+    <div class="source">来源：智谱 2026H1 Call back、半年度业绩发布会及 2026-09 战略融资交流材料；MiniMax FY25/1H26 业绩交流会；字节、阿里为公开报道与券商研报口径；DeepSeek、月之暗面为券商 / 第三方跟踪口径。ARR 为管理层商业口径，不等于会计收入。<b>口径注意：（1）智谱 2026/07 起的点位（$1.0bn / $1.6bn / $1.8bn）为全业务口径（含 Coding/API、云厂商分成与 Agent），2025/12 的 $250m 为 MaaS 平台口径（人民币 17 亿元），两者已断开连线；早期点位仅保留历史记录，日期和范围待核；（2）字节为「AI 相关年化收入」、阿里为 MaaS 口径，均与智谱全业务口径不同；（3）DeepSeek、月之暗面为第三方跟踪数据，不可与公司披露数字同列比较。阶跃星辰、百川智能、零一万物、面壁智能、无问芯穹、硅基流动 6 家未披露 ARR（零一万物仅有 2025 年经审计收入人民币 2.5 亿元，非 ARR）；生数科技 Vidu ARR 仅超 US$0.2 亿（2025 末），低于本图可视范围，未入图。</b></div>
+  </article>
+  <div class="grid g4">
+    <article class="card z"><div class="label">智谱 1H26 收入</div><div class="value">RMB 9.54亿</div><div class="delta">同比 +399.7%</div><div class="note">开放平台/API 占 86.5%</div></article>
+    <article class="card m"><div class="label">MiniMax 1H26 收入</div><div class="value">US$1.17亿</div><div class="delta">同比 +283.1%</div><div class="note">平台与企业服务占 63.4%</div></article>
+    <article class="card z"><div class="label">智谱 1H26 毛利率</div><div class="value">26.4%</div><div class="delta">API 毛利率 24.6%</div><div class="note">整体同比下降 23.6pct，来自收入结构切换</div></article>
+    <article class="card m"><div class="label">MiniMax 1H26 毛利率</div><div class="value">17.9%</div><div class="delta">同比 +5.8pct</div><div class="note">公司归因为基础设施效率改善</div></article>
+  </div>
+  <div class="section-head"><div><h2>商业模式正在同向收敛</h2><p>但两家的“旧收入底座”不同：智谱来自私有化部署，MiniMax 来自 AI 原生消费产品。</p></div><span class="pill">披露口径：公司财报</span></div>
+  <div class="grid g2">
+    <article class="card z"><div class="company"><span class="sigil">Z</span><div><h3>智谱 / Z.AI</h3><small>2513.HK · 人民币口径</small></div></div><p class="thesis">2026 上半年完成从“卖模型项目”到“卖调用量”的收入翻转。增长质量的验证点已从收入增速转向 API 毛利、持续付费与推理成本。</p><div class="bar-row"><span>开放平台/API</span><div class="track"><div class="fill" style="--w:86.5%"></div></div><b>86.5%</b></div><div class="bar-row"><span>企业智能体</span><div class="track"><div class="fill" style="--w:5.8%"></div></div><b>5.8%</b></div><div class="bar-row"><span>企业大模型</span><div class="track"><div class="fill" style="--w:7%"></div></div><b>7.0%</b></div></article>
+    <article class="card m"><div class="company"><span class="sigil">M</span><div><h3>MiniMax</h3><small>0100.HK · 美元口径</small></div></div><p class="thesis">海外消费产品带来早期规模，2026 上半年企业平台成为第一大收入来源。后续要看 API 增长能否带来更高毛利，而非仅放大训练与推理支出。</p><div class="bar-row"><span>平台/企业服务</span><div class="track"><div class="fill" style="--w:63.4%"></div></div><b>63.4%</b></div><div class="bar-row"><span>AI 原生产品</span><div class="track"><div class="fill" style="--w:36.6%"></div></div><b>36.6%</b></div><div class="bar-row"><span>中国大陆以外</span><div class="track"><div class="fill" style="--w:60.8%"></div></div><b>60.8%</b></div></article>
+  </div>
+  <div class="section-head">
+    <div>
+      <h2>全球 ARR 坐标</h2>
+      <p>把中国阵营放回全球梯队。ARR 有三套并行口径，跨口径比较会得出相反结论，因此本表把每家的口径与时点一并列出。</p>
+    </div>
+    <span class="pill">2026/08–09</span>
+  </div>
+  <div class="table-wrap card">
+    <table>
+      <thead><tr><th>公司</th><th>最新 ARR</th><th>口径 / 时点</th><th>估值</th><th>隐含 PS</th></tr></thead>
+      <tbody>
+        <tr><td><b>Anthropic</b></td><td><b>&gt; $650 亿</b>（A）<br>$1,003 亿（B）⚠️</td><td>2026/07 底 · 09/07</td><td>$9,650 亿</td><td>~15x</td></tr>
+        <tr><td><b>OpenAI</b></td><td><b>&gt; $400 亿</b>（A）<br>$834 亿（B）⚠️</td><td>2026/08 中 · 09/06</td><td>$8,520 亿</td><td>~21x</td></tr>
+        <tr><td>Google（Gemini）</td><td>$55–65 亿（单产品）<br>$280 亿（AI 云整体）⚠️</td><td>2026 年中</td><td>未单独披露</td><td>—</td></tr>
+        <tr><td>Microsoft（Copilot）</td><td>$84 亿</td><td>2026/03 公司披露</td><td>未单独披露</td><td>—</td></tr>
+        <tr><td>Databricks</td><td>$54 亿</td><td>2026 初</td><td>$1,340 亿</td><td>~25x</td></tr>
+        <tr><td>Cursor（Anysphere）</td><td>$40 亿</td><td>2026/06 初</td><td>$600 亿（被 SpaceX 收购）</td><td>~15x</td></tr>
+        <tr><td>字节跳动（豆包 + 火山）</td><td>~$40 亿（≈¥272 亿）</td><td>2026/07</td><td>未上市</td><td>—</td></tr>
+        <tr><td>阿里巴巴（MaaS）</td><td>&gt; ¥160 亿（≈$24 亿）<br>AI 相关产品 ¥495 亿 ⚠️</td><td>2026/08</td><td>—</td><td>—</td></tr>
+        <tr style="background:#fdf0ea"><td><b>智谱 Z.ai</b></td><td><b>全业务 $18 亿</b><br>MaaS 平台 ¥17 亿（7 月）⚠️</td><td>2026/09 上半月</td><td>~$495 亿</td><td>~50x</td></tr>
+        <tr style="background:#eaf5f1"><td><b>MiniMax</b></td><td><b>&gt; $8 亿</b></td><td>2026/08</td><td>~$131 亿</td><td>~16x</td></tr>
+        <tr><td>DeepSeek</td><td>$4–5 亿</td><td>2026/07</td><td>~$740 亿</td><td>~150x</td></tr>
+        <tr><td>月之暗面 Kimi</td><td>~$3 亿<br>$10 亿 ⚠️</td><td>2026/06</td><td>$500 亿（投前）</td><td>~50–105x</td></tr>
+        <tr><td>xAI（Grok）</td><td>~$5 亿</td><td>2026 年中</td><td>$2,300 亿</td><td>~460x</td></tr>
+        <tr><td>Mistral AI</td><td>&gt; $4 亿</td><td>2026 年中</td><td>≈$240 亿</td><td>~25x</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="callout gold"><strong>三套口径，不能混用：</strong>A 公司 / 投资者披露（相对保守）｜B 第三方高频跟踪（YipitData 等，系统性高出 30%–50%）｜C 会计确认收入（远低于同期 ARR）。实例：Anthropic 7 月底 A 口径 &gt;$650 亿，而 9/07 的 B 口径已达 $1,002.8 亿，差 54%。再叠一层「全业务 vs 单产品」——Google AI 云整体 $280 亿与 Gemini 单产品 $55–65 亿差 4–5 倍。表内高亮行为本看板跟踪对象。</div>
+  <div class="grid g3">
+    <article class="card gold"><div class="label">总量差距</div><div class="value">~1/10</div><div class="delta">中国 7 家合计 ≈ $107 亿</div><div class="note">对比 OpenAI + Anthropic 合计 &gt;$1,000 亿（Rhodium Group，2026/03–08）。</div></article>
+    <article class="card gold"><div class="label">结构巧合</div><div class="value">B 端为主</div><div class="delta">第一梯队都在「卖铲子」</div><div class="note">智谱 ARR 全部来自 API / Coding；DeepSeek 约九成来自 API；Kimi API 占七成以上。</div></article>
+    <article class="card gold"><div class="label">资本强度倒挂</div><div class="value">-¥160 亿</div><div class="delta">阿里 + 腾讯 + 百度 2026H1 自由现金流</div><div class="note">同期中国 AI 基建投入 ¥9,320 亿（同比翻倍以上）；去年同期三家 FCF 为 +¥1,700 亿。</div></article>
+  </div>
+
+  <div class="section-head">
+    <div>
+      <h2>2026 资本动作时间线</h2>
+      <p>两家在 8 个月内各自走完 IPO、大规模配售与再融资。节奏差异主要来自市值水平与限售解禁时点。</p>
+    </div>
+    <span class="pill">港股 → 科创板</span>
+  </div>
+  <div class="grid g2">
+    <article class="card z">
+      <div class="label">智谱 02513.HK</div>
+      <div class="timeline">
+        <div class="event"><time>2026/01/08</time><h4>港交所上市</h4><p>发行价 116.2 港元，全球发售净额约 48.96 亿港元，IPO 市值约 511 亿港元；11 家基石认购约 29.8 亿港元。</p></div>
+        <div class="event"><time>2026/06</time><h4>启动回 A</h4><p>6/01 公告拟发行 A 股并在科创板上市，拟募资不超过 150 亿元；6/06 辅导备案 → 6/17 通过验收，仅 11 天。</p></div>
+        <div class="event"><time>2026/07/13</time><h4>首次配售</h4><p>配售价 1,588 港元，募资净额约 313.75 亿港元，创 2026 年港股科技企业单次配售规模新高。</p></div>
+        <div class="event"><time>2026/09/18</time><h4>「小股大债」再融资</h4><p>配售 156.83 亿港元（714 港元）+ 零息可转债本金 201.4 亿元，净额合计约 393 亿港元；悉数转股最高稀释 9.4%，债券于维也纳 MTF 上市。</p></div>
+        <div class="event"><time>2026/09/21</time><h4>市值回落</h4><p>约 3,692 亿港元（9/11 收 793 港元）。6/22 曾盘中触及 2,980 港元、市值一度达 1.33 万亿港元。</p></div>
+      </div>
+    </article>
+    <article class="card m">
+      <div class="label">MiniMax 00100.HK</div>
+      <div class="timeline">
+        <div class="event"><time>2026/01/09</time><h4>港交所上市</h4><p>发行价 165 港元，募资净额约 38.18 亿港元；公开发售超额认购 1,837.17 倍，14 家基石认购约 27 亿港元。</p></div>
+        <div class="event"><time>2026/03/18</time><h4>市值高点</h4><p>盘中最高 1,330 港元，市值一度超 4,000 亿港元。</p></div>
+        <div class="event"><time>2026/05/29</time><h4>启动回 A</h4><p>与中信证券签署辅导协议，启动科创板 IPO；5/31 公告已聘请专业顾问。募资金额未披露。</p></div>
+        <div class="event"><time>2026/07/10</time><h4>解禁日再融资</h4><p>配售 3,560 万股 @ 268 港元（95.41 亿港元）+ 65 亿港元零息可转债，合计逾 160.41 亿港元。当日收跌 17.98%。</p></div>
+        <div class="event"><time>2026/09/21</time><h4>市值回落</h4><p>收盘 295.2 港元，总市值约 1,031 亿港元，较峰值回撤约 74%。</p></div>
+      </div>
+    </article>
+  </div>
+
+  <div class="section-head">
+    <div>
+      <h2>回 A 进度：一个已披露明细，一个仍是空白</h2>
+      <p>两家同走上交所科创板，但进度差一个阶段——智谱已过辅导验收并公告完整募投方案，MiniMax 仍在辅导期。</p>
+    </div>
+    <span class="pill">上交所科创板</span>
+  </div>
+  <div class="grid g2">
+    <article class="card z">
+      <div class="label">智谱 · 拟募资不超过 150 亿元</div>
+      <div class="bar-row"><span>人工智能通用基座大模型</span><div class="track"><div class="fill" style="--w:80%"></div></div><b>120 亿</b></div>
+      <div class="bar-row"><span>大模型 MaaS 一站式服务平台</span><div class="track"><div class="fill" style="--w:13%"></div></div><b>20 亿</b></div>
+      <div class="bar-row"><span>补充流动资金</span><div class="track"><div class="fill" style="--w:7%"></div></div><b>10 亿</b></div>
+      <p class="note">来源：2026/06/01 港交所公告原文。发行规模占发行后总股本 2%–8%（909.88 万–3,876.90 万股新 A 股），每股面值 0.10 元；保荐机构国泰海通。现处「申报受理前」，尚未递交招股书。</p>
+    </article>
+    <article class="card m">
+      <div class="label">MiniMax · 募资金额未披露</div>
+      <div class="risk"><i>缺口</i><span>公告、券商研报、官方路演三类信源全部检索后，<b>募资金额、募投项目、发行规模均为空白</b>。</span></div>
+      <div class="risk"><i>原因</i><span>仍处辅导备案阶段，未进入申报受理，招股书尚未公开——与智谱进度差一个阶段。</span></div>
+      <div class="risk"><i>处理</i><span>明确标注为数据缺口，<b>不做推测填补</b>。</span></div>
+      <div class="callout gold"><strong>进度对照：</strong>智谱 6/06 备案 → 6/17 验收 → 已公告募投方案；MiniMax 5/29 签署辅导协议，辅导验收时间未见公开披露。</div>
+    </article>
+  </div>
+
+  <div class="section-head">
+    <div>
+      <h2>中国模型资本化全景</h2>
+      <p>智谱、MiniMax 之外的 9 家：估值、累计融资与上市进度。2026 既是资本大年，也是上市元年。</p>
+    </div>
+    <span class="pill">11 家 · 截至 2026-09-21</span>
+  </div>
+  <div class="table-wrap card">
+    <table>
+      <thead><tr><th>公司</th><th>成立</th><th>最新估值 / 市值</th><th>累计融资</th><th>资本化进展</th></tr></thead>
+      <tbody>
+        <tr style="background:#fdf0ea"><td><b>智谱 AI</b>（02513.HK）</td><td>2019/06</td><td>约 3,692 亿港元</td><td>IPO 前超 83 亿元；上市后 IPO + 配售 + 再融资合计约 940 亿港元</td><td>已上市（01/08），科创板待申报</td></tr>
+        <tr style="background:#eaf5f1"><td><b>MiniMax</b>（00100.HK）</td><td>2021/12</td><td>约 1,031 亿港元</td><td>IPO 前约 7 轮累计超 15 亿美元；IPO 净额约 38.18 亿港元</td><td>已上市（01/09），科创板辅导中</td></tr>
+        <tr><td>月之暗面（Kimi）</td><td>2023/04</td><td>F 轮投后 350 亿美元；Pre-IPO 投前目标 500 亿美元 ⚠️</td><td>超 376 亿元 + F 轮 35 亿美元</td><td>已股改、拆红筹中，尚未递表</td></tr>
+        <tr><td>DeepSeek</td><td>2023/07</td><td>首轮投后约 3,500–4,000 亿元；二轮投前 5,000 亿元</td><td>两轮合计超 1,000 亿元</td><td>已聘中信证券筹备科创板，目标 2027 挂牌</td></tr>
+        <tr><td>阶跃星辰</td><td>2023/04</td><td>100–120 亿美元</td><td>累计约 230 亿元</td><td>已股改 + 拆红筹，传秘密递表港交所（未确认）</td></tr>
+        <tr><td>百川智能</td><td>2023/03</td><td>约 200 亿元</td><td>A 轮 50 亿元</td><td>计划 2027 年启动 IPO</td></tr>
+        <tr><td>零一万物</td><td>2023/05</td><td>约 10 亿美元 ⚠️</td><td>约 10 亿美元</td><td>计划 2027 年赴港 IPO</td></tr>
+        <tr><td>面壁智能</td><td>2022/08</td><td>超 200 亿元</td><td>2026 上半年累计超 50 亿元</td><td>科创板辅导备案已受理（08/11，中信证券）</td></tr>
+        <tr><td>生数科技（Vidu）</td><td>2023/03</td><td>超 20 亿美元</td><td>累计超 60 亿元</td><td>传赴港 IPO，拟募资超 5 亿美元</td></tr>
+        <tr><td>无问芯穹（AI Infra）</td><td>2023/05</td><td>未披露</td><td>超 7 亿元（A+ 轮近 5 亿元，2025/11）🔧</td><td>—</td></tr>
+        <tr><td>硅基流动（AI Infra）</td><td>2023/08</td><td>B+ 轮投后 77.4 亿元</td><td>B 轮超 20 亿元（2026/06）🔧</td><td>已递表港交所（18C 章）</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="grid g3">
+    <article class="card gold"><div class="label">政策窗口</div><div class="value">2026/06</div><div class="delta">科创板第五套标准扩至 AI 大模型</div><div class="note">陆家嘴论坛明确后，上交所发布专项审核指引，为未盈利硬科技 AI 企业打开 A 股通道。</div></article>
+    <article class="card gold"><div class="label">节奏压缩</div><div class="value">半年 +700%</div><div class="delta">月之暗面估值 43 亿 → 350 亿美元</div><div class="note">DeepSeek 两个月内从传闻 100 亿美元走到投前 5,000 亿元；阶跃星辰半年四轮合计约 230 亿元。</div></article>
+    <article class="card gold"><div class="label">头部集中</div><div class="value">59.4%</div><div class="delta">DeepSeek + 阶跃 + Kimi 合计 930.06 亿元</div><div class="note">占 2026 上半年 TOP20 中后期 AI 企业融资额的 59.4%；其中 DeepSeek 单笔 A 轮 510 亿元，为该半年 AI 赛道最大单笔。</div></article>
+  </div>
+  <div class="callout gold"><strong>隐藏风险（融资篇）：</strong>二级市场已开始定价——MiniMax 从峰值 4,000 亿港元回撤约 74%，智谱自 1.33 万亿港元高点回落；智谱 9 月配售折价较 7 月配售价近乎腰斩。基本面上，智谱 2025 年归母净亏 46.98 亿元、MiniMax 三年半累亏约 13.2 亿美元；DeepSeek 前 7 个月 AI 基建支出约 110 亿元，为同期收入的 23 倍。月之暗面仍涉与前公司投资机构的仲裁。</div>
+
+  <div class="callout gold"><strong>口径提示：</strong>智谱以人民币披露，MiniMax 以美元披露；本页不使用即期汇率拼接收入规模。GAAP/IFRS 收入、调整后净亏损、Token 调用量和用户数也不互相替代。</div>
+</section>
+
+<section class="pane" id="zhipu">
+  <div class="section-head"><div><h2>智谱：从私有化部署转向调用与订阅</h2><p>公司在 2026 中报中将商业路径概括为：卖模型 → 卖调用 → 卖订阅 → 卖端到端任务结果。</p></div><span class="pill">2513.HK</span></div>
+  <div class="grid g3"><article class="card z"><div class="label">最新月度 ARR</div><div class="value">US$18亿</div><div class="delta">2026-09 上半月；管理层口径</div></article><article class="card z"><div class="label">FY26 ARR 指引</div><div class="value">US$30亿</div><div class="delta">由 US$24亿上调；非收入预测</div></article><article class="card z"><div class="label">推理成本</div><div class="value">-80%</div><div class="delta">较 2026 年初；公司口径</div></article></div>
+  <div class="section-head"><div><h2>股权融资时间线</h2><p>上市前共 8 轮、累计融资 84 亿元；上市后 8 个月内又走完配售与「小股大债」再融资。金额未特别说明时为人民币。</p></div><span class="pill">2019/06 – 2026/09</span></div>
+  <div class="table-wrap card"><table><thead><tr><th>时间</th><th>轮次 / 事件</th><th>金额</th><th>估值</th><th>主要投资方 / 关键条款</th></tr></thead><tbody>
+    <tr><td>2019/06</td><td>公司成立</td><td>—</td><td>—</td><td>清华 KEG 团队（唐杰、刘德兵、张鹏等）</td></tr>
+    <tr><td>2019/08</td><td>天使 / 种子轮</td><td>4,000 万元</td><td>—</td><td>中科创星、华控汇金、清控资管；创新智源以知识产权（悟道大模型技术底座）作价 2,037 万元入股</td></tr>
+    <tr><td>2021/04–09</td><td>A 轮</td><td>1.52 亿元</td><td>投后 8.5 亿元</td><td>达晨财智、图灵创投、华控基金、凌云光等</td></tr>
+    <tr><td>2022/01</td><td>B1 轮</td><td>2.08 亿元</td><td>投后 22 亿元</td><td>君联资本、启明创投（联合领投）</td></tr>
+    <tr><td>2023/03</td><td>B2 轮</td><td>4.1 亿元</td><td>投前约 26 亿元</td><td>美团（领投）、阿里、蚂蚁</td></tr>
+    <tr><td>2023/05</td><td>B3 轮</td><td>6.09 亿元</td><td>—</td><td>腾讯、金山</td></tr>
+    <tr><td>2023/08</td><td>B4 轮</td><td>12.29 亿元</td><td>—</td><td>腾讯（领投）</td></tr>
+    <tr><td>2023/11</td><td>B5 轮</td><td>13.59 亿元</td><td>投后 134 亿元</td><td>社保基金中关村基金等</td></tr>
+    <tr><td>2024/05</td><td>C 轮</td><td>约 4 亿美元</td><td>约 30 亿美元</td><td>沙特阿美旗下 Prosperity7 Ventures（单笔最大）</td></tr>
+    <tr><td>2024/08–2025/05</td><td>B6 轮</td><td>43.77 亿元</td><td><b>投后 244 亿元</b></td><td>中关村科学城（投前 200 亿元领投）——即上市前最后一轮</td></tr>
+    <tr><td>2025/03</td><td>战略投资</td><td>合计 18 亿元</td><td>—</td><td>杭州城投、上城资本、华发集团、成都高新区</td></tr>
+    <tr><td>2025/04</td><td>战略投资</td><td>2 亿元</td><td>—</td><td>北京市人工智能产业投资基金</td></tr>
+    <tr><td>2025/07</td><td>战略投资</td><td>10 亿元</td><td>—</td><td>浦东创投集团、张江集团</td></tr>
+    <tr><td>2025/12</td><td>IPO 前最后一轮</td><td>未披露</td><td>—</td><td>中关村科学城（领投）、君联资本等老股东；未再显著重估</td></tr>
+    <tr><td>2026/01/08</td><td>港交所上市</td><td>净额约 48.96 亿港元</td><td>IPO 市值约 511 亿港元</td><td>发行价 116.2 港元，发行 3,741.95 万股 H 股；11 家基石认购约 29.8 亿港元</td></tr>
+    <tr><td>2026/07/09→13</td><td>首次配售</td><td>净额约 313.75 亿港元</td><td>—</td><td>1,978 万股 @ <b>1,588 港元</b>；中金独家配售代理；创 2026 年港股科技企业单次配售规模新高</td></tr>
+    <tr><td>2026/09/12→18</td><td>「小股大债」再融资</td><td>净额合计约 393 亿港元</td><td>—</td><td>配售 2,196.5 万股 @ <b>714 港元</b>（156.83 亿港元）+ 零息可转债本金 201.4 亿元；转股价 892.50 港元，悉数转股稀释约 5.36%（股本最高稀释约 9.4%）；债券于维也纳证交所 Vienna MTF 上市</td></tr>
+  </tbody></table></div>
+  <div class="callout gold"><strong>口径修正：</strong>上市前共 8 轮、<b>累计融资 84 亿元</b>，上市前最后一轮投后估值 <b>244 亿元</b>（即 B6 轮，2024/08 启动、2025/05 结算完成）。2023 年全年四轮（B2–B5）累计超 36 亿元，投后估值从年初约 32 亿元升至年末 134 亿元。9 月再融资资金用途：约 60% 投向下一代 GLM 基座模型与完全自训练（RSI）体系及算力基建、15% 业务拓展与潜在并购、25% 优化资本结构。管理层称两轮融资后「短期内算力供给已不再是收入增长的主要约束」，原则上不再做新增股本性融资。</div>
+
+  <div class="section-head"><div><h2>最新经营更新</h2><p>把可兑现的运行指标、订单和理论算力模型分开。</p></div><span class="pill">更新至 2026-09</span></div>
+  <div class="grid g3"><article class="card z"><div class="label">Coding</div><div class="value">200万+</div><div class="delta">9 月 CodeGeeX Copilot 用户</div><p>7 月底解除 Coding Plan 限售后，8 月套餐调用量增长 15 倍；编程仍占业务需求约 70%–80%。</p></article><article class="card z"><div class="label">云分成</div><div class="value">10月起</div><div class="delta">预计开始确认相关收入</div><p>已与海内外云服务商签署托管 API 收入分成协议；具体伙伴、分成比例和规模尚未披露。</p></article><article class="card z"><div class="label">CogWork 订单</div><div class="value">RMB 10亿+</div><div class="delta">GLM-5.3 发布后一个月</div><p>首个场景为网络安全；属于订单金额，预计 1–2 年分摊确认，不能直接计入当期收入。</p></article></div>
+  <div class="section-head"><div><h2>财务轨迹</h2><p>收入高增，但研发投入和调整后亏损仍显著高于收入。</p></div></div>
+  <div class="table-wrap card"><table><thead><tr><th>期间</th><th>收入</th><th>毛利率</th><th>研发费用</th><th>调整后净亏损</th><th>观察</th></tr></thead><tbody><tr><td>FY2024</td><td><b>RMB 3.12亿</b></td><td>56.3%</td><td>RMB 21.95亿</td><td>RMB 24.66亿</td><td>私有化部署占 84.5%</td></tr><tr><td>FY2025</td><td><b>RMB 7.24亿</b></td><td>41.0%</td><td>RMB 31.80亿</td><td>RMB 31.82亿</td><td>API 期末调用量较 6 月约 7 倍</td></tr><tr><td>1H26</td><td><b>RMB 9.54亿</b></td><td>26.4%</td><td>RMB 21.31亿</td><td>RMB 19.64亿</td><td>API 占比升至 86.5%</td></tr></tbody></table></div>
+  <div class="grid g2"><article class="card z"><div class="label">模型与基础设施</div><div class="timeline"><div class="event"><time>2025</time><h4>GLM-4.5 → GLM-5</h4><p>公司称模型能力提升带动 Coding 与 Agent 商业化。</p></div><div class="event"><time>1H26</time><h4>All-in-Infra</h4><p>10 万卡级国产芯片用于规模推理；单位 Token 推理成本较年初下降 80%。</p></div><div class="event"><time>2026-09</time><h4>GLM-5.3 / GLM-5.3 Flash</h4><p>旗舰模型承接高价值任务，Flash 承接高频低成本任务；公司称 Flash 推理成本为 5.2 的十分之一。</p></div></div></article><article class="card z"><div class="label">需要继续验证</div><div class="risk"><i>01</i><span>ARR 是月度订单收入年化，不等于 IFRS 收入；云分成与 CogWork 订单仍受上线、交付和确认节奏影响。</span></div><div class="risk"><i>02</i><span>1H26 研发费用/收入约 223%，调整后亏损/收入约 206%，资金消耗仍高。</span></div><div class="risk"><i>03</i><span>融资材料称 300 亿元算力投资、5.6 万张推理卡的理论年收入上限为 410 亿元；这是满载、无折价情景，不是公司指引。</span></div><div class="risk"><i>04</i><span>按 60% GPU 负载率与 7 折价格实现率推导的 76%推理毛利率属于管理层测算，尚非财报已实现毛利率。</span></div></article></div>
+</section>
+
+<section class="pane" id="minimax">
+  <div class="section-head"><div><h2>MiniMax：全球消费产品转向企业平台</h2><p>语言、视频、语音、音乐多模态产品提供流量入口，平台与企业服务在 1H26 成为主要收入来源。</p></div><span class="pill">0100.HK</span></div>
+  <div class="grid g3"><article class="card m"><div class="label">1H26 平台/企业服务</div><div class="value">US$7,393万</div><div class="delta">同比 +703.1%</div></article><article class="card m"><div class="label">海外收入占比</div><div class="value">60.8%</div><div class="delta">1H26；FY25 超过 70%</div></article><article class="card m"><div class="label">现金余额</div><div class="value">US$13.23亿</div><div class="delta">含现金、存款及金融资产</div></article></div>
+  <div class="section-head"><div><h2>股权融资时间线</h2><p>IPO 前约 7 轮、累计融资超 15 亿美元；上市 6 个月后在解禁日完成再融资。金额未特别说明时为港币 / 美元原币。</p></div><span class="pill">2022/01 – 2026/07</span></div>
+  <div class="table-wrap card"><table><thead><tr><th>时间</th><th>轮次 / 事件</th><th>金额</th><th>估值</th><th>主要投资方 / 关键条款</th></tr></thead><tbody>
+    <tr><td>2021/12</td><td>公司成立</td><td>—</td><td>—</td><td>上海稀宇科技</td></tr>
+    <tr><td>2022/01</td><td>天使轮</td><td>未披露</td><td>—</td><td>云启资本</td></tr>
+    <tr><td>2022/07</td><td>Pre-A 轮</td><td>未披露</td><td>—</td><td>IDG 资本、明势创投、高瓴创投</td></tr>
+    <tr><td>2023/06</td><td>A 轮</td><td>超 2.5 亿美元</td><td>—</td><td>腾讯投资</td></tr>
+    <tr><td>2024/03</td><td>B 轮</td><td>约 6 亿美元</td><td>—</td><td>阿里巴巴</td></tr>
+    <tr><td>2025/07</td><td>C 轮</td><td>未完整披露</td><td>—</td><td>—</td></tr>
+    <tr><td>2025/12</td><td>IPO 前最后一轮</td><td>约 3.5 亿美元</td><td><b>投后超 42 亿美元</b></td><td>约合 330 亿港元</td></tr>
+    <tr><td>2026/01/09</td><td>港交所上市</td><td>净额约 38.18 亿港元</td><td>发行估值 461–504 亿港元</td><td>发行价 165 港元（区间 151–165），发行 2,538.922 万股；香港公开发售超额认购 <b>1,837.17 倍</b>、国际配售 36.76 倍；14 家基石认购约 27 亿港元；保荐人中金 + UBS</td></tr>
+    <tr><td>2026/07/09→10</td><td>解禁日再融资</td><td><b>逾 160.41 亿港元</b></td><td>—</td><td>配售 3,560 万股 @ 268 港元（95.41 亿，折让 9.89%）+ 65 亿港元 2027 年到期零息可担保可转债（转股价 335 港元）；主承销摩根士丹利、瑞银；100+ 家机构参与、约 7 倍认购；用途 80% AI 基建与模型研发</td></tr>
+  </tbody></table></div>
+  <div class="callout gold"><strong>口径提示：</strong>IPO 前约 7 轮累计融资<b>超 15 亿美元</b>。同一估值 42.2 亿美元存在两个时点口径——招股书梳理为 2025/12、另有研报称 2025/08，本页并列不做取舍。主要股东持股亦有招股书（阿里 13.66%→全球发售后 12.52%、米哈游约 6.4%、腾讯 2.58%）与招商证券（阿里 15.04%、米哈游 7.05%）两套口径。回 A 募资金额至今未披露，见总览页。</div>
+
+  <div class="section-head"><div><h2>财务轨迹</h2><p>收入结构改善明显，但 1H26 研发投入再次加速，调整后净亏损扩大。</p></div></div>
+  <div class="table-wrap card"><table><thead><tr><th>期间</th><th>收入</th><th>毛利率</th><th>研发费用</th><th>调整后净亏损</th><th>观察</th></tr></thead><tbody><tr><td>FY2024</td><td><b>US$3,052万</b></td><td>12.2%</td><td>US$1.89亿</td><td>US$2.44亿</td><td>消费产品为主要商业化载体</td></tr><tr><td>FY2025</td><td><b>US$7,904万</b></td><td>25.4%</td><td>US$2.53亿</td><td>US$2.51亿</td><td>海外收入超过 70%</td></tr><tr><td>1H26</td><td><b>US$1.17亿</b></td><td>17.9%</td><td>US$2.97亿</td><td>US$2.93亿</td><td>半年收入超过 FY25 全年</td></tr></tbody></table></div>
+  <div class="grid g2"><article class="card m"><div class="label">产品与模型</div><div class="timeline"><div class="event"><time>2025 Q4</time><h4>M2 / M2.1 / M2-her</h4><p>M2 聚焦 Coding、工具调用和深度搜索；M2-her 支撑 Talkie 与星野。</p></div><div class="event"><time>2026-02</time><h4>M2.5</h4><p>继续强化 Coding、工具调用与办公场景。</p></div><div class="event"><time>1H26</time><h4>M3 与 MiniMax Code</h4><p>公司将 Agentic 工作负载与企业开放平台作为增长重点。</p></div></div></article><article class="card m"><div class="label">需要继续验证</div><div class="risk"><i>01</i><span>1H26 毛利率由 FY25 的 25.4%回落至 17.9%，需观察企业平台规模效应。</span></div><div class="risk"><i>02</i><span>1H26 研发费用/收入约 255%，调整后亏损/收入约 251%，盈利拐点仍远。</span></div><div class="risk"><i>03</i><span>招股书前五大供应商采购占比：2024 年 57.3%，2025 前九个月 62.5%，云基础设施集中度较高。</span></div><div class="risk"><i>04</i><span>海外占比较高带来更大市场，也提高汇率、内容合规和跨境运营复杂度。</span></div></article></div>
+</section>
+
+<section class="pane" id="deepseek">
+  <div class="section-head"><div><h2>DeepSeek：从「零外部融资」到两轮千亿</h2><p>成立近三年靠幻方量化自有资金支撑，2026 年 4 月突然转向，半年内走完两轮千亿级融资并启动科创板。</p></div><span class="pill">未上市 · 筹备科创板</span></div>
+  <div class="grid g3">
+    <article class="card gold"><div class="label">首轮（A 轮）</div><div class="value">500–510 亿元</div><div class="delta">2026/06/16 完成交割</div><div class="note">约 74 亿美元；为 2026 上半年 AI 赛道最大单笔</div></article>
+    <article class="card gold"><div class="label">首轮投后估值</div><div class="value">3,500–4,000 亿元</div><div class="delta">二轮投前已到 5,000 亿元</div><div class="note">另有「超 500 亿美元」口径并存</div></article>
+    <article class="card gold"><div class="label">两轮合计</div><div class="value">超 1,000 亿元</div><div class="delta">半年内完成</div><div class="note">首轮估值路径：100 亿 → 450 亿 → 515 亿美元均为传闻</div></article>
+  </div>
+  <div class="section-head"><div><h2>股权融资时间线</h2><p>2026 年 4 月之前无任何外部融资记录。传闻阶段与已交割轮次分别标注。</p></div><span class="pill">2023/07 – 2026/09</span></div>
+  <article class="card"><div class="label">融资与资本动作</div><div class="timeline">
+    <div class="event"><time>2023/07</time><h4>公司成立，明确「不接受外部融资」</h4><p>由幻方量化孵化，全部由母公司自有资金支撑，这一状态持续近三年。</p></div>
+    <div class="event"><time>2025/01/20</time><h4>发布 R1 并开源权重</h4><p>成为其后一级市场估值跳升的技术基础。</p></div>
+    <div class="event"><time>2026/04/17</time><h4>曝出启动首轮外部融资 <b>（媒体传闻）</b></h4><p>The Information 报道：计划至少 3 亿美元，估值超 100 亿美元。</p></div>
+    <div class="event"><time>2026/04/22</time><h4>传腾讯、阿里进入投资洽谈 <b>（媒体传闻）</b></h4><p>估值口径升至超 200 亿美元。</p></div>
+    <div class="event"><time>2026/05/06</time><h4>传国家大基金洽谈领投 <b>（媒体传闻）</b></h4><p>估值约 450 亿美元。该轮次后来在多方信源中得到印证。</p></div>
+    <div class="event"><time>2026/05/08</time><h4>传总规模 500 亿元、梁文锋个人出资 200 亿元 <b>（媒体传闻）</b></h4><p>对应估值约 515 亿美元。</p></div>
+    <div class="event"><time>2026/06/16</time><h4>首轮（A 轮）完成交割</h4><p><b>500–510 亿元</b>（约 74 亿美元），投后约 3,500–4,000 亿元。出资方：梁文锋个人 200 亿、腾讯 100 亿、宁德时代体系 50 亿、网易/京东/砺思/IDG 各约 30 亿、正心谷/拾象各约 15 亿、国家 AI 产业投资基金约 9.8 亿。</p></div>
+    <div class="event"><time>2026/07</time><h4>传出筹备 IPO，同期参与长鑫科技打新</h4><p>估值口径约 3,500 亿元。通过幻方量化、九章资产参与长鑫科技科创板网下打新，获配约 1.75 亿元，首日浮盈超 8.2 亿元。</p></div>
+    <div class="event"><time>2026/08</time><h4>第二轮融资接近尾声，计划 500 亿元</h4><p>投前估值 <b>5,000 亿元</b>。石溪资本（拟约 50 亿元，兆易创新经其获约 15 亿元额度）、中芯聚源、博裕、CPE 源峰、合肥国资等参与；老股东腾讯、宁德时代、IDG、砺思、拾象、正心谷跟投。同期斥资 1.41 亿元参与宇树科技 IPO 战略配售（锁定 36 个月）。</p></div>
+    <div class="event"><time>2026/09</time><h4>聘中信证券筹备上交所科创板</h4><p>计划年内递表、2027 年挂牌。9/16 传高瓴合伙人严文韬将出任首任 CFO。</p></div>
+  </div></article>
+  <div class="section-head"><div><h2>ARR 与商业化</h2><p>收入几乎全部来自 B 端 API，C 端免费。ARR 与会计确认收入差距极大，不可混用。</p></div><span class="pill">B 端 API 驱动</span></div>
+  <div class="table-wrap card"><table><thead><tr><th>指标</th><th>数值</th><th>时点 / 口径</th><th>说明</th></tr></thead><tbody>
+    <tr><td>ARR</td><td><b>$4–5 亿</b></td><td>2026/07 · 管理层口径</td><td>约九成来自 API；C 端免费</td></tr>
+    <tr><td>会计营收</td><td><b>RMB 4.75 亿</b></td><td>2026 前 7 个月</td><td>⚠️ 与「时点年化$4–5亿」期间不同；两条来源待核，不能直接比较</td></tr>
+    <tr><td>净亏损</td><td>RMB 7.15 亿</td><td>2026 前 7 个月</td><td>—</td></tr>
+    <tr><td>毛利率</td><td><b>44.6%</b></td><td>2026 前 7 个月</td><td>其中 API 业务 82.9%</td></tr>
+    <tr><td>隐含 PS</td><td>~150x</td><td>估值 ~$740 亿 ÷ ARR $5 亿</td><td>国内第一梯队中最高</td></tr>
+    <tr><td>AI 基建支出</td><td><b>约 110 亿元</b></td><td>2026 前 7 个月</td><td>2025 全年仅约 12 亿元，增近 10 倍；为同期收入的 23 倍</td></tr>
+    <tr><td>API 定价</td><td>高峰期价格翻倍</td><td>2026/09/01 起</td><td>V4 正式版调整</td></tr>
+    <tr><td>模型迭代</td><td>V4.1 Flash</td><td>2026/09/15</td><td>对 HBM 需求减至 1/4、对 SSD 减至 1/8</td></tr>
+  </tbody></table></div>
+  <div class="grid g2">
+    <article class="card gold"><div class="label">首轮交易架构（特殊条款）</div><div class="risk"><i>01</i><span>外部资金注入梁文锋管理的<b>有限合伙企业</b>，而非公司主体。</span></div><div class="risk"><i>02</i><span>外部投资方<b>无投票权</b>、锁定期 5 年。</span></div><div class="risk"><i>03</i><span>唯一例外：国家人工智能产业投资基金为直投、有投票权。</span></div><div class="risk"><i>04</i><span>梁文锋通过直接与间接持股合计控制约 <b>84.29%</b> 股权。</span></div></article>
+    <article class="card"><div class="label">需要存疑 / 标注的地方</div><div class="risk"><i>!</i><span><b>营收口径待核：</b>2026 前 7 个月营收 4.75 亿元；另有来源称「年化 4–5 亿美元」，累计会计收入与时点年化速度不是同一指标，不能直接判定互相矛盾；两条来源均待核，不据此选择一个替代另一个。</span></div><div class="risk"><i>!</i><span><b>估值三说并存：</b>3,500 亿元 / 约 4,000 亿元 / 超 500 亿美元，本页取区间。</span></div><div class="risk"><i>!</i><span>传闻阶段金额多来自媒体，正式引用前建议以公告或监管披露为准。</span></div></article>
+  </div>
+</section>
+
+<section class="pane" id="moonshot">
+  <div class="section-head"><div><h2>月之暗面：一年六轮，估值 43 亿 → 350 亿美元</h2><p>Kimi 是本轮融资节奏压缩最极端的一家，也是唯一「估值涨了 7 倍却仍未递表」的一家。</p></div><span class="pill">未上市 · 拆红筹中</span></div>
+  <div class="grid g3">
+    <article class="card gold"><div class="label">F 轮（最新已完成）</div><div class="value">超 35 亿美元</div><div class="delta">投后 350 亿美元</div><div class="note">因超额认购 3 倍提前关闭</div></article>
+    <article class="card gold"><div class="label">Pre-IPO 目标</div><div class="value">投前 500 亿美元</div><div class="delta">G 轮洽谈中</div><div class="note">尚未递表，递交时点未定</div></article>
+    <article class="card gold"><div class="label">累计融资</div><div class="value">超 376 亿元</div><div class="delta">另加 F 轮 35 亿美元</div><div class="note">Alpha派：2026 上半年 189 亿元，分两轮完成</div></article>
+  </div>
+  <div class="section-head"><div><h2>股权融资时间线</h2><p>轮次密集，按金额与估值合并列表；末列为投后估值。</p></div><span class="pill">2023/06 – 2026/08</span></div>
+  <div class="table-wrap card"><table><thead><tr><th>时间</th><th>轮次</th><th>金额</th><th>投后估值</th><th>主要投资方</th></tr></thead><tbody>
+    <tr><td>2023/04</td><td>公司成立</td><td>—</td><td>—</td><td>杨植麟等</td></tr>
+    <tr><td>2023/06</td><td>天使轮</td><td>超 2 亿美元</td><td>3 亿美元</td><td>红杉中国、真格基金、今日资本、砺思资本</td></tr>
+    <tr><td>2023/07</td><td>A1 轮</td><td>未披露</td><td>未披露</td><td>美团龙珠</td></tr>
+    <tr><td>2024/02</td><td>A+ 轮</td><td>超 10 亿美元</td><td>25 亿美元</td><td>阿里巴巴（领投）、红杉中国、美团、小红书、砺思</td></tr>
+    <tr><td>2024/08</td><td>B 轮</td><td>超 3 亿美元</td><td>33 亿美元</td><td>腾讯、高榕创投、阿里巴巴</td></tr>
+    <tr><td>2025/12</td><td>C 轮</td><td>5 亿美元</td><td>43 亿美元</td><td>IDG 资本（领投）、阿里巴巴、腾讯</td></tr>
+    <tr><td>2026/01–02</td><td>连续三轮</td><td>5 / 7 / 7 亿美元</td><td>100 亿 → 180 亿美元</td><td>阿里、腾讯、五源资本、IDG、九安医疗</td></tr>
+    <tr><td>2026/05</td><td>D 轮</td><td>约 20 亿美元</td><td>200 亿美元</td><td>美团龙珠（领投）、中国移动、CPE 源峰、国智投、顺禧基金</td></tr>
+    <tr><td>2026/06</td><td>E 轮</td><td>超 20 亿美元</td><td>投前约 315 亿美元</td><td>多地国资、IDG 资本</td></tr>
+    <tr><td>2026/07</td><td>F 轮</td><td><b>超 35 亿美元</b></td><td><b>350 亿美元</b></td><td>未完整披露（传中芯聚源、深创投）</td></tr>
+    <tr><td>2026/08</td><td>Pre-IPO（G 轮）</td><td>未披露</td><td>投前目标 500 亿美元</td><td>洽谈中</td></tr>
+  </tbody></table></div>
+  <div class="section-head"><div><h2>ARR 与商业化</h2><p>ARR 是估值跳升的直接支撑；但 $3 亿与 $10 亿两个口径并存，本页采信前者。</p></div><span class="pill">API 占比七成以上</span></div>
+  <div class="table-wrap card"><table><thead><tr><th>指标</th><th>数值</th><th>时点 / 口径</th></tr></thead><tbody>
+    <tr><td>ARR</td><td>$1 亿 → $2 亿 → <b>~$3 亿</b></td><td>2026/03 → 05 → 06 月中</td></tr>
+    <tr><td>ARR（另一口径）</td><td>$10 亿 ⚠️</td><td>与券商支撑的 $3 亿冲突，未采信</td></tr>
+    <tr><td>API 收入占比</td><td><b>七成以上</b></td><td>2026 上半年</td></tr>
+    <tr><td>模型进展</td><td>Kimi K3（2.8 万亿总参数）</td><td>2026/07/16 发布，7/27 完成全链条开源</td></tr>
+  </tbody></table></div>
+  <div class="grid g2">
+    <article class="card gold"><div class="label">上市进展</div><div class="risk"><i>01</i><span>已完成工商变更（有限责任公司 → 股份有限公司）。</span></div><div class="risk"><i>02</i><span>已启动 VIE / 红筹架构拆除，据彭博社已进入实质性拆架构工作。</span></div><div class="risk"><i>03</i><span>计划按港交所 18C 章上市，目标窗口 2026 年底至 2027 年初。</span></div><div class="risk"><i>!</i><span>2026/08/03 有消息称「月内递表、募资约 30 亿美元」，知情人士向澎湃回应「消息不实，G 轮还在进行中」。<b>截至目前未正式递表。</b></span></div></article>
+    <article class="card"><div class="label">需要存疑 / 标注的地方</div><div class="risk"><i>!</i><span>F 轮完成日期媒体有 7/28 与 7/29 两种说法。</span></div><div class="risk"><i>!</i><span>另有「目标估值 300 亿美元」一说（中信建投 6/15），属更早阶段口径。</span></div><div class="risk"><i>!</i><span><b>股权纠纷：</b>涉及与前公司循环智能投资机构的仲裁（朱啸虎与张予彤持股争议），对后续融资尽调构成障碍。</span></div></article>
+  </div>
+</section>
+
+<section class="pane" id="stepfun">
+  <div class="section-head"><div><h2>阶跃星辰：半年四轮，手机产业链与国资双线入股</h2><p>估值路径是本轮最完整的一条公开线索：从投前 40 亿美元一路走到基石定价 100 亿美元。</p></div><span class="pill">未上市 · 传秘密递表</span></div>
+  <div class="grid g3">
+    <article class="card gold"><div class="label">累计融资</div><div class="value">约 230 亿元</div><div class="delta">2026 上半年完成 4 轮</div><div class="note">另一口径为「突破 200 亿元」</div></article>
+    <article class="card gold"><div class="label">估值</div><div class="value">基石定价 100 亿美元</div><div class="delta">传上限 120 亿美元</div><div class="note">投前路径：40 亿 → 50–60 亿美元</div></article>
+    <article class="card gold"><div class="label">经营目标</div><div class="value">2026 年收入 12 亿元</div><div class="delta">2025 年为 5 亿元</div><div class="note">2025 年算力 + 算法研发投入约 12 亿元</div></article>
+  </div>
+  <div class="section-head"><div><h2>股权融资时间线</h2><p>2026/05 的 Pre-IPO 轮为当月全市场最大单笔融资。</p></div><span class="pill">2023/04 – 2026/09</span></div>
+  <article class="card"><div class="label">融资与资本动作</div><div class="timeline">
+    <div class="event"><time>2023/04</time><h4>公司成立</h4><p>前微软全球副总裁姜大昕创立。</p></div>
+    <div class="event"><time>2026/01</time><h4>B+ 轮融资，同步引入印奇任董事长</h4><p><b>超 50 亿元</b>，创当时国内大模型单笔融资纪录；同步引入旷视联合创始人印奇出任董事长。</p></div>
+    <div class="event"><time>2026/02</time><h4>传考虑港股上市 <b>（媒体传闻）</b></h4><p>拟筹约 5 亿美元（约 39 亿港元）。</p></div>
+    <div class="event"><time>2026/04</time><h4>完成股改，拆除红筹 / VIE 架构</h4><p>改走 H 股路径。</p></div>
+    <div class="event"><time>2026/05</time><h4>Pre-IPO 轮接近完成：近 25 亿美元</h4><p>投中网口径 25.00 亿美元（折合人民币 170.44 亿元），为当月全市场最大单笔。估值路径：投前 40 亿美元 → 第二波 50–60 亿美元 → 基石定价 <b>100 亿美元</b> → 传上限 120 亿美元。同期米奥会展以 1.5 亿元认购股份（财务性参股，约占投后 1%）。</p></div>
+    <div class="event"><time>2026/06</time><h4>《华尔街日报》独家：已秘密递交港股 IPO 材料 <b>（公司未确认）</b></h4><p>计划募资约 5 亿美元，市场最高给到 120 亿美元估值。</p></div>
+    <div class="event"><time>2026/07/13</time><h4>全品类发布会</h4><p>发布新一代基座模型、端侧模型、Step AOS、个人智能体 Amoo 及首款 AI 手机 STEPX Neo。</p></div>
+    <div class="event"><time>2026/09/07</time><h4>华信永道出资 500 万元间接参股</h4><p>通过双层基金架构间接持股。截至 9 月，公开渠道仍未见正式招股书，公司未确认秘密递表。</p></div>
+  </div></article>
+  <div class="grid g2">
+    <article class="card gold"><div class="label">投资方结构</div><div class="risk"><b>老股东：</b><span>腾讯、启明创投、五源资本。</span></div><div class="risk"><b>国资 / 保险：</b><span>上海国投先导基金、国寿股权、浦东创投。</span></div><div class="risk"><b>手机产业链：</b><span>华勤技术、龙旗科技、豪威集团、中兴通讯。</span></div><div class="risk"><b>境外资本：</b><span>香港投资管理有限公司（HKIC）；海棠同慧基金（九安医疗、汤臣倍健等上市公司 LP）。</span></div></article>
+    <article class="card"><div class="label">需要存疑 / 标注的地方</div><div class="risk"><i>!</i><span><b>ARR 缺口：</b>公司未披露任何 ARR 口径，仅有 2025 年收入 5 亿元与 2026 年目标 12 亿元。本页不做推测填补。</span></div><div class="risk"><i>!</i><span>「已秘密递表港交所」仅《华尔街日报》单一来源，公司未确认。</span></div><div class="risk"><i>!</i><span>累计融资两口径并存（约 230 亿元 / 超 200 亿元），本页取前者并同时列出。</span></div></article>
+  </div>
+</section>
+
+<section class="pane" id="baichuan">
+  <div class="section-head"><div><h2>百川智能：转向医疗，融资停在 A 轮</h2><p>「六小虎」中资本动作最少的一家——2024 年 7 月 A 轮之后再无公开融资，重心已转向医疗大模型。</p></div><span class="pill">未上市 · 计划 2027 IPO</span></div>
+  <div class="grid g3">
+    <article class="card gold"><div class="label">A 轮（唯一披露轮次）</div><div class="value">50 亿元</div><div class="delta">2024/07 完成</div><div class="note">此后无新的公开融资</div></article>
+    <article class="card gold"><div class="label">估值</div><div class="value">约 200 亿元</div><div class="delta">A 轮口径沿用至今</div><div class="note">另有「投后约 30 亿美元」冲突口径，未采信</div></article>
+    <article class="card gold"><div class="label">IPO 计划</div><div class="value">2027 年启动</div><div class="delta">创始人王小川 2026/01 表态</div><div class="note">未指定板块</div></article>
+  </div>
+  <div class="section-head"><div><h2>股权融资时间线</h2><p>与同期成立的其他「六小虎」相比，融资节奏明显偏慢。</p></div><span class="pill">2023/03 – 2026/07</span></div>
+  <article class="card"><div class="label">融资与经营动作</div><div class="timeline">
+    <div class="event"><time>2023/03</time><h4>公司成立</h4><p>前搜狗 CEO 王小川创立。</p></div>
+    <div class="event"><time>2024/07</time><h4>A 轮融资完成</h4><p><b>50 亿元</b>，投后估值 <b>200 亿元</b>。投资方包括阿里巴巴、腾讯、小米、深创投，以及北京 / 上海 / 深圳等地人工智能产业及国资基金。</p></div>
+    <div class="event"><time>2024/11</time><h4>公开提及 B 轮融资在推进 <b>（未完成披露）</b></h4><p>公司在中信建投峰会上表示「正在进行 B 轮融资」，但此后未见金额与投资方披露。</p></div>
+    <div class="event"><time>2026/01/13</time><h4>表态 2027 年启动 IPO</h4><p>王小川公开表示预计 2027 年启动 IPO 上市。同期开源医疗大模型 Baichuan-M3，在 Health Bench 以 65.1 分位列第一、Health Bench Hard 44.4 分夺冠。</p></div>
+    <div class="event"><time>2026/07</time><h4>与中再寿险签署战略合作</h4><p>围绕保险服务、营销、精算方向做 AI 共创——医疗与金融的交叉点即保险，是公司既定路径。</p></div>
+  </div></article>
+  <div class="grid g2">
+    <article class="card gold"><div class="label">ARR / 收入：数据缺口</div><div class="risk"><i>缺口</i><span>公司<b>未披露任何 ARR、收入、亏损口径</b>，也未见券商给出可引用的测算。</span></div><div class="risk"><i>原因</i><span>未上市、未递表，无强制披露义务；医疗大模型收入尚未形成可公开核对的规模。</span></div><div class="risk"><i>处理</i><span>明确标注为数据缺口，<b>仅以「A 轮估值 200 亿元」作为资本侧锚点，不做推测填补。</b></span></div></article>
+    <article class="card"><div class="label">需要存疑 / 标注的地方</div><div class="risk"><i>!</i><span><b>「2026/04 完成 5 亿美元 C 轮、投后约 30 亿美元」：</b>Alpha派 检索公告、研报、路演三类信源均无支持材料，且与「当前估值约 200 亿元」直接冲突。<b>维持存疑、不采信。</b></span></div><div class="risk"><i>!</i><span>成立时间有 2023/03 与 2023/04 两种说法，本页取 2023/03。</span></div><div class="risk"><i>!</i><span>B 轮是否已交割、金额与投资方均无公开信息。</span></div></article>
+  </div>
+</section>
+
+<section class="pane" id="lingyi">
+  <div class="section-head"><div><h2>零一万物：唯一主动收缩的一家</h2><p>2025 年初放弃通用基座自研，把预训练与 Infra 团队并入阿里，转向行业模型与海外 To C——资本叙事也随之从「基座」变成「订单」。</p></div><span class="pill">未上市 · 计划 2027 赴港</span></div>
+  <div class="grid g3">
+    <article class="card gold"><div class="label">估值</div><div class="value">约 10 亿美元</div><div class="delta">B 轮口径</div><div class="note">另有「约 104 亿元」口径 ⚠️</div></article>
+    <article class="card gold"><div class="label">2025 年经审计收入</div><div class="value">2.5 亿元</div><div class="delta">合同订单总额 5 亿元</div><div class="note">收入口径，非 ARR</div></article>
+    <article class="card gold"><div class="label">累计订单</div><div class="value">超 15 亿元</div><div class="delta">2026/05 锁定</div><div class="note">订单不等于收入确认</div></article>
+  </div>
+  <div class="section-head"><div><h2>股权融资时间线</h2><p>融资轮次少，但战略转向是理解其估值的必要背景。</p></div><span class="pill">2023/05 – 2026</span></div>
+  <article class="card"><div class="label">融资与战略动作</div><div class="timeline">
+    <div class="event"><time>2023/05</time><h4>公司成立</h4><p>李开复创立，定位通用基座大模型。</p></div>
+    <div class="event"><time>2024</time><h4>B 轮融资</h4><p>估值约 <b>10 亿美元</b>。</p></div>
+    <div class="event"><time>2025 初</time><h4>放弃通用基座自研</h4><p>预训练与 Infra 团队并入阿里通义 / 阿里云；公司转向行业模型 + 海外 To C。这是「六小虎」中唯一一次公开的战略性收缩。</p></div>
+    <div class="event"><time>2025 全年</time><h4>经审计营业收入 2.5 亿元</h4><p>合同订单总额 5 亿元。</p></div>
+    <div class="event"><time>2026/05</time><h4>累计锁定订单突破 15 亿元</h4><p>订单节奏较 2025 年明显提速。</p></div>
+    <div class="event"><time>2026</time><h4>推进 Pre-IPO 融资</h4><p>计划 2027 年赴港上市，目标 2027 年内实现季度盈利。具体轮次金额与投资方未披露。</p></div>
+  </div></article>
+  <div class="grid g2">
+    <article class="card"><div class="label">ARR / 收入口径</div><div class="risk"><i>01</i><span>公司<b>未披露 ARR</b>，公开可核对的是经审计营业收入（2025 年 2.5 亿元）。</span></div><div class="risk"><i>02</i><span>合同订单（15 亿元）与收入确认之间存在交付与分摊时滞，不可等同。</span></div><div class="risk"><i>03</i><span>估值与收入的匹配度是这家公司最需要跟踪的变量——战略收缩后收入基数变小，估值锚点也从技术叙事转向订单与盈利拐点。</span></div></article>
+    <article class="card"><div class="label">需要存疑 / 标注的地方</div><div class="risk"><i>!</i><span>估值两口径并存：约 10 亿美元 vs 约 104 亿元，本页并列不做取舍。</span></div><div class="risk"><i>!</i><span>Pre-IPO 轮次的具体金额、投资方与投前估值均未披露。</span></div><div class="risk"><i>!</i><span>「2027 年内实现季度盈利」为公司目标，非指引。</span></div></article>
+  </div>
+</section>
+
+<section class="pane" id="modelbest">
+  <div class="section-head"><div><h2>面壁智能：端侧路线，半年融超 50 亿元</h2><p>清华 NLP 实验室孵化的端侧模型公司，2026 上半年密集完成多轮融资，8 月已进入科创板辅导备案受理。</p></div><span class="pill">未上市 · 科创板辅导受理</span></div>
+  <div class="grid g3">
+    <article class="card gold"><div class="label">2026 上半年累计融资</div><div class="value">超 50 亿元</div><div class="delta">投后估值超 200 亿元</div><div class="note">一季度累计已超 10 亿元</div></article>
+    <article class="card gold"><div class="label">IPO 进展</div><div class="value">2026/08/11</div><div class="delta">辅导备案获北京证监局受理</div><div class="note">辅导券商中信证券；市场普遍预计目标科创板</div></article>
+    <article class="card gold"><div class="label">端侧装机目标</div><div class="value">30 万辆</div><div class="delta">2026 年底汽车搭载目标</div><div class="note">已进入三星手机及吉利、长安等场景</div></article>
+  </div>
+  <div class="section-head"><div><h2>股权融资时间线</h2><p>前期单轮金额未披露，2026 年起披露密度明显提高。</p></div><span class="pill">2022/08 – 2026/08</span></div>
+  <article class="card"><div class="label">融资与资本动作</div><div class="timeline">
+    <div class="event"><time>2022/08</time><h4>公司成立</h4><p>孵化自清华大学 NLP 实验室（ModelBest）。</p></div>
+    <div class="event"><time>2025/12</time><h4>完成数亿元融资</h4><p>金额未完整披露。</p></div>
+    <div class="event"><time>2026/02</time><h4>完成数亿元融资</h4><p>中国电信领投，中信金石、中信私募跟投。</p></div>
+    <div class="event"><time>2026/04/07</time><h4>完成数亿元人民币融资</h4><p>深创投、汇川产投联合领投；一季度累计融资超 10 亿元。</p></div>
+    <div class="event"><time>2026 上半年</time><h4>累计融资超 50 亿元</h4><p>投后估值 <b>超 200 亿元</b>。</p></div>
+    <div class="event"><time>2026/08/11</time><h4>IPO 辅导备案获受理</h4><p>北京证监局受理，辅导券商中信证券；市场普遍预计目标为科创板。</p></div>
+  </div></article>
+  <div class="grid g2">
+    <article class="card gold"><div class="label">投资方与股权结构</div><div class="risk"><b>投资方：</b><span>知乎、华为哈勃、春华创投、北京市人工智能产业投资基金、中国电信、深创投、汇川产投、京国瑞、茅台基金、龙芯创投、中金保时捷等。</span></div><div class="risk"><b>股本：</b><span><b>无控股股东</b>；第一大股东为北京清语启航科技中心（有限合伙），持股 <b>16.45%</b>。</span></div></article>
+    <article class="card"><div class="label">ARR / 收入：数据缺口</div><div class="risk"><i>缺口</i><span>尚未递交招股书，<b>收入、利润、研发投入、现金消耗等核心财务数据均未披露</b>，无 ARR 口径。</span></div><div class="risk"><i>可用替代指标</i><span>MiniCPM 系列全球累计下载量超 4,300 万次（早期口径 2,400 万次，时点不同）。</span></div><div class="risk"><i>处理</i><span>标注为数据缺口，<b>不做推测填补</b>；下载量不等同于收入。</span></div></article>
+  </div>
+</section>
+
+<section class="pane" id="shengshu">
+  <div class="section-head"><div><h2>生数科技：世界模型赛道，半年三轮超 60 亿元</h2><p>Vidu 所属公司，2026 年从 A+ 轮走到 B+ 轮，单轮规模从 6 亿元跳到 5 亿美元。</p></div><span class="pill">未上市 · 传筹备港股</span></div>
+  <div class="grid g3">
+    <article class="card gold"><div class="label">累计融资</div><div class="value">超 60 亿元</div><div class="delta">2026 年完成三轮</div><div class="note">A+ / B / B+，节奏高度压缩</div></article>
+    <article class="card gold"><div class="label">估值</div><div class="value">超 20 亿美元</div><div class="delta">B 轮口径</div><div class="note">A+ 轮前约 80 亿元</div></article>
+    <article class="card gold"><div class="label">Vidu ARR</div><div class="value">超 $2,000 万</div><div class="delta">上线 8 个月</div><div class="note">覆盖全球 200 多个国家和地区</div></article>
+  </div>
+  <div class="section-head"><div><h2>股权融资时间线</h2><p>B+ 轮为国内通用世界模型领域最大单笔。</p></div><span class="pill">2023/06 – 2026/08</span></div>
+  <article class="card"><div class="label">融资与资本动作</div><div class="timeline">
+    <div class="event"><time>2023/03</time><h4>公司成立</h4><p>由瑞莱智慧、蚂蚁集团、BV 百度风投联合孵化；核心团队来自清华朱军团队。</p></div>
+    <div class="event"><time>2023/06</time><h4>天使轮（成立仅 3 个月）</h4><p>近亿元，蚂蚁集团领投。</p></div>
+    <div class="event"><time>2026/02</time><h4>A+ 轮</h4><p><b>超 6 亿元</b>，中关村科学城、星连资本领投；A+ 轮前估值约 80 亿元。</p></div>
+    <div class="event"><time>2026/03/30</time><h4>完成股份制改造</h4><p>为后续资本化铺路。</p></div>
+    <div class="event"><time>2026/04</time><h4>B 轮</h4><p><b>近 20 亿元</b>，阿里云领投，中网投、九安海棠、好未来、光合创投跟投；投后估值 <b>超 20 亿美元</b>。</p></div>
+    <div class="event"><time>2026/07</time><h4>B+ 轮：5 亿美元</h4><p>达泰资本披露，为国内通用世界模型领域最大单笔。</p></div>
+    <div class="event"><time>2026/08/18</time><h4>传考虑赴港 IPO <b>（媒体传闻）</b></h4><p>已与中金公司、中信证券合作，拟募资超 5 亿美元。</p></div>
+  </div></article>
+  <div class="grid g2">
+    <article class="card gold"><div class="label">ARR 与商业化</div><div class="risk"><i>01</i><span>Vidu 上线 8 个月 ARR 突破 <b>$2,000 万</b>，属视频生成赛道中较早跑出规模的案例。</span></div><div class="risk"><i>02</i><span>2025 年用户与收入均实现超 10 倍增长；覆盖全球 200 多个国家和地区。</span></div><div class="risk"><i>03</i><span>投资方：蚂蚁集团、百度风投、智谱、华为哈勃、启明创投、中关村科学城、阿里云、中网投、九安海棠、好未来、光合创投、星连资本、达泰资本等。</span></div></article>
+    <article class="card"><div class="label">需要存疑 / 标注的地方</div><div class="risk"><i>!</i><span>「赴港 IPO、拟募资超 5 亿美元」为媒体传闻，未见公司公告或招股书。</span></div><div class="risk"><i>!</i><span>$2,000 万 ARR 相对超 20 亿美元估值，隐含 PS 超 100x——但 Vidu 仅为公司一条产品线，不能用该 PS 直接推导公司整体估值合理性。</span></div><div class="risk"><i>!</i><span>2026/07 B+ 轮 5 亿美元金额来自达泰资本单方披露，公司未公告。</span></div></article>
+  </div>
+</section>
+
+<section class="pane" id="wuwen">
+  <div class="section-head"><div><h2>无问芯穹：异构算力调度，转做 Agentic Infra</h2><p>不做模型，做「让不同芯片跑同一个模型」这件事。2026 年战略重心从算力池转向智能体基础设施。</p></div><span class="pill">AI Infra · 未上市</span></div>
+  <div class="grid g3">
+    <article class="card gold"><div class="label">最新一轮 A+</div><div class="value">近 5 亿元</div><div class="delta">2025/11/27 宣布</div><div class="note">约 7,100 万美元口径，一致</div></article>
+    <article class="card gold"><div class="label">累计融资</div><div class="value">超 7 亿元</div><div class="delta">另有「近 10 亿元」口径 ⚠️</div><div class="note">完整轮次未见公开披露</div></article>
+    <article class="card gold"><div class="label">技术触点</div><div class="value">3.7 万 P</div><div class="delta">覆盖 16 种芯片</div><div class="note">跨域训练系统已实现超 4,000 公里跨域混训</div></article>
+  </div>
+  <div class="section-head"><div><h2>股权融资时间线</h2><p>公开可核对的轮次有限，仅 A+ 轮有完整投资方名单。</p></div><span class="pill">2023/05 – 2026/07</span></div>
+  <article class="card"><div class="label">融资与经营动作</div><div class="timeline">
+    <div class="event"><time>2023/05</time><h4>公司成立</h4><p>上海，定位大模型软硬件协同优化的异构算力平台。</p></div>
+    <div class="event"><time>2025/11/27</time><h4>A+ 轮：近 5 亿元</h4><p>珠海科技集团、孚腾资本（元创未来基金）领投；惠远资本、尚颀资本、弘晖基金跟投；老股东洪泰基金、达晨财智、尚势资本 &amp; 海棠资金、联想创投、君联资本、申万宏源、徐汇科创投、元智未来持续追投。资金投向软硬协同技术、AI 云与终端规模化、智能体基础设施研发。</p></div>
+    <div class="event"><time>2026/07</time><h4>WAIC 公布 Agentic Infra 战略</h4><p>「前店后厂一中心」布局：算力集散中心、Token 工厂、AI 生产力商店。推理端首创跨集群异构 PDD 架构，首 Token 延迟降 51.5%、单 Token 成本降 37.5%；平台单日 Token 调用量较 2025/12 增长 40 倍，并向具身智能延伸。</p></div>
+  </div></article>
+  <div class="grid g2">
+    <article class="card"><div class="label">ARR / 收入口径</div><div class="risk"><i>01</i><span>公司<b>未披露 ARR 或收入</b>。公开可用的运营指标是算力触点（3.7 万 P）与 Token 调用量增速（较 2025/12 增长 40 倍）。</span></div><div class="risk"><i>02</i><span>公司自称 PDD 架构规模化落地后推理成本仍有 10 倍下降空间——属技术预测，非财务指引。</span></div><div class="risk"><i>03</i><span>无自有芯片，收入依赖算力资源池的调度与转售，单位经济性受上游供给价格直接传导。</span></div></article>
+    <article class="card"><div class="label">需要存疑 / 标注的地方</div><div class="risk"><i>!</i><span><b>融资轮次不完整：</b>天使轮、A 轮等早期轮次的金额、时间与投资方均未见公开披露，本页只列可核对的 A+ 轮。</span></div><div class="risk"><i>!</i><span>累计融资两口径并存（超 7 亿元 / 近 10 亿元），本页并列不做取舍。</span></div><div class="risk"><i>!</i><span>「3.7 万 P 算力」为公司口径的触达规模，不等于自有资产。</span></div></article>
+  </div>
+</section>
+
+<section class="pane" id="siliconflow">
+  <div class="section-head"><div><h2>硅基流动：已递表港交所的「Token 工厂」</h2><p>国内独立生态词元供应商中排名第一，按港交所 18C 特专科技规则递表主板——本页覆盖的 11 家中，它是除智谱、MiniMax 外唯一进入申报环节的。</p></div><span class="pill">已递表 · 18C 章</span></div>
+  <div class="grid g3">
+    <article class="card gold"><div class="label">B+ 轮投后估值</div><div class="value">77.4 亿元</div><div class="delta">半年内融资 3 轮</div><div class="note">近半年估值抬升约 148%</div></article>
+    <article class="card gold"><div class="label">最新一轮 B 轮</div><div class="value">超 20 亿元</div><div class="delta">2026/06/16 宣布</div><div class="note">18 家机构参与，含携程战投、晶科、金蝶、壁仞、蔚来、商汤</div></article>
+    <article class="card gold"><div class="label">市场地位</div><div class="value">独立生态第一</div><div class="delta">2025 年词元年吞吐量</div><div class="note">全市场约第四、市占约 1.5%；前三名均为云厂商封闭生态，合计约 87%</div></article>
+  </div>
+  <div class="section-head"><div><h2>股权融资时间线</h2><p>三年从 Pre-A 走到递表，估值路径清晰、轮次披露完整。</p></div><span class="pill">2023/08 – 2026/06</span></div>
+  <div class="table-wrap card"><table><thead><tr><th>时间</th><th>轮次</th><th>金额</th><th>估值</th><th>主要投资方</th></tr></thead><tbody>
+    <tr><td>2023/08</td><td>公司成立</td><td>—</td><td>—</td><td>袁进辉（一流科技创始人、光年之外联合创始人）</td></tr>
+    <tr><td>2024 年底</td><td>Pre-A 轮</td><td>未完整披露</td><td>投后 2 亿美元</td><td>华创资本（领投）、普华资本（跟投）</td></tr>
+    <tr><td>2025/06</td><td>A 轮</td><td>数亿元人民币</td><td>—</td><td>阿里云（领投）、老股东创新工场等超额跟投；华兴资本任独家财务顾问</td></tr>
+    <tr><td>2026/06/16</td><td>B 轮</td><td><b>超 20 亿元</b></td><td>—</td><td>上海携程商务（战投）、晶科能源控股、金蝶软件、联通新沃、壁仞战投、蔚来资本、商汤战投等 18 家机构</td></tr>
+    <tr><td>2026 年内</td><td>B+ 轮</td><td>未披露</td><td><b>投后 77.4 亿元</b></td><td>阿里、美团、华为哈勃等产业资本入局</td></tr>
+  </tbody></table></div>
+  <div class="grid g2">
+    <article class="card gold"><div class="label">经营与股权结构</div><div class="risk"><b>收入结构：</b><span>2025 年公有云 / 本地部署收入占比约 <b>53% / 47%</b>。</span></div><div class="risk"><b>客户规模：</b><span>服务超 1,000 万用户及 1 万家企业客户，营收同比增长超 10 倍（2026/06 口径）。</span></div><div class="risk"><b>研发投入：</b><span>AI 基础设施软件企业，无自有芯片与大规模服务器资产；2023–2025 三年研发累计超 2.8 亿元。</span></div><div class="risk"><b>股权：</b><span>创始人袁进辉 + 员工持股平台合计控制 <b>44.48%</b> 投票权。</span></div></article>
+    <article class="card"><div class="label">需要存疑 / 标注的地方</div><div class="risk"><i>!</i><span><b>本页与原稿口径有重大差异：</b>原稿仅记录「数亿元」，经 Alpha派 检索招股书与券商研报后修订为「B 轮超 20 亿元、B+ 轮投后 77.4 亿元」。</span></div><div class="risk"><i>!</i><span>公司<b>未披露 ARR</b>，仅有词元吞吐量排名、用户与客户数、收入增速等运营指标，不能反推收入绝对值。</span></div><div class="risk"><i>!</i><span>市占约 1.5% 对应的行业集中度极高——前三名云厂商封闭生态合计约 87%，独立平台的长期空间取决于单位经济改善。</span></div></article>
+  </div>
+</section>
+
+<section class="pane" id="compare">
+  <div class="section-head"><div><h2>1H26 可比指标矩阵</h2><p>只比较同期、定义接近的指标；收入额保留原币，不做汇率折算。</p></div></div>
+  <div class="table-wrap card"><table><thead><tr><th>指标</th><th>智谱</th><th>MiniMax</th><th>研究解读</th></tr></thead><tbody><tr><td>收入同比</td><td><b>+399.7%</b></td><td><b>+283.1%</b></td><td>均处于低基数高增阶段</td></tr><tr><td>平台/API 收入占比</td><td><b>86.5%</b></td><td><b>63.4%</b></td><td>智谱收入切换更彻底</td></tr><tr><td>综合毛利率</td><td><b>26.4%</b></td><td><b>17.9%</b></td><td>智谱更高，但同比明显下滑；MiniMax 同比改善</td></tr><tr><td>研发费用/收入</td><td><b>223%</b></td><td><b>255%</b></td><td>两者都仍依赖外部融资支持</td></tr><tr><td>调整后亏损/收入</td><td><b>206%</b></td><td><b>251%</b></td><td>不可把收入高增长等同于经营杠杆已兑现</td></tr><tr><td>全球化</td><td>覆盖 233 个国家和地区</td><td>海外收入 60.8%</td><td>“覆盖”不是收入；MiniMax 披露了可核对的地域收入占比</td></tr><tr><td>主要旧业务</td><td>私有化部署</td><td>AI 原生消费产品</td><td>两家公司平台化转型的基数不同</td></tr></tbody></table></div>
+  <div class="grid g3"><article class="card z"><div class="label">智谱最关键变量</div><div class="value">API 毛利</div><p>调用量与售价同时上升能否持续，国产芯片适配是否真正形成稳定成本优势。</p></article><article class="card m"><div class="label">MiniMax 最关键变量</div><div class="value">平台规模效应</div><p>企业平台占比提升后，综合毛利率能否回到并超过 FY25 水平。</p></article><article class="card gold"><div class="label">共同关键变量</div><div class="value">现金消耗</div><p>研发与收入仍不在同一量级，估值需要同时审视融资能力、债务和供应商集中度。</p></article></div>
+</section>
+
+<section class="pane" id="risks">
+  <div class="section-head"><div><h2>风险、催化剂与证据边界</h2><p>看板中的“公司称”代表管理层口径，不等于独立第三方验证。</p></div></div>
+  <div class="grid g2"><article class="card gold"><div class="label">共同催化剂</div><div class="risk"><i>＋</i><span>Coding/Agent 从试用进入持续生产调用，带动 API 与订阅收入。</span></div><div class="risk"><i>＋</i><span>推理效率、国产芯片或云资源优化改善单位经济性。</span></div><div class="risk"><i>＋</i><span>企业平台降低一次性交付比重，提高收入可重复性。</span></div></article><article class="card"><div class="label">共同风险</div><div class="risk"><i>－</i><span>前沿模型训练与推理投入持续快于收入，融资窗口变化会放大现金压力。</span></div><div class="risk"><i>－</i><span>云与算力供应集中、出口管制及价格波动影响交付成本。</span></div><div class="risk"><i>－</i><span>模型能力迭代快，产品留存和定价权可能弱于短期调用增长。</span></div><div class="risk"><i>－</i><span>数据、版权、内容安全与跨境合规要求提高运营成本。</span></div></article></div>
+  <div class="section-head"><div><h2>主要资料源</h2><p>按优先级列示：港交所正式披露 → 公司官网；第三方估算未进入核心 KPI。</p></div></div>
+  <div class="card source"><p><strong>智谱：</strong> <a href="https://www1.hkexnews.hk/listedco/listconews/sehk/2025/1230/2025123000017.pdf" target="_blank" rel="noopener">招股书（2025-12-30）</a> · <a href="https://www1.hkexnews.hk/listedco/listconews/sehk/2026/0331/2026033101549.pdf" target="_blank" rel="noopener">FY2025 业绩公告</a> · <a href="https://www1.hkexnews.hk/listedco/listconews/sehk/2026/0831/2026083101539.pdf" target="_blank" rel="noopener">1H26 中期业绩公告</a></p><p><strong>智谱最新会议材料：</strong>《2026年半年度业绩发布会》·《2026H1 Call back》·《战略融资解读及业务进展更新》。三份均为 AI 生成会议要点，核心经营数字视作管理层口径，并以正式公告为更高优先级。</p><p><strong>MiniMax：</strong> <a href="https://www1.hkexnews.hk/listedco/listconews/sehk/2025/1231/2025123100025.pdf" target="_blank" rel="noopener">招股书（2025-12-31）</a> · <a href="https://www1.hkexnews.hk/listedco/listconews/sehk/2026/0302/2026030202837.pdf" target="_blank" rel="noopener">FY2025 业绩公告</a> · <a href="https://www1.hkexnews.hk/listedco/listconews/sehk/2026/0826/2026082600680.pdf" target="_blank" rel="noopener">1H26 中期业绩公告</a></p><p><strong>方法：</strong>会计收入、月度 ARR、周度年化、订单、理论产能与目标指引严格分开；运营口径不视为审计收入，公司间不进行未经说明的汇率换算。</p></div>
+</section>
+
+<footer class="footnote">中国模型 · AI Labs 看板｜首次建立：2026-09-21｜2026-09-22 将「定价史」「模型性价比象限」拆出为独立看板（详见 模型性价比_看板.html）｜仅用于研究记录，不构成投资建议。</footer>
+</main><script>
+document.querySelectorAll('.tab').forEach(btn=>btn.addEventListener('click',()=>{document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));document.querySelectorAll('.pane').forEach(x=>x.classList.remove('active'));btn.classList.add('active');document.getElementById(btn.dataset.tab).classList.add('active');history.replaceState(null,'','#'+btn.dataset.tab)}));
+const initial=location.hash.slice(1);if(initial&&document.getElementById(initial)){document.querySelector(`[data-tab="${initial}"]`)?.click()}
+</script></body></html>

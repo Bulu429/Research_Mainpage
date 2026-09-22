@@ -322,12 +322,30 @@ code{font-size:10px;background:var(--tag-bg);color:var(--tag);padding:1px 5px;bo
 @media(max-width:560px){.conclusion-head,.conclusion-grid{padding-left:15px;padding-right:15px}.capex-conversion,.conclusion-warning{margin-left:15px;margin-right:15px}.priority-row{grid-template-columns:20px minmax(0,1fr)}.priority-tag{grid-column:2}.mapping-row{grid-template-columns:92px 15px minmax(0,1fr)}.mapping-note{grid-column:3;justify-self:start}}
 
 </style>
-</head>
-<body>
+<style>
+/* industry-dashboard-shell:start */
+:root{--bg:#f4f6f1;--card:#fff;--paper:#fff;--border:#dce2d8;--line:#dce2d8;
+ --text:#1d292c;--text-primary:#1d292c;--text2:#667477;--text-secondary:#667477;
+ --accent:#247052;--deep:#23483f;--green:#247052}
+body{background:#f4f6f1!important;font-family:"Microsoft YaHei","PingFang SC","Segoe UI",sans-serif}
+.industry-shell{position:relative;z-index:101;display:flex;align-items:center;gap:10px 14px;
+ flex-wrap:wrap;padding:11px max(20px,calc((100vw - 1280px)/2));background:#23483f;
+ color:#fff;font:500 12px/1.5 "Microsoft YaHei","PingFang SC",sans-serif}
+.industry-shell *{box-sizing:border-box}
+.industry-shell a{color:#d7f2df!important;text-decoration:none!important;font-weight:700}
+.industry-shell a:hover{text-decoration:underline!important}
+.industry-shell__name{font-weight:800;font-size:13px;color:#fff}
+.industry-shell__kind{border:1px solid #91bd9e;border-radius:999px;padding:2px 8px;color:#e9f8ed}
+.industry-shell__asof{margin-left:auto;color:#e2efe5}
+body a[data-industry-legacy-back="1"]{display:none!important}
+@media(max-width:680px){.industry-shell{padding:10px 15px}.industry-shell__asof{margin-left:0;width:100%}}
+/* industry-dashboard-shell:end */
+</style></head>
+<body><!-- industry-dashboard-shell:start --><nav class="industry-shell" aria-label="行业看板统一导航"><a href="../industry-fundamentals-entry.html">行业看板</a><span aria-hidden="true">/</span><span class="industry-shell__name">全球半导体设备看板</span><span class="industry-shell__kind">行业总览</span><span class="industry-shell__asof">数据日期与口径见正文</span></nav><!-- industry-dashboard-shell:end --><!-- industry-review:start --><aside class="industry-review" style="padding:10px 20px;background:#fff8e5;color:#665424;font-size:12px;line-height:1.7;border-bottom:1px solid #e7ddbc"><strong>口径说明 · 页面修订2026-09-22</strong>｜研究模型日期2026-07。1GW对应4.62万片/月、约75亿美元WFE为情景推导，不是已披露订单；公司预测与估值保留各自来源日期。</aside><!-- industry-review:end -->
 
 <header class="hdr">
   <div class="hdr-l">
-    <a class="back-link" href="../industry-fundamentals-entry.html">← 行业基本面入口</a>
+    <a class="back-link" href="../industry-fundamentals-entry.html" data-industry-legacy-back="1">← 行业基本面入口</a>
     <span class="hdr-title">全球半导体设备看板</span>
     <span class="hdr-sub">AI WFE 总量 · 逻辑 vs 存储CapEx结构 · 海外设备商盈利与估值</span>
     <span class="badge-warn">🟡 建设中</span>
@@ -939,15 +957,15 @@ if (overseasEquipmentDataNode) {
   };
   const marketPill = (market) => '<span class="market-pill ' + (market === '日股' ? 'jp' : '') + '">' + market + '</span>';
   const companyPageUrl = {
-    "AMAT.O": "../../us-mapping/companies/AMAT_AppliedMaterials.html",
-    "LRCX.O": "../../us-mapping/companies/LRCX_LamResearch.html",
-    "ASML.O": "../../us-mapping/companies/ASML_ASML.html"
+    "AMAT.O": "../../美股映射研究/companies/AMAT_应用材料.html",
+    "LRCX.O": "../../美股映射研究/companies/LRCX_泛林.html",
+    "ASML.O": "../../美股映射研究/companies/ASML_阿斯麦.html"
   };
   const companyName = (item) => {
     const name = escapeHtml(item.cn);
     const url = companyPageUrl[item.ticker];
     return url
-      ? '<a class="company-link" href="' + url + '" target="_blank" rel="noopener" title="查看公司页">' + name + '</a>'
+      ? '<a class="company-link" title="本地研究底稿，未随公开看板发布" aria-disabled="true" target="_blank" rel="noopener" title="查看公司页">' + name + '</a>'
       : name;
   };
   const companyCell = (item) => {

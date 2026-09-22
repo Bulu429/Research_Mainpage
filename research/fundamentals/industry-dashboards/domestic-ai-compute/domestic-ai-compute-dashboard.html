@@ -179,12 +179,30 @@ code{font-size:10px;background:var(--tag-bg);color:var(--tag);padding:1px 5px;bo
 .rate-low{background:#fecaca;color:#991b1b}
 .rate-none{background:#fca5a5;color:#7f1d1d}
 </style>
-</head>
-<body>
+<style>
+/* industry-dashboard-shell:start */
+:root{--bg:#f4f6f1;--card:#fff;--paper:#fff;--border:#dce2d8;--line:#dce2d8;
+ --text:#1d292c;--text-primary:#1d292c;--text2:#667477;--text-secondary:#667477;
+ --accent:#247052;--deep:#23483f;--green:#247052}
+body{background:#f4f6f1!important;font-family:"Microsoft YaHei","PingFang SC","Segoe UI",sans-serif}
+.industry-shell{position:relative;z-index:101;display:flex;align-items:center;gap:10px 14px;
+ flex-wrap:wrap;padding:11px max(20px,calc((100vw - 1280px)/2));background:#23483f;
+ color:#fff;font:500 12px/1.5 "Microsoft YaHei","PingFang SC",sans-serif}
+.industry-shell *{box-sizing:border-box}
+.industry-shell a{color:#d7f2df!important;text-decoration:none!important;font-weight:700}
+.industry-shell a:hover{text-decoration:underline!important}
+.industry-shell__name{font-weight:800;font-size:13px;color:#fff}
+.industry-shell__kind{border:1px solid #91bd9e;border-radius:999px;padding:2px 8px;color:#e9f8ed}
+.industry-shell__asof{margin-left:auto;color:#e2efe5}
+body a[data-industry-legacy-back="1"]{display:none!important}
+@media(max-width:680px){.industry-shell{padding:10px 15px}.industry-shell__asof{margin-left:0;width:100%}}
+/* industry-dashboard-shell:end */
+</style></head>
+<body><!-- industry-dashboard-shell:start --><nav class="industry-shell" aria-label="行业看板统一导航"><a href="../industry-fundamentals-entry.html">行业看板</a><span aria-hidden="true">/</span><span class="industry-shell__name">国产AI算力研究看板</span><span class="industry-shell__kind">行业总览</span><span class="industry-shell__asof">数据日期与口径见正文</span></nav><!-- industry-dashboard-shell:end --><!-- industry-review:start --><aside class="industry-review" style="padding:10px 20px;background:#fff8e5;color:#665424;font-size:12px;line-height:1.7;border-bottom:1px solid #e7ddbc"><strong>口径说明 · 页面修订2026-09-22</strong>｜财务主要截至2026Q1。原Q2及7—8月招标窗口已到期，结果待核；仍保留原研究假设，不表示已经兑现。2Q26财务待补。</aside><!-- industry-review:end -->
 
 <header class="hdr">
   <div class="hdr-l">
-    <a class="back-link" href="../industry-fundamentals-entry.html">← 行业基本面入口</a>
+    <a class="back-link" href="../industry-fundamentals-entry.html" data-industry-legacy-back="1">← 行业基本面入口</a>
     <span class="hdr-title">国产AI算力</span>
     <span class="hdr-sub">AI芯片 · 先进封装 · HBM · 推理基础设施</span>
     <span class="badge-up">🟢 替代加速</span>
@@ -1390,8 +1408,8 @@ code{font-size:10px;background:var(--tag-bg);color:var(--tag);padding:1px 5px;bo
   </div>
   <div class="card">
     <div style="font-size:11px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px">催化剂与证伪</div>
-    <div class="tl-item"><div class="tl-dot tl-d-p"></div><div class="tl-date">2026Q2</div><div><div class="tl-evt">第一批小批量招标结果</div><div class="tl-meta">300-500台，验证浪潮/华勤/曙光份额</div></div><span class="tl-st st-p">关键</span></div>
-    <div class="tl-item"><div class="tl-dot tl-d-g"></div><div class="tl-date">2026Q3</div><div><div class="tl-evt">7-8月最大批量招标</div><div class="tl-meta">超节点从研发标转向产业订单</div></div><span class="tl-st st-g">放量</span></div>
+    <div class="tl-item"><div class="tl-dot tl-d-p"></div><div class="tl-date">2026Q2</div><div><div class="tl-evt">第一批小批量招标：原计划已到期，结果待核</div><div class="tl-meta">300-500台，验证浪潮/华勤/曙光份额</div></div><span class="tl-st st-p">关键</span></div>
+    <div class="tl-item"><div class="tl-dot tl-d-g"></div><div class="tl-date">2026Q3</div><div><div class="tl-evt">原计划7-8月大批量招标：结果待核</div><div class="tl-meta">超节点从研发标转向产业订单</div></div><span class="tl-st st-g">放量</span></div>
     <div class="tl-item"><div class="tl-dot tl-d-t"></div><div class="tl-date">2026H2</div><div><div class="tl-evt">盛科scale up突破</div><div class="tl-meta">头部大厂导入决定估值弹性上限</div></div><span class="tl-st st-t">弹性</span></div>
     <div class="risk-i" style="margin-top:8px"><span class="rn">F1</span><span>高端交换芯片继续被博通/迈威尔保供，国产替代慢于预期</span></div>
     <div class="risk-i"><span class="rn">F2</span><span>超节点固定成本增加无法被变动成本下降覆盖，大厂采购节奏放缓</span></div>
@@ -1404,7 +1422,7 @@ code{font-size:10px;background:var(--tag-bg);color:var(--tag);padding:1px 5px;bo
   <div class="tl-item"><div class="tl-dot tl-d-r"></div><div class="tl-date">持续</div><div class="tl-content"><div class="tl-evt">美国出口管制升级（H20/B20等）</div><div class="tl-meta">每次禁运升级 = 国产算力短期冲击+中长期催化；密切追踪BIS动向</div></div><span class="tl-st st-r">⚠核心变量</span></div>
   <div class="tl-item"><div class="tl-dot tl-d-t"></div><div class="tl-date">每季度</div><div class="tl-content"><div class="tl-evt">海光信息季报 + DCU出货指引</div><div class="tl-meta">最重要的景气确认；GPU等效卡出货量是核心指标</div></div><span class="tl-st st-t">🔵核心跟踪</span></div>
   <div class="tl-item"><div class="tl-dot tl-d-g"></div><div class="tl-date">2026Q2-Q3</div><div class="tl-content"><div class="tl-evt">DeepSeek R2 / 新模型发布影响</div><div class="tl-meta">推理效率提升 → 国产算力适配性加速；关注海光/寒武纪适配进度</div></div><span class="tl-st st-g">🟢机遇</span></div>
-  <div class="tl-item"><div class="tl-dot tl-d-p"></div><div class="tl-date">2026Q3</div><div class="tl-content"><div class="tl-evt">超节点 7-8月大批量招标</div><div class="tl-meta">交换网络四剑客 + OEM份额验证；重点看盛科通信scale up导入、浪潮/华勤/曙光中标份额</div></div><span class="tl-st st-p">🕐新增主线</span></div>
+  <div class="tl-item"><div class="tl-dot tl-d-p"></div><div class="tl-date">2026Q3</div><div class="tl-content"><div class="tl-evt">超节点原计划7-8月大批量招标：结果待核</div><div class="tl-meta">交换网络四剑客 + OEM份额验证；重点看盛科通信scale up导入、浪潮/华勤/曙光中标份额</div></div><span class="tl-st st-p">🕐新增主线</span></div>
   <div class="tl-item"><div class="tl-dot tl-d-p"></div><div class="tl-date">2026H2</div><div class="tl-content"><div class="tl-evt">寒武纪盈利可持续性验证（26Q2-Q3）</div><div class="tl-meta">若连续两季度盈利 → 商业模式验证，估值重估</div></div><span class="tl-st st-p">🕐关键节点</span></div>
   <div class="tl-item"><div class="tl-dot tl-d-p"></div><div class="tl-date">2026H2-2027</div><div class="tl-content"><div class="tl-evt">长电科技 CoWoS-like 小批量量产</div><div class="tl-meta">先进封装突破 = 先进封装板块估值重估信号</div></div><span class="tl-st st-p">🕐关键节点</span></div>
   <div class="tl-item"><div class="tl-dot tl-d-p"></div><div class="tl-date">2027</div><div class="tl-content"><div class="tl-evt">长鑫存储 HBM 小批量验证</div><div class="tl-meta">若量产成功 → 国产AI算力产业链最大单一里程碑</div></div><span class="tl-st st-p">🕐重大催化</span></div>

@@ -172,12 +172,30 @@ code{font-size:10px;background:var(--tag-bg);color:var(--tag);padding:1px 5px;bo
 .gtip .tip-up{color:#4ade80;font-weight:700}
 .gtip .tip-down{color:#f87171;font-weight:700}
 </style>
-</head>
-<body>
+<style>
+/* industry-dashboard-shell:start */
+:root{--bg:#f4f6f1;--card:#fff;--paper:#fff;--border:#dce2d8;--line:#dce2d8;
+ --text:#1d292c;--text-primary:#1d292c;--text2:#667477;--text-secondary:#667477;
+ --accent:#247052;--deep:#23483f;--green:#247052}
+body{background:#f4f6f1!important;font-family:"Microsoft YaHei","PingFang SC","Segoe UI",sans-serif}
+.industry-shell{position:relative;z-index:101;display:flex;align-items:center;gap:10px 14px;
+ flex-wrap:wrap;padding:11px max(20px,calc((100vw - 1280px)/2));background:#23483f;
+ color:#fff;font:500 12px/1.5 "Microsoft YaHei","PingFang SC",sans-serif}
+.industry-shell *{box-sizing:border-box}
+.industry-shell a{color:#d7f2df!important;text-decoration:none!important;font-weight:700}
+.industry-shell a:hover{text-decoration:underline!important}
+.industry-shell__name{font-weight:800;font-size:13px;color:#fff}
+.industry-shell__kind{border:1px solid #91bd9e;border-radius:999px;padding:2px 8px;color:#e9f8ed}
+.industry-shell__asof{margin-left:auto;color:#e2efe5}
+body a[data-industry-legacy-back="1"]{display:none!important}
+@media(max-width:680px){.industry-shell{padding:10px 15px}.industry-shell__asof{margin-left:0;width:100%}}
+/* industry-dashboard-shell:end */
+</style></head>
+<body><!-- industry-dashboard-shell:start --><nav class="industry-shell" aria-label="行业看板统一导航"><a href="../industry-fundamentals-entry.html">行业看板</a><span aria-hidden="true">/</span><span class="industry-shell__name">存储 / HBM 研究看板</span><span class="industry-shell__kind">行业总览</span><span class="industry-shell__asof">三大原厂 2Q26 模型</span></nav><!-- industry-dashboard-shell:end --><!-- industry-review:start --><aside class="industry-review" style="padding:10px 20px;background:#fff8e5;color:#665424;font-size:12px;line-height:1.7;border-bottom:1px solid #e7ddbc"><strong>口径说明 · 页面修订2026-09-22</strong>｜2Q26模型输入已作关键数核对；Micron/Sandisk等仍含预测，按每家公司标签使用。模型版本不等于全部季度均为实际披露。</aside><!-- industry-review:end -->
 
 <header class="hdr">
   <div class="hdr-l">
-    <a class="back-link" href="../industry-fundamentals-entry.html">← 行业基本面入口</a>
+    <a class="back-link" href="../industry-fundamentals-entry.html" data-industry-legacy-back="1">← 行业基本面入口</a>
     <span class="hdr-title">存储 / HBM</span>
     <span class="hdr-sub">HBM · DRAM · NAND · 三大原厂</span>
     <span class="badge-up">🟢 景气上行</span>
@@ -193,14 +211,15 @@ code{font-size:10px;background:var(--tag-bg);color:var(--tag);padding:1px 5px;bo
 <div id="sec-calc" class="st" onclick="toggleSec(this)">📐 利润速算器（Bits × ASP，可调整假设）<span class="st-arrow">▾</span></div>
 <div class="sec-body" style="margin-bottom:16px">
   <div class="card">
-    <div class="note-box note-fold" onclick="toggleNote(this)"><div class="note-head">核心公式与口径提示 ▾</div><div class="note-body">核心公式：<strong>营收=出货量(Bits)×ASP；利润=出货量×(ASP−单位成本)</strong>。<strong style="color:var(--warn)">2026-08-06起：ASP与单位成本默认改为2Q26单季度值</strong>（此前为2025年度加权平均值），出货量仍为2025年度加总不变——三项默认值不再同一时间口径，故默认呈现的"利润率"实际反映的是2Q26单季的价格/成本水位、乘以2025全年的销量假设，是刻意的混搭测算（用最新单季价格看全年量级弹性），不代表任何一个真实报告期。单位成本由利润率反推（<code>成本/bit=ASP×(1−利润率%)</code>），可改任意一项做敏感性测算。<strong>2Q26实际/预测状态分三档</strong>：海力士、三星2Q26已是公司实际披露值；美光、Sandisk、铠侠2Q26仍是模型预测值（2Q26E，尚未转正）——悬停ASP徽章查看每家具体状态。<strong style="color:var(--warn)">口径差异（三档）</strong>：①美光、Sandisk单列COGS，是真毛利率；②海力士、三星、铠侠只给营业利润率（已扣SG&A/研发），反推成本口径更宽，五家不能直接横比；③Sandisk/铠侠仅NAND单一业务（无DRAM/HBM），故只有一段输入，"合计"行等于该段本身。<strong>出货量下方的青色小字</strong>是"产能↔位元"校验（BPW单片有效位元产出反推，悬停查看方法与来源），随出货量输入实时联动，仅供量级校验，<strong>不参与利润计算</strong>；DRAM、NAND均已覆盖（海力士/三星为自有模型产能反推，美光/Sandisk/铠侠因无自有产能数据，BPW借用海力士+三星同品类均值代用，不显示占26年产能%）。<strong style="color:var(--warn)">NAND的BPW比DRAM高约30-40倍</strong>（3D堆叠层数多），两者不可跨品类比较。</div></div>
+    <div class="note-box note-fold" onclick="toggleNote(this)"><div class="note-head">核心公式与口径提示 ▾</div><div class="note-body">核心公式：<strong>营收=出货量(Bits)×ASP；利润=出货量×(ASP−单位成本)</strong>。<strong style="color:var(--warn)">2026-08-06起：ASP与单位成本默认改为2Q26单季度值</strong>（此前为2025年度加权平均值），出货量仍为2025年度加总不变——三项默认值不再同一时间口径，故默认呈现的"利润率"实际反映的是2Q26单季的价格/成本水位、乘以2025全年的销量假设，是刻意的混搭测算（用最新单季价格看全年量级弹性），不代表任何一个真实报告期。单位成本由利润率反推（<code>成本/bit=ASP×(1−利润率%)</code>），可改任意一项做敏感性测算。<strong>2Q26模型历史/预测状态</strong>：海力士、三星、铠侠2Q26列无E；美光、Sandisk仍是旧模型预测值（2Q26E，尚未按后续披露重估）——悬停ASP徽章查看每家具体状态。<strong style="color:var(--warn)">口径差异（三档）</strong>：①美光、Sandisk单列COGS，是真毛利率；②海力士、三星、铠侠只给营业利润率（已扣SG&A/研发），反推成本口径更宽，五家不能直接横比；③Sandisk/铠侠仅NAND单一业务（无DRAM/HBM），故只有一段输入，"合计"行等于该段本身。<strong>出货量下方的青色小字</strong>是"产能↔位元"校验（BPW单片有效位元产出反推，悬停查看方法与来源），随出货量输入实时联动，仅供量级校验，<strong>不参与利润计算</strong>；DRAM、NAND均已覆盖（海力士/三星为自有模型产能反推，美光/Sandisk/铠侠因无自有产能数据，BPW借用海力士+三星同品类均值代用，不显示占26年产能%）。<strong style="color:var(--warn)">NAND的BPW比DRAM高约30-40倍</strong>（3D堆叠层数多），两者不可跨品类比较。</div></div>
+    <div class="source-note" style="margin:10px 0 14px;border-left:3px solid #b45309;padding:8px 12px;background:#fff8e6">2026-09-22 核验补充：速算器是<strong>2025 年出货量 × 模型中 2Q26 单季 ASP／利润率</strong>的情景测算，不是已披露的全年利润。海力士、三星、铠侠模型的 2Q26 列无 E，美光、Sandisk 仍标 2Q26E；这些分部 ASP、出货量及利润率是模型指标，不能仅凭列名认定为公司逐项披露。铠侠已发布截至 2026-06-30 的季度财报，Sandisk 已发布截至 2026-07-03 的财季结果，美光已发布截至 2026-05-28 的财季结果；铠侠的财报实际值已进入原始模型及页面，但页面先前误标预测；美光与 Sandisk 的旧模型预测尚未按这些披露重新估算，且美光、Sandisk 财季与自然季不同。见 <a href="https://www.kioxia-holdings.com/en-jp/ir/news.html">铠侠 IR</a>、<a href="https://investor.sandisk.com/news-releases/news-release-details/sandisk-reports-fiscal-fourth-quarter-2026-financial-results">Sandisk IR</a>、<a href="https://investors.micron.com/news/press-release/2026/Micron-Technology-Inc--Reports-Record-Results-for-the-Third-Quarter-of-Fiscal-2026/default.aspx">美光 IR</a>。</div>
     <div class="calc-grid">
       <div class="calc-col" data-co="skh">
         <div class="calc-h">海力士 SK Hynix</div>
         <div class="calc-seg-h tg-dram">DRAM（含 HBM 混合）</div>
         <label>出货量（bn Gb）<span class="src-ic" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="来源：SK Hynix Model 2Q26.xlsx · DRAM Revenue表 · 2025年1-4季度(自然季)原始出货量求和">模型</span><input id="ship-skh-dram" type="number" step="0.01" value="93.10" oninput="calcProfit();updateCapCheck()"></label>
         <div id="cap-skh" class="cap-check" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="按SK Hynix Model 2Q26.xlsx自身'DRAM Wafer capacity(WPM)'÷'Shipment(1Gb equiv)'反推：2026E均值 ≈1,940 GB/片有效位元产出（BPW），2026E产能均值≈618 kwpm，均取自同一模型同一口径，可直接对比。不代表实际投片计划，仅做量级校验，不参与左侧利润测算。"></div>
-        <label>ASP（$/Gb）<span class="src-ic" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="来源：SK Hynix Model 2Q26.xlsx · DRAM Revenue表 · 2Q26单季&quot;综合ASP&quot;，公司实际披露值（2Q26已随2026-08-06模型切换转正，非预测）">模型</span><input id="asp-skh-dram" type="number" step="0.0001" value="1.430" oninput="calcProfit();updateAspPct()"></label>
+        <label>ASP（$/Gb）<span class="src-ic" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="来源：SK Hynix Model 2Q26.xlsx · DRAM Revenue表 · 2Q26单季&quot;综合ASP&quot;，模型2Q26历史列的估算值（无E，非预测列；不代表公司单独披露该ASP）">模型</span><input id="asp-skh-dram" type="number" step="0.0001" value="1.430" oninput="calcProfit();updateAspPct()"></label>
         <div id="pct-skh-dram" class="asp-ref"></div>
         <label>单位成本（$/Gb）<span class="src-ic derived" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="反推：ASP×(1−79.3%)；79.3%为2Q26单季DRAM营业利润率（实际值），来源SK Hynix Model 2Q26.xlsx DRAM Cost sheet（未单列COGS，非真实毛利率）">反推</span><input type="number" step="0.0001" value="0.2966" oninput="calcProfit()"></label>
         <div class="calc-out"><span>营收</span><b class="o-rev">-</b></div>
@@ -209,7 +228,7 @@ code{font-size:10px;background:var(--tag-bg);color:var(--tag);padding:1px 5px;bo
         <div class="calc-seg-h tg-nand" style="margin-top:10px">NAND</div>
         <label>出货量（bn GB）<span class="src-ic" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="来源：SK Hynix Model 2Q26.xlsx · NAND Revenue表 · 2025年1-4季度求和">模型</span><input id="ship-skh-nand" type="number" step="0.01" value="174.80" oninput="calcProfit();updateCapCheck()"></label>
         <div id="cap-skh-nand" class="cap-check" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="按SK Hynix Model 2Q26.xlsx自身'NAND Wafer capacity(WPM)'÷'Shipment(16Gb equiv)'反推：2026E均值≈70,742 GB/片有效位元产出（BPW，NAND因3D堆叠层数多，天然比DRAM高一到两个数量级，不可跨品类比较），2026E产能均值≈242.5 kwpm，均取自同一模型同一口径。不代表实际投片计划，仅做量级校验，不参与左侧利润测算。"></div>
-        <label>ASP（$/GB）<span class="src-ic" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="来源：SK Hynix Model 2Q26.xlsx · NAND Revenue表 · 2Q26单季ASP，公司实际披露值">模型</span><input id="asp-skh-nand" type="number" step="0.0001" value="0.2705" oninput="calcProfit();updateAspPct()"></label>
+        <label>ASP（$/GB）<span class="src-ic" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="来源：SK Hynix Model 2Q26.xlsx · NAND Revenue表 · 2Q26单季ASP，模型历史列估算值（非公司逐项披露）">模型</span><input id="asp-skh-nand" type="number" step="0.0001" value="0.2705" oninput="calcProfit();updateAspPct()"></label>
         <div id="pct-skh-nand" class="asp-ref"></div>
         <label>单位成本（$/GB）<span class="src-ic derived" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="反推：ASP×(1−68.8%)；68.8%为2Q26单季NAND营业利润率（实际值），来源SK Hynix Model 2Q26.xlsx NAND Cost sheet（未单列COGS）">反推</span><input type="number" step="0.0001" value="0.0844" oninput="calcProfit()"></label>
         <div class="calc-out"><span>营收</span><b class="o-rev">-</b></div>
@@ -224,7 +243,7 @@ code{font-size:10px;background:var(--tag-bg);color:var(--tag);padding:1px 5px;bo
         <div class="calc-seg-h tg-dram">DRAM（含 HBM 混合）</div>
         <label>出货量（bn Gb）<span class="src-ic" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="来源：Samsung Model 2Q26.xlsx · DRAM sheet · 2025年1-4季度求和">模型</span><input id="ship-sam-dram" type="number" step="0.01" value="116.45" oninput="calcProfit();updateCapCheck()"></label>
         <div id="cap-sam" class="cap-check" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="按Samsung Model 2Q26.xlsx自身DRAM capacity(WPM)与Gross die/wafer×良率链条反推：2026E均值≈2,099 GB/片（BPW），2026E产能均值≈725 kwpm，均取自同一模型。两条链路（产能÷出货量反推 与 GDPW×良率直算）互相印证，结果一致。仅做量级校验，不参与左侧利润测算。"></div>
-        <label>ASP（$/Gb）<span class="src-ic" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="来源：Samsung Model 2Q26.xlsx · DRAM sheet · 2Q26单季综合ASP，公司实际披露值（2Q26已随2026-08-04模型切换转正，非预测）">模型</span><input id="asp-sam-dram" type="number" step="0.0001" value="1.647" oninput="calcProfit();updateAspPct()"></label>
+        <label>ASP（$/Gb）<span class="src-ic" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="来源：Samsung Model 2Q26.xlsx · DRAM sheet · 2Q26单季综合ASP，模型2Q26历史列的估算值（无E，非预测列；不代表公司单独披露该ASP）">模型</span><input id="asp-sam-dram" type="number" step="0.0001" value="1.647" oninput="calcProfit();updateAspPct()"></label>
         <div id="pct-sam-dram" class="asp-ref"></div>
         <label>单位成本（$/Gb）<span class="src-ic derived" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="反推：ASP×(1−78.6%)；78.6%为2Q26单季DRAM营业利润率（实际值），来源Samsung Model 2Q26.xlsx Semiconductor Cost sheet（未单列COGS，非真实毛利率）">反推</span><input type="number" step="0.0001" value="0.3529" oninput="calcProfit()"></label>
         <div class="calc-out"><span>营收</span><b class="o-rev">-</b></div>
@@ -233,9 +252,9 @@ code{font-size:10px;background:var(--tag-bg);color:var(--tag);padding:1px 5px;bo
         <div class="calc-seg-h tg-nand" style="margin-top:10px">NAND</div>
         <label>出货量（bn GB）<span class="src-ic" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="来源：Samsung Model 2Q26.xlsx · NAND sheet · 2025年1-4季度求和">模型</span><input id="ship-sam-nand" type="number" step="0.01" value="336.00" oninput="calcProfit();updateCapCheck()"></label>
         <div id="cap-sam-nand" class="cap-check" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="按Samsung Model 2Q26.xlsx自身NAND capacity(WPM)÷Bit shipment反推：2026E均值≈79,140 GB/片（BPW），2026E产能均值≈401.2 kwpm，均取自同一模型。三星NAND产能2025→2027E实为逐年收缩(435→401→378kwpm)，靠密度提升(BPW上升)撑住出货量增长，与行业减产控产能叙事一致。不代表实际投片计划，仅做量级校验，不参与左侧利润测算。"></div>
-        <label>ASP（$/GB）<span class="src-ic" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="来源：Samsung Model 2Q26.xlsx · NAND sheet · 2Q26单季ASP，公司实际披露值">模型</span><input id="asp-sam-nand" type="number" step="0.0001" value="0.2440" oninput="calcProfit();updateAspPct()"></label>
+        <label>ASP（$/GB）<span class="src-ic" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="来源：Samsung Model 2Q26.xlsx · NAND!DH12=0.4873479美元/16Gb，除以2换算为0.243674美元/GB；模型历史列估算值，非公司逐项披露">模型</span><input id="asp-sam-nand" type="number" step="0.0001" value="0.2437" oninput="calcProfit();updateAspPct()"></label>
         <div id="pct-sam-nand" class="asp-ref"></div>
-        <label>单位成本（$/GB）<span class="src-ic derived" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="反推：ASP×(1−62.7%)；62.7%为2Q26单季NAND营业利润率（实际值），来源同上Semiconductor Cost sheet">反推</span><input type="number" step="0.0001" value="0.0911" oninput="calcProfit()"></label>
+        <label>单位成本（$/GB）<span class="src-ic derived" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="按模型ASP×(1−62.6754%)反推；利润率取自Samsung Model 2Q26.xlsx Semiconductor Cost!DH30，为模型NAND营业利润率，非公司单独披露的毛利率">反推</span><input type="number" step="0.0001" value="0.0910" oninput="calcProfit()"></label>
         <div class="calc-out"><span>营收</span><b class="o-rev">-</b></div>
         <div class="calc-out"><span>利润</span><b class="o-prof">-</b></div>
         <div class="calc-out"><span>利润率</span><b class="o-marg">-</b></div>
@@ -248,7 +267,7 @@ code{font-size:10px;background:var(--tag-bg);color:var(--tag);padding:1px 5px;bo
         <div class="calc-seg-h tg-dram">DRAM（含 HBM 混合）</div>
         <label>出货量（bn Gb）<span class="src-ic" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="来源：MU Model 2Q26.xlsx · Worksheet · 2025年1-4季度求和">模型</span><input id="ship-mu-dram" type="number" step="0.01" value="69.02" oninput="calcProfit();updateCapCheck()"></label>
         <div id="cap-mu" class="cap-check na" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="美光模型未披露晶圆产能/GDPW数据，位元/片(BPW)按海力士、三星2026E值取均值≈2,020 GB/片代用（非美光自有口径，仅供量级参考）。看板另有的美光'~190 kwpm'产能数字来自外部汇丰/大摩表，交叉校验发现：用该数字反推的隐含BPW与海力士/三星差3倍以上、且连2025年实际出货量都不够用（隐含产能利用率&gt;180%），说明两个数字口径不一致（该190kwpm大概率只是部分/先进制程产能，非美光DRAM总产能），故不做'占26年产能%'比较，只显示估算所需产能。"></div>
-        <label>ASP（$/Gb）<span class="src-ic" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="来源：MU Model 2Q26.xlsx · Worksheet · 2Q26E单季综合ASP，模型预测值（美光新模型2Q26本身仍标E，尚未转正为实际披露）">模型</span><input id="asp-mu-dram" type="number" step="0.0001" value="1.515" oninput="calcProfit();updateAspPct()"></label>
+        <label>ASP（$/Gb）<span class="src-ic" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="来源：MU Model 2Q26.xlsx · Worksheet · 2Q26E单季综合ASP；模型该列仍标E，预测值尚未按后续财报重估。美光财季与自然季不同，不能直接视为同一期间。">模型</span><input id="asp-mu-dram" type="number" step="0.0001" value="1.515" oninput="calcProfit();updateAspPct()"></label>
         <div id="pct-mu-dram" class="asp-ref"></div>
         <label>单位成本（$/Gb）<span class="src-ic derived" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="反推：ASP×(1−86.1%)；86.1%为2Q26E单季DRAM毛利率预测值（美光单列COGS，真实毛利率），来源MU Model 2Q26.xlsx Worksheet行202(DRAM GM)">反推</span><input type="number" step="0.0001" value="0.2106" oninput="calcProfit()"></label>
         <div class="calc-out"><span>营收</span><b class="o-rev">-</b></div>
@@ -272,7 +291,7 @@ code{font-size:10px;background:var(--tag-bg);color:var(--tag);padding:1px 5px;bo
         <div class="calc-seg-h tg-nand">NAND（100%业务，无DRAM/HBM）</div>
         <label>出货量（bn GB）<span class="src-ic" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="来源：Sandisk Model 1Q26.xlsx · Worksheet行57-65 · 2025年1-4季度(自然季)求和">模型</span><input id="ship-sndk-nand" type="number" step="0.01" value="106.63" oninput="calcProfit();updateCapCheck()"></label>
         <div id="cap-sndk-nand" class="cap-check na" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="Sandisk模型未披露晶圆产能数据（与铠侠共享日本Flash Ventures产能，非独立核算），BPW借用海力士/三星NAND 2026E均值≈74,941 GB/片代用，仅供量级参考，不显示占26年产能%。"></div>
-        <label>ASP（$/GB）<span class="src-ic" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="来源：Sandisk Model 1Q26.xlsx · Worksheet · 2Q26E单季ASP，模型预测值（Sandisk仍为1Q26模型口径，2Q26尚未转正为实际披露）">模型</span><input id="asp-sndk" type="number" step="0.0001" value="0.3097" oninput="calcProfit();updateAspPct()"></label>
+        <label>ASP（$/GB）<span class="src-ic" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="来源：Sandisk Model 1Q26.xlsx · Worksheet · 2Q26E单季ASP；仍为旧模型预测值，尚未按2026-08-05发布的财季结果重估。财季与自然季不同。">模型</span><input id="asp-sndk" type="number" step="0.0001" value="0.3097" oninput="calcProfit();updateAspPct()"></label>
         <div id="pct-sndk" class="asp-ref"></div>
         <label>单位成本（$/GB）<span class="src-ic derived" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="反推：ASP×(1−84.3%)；84.3%为2Q26E单季毛利率预测值（Sandisk单列COGS，真实毛利率），来源Sandisk Model 1Q26.xlsx Worksheet毛利率行">反推</span><input type="number" step="0.0001" value="0.0486" oninput="calcProfit()"></label>
         <div class="calc-out"><span>营收</span><b class="o-rev">-</b></div>
@@ -287,9 +306,9 @@ code{font-size:10px;background:var(--tag-bg);color:var(--tag);padding:1px 5px;bo
         <div class="calc-seg-h tg-nand">NAND（含SSD&Storage，无DRAM/HBM）</div>
         <label>出货量（bn GB）<span class="src-ic" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="来源：Kioxia Model 2Q26.xlsx · PL表行145(bit shipment) · 2025年1-4季度(自然季，财年已重映射)求和">模型</span><input id="ship-kx-nand" type="number" step="0.01" value="167.18" oninput="calcProfit();updateCapCheck()"></label>
         <div id="cap-kx-nand" class="cap-check na" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="铠侠模型未披露晶圆产能数据（与Sandisk共享日本Flash Ventures产能，非独立核算），BPW借用海力士/三星NAND 2026E均值≈74,941 GB/片代用，仅供量级参考，不显示占26年产能%。"></div>
-        <label>ASP（$/GB）<span class="src-ic" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="来源：Kioxia Model 2Q26.xlsx · PL表 · 2Q26E单季ASP，模型预测值（铠侠1Q26为最新实际披露季，季度表头2Q26E的E后缀确认2Q26仍为预测，非实际；此前底稿中2Q26为实际的表述有误，已一并订正）">模型</span><input id="asp-kx" type="number" step="0.0001" value="0.2285" oninput="calcProfit();updateAspPct()"></label>
+        <label>ASP（$/GB）<span class="src-ic" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="来源：Kioxia Model 2Q26.xlsx · PL!BR149=0.228537美元/GB（自然季2Q26）；同列营收及营业利润与铠侠2026-07-31财报相符，ASP是高盛估算而非公司单独披露。">模型</span><input id="asp-kx" type="number" step="0.0001" value="0.2285" oninput="calcProfit();updateAspPct()"></label>
         <div id="pct-kx" class="asp-ref"></div>
-        <label>单位成本（$/GB）<span class="src-ic derived" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="反推：ASP×(1−71.9%)；71.9%为2Q26E单季营业利润率预测值，来源Kioxia Model 2Q26.xlsx PL表行29(营业利益)÷营收反推，未单列COGS">反推</span><input type="number" step="0.0001" value="0.0642" oninput="calcProfit()"></label>
+        <label>单位成本（$/GB）<span class="src-ic derived" onmouseenter="showTip(this)" onmouseleave="hideTip()" data-tip="反推：ASP×(1−71.9%)；71.9%为2Q26单季营业利润率，模型历史列，来源Kioxia Model 2Q26.xlsx PL表行29(营业利益)÷营收反推，未单列COGS">反推</span><input type="number" step="0.0001" value="0.0642" oninput="calcProfit()"></label>
         <div class="calc-out"><span>营收</span><b class="o-rev">-</b></div>
         <div class="calc-out"><span>利润</span><b class="o-prof">-</b></div>
         <div class="calc-out"><span>利润率</span><b class="o-marg">-</b></div>
@@ -365,7 +384,7 @@ code{font-size:10px;background:var(--tag-bg);color:var(--tag);padding:1px 5px;bo
         <div class="chart-box"><h4>出货量：传统 DRAM vs HBM（bn Gb）</h4><div class="chart-wrap"><canvas id="c-skh-bits-q"></canvas></div></div>
       </div>
       <div class="seg-sum note-fold" onclick="toggleNote(this)"><div class="note-head">海力士关键读数（4点）▾</div><div class="note-body">①1Q26传统DRAM ASP单季+102%（$0.375→$0.531→$1.073，两季近3倍），涨价节奏三家最陡。<br>②HBM ASP同期反而从$1.575降至$1.266（唯一下行），成因是产品代际混线降价+客户结构切换，与bits仍创新高互相印证，不代表需求转弱。<br>③模型预测HBM ASP 2027E反弹至$2.225，反弹节点与传统DRAM 2026E见顶后小幅回落（4Q27E $2.064）正好交错，隐含"传统DRAM先涨、HBM4接棒"路径，是三家里唯一给出完整2027E路径的一组。<br>④HBM bits 1Q23→4Q27E增45倍(0.16→7.21 bn Gb)，三家最大最连续。</div></div>
-      <div class="note-box note-fold" style="margin-top:14px" onclick="toggleNote(this)"><div class="note-head">数据来源与口径 ▾</div><div class="note-body">来源：<span class="src">SK Hynix Model 2Q26.xlsx</span> DRAM/NAND/OP三表（行6-156等），KRW按各季F/X假设换算USD。<strong style="color:var(--warn)">3Q26E起为模型假设值（标黄）</strong>；<strong>2Q26为公司实际披露值</strong>（2026-08-06已随2Q26模型切换，此前1Q26版本模型中2Q26尚为预测）。海力士对传统DRAM/HBM均给出完整到4Q27E的bits/ASP假设，不需反推（与美光不同，美光2Q26E起只给HBM营收目标）。已与年度表交叉核对，DRAM/NAND营收误差&lt;1%。</div></div>
+      <div class="note-box note-fold" style="margin-top:14px" onclick="toggleNote(this)"><div class="note-head">数据来源与口径 ▾</div><div class="note-body">来源：<span class="src">SK Hynix Model 2Q26.xlsx</span> DRAM/NAND/OP三表（行6-156等），KRW按各季F/X假设换算USD。<strong style="color:var(--warn)">3Q26E起为模型假设值（标黄）</strong>；<strong>2Q26为模型历史列（无E；分部拆分指标为模型估算）</strong>（2026-08-06已随2Q26模型切换，此前1Q26版本模型中2Q26尚为预测）。海力士对传统DRAM/HBM均给出完整到4Q27E的bits/ASP假设，不需反推（与美光不同，美光2Q26E起只给HBM营收目标）。已与年度表交叉核对，DRAM/NAND营收误差&lt;1%。</div></div>
       <div class="model-wrap">
         <table class="model-table">
           <thead><tr><th>海力士季度（$mn / bn Gb / $·Gb⁻¹）</th><th>1Q23</th><th>2Q23</th><th>3Q23</th><th>4Q23</th><th>1Q24</th><th>2Q24</th><th>3Q24</th><th>4Q24</th><th>1Q25</th><th>2Q25</th><th>3Q25</th><th>4Q25</th><th>1Q26</th><th>2Q26</th><th>3Q26E</th><th>4Q26E</th><th>1Q27E</th><th>2Q27E</th><th>3Q27E</th><th>4Q27E</th></tr></thead>
@@ -427,7 +446,7 @@ code{font-size:10px;background:var(--tag-bg);color:var(--tag);padding:1px 5px;bo
         <div class="chart-box"><h4>出货量：传统 DRAM vs HBM（bn Gb）</h4><div class="chart-wrap"><canvas id="c-sam-bits-q"></canvas></div></div>
       </div>
       <div class="seg-sum note-fold" onclick="toggleNote(this)"><div class="note-head">三星关键读数（4点）▾</div><div class="note-body">①传统DRAM ASP 1Q26单季+105%（三家最陡，海力士+102%/美光+80%）。<br>②HBM ASP 1Q26仅-1.0%（远小于海力士-19.6%），因涨价前本身在$1.19-1.45窄区间反复，未现清库存式陡降。<br>③HBM占DRAM bits比重仅4.7%，明显低于海力士，与HBM市场份额33.5%&lt;38.2%互相印证。<br>④NAND ASP同步跳涨，4Q25→1Q26 +90%，峰值2Q27E $0.350后小幅回落至4Q27E $0.309。</div></div>
-      <div class="note-box note-fold" style="margin-top:14px" onclick="toggleNote(this)"><div class="note-head">数据来源与口径 ▾</div><div class="note-body">来源：<span class="src">Samsung Model 2Q26.xlsx</span> DRAM/NAND/Earnings Summaries三表。营收=出货量(bits)×ASP。三星对Conventional/HBM均给出完整到4Q27E的bits/ASP假设，无美光式数据缺口。<strong style="color:var(--warn)">3Q26E起为模型假设值（标黄）</strong>；<strong>2Q26 为公司实际披露值</strong>（2026-08-04 已随 2Q26 模型切换，此前 1Q26 版本模型中 2Q26 尚为预测，实际值较预测普遍上修，见对应单元格悬停浮窗）。HBM ASP原标注US$/GB，反推核验实为每8Gb一组报价，已÷8统一为$/Gb口径。Bridge口径为DS Memory分部小计，不含Mobile/Display/Harman，不能与集团整体营收对比；年度汇总核对误差±1内一致。</div></div>
+      <div class="note-box note-fold" style="margin-top:14px" onclick="toggleNote(this)"><div class="note-head">数据来源与口径 ▾</div><div class="note-body">来源：<span class="src">Samsung Model 2Q26.xlsx</span> DRAM/NAND/Earnings Summaries三表。营收=出货量(bits)×ASP。三星对Conventional/HBM均给出完整到4Q27E的bits/ASP假设，无美光式数据缺口。<strong style="color:var(--warn)">3Q26E起为模型假设值（标黄）</strong>；<strong>2Q26 为模型历史列（无E；分部拆分指标为模型估算）</strong>（2026-08-04 已随 2Q26 模型切换，此前 1Q26 版本模型中 2Q26 尚为预测，实际值较预测普遍上修，见对应单元格悬停浮窗）。HBM ASP原标注US$/GB，反推核验实为每8Gb一组报价，已÷8统一为$/Gb口径。Bridge口径为DS Memory分部小计，不含Mobile/Display/Harman，不能与集团整体营收对比；年度汇总核对误差±1内一致。</div></div>
       <div class="model-wrap">
         <table class="model-table">
           <thead><tr><th>三星季度（$mn / bn Gb / $·Gb⁻¹）</th><th>1Q23</th><th>2Q23</th><th>3Q23</th><th>4Q23</th><th>1Q24</th><th>2Q24</th><th>3Q24</th><th>4Q24</th><th>1Q25</th><th>2Q25</th><th>3Q25</th><th>4Q25</th><th>1Q26</th><th>2Q26</th><th>3Q26E</th><th>4Q26E</th><th>1Q27E</th><th>2Q27E</th><th>3Q27E</th><th>4Q27E</th></tr></thead>
@@ -491,7 +510,7 @@ code{font-size:10px;background:var(--tag-bg);color:var(--tag);padding:1px 5px;bo
         <div class="chart-box"><h4>出货量：传统 DRAM vs HBM（bn Gb）</h4><div class="chart-wrap"><canvas id="c-mu-bits-q"></canvas></div></div>
       </div>
       <div class="seg-sum note-fold" onclick="toggleNote(this)"><div class="note-head">美光关键读数（4点）▾</div><div class="note-body">①1Q26转折点：传统DRAM ASP+80%、NAND ASP+79%，涨幅远超HBM同期+11%，是"2026E HBM占比回落"的微观来源。<br>②HBM bits持续爬坡(0.07→1.36 bn Gb，18倍)，放量未变，只是收入占比被稀释。<br>③2Q26E起建模方式从"量价拆解"切换为"总量目标+HBM单列反推"，置信度打折。<br>④DRAM综合ASP 4Q26E-2Q27E维持$1.702平台后于3Q27E转跌，4Q27E降至$1.536(-10%)，同期出货增速(+21.5%)跑赢营收增速(+9.6%)，隐含2027下半年边际定价走低——但分项ASP该区间缺失，无法归因是传统DRAM让价还是HBM占比下降所致。</div></div>
-      <div class="note-box note-fold" style="margin-top:14px" onclick="toggleNote(this)"><div class="note-head">数据来源与口径 ▾</div><div class="note-body">来源：<span class="src">MU model.xlsx</span> Worksheet第84-187行。营收=出货量(bits)×ASP。<strong style="color:var(--warn)">2Q26E起营收为模型假设值（标黄）</strong>；传统DRAM 2Q26E起为<strong>推算值</strong>（=DRAM总营收−HBM营收，模型该区间未单列bits/ASP）。1Q23-1Q24无法拆分传统/HBM（模型2Q24起才单列HBM）。已核查确认美光模型确实没有海力士式的Conventional完整假设（非漏看）。</div></div>
+      <div class="note-box note-fold" style="margin-top:14px" onclick="toggleNote(this)"><div class="note-head">数据来源与口径 ▾</div><div class="note-body">来源：<span class="src">MU Model 2Q26.xlsx</span> Worksheet第84-187行。营收=出货量(bits)×ASP。<strong style="color:var(--warn)">2Q26E起营收为模型假设值（标黄）</strong>；传统DRAM 2Q26E起为<strong>推算值</strong>（=DRAM总营收−HBM营收，模型该区间未单列bits/ASP）。1Q23-1Q24无法拆分传统/HBM（模型2Q24起才单列HBM）。已核查确认美光模型确实没有海力士式的Conventional完整假设（非漏看）。</div></div>
       <div class="model-wrap">
         <table class="model-table">
           <thead><tr><th>美光季度（$mn / bn Gb / $·Gb⁻¹）</th><th>1Q23</th><th>2Q23</th><th>3Q23</th><th>4Q23</th><th>1Q24</th><th>2Q24</th><th>3Q24</th><th>4Q24</th><th>1Q25</th><th>2Q25</th><th>3Q25</th><th>4Q25</th><th>1Q26</th><th>2Q26E</th><th>3Q26E</th><th>4Q26E</th><th>1Q27E</th><th>2Q27E</th><th>3Q27E</th><th>4Q27E</th></tr></thead>
@@ -542,20 +561,20 @@ code{font-size:10px;background:var(--tag-bg);color:var(--tag);padding:1px 5px;bo
     </div>
 
     <div id="t-co-kx" class="tab-pane">
-      <div class="note-box note-fold" onclick="toggleNote(this)"><div class="note-head">铠侠公司简介与口径 ▾</div><div class="note-body">铠侠Kioxia（285A.T）：原东芝存储，2024-12东京上市，<strong>NAND Flash+SSD&Storage两分部，无DRAM/HBM</strong>。与Sandisk是<strong>Flash Ventures合资伙伴</strong>。来源：<span class="src">Kioxia Model 2Q26.xlsx</span>，财年3月结束，已按财年→自然季规则重映射（<strong style="color:var(--warn)">最新实际披露季为1Q26，2Q26起为模型预测值</strong>，"2Q26.xlsx"是模型版本/取数时点，不代表2Q26已实际披露）；营收由JPY÷内嵌汇率换算为美元。</div></div>
+      <div class="note-box note-fold" onclick="toggleNote(this)"><div class="note-head">铠侠公司简介与口径 ▾</div><div class="note-body">铠侠Kioxia（285A.T）：原东芝存储，2024-12东京上市，<strong>单一可报告分部为Memory，另披露SSD &amp; Storage等按用途划分的收入；无DRAM/HBM</strong>。与Sandisk是<strong>Flash Ventures合资伙伴</strong>。来源：<span class="src">Kioxia Model 2Q26.xlsx</span>，财年3月结束，已按财年→自然季规则重映射（<strong style="color:var(--warn)">本模型的自然季2Q26为历史列；3Q26E起为预测值</strong>，"2Q26.xlsx"是模型版本/取数时点，其中自然季2Q26已纳入2026-07-31披露的财报实际值）；营收由JPY÷内嵌汇率换算为美元。</div></div>
       <div class="chart-row">
         <div class="chart-box"><h4>营收与营业利润率（$mn / %，按季）</h4><div class="chart-wrap"><canvas id="c-kx-rev-q"></canvas></div></div>
         <div class="chart-box"><h4>NAND 出货量与 ASP（mn GB / $·GB⁻¹，按季）</h4><div class="chart-wrap"><canvas id="c-kx-bitsasp-q"></canvas></div></div>
       </div>
       <div class="model-wrap">
         <table class="model-table">
-          <thead><tr><th>铠侠季度（$mn / mn GB / $·GB⁻¹）</th><th>1Q23</th><th>2Q23</th><th>3Q23</th><th>4Q23</th><th>1Q24</th><th>2Q24</th><th>3Q24</th><th>4Q24</th><th>1Q25</th><th>2Q25</th><th>3Q25</th><th>4Q25</th><th>1Q26</th><th>2Q26E</th><th>3Q26E</th><th>4Q26E</th><th>1Q27E</th><th>2Q27E</th><th>3Q27E</th><th>4Q27E</th></tr></thead>
+          <thead><tr><th>铠侠季度（$mn / mn GB / $·GB⁻¹）</th><th>1Q23</th><th>2Q23</th><th>3Q23</th><th>4Q23</th><th>1Q24</th><th>2Q24</th><th>3Q24</th><th>4Q24</th><th>1Q25</th><th>2Q25</th><th>3Q25</th><th>4Q25</th><th>1Q26</th><th>2Q26</th><th>3Q26E</th><th>4Q26E</th><th>1Q27E</th><th>2Q27E</th><th>3Q27E</th><th>4Q27E</th></tr></thead>
           <tbody>
-            <tr><td>NAND 出货量（mn GB）</td><td>29,224</td><td>33,608</td><td>29,239</td><td>29,239</td><td>31,578</td><td>35,683</td><td>39,251</td><td>38,466</td><td>34,619</td><td>34,619</td><td>47,775</td><td>50,163</td><td>45,147</td><td class="warn">46,502</td><td class="warn">52,758</td><td class="warn">56,451</td><td class="warn">55,945</td><td class="warn">58,438</td><td class="warn">65,066</td><td class="warn">70,161</td></tr>
-            <tr><td>NAND ASP（$/GB）</td><td>—</td><td>0.0448</td><td>0.0462</td><td>0.0499</td><td>0.0593</td><td>0.0678</td><td>0.0711</td><td>0.0691</td><td>0.0553</td><td>0.0591</td><td>0.0572</td><td class="hl">0.0634</td><td class="hl">0.1340</td><td class="warn">0.2285</td><td class="warn">0.2857</td><td class="warn">0.3285</td><td class="warn">0.3449</td><td class="warn">0.3553</td><td class="warn">0.3375</td><td class="warn">0.3139</td></tr>
-            <tr><td>营收（$mn）</td><td>1,841</td><td>1,849</td><td>1,676</td><td>1,761</td><td>2,196</td><td>2,764</td><td>3,143</td><td>3,020</td><td>2,254</td><td>2,364</td><td>3,050</td><td>3,553</td><td>6,470</td><td class="warn">11,044</td><td class="warn">15,429</td><td class="warn">18,903</td><td class="warn">19,656</td><td class="warn">21,121</td><td class="warn">22,319</td><td class="warn">22,382</td></tr>
-            <tr class="subtle"><td>营业利润（$mn）</td><td class="yn">-1,287</td><td class="yn">-963</td><td class="yn">-700</td><td class="yn">-437</td><td>299</td><td>812</td><td>1,085</td><td>824</td><td>241</td><td>310</td><td>584</td><td>933</td><td class="hl">3,850</td><td class="warn">7,938</td><td class="warn">12,248</td><td class="warn">15,479</td><td class="warn">16,126</td><td class="warn">17,564</td><td class="warn">18,406</td><td class="warn">18,259</td></tr>
-            <tr class="subtle"><td>营业利润率</td><td class="yn">-69.9%</td><td class="yn">-52.1%</td><td class="yn">-41.7%</td><td class="yn">-24.8%</td><td>13.6%</td><td>29.4%</td><td>34.5%</td><td>27.3%</td><td>10.7%</td><td>13.1%</td><td>19.2%</td><td>26.3%</td><td class="hl">59.5%</td><td class="warn">71.9%</td><td class="warn">79.4%</td><td class="warn">81.9%</td><td class="warn">82.0%</td><td class="warn">83.2%</td><td class="warn">82.5%</td><td class="warn">81.6%</td></tr>
+            <tr><td>NAND 出货量（mn GB）</td><td>29,224</td><td>33,608</td><td>29,239</td><td>29,239</td><td>31,578</td><td>35,683</td><td>39,251</td><td>38,466</td><td>34,619</td><td>34,619</td><td>47,775</td><td>50,163</td><td>45,147</td><td class="hl">46,502</td><td class="warn">52,758</td><td class="warn">56,451</td><td class="warn">55,945</td><td class="warn">58,438</td><td class="warn">65,066</td><td class="warn">70,161</td></tr>
+            <tr><td>NAND ASP（$/GB）</td><td>—</td><td>0.0448</td><td>0.0462</td><td>0.0499</td><td>0.0593</td><td>0.0678</td><td>0.0711</td><td>0.0691</td><td>0.0553</td><td>0.0591</td><td>0.0572</td><td class="hl">0.0634</td><td class="hl">0.1340</td><td class="hl">0.2285</td><td class="warn">0.2857</td><td class="warn">0.3285</td><td class="warn">0.3449</td><td class="warn">0.3553</td><td class="warn">0.3375</td><td class="warn">0.3139</td></tr>
+            <tr><td>营收（$mn）</td><td>1,841</td><td>1,849</td><td>1,676</td><td>1,761</td><td>2,196</td><td>2,764</td><td>3,143</td><td>3,020</td><td>2,254</td><td>2,364</td><td>3,050</td><td>3,553</td><td>6,470</td><td class="hl">11,044</td><td class="warn">15,429</td><td class="warn">18,903</td><td class="warn">19,656</td><td class="warn">21,121</td><td class="warn">22,319</td><td class="warn">22,382</td></tr>
+            <tr class="subtle"><td>营业利润（$mn）</td><td class="yn">-1,287</td><td class="yn">-963</td><td class="yn">-700</td><td class="yn">-437</td><td>299</td><td>812</td><td>1,085</td><td>824</td><td>241</td><td>310</td><td>584</td><td>933</td><td class="hl">3,850</td><td class="hl">7,938</td><td class="warn">12,248</td><td class="warn">15,479</td><td class="warn">16,126</td><td class="warn">17,564</td><td class="warn">18,406</td><td class="warn">18,259</td></tr>
+            <tr class="subtle"><td>营业利润率</td><td class="yn">-69.9%</td><td class="yn">-52.1%</td><td class="yn">-41.7%</td><td class="yn">-24.8%</td><td>13.6%</td><td>29.4%</td><td>34.5%</td><td>27.3%</td><td>10.7%</td><td>13.1%</td><td>19.2%</td><td>26.3%</td><td class="hl">59.5%</td><td class="hl">71.9%</td><td class="warn">79.4%</td><td class="warn">81.9%</td><td class="warn">82.0%</td><td class="warn">83.2%</td><td class="warn">82.5%</td><td class="warn">81.6%</td></tr>
           </tbody>
         </table>
       </div>
@@ -577,7 +596,7 @@ code{font-size:10px;background:var(--tag-bg);color:var(--tag);padding:1px 5px;bo
 <div class="sec-body" style="margin-bottom:16px">
   <div class="card">
 
-    <div class="note-box note-fold" style="margin-top:14px" onclick="toggleNote(this)"><div class="note-head">数据来源与口径 ▾</div><div class="note-body">🏭三家分拆：bit出货 vs 晶圆产能。来源：<span class="src">SK Hynix/SAMSUNG/MU model.xlsx</span> 各自DRAM/Worksheet表，均按自然季对齐（美光为日历季，与第一部分FY口径表不是同一基准，数字不同但都对）。<strong style="color:var(--warn)">三份模型均未拆出"HBM专用晶圆产能"，只有DRAM总产能</strong>，故"三大厂HBM晶圆产能"两行来自外部券商（Jefferies/汇丰）而非公司模型；模型能给出的是bit出货，以此反推产能利用方向。</div></div>
+    <div class="note-box note-fold" style="margin-top:14px" onclick="toggleNote(this)"><div class="note-head">数据来源与口径 ▾</div><div class="note-body">🏭三家分拆：bit出货 vs 晶圆产能。来源：<span class="src">SK Hynix Model 2Q26.xlsx / Samsung Model 2Q26.xlsx / MU Model 2Q26.xlsx</span> 各自DRAM/Worksheet表，均按自然季对齐（美光为日历季，与第一部分FY口径表不是同一基准，数字不同但都对）。<strong style="color:var(--warn)">三份模型均未拆出"HBM专用晶圆产能"，只有DRAM总产能</strong>，故"三大厂HBM晶圆产能"两行来自外部券商（Jefferies/汇丰）而非公司模型；模型能给出的是bit出货，以此反推产能利用方向。</div></div>
     <div class="model-wrap">
       <table class="model-table" style="min-width:480px">
         <thead><tr><th style="min-width:140px">HBM bit 出货（bn Gb，自然年/季）</th><th>2023</th><th>2024</th><th>2025</th><th>2026E</th><th>2027E</th></tr></thead>
@@ -792,7 +811,7 @@ code{font-size:10px;background:var(--tag-bg);color:var(--tag);padding:1px 5px;bo
       <div class="chart-box"><h4>NAND 出货量对比（mn GB，按季）</h4><div class="chart-wrap"><canvas id="c-nand-bits5"></canvas></div></div>
       <div class="chart-box"><h4>NAND 营收对比（$mn，模型测算值，按季）</h4><div class="chart-wrap"><canvas id="c-nand-rev5"></canvas></div></div>
     </div>
-    <div class="seg-sum" style="margin-top:0;margin-bottom:10px;font-size:11px">⚠️ 横轴"2Q26"对海力士、三星已是实际披露值，对美光、Sandisk、<strong>铠侠</strong>仍是预测值（铠侠最新实际季为1Q26）——五家共用坐标轴标签，此处未拆分，口径混合，读图时注意区分。</div>
+    <div class="seg-sum" style="margin-top:0;margin-bottom:10px;font-size:11px">⚠️ 横轴"2Q26"对海力士、三星、铠侠对应已披露财报的模型历史列，但位元/ASP等仍是模型拆分估算；对美光、Sandisk则为模型预测列。五家共用坐标轴标签，读图时注意区分。</div>
     <div class="model-wrap">
       <table class="model-table">
         <thead><tr><th>公司</th><th>1Q26 出货量（mn GB）</th><th>出货份额</th><th>1Q26 营收（$mn）</th><th>营收份额</th></tr></thead>
@@ -808,7 +827,7 @@ code{font-size:10px;background:var(--tag-bg);color:var(--tag);padding:1px 5px;bo
     </div>
     <div class="seg-sum note-fold" onclick="toggleNote(this)"><div class="note-head">数据来源与口径（4点）▾</div><div class="note-body"><strong>来源：</strong>五家均高盛(GS)模型，海力士/三星NAND表、美光/Sandisk Worksheet、铠侠PL表，均对齐至自然季。<br>
       <strong>单位：</strong>海力士/三星原始为"mn chips，16Gb等效"，已×2折算为mn GB统一口径。<br>
-      <strong>铠侠财年重映射：</strong>3月结束财年已重映射为自然季（最新实际披露季为1Q26，2Q26起为模型预测值，与海力士/三星不同）；营收由JPY÷内嵌汇率换算，海力士/三星营收由KRW÷内嵌汇率换算。<br>
+      <strong>铠侠财年重映射：</strong>3月结束财年已重映射为自然季（本模型的自然季2Q26为历史列；3Q26E起为预测值，与海力士/三星同为历史列）；营收由JPY÷内嵌汇率换算，海力士/三星营收由KRW÷内嵌汇率换算。<br>
       <strong>起点差异：</strong>Sandisk数据仅从3Q23起（2025-02才分拆独立），1Q23-2Q23留空。<br>
       <strong>营收提示：</strong>五家"NAND营收"均为出货量×ASP测算值，非完整分部收入口径，不建议与财报逐项对照。</div></div>
   </div>
@@ -819,7 +838,7 @@ code{font-size:10px;background:var(--tag-bg);color:var(--tag);padding:1px 5px;bo
 <div class="sec-body" style="margin-bottom:16px">
   <div class="card">
     <div class="chart-box" style="margin-bottom:14px"><h4>NAND ASP 对比（五家，$/GB，按季）</h4><div class="chart-wrap"><canvas id="c-nand-asp-co"></canvas></div></div>
-    <div class="seg-sum" style="margin-top:0;margin-bottom:10px;font-size:11px">⚠️ 横轴"2Q26"对海力士、三星、铠侠已是实际披露值，对美光、Sandisk仍是预测值，读图注意区分。</div>
+    <div class="seg-sum" style="margin-top:0;margin-bottom:10px;font-size:11px">⚠️ 横轴"2Q26"对海力士、三星、铠侠为模型历史列，财报期间已披露、分部位元与ASP仍由模型估算；对美光、Sandisk仍是预测列。</div>
     <div class="model-wrap">
       <table class="model-table">
         <thead><tr><th>NAND 指标</th><th>2024 均价</th><th>2025 均价</th><th>2025/12 价</th><th>vs 2024 均</th><th>vs 2025 均</th><th>来源</th></tr></thead>
@@ -1304,7 +1323,7 @@ code{font-size:10px;background:var(--tag-bg);color:var(--tag);padding:1px 5px;bo
       <thead><tr><th style="width:90px">代码</th><th style="width:130px">名称</th><th>产业链位置</th><th>对标 / 备注</th><th style="width:80px">关注度</th></tr></thead>
       <tbody>
         <tr class="grp"><td colspan="5">三大原厂（海外，两条逻辑链的源头）</td></tr>
-        <tr><td>000660.KS</td><td><a href="SK海力士_公司看板.html" target="_blank">SK 海力士</a></td><td>DRAM/HBM 龙头，HBM3E 供应英伟达</td><td>DRAM 份额 38.2%（第一） · <a href="SK海力士_公司看板.html" target="_blank">公司页</a></td><td><span class="dot d-na">海外</span></td></tr>
+        <tr><td>000660.KS</td><td><a href="sk-hynix.html" target="_blank">SK 海力士</a></td><td>DRAM/HBM 龙头，HBM3E 供应英伟达</td><td>DRAM 份额 38.2%（第一） · <a href="sk-hynix.html" target="_blank">公司页</a></td><td><span class="dot d-na">海外</span></td></tr>
         <tr><td>005930.KS</td><td>三星电子</td><td>DRAM/HBM/NAND 全覆盖，产能最大</td><td>份额 33.5%，HBM4 认证领先</td><td><span class="dot d-na">海外</span></td></tr>
         <tr><td>MU</td><td>美光 Micron</td><td>DRAM/HBM/NAND，美系唯一</td><td>份额 22.0%，FY26Q2 毛利率 74.4%</td><td><span class="dot d-na">海外</span></td></tr>
         <tr class="grp"><td colspan="5">🔗 逻辑链一·HBM 相关 · 第一层：HBM 制造核心设备</td></tr>
@@ -1443,7 +1462,7 @@ function updateCapCheck(){
 updateCapCheck();
 
 // 2026-08-07 新增：ASP相当于26Q2基准的百分比（默认值即26Q2值，故初始100%），不参与利润计算
-const ASP_26Q2={'asp-skh-dram':1.430,'asp-skh-nand':0.2705,'asp-sam-dram':1.647,'asp-sam-nand':0.2440,
+const ASP_26Q2={'asp-skh-dram':1.430,'asp-skh-nand':0.2705,'asp-sam-dram':1.647,'asp-sam-nand':0.2437,
   'asp-mu-dram':1.515,'asp-mu-nand':0.2620,'asp-sndk':0.3097,'asp-kx':0.2285};
 function updateAspPct(){
   Object.keys(ASP_26Q2).forEach(id=>{

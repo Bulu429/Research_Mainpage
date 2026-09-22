@@ -89,13 +89,31 @@ a{color:var(--accent);text-decoration:none}
 .foot{text-align:center;font-size:11px;color:var(--text2);padding:14px;margin-top:16px}
 @media(max-width:900px){.kpi-grid,.two-col{grid-template-columns:1fr}}
 </style>
-</head>
-<body>
+<style>
+/* industry-dashboard-shell:start */
+:root{--bg:#f4f6f1;--card:#fff;--paper:#fff;--border:#dce2d8;--line:#dce2d8;
+ --text:#1d292c;--text-primary:#1d292c;--text2:#667477;--text-secondary:#667477;
+ --accent:#247052;--deep:#23483f;--green:#247052}
+body{background:#f4f6f1!important;font-family:"Microsoft YaHei","PingFang SC","Segoe UI",sans-serif}
+.industry-shell{position:relative;z-index:101;display:flex;align-items:center;gap:10px 14px;
+ flex-wrap:wrap;padding:11px max(20px,calc((100vw - 1280px)/2));background:#23483f;
+ color:#fff;font:500 12px/1.5 "Microsoft YaHei","PingFang SC",sans-serif}
+.industry-shell *{box-sizing:border-box}
+.industry-shell a{color:#d7f2df!important;text-decoration:none!important;font-weight:700}
+.industry-shell a:hover{text-decoration:underline!important}
+.industry-shell__name{font-weight:800;font-size:13px;color:#fff}
+.industry-shell__kind{border:1px solid #91bd9e;border-radius:999px;padding:2px 8px;color:#e9f8ed}
+.industry-shell__asof{margin-left:auto;color:#e2efe5}
+body a[data-industry-legacy-back="1"]{display:none!important}
+@media(max-width:680px){.industry-shell{padding:10px 15px}.industry-shell__asof{margin-left:0;width:100%}}
+/* industry-dashboard-shell:end */
+</style></head>
+<body><!-- industry-dashboard-shell:start --><nav class="industry-shell" aria-label="行业看板统一导航"><a href="../industry-fundamentals-entry.html">行业看板</a><span aria-hidden="true">/</span><span class="industry-shell__name">CoWoS 产能分配看板</span><span class="industry-shell__kind">专题研究</span><span class="industry-shell__asof">数据日期与口径见正文</span></nav><!-- industry-dashboard-shell:end --><!-- industry-review:start --><aside class="industry-review" style="padding:10px 20px;background:#fff8e5;color:#665424;font-size:12px;line-height:1.7;border-bottom:1px solid #e7ddbc"><strong>口径说明 · 页面修订2026-09-22</strong>｜2026-06-23资料的2027E预测。客户表混合台积电与非台产能，分项和总额差额已列明待核，不能视为完整订单清单。</aside><!-- industry-review:end -->
 
 <header class="hdr">
   <div class="hdr-l">
     <a class="btn-back" href="../../../../main-dashboard.html">← 总看板</a>
-    <a class="btn-back2" href="../industry-fundamentals-entry.html">↑ 行业入口</a>
+    <a class="btn-back2" href="../industry-fundamentals-entry.html" data-industry-legacy-back="1">↑ 行业入口</a>
     <div>
       <div class="hdr-title">CoWoS 产能分配看板</div>
       <div class="hdr-sub">全球先进封装产能格局 · 台积电 + 非台积电阵营 · 芯片链条</div>
@@ -357,10 +375,11 @@ a{color:var(--accent);text-decoration:none}
 <!-- ====== 客户分配 ====== -->
 <section class="sec">
   <div class="sec-hd" onclick="toggleSec(this)">
-    <div class="sec-ttl">🏭 主要客户产能分配（2027E，台积电口径）</div>
+    <div class="sec-ttl">🏭 主要客户封装需求分配（2027E，含台积电与非台厂商）</div>
     <span class="sec-arrow">▼</span>
   </div>
   <div class="sec-body">
+    <p style="color:#765d20">口径核验：AMD含非台27万片，不能将本表整体视为台积电订单。客户总量与列出的主要项目尚未完全勾稽：NVDA差13.2万、AMD差2万、AVGO差8.6万、AWS差3.24万，均为未解释差额（待核，非新增订单）。已列客户合计263万与总需求269.4万另差6.4万；原值保留。</p>
     <div id="customer-bars" style="margin-bottom:18px;max-width:700px"></div>
     <table class="ctable">
       <thead>

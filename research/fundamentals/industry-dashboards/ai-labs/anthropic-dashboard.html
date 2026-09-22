@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<html lang="zh-CN" data-page-node-id="DGPgMkKhDOwGUYjV7OOjAk">
+<head data-page-node-id="GMKWCwm0JGTenEPlzGLfTP">
+<meta charset="UTF-8" data-page-node-id="CKidR7tc39mQogBUBgidPH">
+<meta name="viewport" content="width=device-width, initial-scale=1.0" data-page-node-id="ROdVaKXTuWxcc3WyX1Z0TR">
 <title>Anthropic · AI Labs 看板</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <style>
@@ -94,6 +94,18 @@
   .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px; }
   .caveat-banner { background: var(--neutral-bg); border: 1px solid #fcd34d; border-radius: 8px; padding: 10px 14px; font-size: 13px; font-weight: 600; color: #92400e; margin-bottom: 16px; }
   .source-note { font-size: 11px; color: var(--text-secondary); margin-top: 8px; }
+    /* ── 时间线折叠（2025 年之前归档） ── */
+    .fold { margin-top: 14px; border-top: 1px dashed var(--border); padding-top: 2px; }
+    .fold > summary { cursor: pointer; font-size: 12px; font-weight: 600; color: var(--accent);
+        padding: 8px 0; list-style: none; user-select: none; }
+    .fold > summary::-webkit-details-marker { display: none; }
+    .fold > summary::before { content: '\25B8'; display: inline-block; margin-right: 6px; }
+    .fold[open] > summary::before { content: '\25BE'; }
+    .fold > summary:hover { text-decoration: underline; }
+    .fold > table { margin-top: 4px; }
+    .fold > table th { background: transparent; color: var(--text-secondary); }
+    .fold > table td { color: var(--text-secondary); }
+    .fold > table td b { color: var(--text-primary); }
   .timeline { padding-left: 4px; }
   .tl-item { display: flex; gap: 16px; padding: 10px 0; border-bottom: 1px solid var(--border); }
   .tl-item:last-child { border-bottom: none; }
@@ -114,415 +126,748 @@
   .judgment-text { font-size: 14px; line-height: 1.8; color: var(--text-primary); background: var(--bg); border-radius: 6px; padding: 14px 16px; border-left: 3px solid var(--accent); margin-bottom: 14px; }
   .risk-item { display: flex; gap: 8px; margin-bottom: 6px; font-size: 13px; }
   .risk-icon { color: var(--down); flex-shrink: 0; }
+
+  /* ===== Tab7: IPO 进程与合规 ===== */
+  .kpi-mini { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 20px; }
+  .kpi-mini .km { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; box-shadow: var(--shadow); }
+  .kpi-mini .km .k { font-size: 11px; color: var(--text-secondary); margin-bottom: 6px; }
+  .kpi-mini .km .v { font-size: 20px; font-weight: 700; color: var(--text-primary); line-height: 1.25; letter-spacing: -0.2px; }
+  .kpi-mini .km .v.up { color: var(--up); }
+  .kpi-mini .km .v.warn { color: var(--neutral); }
+  .kpi-mini .km .n { font-size: 11px; color: var(--text-secondary); margin-top: 5px; line-height: 1.55; }
+  .lit-badge { display: inline-block; font-size: 11px; font-weight: 600; padding: 2px 7px; border-radius: 4px; white-space: nowrap; }
+  .lit-closed { background: var(--up-bg); color: var(--up); }
+  .lit-active { background: var(--down-bg); color: var(--down); }
+  .lit-watch { background: var(--neutral-bg); color: var(--neutral); }
+  @media (max-width: 900px) {
+    .kpi-mini { grid-template-columns: 1fr; }
+  }
   @media (max-width: 900px) {
     .kpi-grid { grid-template-columns: repeat(2, 1fr); }
     .charts-grid, .charts-grid-even, .grid-2, .bottom-grid { grid-template-columns: 1fr; }
   }
 </style>
-</head>
-<body>
+<style>
+/* industry-dashboard-shell:start */
+:root{--bg:#f4f6f1;--card:#fff;--paper:#fff;--border:#dce2d8;--line:#dce2d8;
+ --text:#1d292c;--text-primary:#1d292c;--text2:#667477;--text-secondary:#667477;
+ --accent:#247052;--deep:#23483f;--green:#247052}
+body{background:#f4f6f1!important;font-family:"Microsoft YaHei","PingFang SC","Segoe UI",sans-serif}
+.industry-shell{position:relative;z-index:101;display:flex;align-items:center;gap:10px 14px;
+ flex-wrap:wrap;padding:11px max(20px,calc((100vw - 1280px)/2));background:#23483f;
+ color:#fff;font:500 12px/1.5 "Microsoft YaHei","PingFang SC",sans-serif}
+.industry-shell *{box-sizing:border-box}
+.industry-shell a{color:#d7f2df!important;text-decoration:none!important;font-weight:700}
+.industry-shell a:hover{text-decoration:underline!important}
+.industry-shell__name{font-weight:800;font-size:13px;color:#fff}
+.industry-shell__kind{border:1px solid #91bd9e;border-radius:999px;padding:2px 8px;color:#e9f8ed}
+.industry-shell__asof{margin-left:auto;color:#e2efe5}
+body a[data-industry-legacy-back="1"]{display:none!important}
+@media(max-width:680px){.industry-shell{padding:10px 15px}.industry-shell__asof{margin-left:0;width:100%}}
+/* industry-dashboard-shell:end */
+</style></head>
+<body data-page-node-id="lTimAZylnpehYDeikM0np3"><!-- industry-dashboard-shell:start --><nav class="industry-shell" aria-label="行业看板统一导航"><a href="../industry-fundamentals-entry.html">行业看板</a><span aria-hidden="true">/</span><span class="industry-shell__name">Anthropic · AI Labs 看板</span><span class="industry-shell__kind">专题研究</span><span class="industry-shell__asof">数据日期与口径见正文</span></nav><!-- industry-dashboard-shell:end --><!-- industry-review:start --><aside class="industry-review" style="padding:10px 20px;background:#fff8e5;color:#665424;font-size:12px;line-height:1.7;border-bottom:1px solid #e7ddbc"><strong>口径说明 · 页面修订2026-09-22</strong>｜ARR跟踪至2026-09-14；IPO材料至09-21；财务模型为第三方估计，2026Q3及以后是预测，未实现。EV/ARR不等于会计收入P/S。</aside><!-- industry-review:end -->
 
-<header class="header">
-  <div class="header-left">
-    <a class="back-link" href="../industry-fundamentals-entry.html">← 行业基本面入口</a>
-    <span class="sector-name">Anthropic</span>
-    <span class="sub-badge">AI Labs · 秘密提交IPO</span>
+<header class="header" data-page-node-id="JgyA7QVApEcUOmCfeBaGnr">
+  <div class="header-left" data-page-node-id="pKiWeukP0smJDymBBhAPCH">
+    <a class="back-link" href="../industry-fundamentals-entry.html" data-page-node-id="ScIYPflsFc6BvP6dJ8geYI" data-industry-legacy-back="1">← 行业基本面入口</a>
+    <span class="sector-name" data-page-node-id="fGL3cWyTkmzltWoMzICNBD">Anthropic</span>
+    <span class="sub-badge" data-page-node-id="wNFCO4kN9nhcXkEu43QzjI">AI Labs · 秘密提交IPO</span>
   </div>
-  <div class="header-meta">
-    <span>行业看板</span>
-    <span style="margin: 0 8px; color: var(--border)">|</span>
-    <span>更新：2026-07-09</span>
+  <div class="header-meta" data-page-node-id="NMHOta1kqiKFauydGvj3bt">
+    <span data-page-node-id="j682rV7SKrpX5AB9miGmRX">行业看板</span>
+    <span style="margin: 0 8px; color: var(--border)" data-page-node-id="1KHrsGsnCoCAYypQOQsPSF">|</span>
+    <span data-page-node-id="Qx707hXsMyBtJtZecvV0qQ">ARR更新：2026-09-14；其他内容：2026-07-09</span>
   </div>
 </header>
 
-<div class="container">
+<div class="container" data-page-node-id="KoyCuosnJaObAq1kbe6nLq">
 
-  <div class="kpi-grid" id="kpiGrid"><!-- KPI由JS填充 --></div>
+  <div class="kpi-grid" id="kpiGrid" data-page-node-id="8GZADuIhhLVvpIF2I629dN"><!-- KPI由JS填充 --></div>
 
-  <div class="tab-nav" id="tabNav">
-    <button class="tab-btn active" data-tab="tab1">IPO财务与估值</button>
-    <button class="tab-btn" data-tab="tab2">与OpenAI对比</button>
-    <button class="tab-btn" data-tab="tab3">商业模式与产品</button>
-    <button class="tab-btn" data-tab="tab4">TPU视角看Anthropic</button>
-    <button class="tab-btn" data-tab="tab5">风险与催化剂</button>
+  <div class="tab-nav" id="tabNav" data-page-node-id="BLZFvQCf2SKCpiKdhZI6pp">
+    <button class="tab-btn active" data-tab="tab1" data-page-node-id="CvHEfWdprqGuslCzkuuYuM">IPO财务与估值</button>
+    <button class="tab-btn" data-tab="tab2" data-page-node-id="vHAGzFYW1lrzDOMhO1GtGB">与OpenAI对比</button>
+    <button class="tab-btn" data-tab="tab6" data-page-node-id="BIgPXvjxsHVhJDBr9E53bB">ARR与估值时间线</button>
+    <button class="tab-btn" data-tab="tab3" data-page-node-id="yJhO8e92oruZCNLeQ5ryCQ">商业模式与产品</button>
+    <button class="tab-btn" data-tab="tab4" data-page-node-id="VYHVf8dCgDPF7u8N8u1FEA">TPU视角看Anthropic</button>
+    <button class="tab-btn" data-tab="tab5" data-page-node-id="Ct4eFRs8CmVMnUH2FbcZRc">风险与催化剂</button>
+    <button class="tab-btn" data-tab="tab7">IPO 与合规</button>
   </div>
 
-  <div class="tab-panel active" id="tab1">
-    <div class="charts-grid">
-      <div class="chart-card">
-        <h3>ARR轨迹：Anthropic vs OpenAI（2025年下半年→2026年6月，$B）</h3>
-        <div class="chart-wrapper"><canvas id="arrTrendChart"></canvas></div>
-        <div class="source-note">来源：Anthropic线：SaaStr/多家报道（2025年7-10月）+ Yipit高频数据（2026年，截至6/14约$62B）；OpenAI线：Tab2"OpenAI ARR时间线"数据点，虚线为缺失月份的插值连线（非精确值）。可见Anthropic自2025年底起持续拉大对OpenAI的领先差距</div>
+  <div class="tab-panel active" id="tab1" data-page-node-id="rpSjmdHPIpC8UCkEYM9De7">
+    <div class="charts-grid" data-page-node-id="GRn54jivCAtt4WcRJL2k3t">
+      <div class="chart-card" data-page-node-id="NLF9B1MO7KiNHEM8jjkxpA">
+        <h3 data-page-node-id="NiyzJ8KjArFAHSOHYNqxxo">ARR轨迹：Anthropic vs OpenAI（截至2026年6月底，$B）</h3>
+        <div class="chart-wrapper" data-page-node-id="sB3aoqoN4CVJwJ6QVuxhZg"><canvas id="arrTrendChart" data-page-node-id="7Yk9Pv7lRA3JlKoJXYbmWd"></canvas></div>
+        <div class="source-note" data-page-node-id="dLyH16CbPUnjSc3fbOj7Q0">来源：Anthropic线：SaaStr/多家报道（2025年7-10月）及Yipit高频估算（6/14约$62B、6月底约$69B）；OpenAI线：Tab2历史估算，缺失月份用虚线连接。Yipit的7月下旬约$80B预测后被其说明为高估，故未纳入曲线；不同来源不可拼成连续公司披露。<a href="https://t.me/s/DNSPODT?before=14692" target="_blank" rel="noopener" data-page-node-id="YCxtDaxkG1OFWQfZvUHnD0">Yipit修正说明（转述）</a></div>
       </div>
-      <div class="chart-card">
-        <h3>毛利率演变</h3>
-        <div class="chart-wrapper"><canvas id="marginTrendChart"></canvas></div>
-        <div class="source-note">来源：SemiAnalysis Tokenomics Model，Anthropic Tab（Total Gross Margins）；2024-2025年为年度值按季度重复填充，仅2026年起为真实季度数据。API业务毛利率已超80%，是支撑综合毛利率持续改善的核心结构（订阅/免费用户业务毛利率更低，拖累综合值）</div>
+      <div class="chart-card" data-page-node-id="lZnpRu4nlyiNl0j4QBIlAp">
+        <h3 data-page-node-id="pkyyHAbqk2vj3H9Kqt0SCk">毛利率演变</h3>
+        <div class="chart-wrapper" data-page-node-id="G0INBI3vAf7S4R5dByh79Z"><canvas id="marginTrendChart" data-page-node-id="ZICtG1oUnLK5wBiTNbHBiW"></canvas></div>
+        <div class="source-note" data-page-node-id="JPyqB3pXmKE4gtz8nqZiBM">来源：SemiAnalysis Tokenomics Model，Anthropic Tab（Total Gross Margins）；2024-2025年为年度值按季度重复填充，2026年起为第三方季度模型估计，未逐季核对公司披露；3Q26及以后为预测，非已实现业绩。API业务毛利率已超80%，是支撑综合毛利率持续改善的核心结构（订阅/免费用户业务毛利率更低，拖累综合值）</div>
       </div>
     </div>
 
-    <div class="table-card">
-      <h3>Anthropic ARR 时间线（创立以来）</h3>
-      <table>
-        <thead><tr><th>时间点</th><th>ARR / 年化收入</th><th>消息口径</th></tr></thead>
-        <tbody>
-          <tr><td>2022（成立年）</td><td>~$10M</td><td>SaaStr梳理的收入时间线</td></tr>
-          <tr><td>2023年3月</td><td>$22M</td><td>Sacra估算</td></tr>
-          <tr><td>2023全年</td><td>~$100M</td><td>SaaStr梳理</td></tr>
-          <tr><td>2024年3月</td><td>$316M</td><td>Sacra估算（Claude 3 Opus发布后，同比+1341%）</td></tr>
-          <tr><td>2024年12月 / 2025年初</td><td>~$1B</td><td>SaaStr（Dec 2024 $1B ARR）；Anthropic官方（Jan 2025约$1B）</td></tr>
-          <tr><td>2025年7月</td><td>$4B</td><td>SaaStr / 多家报道</td></tr>
-          <tr><td>2025年8月</td><td>$5B+</td><td>Anthropic官方（Series F公告，8个月内运行率破$5B）</td></tr>
-          <tr><td>2025年10月</td><td>~$7B</td><td>Anthropic官方（Google云合作公告称运行率"approaching $7B"）</td></tr>
-          <tr><td>2025年底</td><td>$9B+</td><td>消息人士 / Reuters（达成内部$9B年化运行率目标）</td></tr>
-          <tr><td>2026年2月</td><td>$14B</td><td>Yipit</td></tr>
-          <tr><td>2026年4月</td><td>$30B</td><td>Yipit</td></tr>
-          <tr><td>2026年5月</td><td>$44-47B</td><td>Yipit / 机构预测区间</td></tr>
-          <tr><td>2026年6月14日</td><td>~$62B</td><td>Yipit最新数据，打破"6月后Claude失速"传言</td></tr>
-          <tr><td>2026年底（机构预期）</td><td>$100B</td><td>机构预期，以当前增速看仍是保守锚定，存在更乐观上修声音</td></tr>
+    <div class="table-card" data-page-node-id="PJA41m7S29i1421bgAIr0V">
+      <h3 data-page-node-id="nwh8fxqOrMoSbvnCzqUupG">Anthropic ARR 时间线（创立以来）</h3>
+      <table data-page-node-id="0Us0dIaVvEjC2iwDj4aBJz">
+        <thead data-page-node-id="qHPsq1k0isApez7peTqMeT"><tr data-page-node-id="burfsLjXCHepnr8pxEkLH9"><th data-page-node-id="IJEyZYzQR0qMxayI34lh1w">时间点</th><th data-page-node-id="Hqoxa2lZWAHPQ98uGH3LAG">ARR / 年化收入</th><th data-page-node-id="IXqBIeF8UGnrGrwxnBAI8i">消息口径</th></tr></thead>
+        <tbody data-page-node-id="9HL5XtpyMVg7ejsRecksU6">
+          <tr data-page-node-id="glVQaE2WPjnKLTWNw5pSR9"><td data-page-node-id="hG6gUtfCCh6CNXArQs3kBo">2022（成立年）</td><td data-page-node-id="WKEwnB8Udm3t0NjLrv94rv">~$10M</td><td data-page-node-id="lFu3pEn2fp3UtnbfSztZ4o">SaaStr梳理的收入时间线</td></tr>
+          <tr data-page-node-id="s83kzjFHostVGxvt9YSeFl"><td data-page-node-id="Brh2nreGBH2xlSxwsbo7eD">2023年3月</td><td data-page-node-id="v9434eaIvGC8gN3r7mg1tw">$22M</td><td data-page-node-id="BhCG7ZVKtUL6vkgptcCn2V">Sacra估算</td></tr>
+          <tr data-page-node-id="JBsSBz8LVX7OxAVyBOQlhN"><td data-page-node-id="u5PBHJBoVBTv1EeYzs2Bfx">2023全年</td><td data-page-node-id="a1pLvwc9h4pWSrGGQMlCfk">~$100M</td><td data-page-node-id="lydsuqxcYndK9xnnGd61HV">SaaStr梳理</td></tr>
+          <tr data-page-node-id="geNTzNAWEkMoz1EnZzWGCC"><td data-page-node-id="nLNlGP9lBSRVuemIJRsbBW">2024年3月</td><td data-page-node-id="oxbjDSO7qEux0cj7SrOFGt">$316M</td><td data-page-node-id="tkWVgtrBaoQHZSVbmiRBBP">Sacra估算（Claude 3 Opus发布后，同比+1341%）</td></tr>
+          <tr data-page-node-id="gAjxaxoLJiJabCBeBZxm0o"><td data-page-node-id="hNu6k3obO7NmsNmTZqkh5D">2024年12月 / 2025年初</td><td data-page-node-id="qLEHX2NB4SWNHwmkLzdfkq">~$1B</td><td data-page-node-id="PZK2B2lmqYa5FMiWdwGlRY">SaaStr（Dec 2024 $1B ARR）；Anthropic官方（Jan 2025约$1B）</td></tr>
+          <tr data-page-node-id="DmiEksGmEI0nfvqUVKaGOG"><td data-page-node-id="oGCdN9ED5gdD0Bkwwyi52u">2025年7月</td><td data-page-node-id="zPRZiC0YAPiWiOR5s6tIXg">$4B</td><td data-page-node-id="HnSqZMyn2DWktec3rbkmyH">SaaStr / 多家报道</td></tr>
+          <tr data-page-node-id="37EsNNkoDWbUKTFFh1RLBT"><td data-page-node-id="WLb4MJYQ2XZOHKlsT8xmHS">2025年8月</td><td data-page-node-id="Lu9KZ838Ps5HG2f4SnDxzm">$5B+</td><td data-page-node-id="kzX2MMR5ynxUBXyFQhI2CF">Anthropic官方（Series F公告，8个月内运行率破$5B）</td></tr>
+          <tr data-page-node-id="Ecn4mxV3uGPCdN0vLSNVG6"><td data-page-node-id="sZnAZkMm0B0H8gUWfjho5C">2025年10月</td><td data-page-node-id="T7qhcKHBMe2oQFfpprwXQa">~$7B</td><td data-page-node-id="Zrf7P0qrqNjeUOwXb1NNLb">Anthropic官方（Google云合作公告称运行率"approaching $7B"）</td></tr>
+          <tr data-page-node-id="RLUBkxrPMWhXTlzilvNbq4"><td data-page-node-id="OEn3frMD35wRpbhGNuBgKo">2025年底</td><td data-page-node-id="A02jlUPlsFzHC76Pb9CjvC">$9B+</td><td data-page-node-id="2rrHsejw8MaqD02CZjDmlH">消息人士 / Reuters（达成内部$9B年化运行率目标）</td></tr>
+          <tr data-page-node-id="VcPPuIKmcrSZQUKxb6kB1I"><td data-page-node-id="l6qFNEvWImHj2klwnridJ2">2026年2月</td><td data-page-node-id="pLEL21EkdzqS4krlHCROvf">$14B</td><td data-page-node-id="TEnHaCr6mSq1gUZYhb8aTu">Yipit</td></tr>
+          <tr data-page-node-id="QCVl1peEvjloCCHBPpR3og"><td data-page-node-id="kToKGpXc9rBjDgLLNevCLt">2026年4月</td><td data-page-node-id="GNnIR1dHmAWmCfocgSlycI">$30B</td><td data-page-node-id="3KNfawnG5bLAgA4gat4LHt">Yipit</td></tr>
+          <tr data-page-node-id="AsOnFgaxCMSBDqeIK5HCSU"><td data-page-node-id="r27awveeN7DbRw7TggP9Qn">2026年5月</td><td data-page-node-id="ED22VXA4w3jTRQjHSSlXYj">$44-47B</td><td data-page-node-id="GiBe4w4UyEeaZDssbvfjde">Yipit / 机构预测区间</td></tr>
+          <tr data-page-node-id="iVWZgziuzLZUcBwCBNY1N3"><td data-page-node-id="2P2e2dHaNMk0jjgLFbO5UH">2026年6月14日</td><td data-page-node-id="MK1BgrIvTdRrLauQwZBSxG">~$62B</td><td data-page-node-id="nNEmGvy4ALN7TmU4qGrcB4">Yipit估算；当时数据，不等于公司披露</td></tr>
+          <tr data-page-node-id="RdG5ihgl2KC5q9OmUd6FAb"><td data-page-node-id="Y4E50FsPceJHwlYGjOHcW3">2026年6月底</td><td data-page-node-id="kGBXsTgyc6jwz1B4iCUTs0">~$69B</td><td data-page-node-id="WzAxSlLKCitYYi7cRFKQwH">Yipit估算，<a href="https://www.kucoin.com/news/flash/yipitdata-estimates-anthropic-s-annualized-revenue-at-79-5-billion-surpassing-100-billion-in-three-weeks" target="_blank" rel="noopener" data-page-node-id="GID0rnfqUrfREuQJ5txFk4">公开转述</a></td></tr>
+          <tr data-page-node-id="V5ewVnqFhnvSmuLZZQQzZw"><td data-page-node-id="KwfUAg6FDb2UPhSM7OBvQn">2026年7月下旬</td><td data-page-node-id="ftUGRHIw7Jzltcnj2J8hWX">~$80B（已高估）</td><td data-page-node-id="DAtc976qpIV8gJXRQE9rzu">Yipit截至7/26的初步预测；其后承认云端样本外推偏高，<a href="https://t.me/s/DNSPODT?before=14692" target="_blank" rel="noopener" data-page-node-id="IYzTmBsMQxS2hY3K81f0ka">修正说明转述</a>，不作为最新有效总量</td></tr>
+          <tr data-page-node-id="BYBNIjOUA3UxDfJNdyQ9vD"><td data-page-node-id="X2O8L1jmROBeKwYbDlWx2W">2026年7月底</td><td data-page-node-id="qw16g6XjpBdQ1P8hCyWAIL">&gt;$65B</td><td data-page-node-id="orTnLQajmQ8O6ZdRTjqKNy">Anthropic投资者资料，经<a href="https://www.axios.com/2026/08/17/anthropic-revenue-run-rate-ipo-openai" target="_blank" rel="noopener" data-page-node-id="yWbPr102Jyvl5cb0aIEcSa">媒体报道</a>；与Yipit模型不可直接相减</td></tr>
+          <tr data-page-node-id="ev6DOKQTI2yOCvqD6RoVHu"><td data-page-node-id="8sMWmn3n0Kupy0IAQGKubC">2026年8月（截至8/23的初测）</td><td data-page-node-id="SHsQki5TlmPeNMixQkHNmf">总量待核；月净增约$4-5B</td><td data-page-node-id="mN2MAYXUL77p2HizmK5a53">Yipit月初至今外推，B2B样本未齐，<a href="https://www.fxbaogao.com/detail/5681560" target="_blank" rel="noopener" data-page-node-id="vkUo1nc2qGcCGSP7aoKI7F">报告转述</a>；7月隐含净增约$8B</td></tr>
+          <tr data-page-node-id="LXWT7HKrV5ahfXRavQC3fN"><td data-page-node-id="YdfuuS8oxQjeQqD7A3FCGh">2026年底（机构预期）</td><td data-page-node-id="C2HAePlWFBsZy8ash7G7u5">$100B</td><td data-page-node-id="ZM95GLA4DM1okOGvCT09Wf">历史预测；8月净新增放缓后需重新检验，非公司披露</td></tr>
         </tbody>
       </table>
-      <div class="source-note">口径不完全统一（部分为第三方估算，部分为官方披露，部分为Yipit等高频消费数据），与左上ARR轨迹图衔接，构成Anthropic自2022年成立以来完整ARR增长脉络：约4年从$10M增长至$62B（截至2026-06-14）</div>
+      <div class="source-note" data-page-node-id="DvpBghpslmpdhsUcSMGXxW">ARR为年化运行率，并非经审计的全年收入或全部已签约订阅收入。Yipit最新可见的8月数据是净新增的初步估算，未给出可核验的8月总ARR；7月约$80B预测已被其说明为高估。公司投资者资料显示7月底超过$65B，但与Yipit样本模型口径不同。</div>
     </div>
 
-    <div class="charts-grid-even">
-      <div class="chart-card">
-        <h3>月度净新增ARR（$B）</h3>
-        <div class="chart-wrapper"><canvas id="nnarrChart"></canvas></div>
-        <div class="source-note">来源：SemiAnalysis《Anthropic's Monthly Net New ARR》图表读数，近似值</div>
+    <div class="charts-grid-even" data-page-node-id="vGB2CC3oFi5FeLX6lQJ6xa">
+      <div class="chart-card" data-page-node-id="2DLuntXxjlh3njvAKqMJGt">
+        <h3 data-page-node-id="1fX0NPQkeGrrGHnpvkS6tR">月度净新增ARR（$B）</h3>
+        <div class="chart-wrapper" data-page-node-id="G7ur6SVHWbGwiPGDno7ZUj"><canvas id="nnarrChart" data-page-node-id="1clbLGoTGiislbjuSdDl1O"></canvas></div>
+        <div class="source-note" data-page-node-id="7MNQAs2zGdT2aYTeglFC53">来源：SemiAnalysis《Anthropic's Monthly Net New ARR》图表读数，近似值</div>
       </div>
-      <div class="info-card">
-        <h4>估值逻辑：$6万亿基准</h4>
-        <p>SemiAnalysis 基准情形：2027年末 ARR 达 $300B（对应2027年月均净新增ARR约$15B），给予20倍 PS，得到 Anthropic 企业价值 $6万亿——若实现将成为全球市值最高企业。</p>
-        <p>长期利润率假设：毛利率升至75%中段，训练/研发占总算力48%，其他运营支出占营收20%，对应30-40%的EBIT/FCF利润率区间（对标历史最优秀软件公司）。</p>
+      <div class="info-card" data-page-node-id="CLjFE7vyJ7oZW4c6mPnnXg">
+        <h4 data-page-node-id="yNiXHnC1VnG9n8Q0dHtRfP">估值逻辑：$6万亿基准</h4>
+        <p data-page-node-id="sK4vC5CBkZ02Ospp9vgEbK">SemiAnalysis 基准情形：2027年末 ARR 达 $300B（对应2027年月均净新增ARR约$15B），给予20倍 EV/ARR，得到 Anthropic 企业价值 $6万亿——若实现将成为全球市值最高企业。</p>
+        <p data-page-node-id="qmHjchfOpuACkH5TAyfPAB">长期利润率假设：毛利率升至75%中段，训练/研发占总算力48%，其他运营支出占营收20%，对应30-40%的EBIT/FCF利润率区间（对标历史最优秀软件公司）。</p>
       </div>
     </div>
 
-    <div class="info-card">
-      <h4>增速远超原定算力规划</h4>
-      <p>据Bloomberg 2026年6月对Dario Amodei的专访，Anthropic 2026年Q1单季度收入环比增长超过3倍，年化增速约80倍，远超公司原定10倍/年的算力规划节奏——这也是"算力供给持续掉队于需求"这一叙事的直接来源。</p>
-      <p>机构预期2026年底ARR达$100B，以当前增速看仍属保守锚定，市场存在更乐观的上修声音。</p>
+    <div class="info-card" data-page-node-id="aFgNyIquiwoMsHCPl0W5Kz">
+      <h4 data-page-node-id="UDY0ZCujhMfltkdDPmDKu5">增速远超原定算力规划（历史判断）</h4>
+      <p data-page-node-id="c5Wa6CSZKM4w1FQC2Sm3Hi">据Bloomberg 2026年6月对Dario Amodei的专访，Anthropic 2026年Q1单季度收入环比增长超过3倍，年化增速约80倍，远超公司原定10倍/年的算力规划节奏——这也是"算力供给持续掉队于需求"这一叙事的直接来源。</p>
+      <p data-page-node-id="OmAypKOiJUZGjSmPQvWUlD">机构对2026年底$100B ARR的预期为预测而非披露值；Yipit的8月初测显示净新增ARR较7月放缓，需待完整B2B样本核验。</p>
     </div>
 
-    <div class="chart-card">
-      <h3>分模型API收入结构（$M，1Q24-4Q26）</h3>
-      <div class="chart-wrapper"><canvas id="modelRevenueChart"></canvas></div>
-      <div class="source-note">来源：SemiAnalysis Tokenomics Model，Anthropic Tab分模型明细；图表读数近似值。仅展示图中列出的模型线（不含消费者订阅/Haiku等其他产品线），不代表公司总收入，用于观察新模型对老模型的收入替代节奏</div>
+    <div class="chart-card" data-page-node-id="Hml2LvAB8Y3EPXG2Ld9NKc">
+      <h3 data-page-node-id="yDCuChtNKg8zYdXxQQ5C5w">分模型API收入结构（$M，1Q24-4Q26）</h3>
+      <div class="chart-wrapper" data-page-node-id="3rDxwbccoB6Gq8xMnSVGEf"><canvas id="modelRevenueChart" data-page-node-id="vtP9JKgpBBpDhrSVDNZCgZ"></canvas></div>
+      <div class="source-note" data-page-node-id="RsWkCgGAFFamNiOULwnVF1">来源：SemiAnalysis Tokenomics Model，Anthropic Tab分模型明细；图表读数近似值。仅展示图中列出的模型线（不含消费者订阅/Haiku等其他产品线），不代表公司总收入，用于观察新模型对老模型的收入替代节奏</div>
     </div>
 
-    <div class="info-card">
-      <h4>Claude Code并非发布即引爆：增速先抑后扬</h4>
-      <p>据Exponential View对全行业（覆盖OpenAI/Anthropic等，非Anthropic单独口径）季度环比收入增速的统计：Claude Enterprise发布当季环比增速达65%，但随后增速一路走低，到Claude Code发布当季一度探底至17%；此后随Agentic Coding时代到来才重新爬升，近几个季度企稳在35% QoQ（约合年化3.2倍）。</p>
-      <p>这一先抑后扬的曲线说明：新产品发布不等于收入立即拉升，往往要经过几个季度的企业采用爬坡后，增长才充分体现在数字上——这也是判断Fable/Mythos等新模型ARR拉动效果时需要的耐心窗口。</p>
+    <div class="info-card" data-page-node-id="CI0RhOSZkv1evaHERvhVHl">
+      <h4 data-page-node-id="kFhOd99tUlh7FAarxW5wyK">Claude Code并非发布即引爆：增速先抑后扬</h4>
+      <p data-page-node-id="JG8ZCwpJeNuQHscoZjBGS0">据Exponential View对全行业（覆盖OpenAI/Anthropic等，非Anthropic单独口径）季度环比收入增速的统计：Claude Enterprise发布当季环比增速达65%，但随后增速一路走低，到Claude Code发布当季一度探底至17%；此后随Agentic Coding时代到来才重新爬升，近几个季度企稳在35% QoQ（约合年化3.2倍）。</p>
+      <p data-page-node-id="luFdmJNFsySE216azJZf2W">这一先抑后扬的曲线说明：新产品发布不等于收入立即拉升，往往要经过几个季度的企业采用爬坡后，增长才充分体现在数字上——这也是判断Fable/Mythos等新模型ARR拉动效果时需要的耐心窗口。</p>
     </div>
 
-    <div class="table-card">
-      <h3>融资历程（Series A → H）</h3>
-      <table>
-        <thead><tr><th>轮次</th><th>时间</th><th>融资额</th><th>投后估值</th></tr></thead>
-        <tbody>
-          <tr><td>Series A</td><td>2021-05</td><td>$124M</td><td>—</td></tr>
-          <tr><td>Series B</td><td>2022-04</td><td>$580M</td><td>—</td></tr>
-          <tr><td>Google</td><td>2023-02</td><td>$300M</td><td>—</td></tr>
-          <tr><td>Series C</td><td>2023-03</td><td>$300M</td><td>$4.1B</td></tr>
-          <tr><td>Amazon</td><td>2023-09</td><td>最高$4B（首付$1.25B）</td><td>—</td></tr>
-          <tr><td>Google</td><td>2023-10</td><td>最高$2B（首付$500M）</td><td>—</td></tr>
-          <tr><td>Series E</td><td>2025-03</td><td>$3.5B</td><td>$61.5B</td></tr>
-          <tr><td>Series F</td><td>2025-09</td><td>$13B</td><td>$183B</td></tr>
-          <tr><td>Series G</td><td>2026-02</td><td>$30B</td><td>$380B</td></tr>
-          <tr><td>Series H</td><td>2026-05</td><td>$65B</td><td>$965B</td></tr>
+    <div class="table-card" data-page-node-id="23snU9i4AQkZvjR8RO730Q">
+      <h3 data-page-node-id="3MVecDfhHCK7bYMDQ8n75Z">融资历程（Series A → H）</h3>
+      <table data-page-node-id="UXDAweFjcf3gm2Jy13ZHbm">
+        <thead data-page-node-id="BcNMHUEzOcxkgqxhX3UNHL"><tr data-page-node-id="lbedYI09G2SSQSardSRsva"><th data-page-node-id="e3okD1IGt9QPn5SBeLAjfm">轮次</th><th data-page-node-id="w6ksbjGKkx0BBwIoMSQTcy">时间</th><th data-page-node-id="td87kmWkpTfUvPM1jFFZBn">融资额</th><th data-page-node-id="p7iY0IThohnpWbjc8uj3ra">投后估值</th></tr></thead>
+        <tbody data-page-node-id="00SZhy9C1baFqljLr4yMih">
+          <tr data-page-node-id="wIfBAZREbgisWOIWQLQFzC"><td data-page-node-id="3PCFNCcJwTz5XA3g668M3i">Series A</td><td data-page-node-id="Yzy4xMntVojYRsUy0lt7Dr">2021-05</td><td data-page-node-id="WNFsc1XYIJmTyuMEmOkkKG">$124M</td><td data-page-node-id="cCN6HKXaPFxhvteI0RnHnf">—</td></tr>
+          <tr data-page-node-id="N4Ye8XQrY8AnwmTIea4LL3"><td data-page-node-id="Up9tnIj5j7N1cwqyCEWDSt">Series B</td><td data-page-node-id="t12kEIqtdYZzwH2cYQSTxt">2022-04</td><td data-page-node-id="YEZZubhR4vVE0VxLFyyVaU">$580M</td><td data-page-node-id="DgyM9AE1Mm8XdvLCriymXA">—</td></tr>
+          <tr data-page-node-id="Yp4p3qCSg2dCjBaJk56ZJZ"><td data-page-node-id="si3213sAXCuvczDyMp8Ymd">Google</td><td data-page-node-id="3aUO8MejdiFA1N5pK7rcx1">2023-02</td><td data-page-node-id="kIlNTeM2Ymlu01BjviIZ8t">$300M</td><td data-page-node-id="yRFVO4woQc1iM7j4th3G1q">—</td></tr>
+          <tr data-page-node-id="wbshIdhS7REpowx27IdOEX"><td data-page-node-id="9plWNgA65MAusO2E72THKF">Series C</td><td data-page-node-id="Q2YJneAg4KsBV4LEKO8F0j">2023-03</td><td data-page-node-id="VPIV39njaMAh5YnGMSJZuv">$300M</td><td data-page-node-id="F6DI57mpRZgDIIoEtuL71h">$4.1B</td></tr>
+          <tr data-page-node-id="3rOV6ihiYsnu0qD3HBHYOQ"><td data-page-node-id="V7CyfkdqXsopozFh5BnqFX">Amazon</td><td data-page-node-id="ODGBI9EPK4zQoRA0xWwgQy">2023-09</td><td data-page-node-id="SrPZDvmDQd9dXcjmB7QUNg">最高$4B（首付$1.25B）</td><td data-page-node-id="wyhIvAMRdpi4iXeLVIG8CS">—</td></tr>
+          <tr data-page-node-id="xFr1ukBqga0vkTDWCjfUqY"><td data-page-node-id="kldf6SLrpBGqfGmDthBpFt">Google</td><td data-page-node-id="XG4hqQkRilEkxFiOxsnOiG">2023-10</td><td data-page-node-id="a4Tz9b2ZhgLUjWrbhI9b4C">最高$2B（首付$500M）</td><td data-page-node-id="mRH4hgMUWHG5xgG4KO44t5">—</td></tr>
+          <tr data-page-node-id="9H96JoUPHSNWDF8rBnMTUg"><td data-page-node-id="f0CZvWzqJVWG2r9nLK56HP">Series E</td><td data-page-node-id="G5gY2fJlJhm9LJj6MCC2CZ">2025-03</td><td data-page-node-id="01xr8twNxcjlHug0B1yLIs">$3.5B</td><td data-page-node-id="D0KEXAWzBsOMdUBmdTg6yZ">$61.5B</td></tr>
+          <tr data-page-node-id="ludEmIGNPoVpQ6odWNkZsF"><td data-page-node-id="alWm14fQp9RAhrpDMJzl6G">Series F</td><td data-page-node-id="gWLQmVsss7ri4tSodLc52j">2025-09</td><td data-page-node-id="zDBfyW3q0UENoSNxZn7bZL">$13B</td><td data-page-node-id="EWDWZUztPGW8kTALPGoS7r">$183B</td></tr>
+          <tr data-page-node-id="IWNBBj47dyJBXmAuaP44Gq"><td data-page-node-id="qGoqnimp3fuDmDxDD9xplA">Series G</td><td data-page-node-id="imVSBjoXN9dtrt8Si5k02T">2026-02</td><td data-page-node-id="Bp0S78R39bCFhxKOjHlhal">$30B</td><td data-page-node-id="RRcWYaViZBLkHtHTLUvEwB">$380B</td></tr>
+          <tr data-page-node-id="jqaKoWdJ6UyaBKSGdJW53r"><td data-page-node-id="k3N7TCzqQ5On20LjbCwrhC">Series H</td><td data-page-node-id="8icSWHe3ujTlokbHtaqfG4">2026-05</td><td data-page-node-id="3rfJDRWXqqTvjRTRm7zYSE">$65B</td><td data-page-node-id="ttNZ8DAsFJB6b3dT5xaOLc">$965B</td></tr>
         </tbody>
       </table>
-      <div class="source-note">来源：SemiAnalysis《Anthropic Funding History》</div>
+      <div class="source-note" data-page-node-id="tGiFflu5EbDFElUCOvMTJD">来源：SemiAnalysis《Anthropic Funding History》</div>
     </div>
   </div>
-  <div class="tab-panel" id="tab2">
-    <div class="table-card">
-      <h3>OpenAI ARR 时间线（对照）</h3>
-      <table>
-        <thead><tr><th>时间点</th><th>ARR / 年化收入</th><th>消息口径</th></tr></thead>
-        <tbody>
-          <tr><td>2022年底</td><td>~$200M</td><td>Sacra估算</td></tr>
-          <tr><td>2023年底</td><td>$2B</td><td>Sacra估算；OpenAI CFO后续确认2023年$2B</td></tr>
-          <tr><td>2024年12月</td><td>$5.5B</td><td>Reuters报道的年化运行率</td></tr>
-          <tr><td>2024全年</td><td>$6B</td><td>OpenAI CFO Sarah Friar口径</td></tr>
-          <tr><td>2025年6月</td><td>$10B</td><td>OpenAI官方（CNBC/Reuters首报，剔除微软授权及一次性大单）</td></tr>
-          <tr><td>2025年8月</td><td>$13B</td><td>融资报道 / Epoch AI（The Information报道年化收入破$13B）</td></tr>
-          <tr><td>2025年底</td><td>$20B+</td><td>OpenAI CFO Sarah Friar表态，年化收入2025超$20B（较2024年$6B增长约3倍）</td></tr>
-          <tr><td>2026年2月（官方最后一次披露）</td><td>$25B</td><td>OpenAI官方</td></tr>
-          <tr><td>2026年5月</td><td>$40-50B</td><td>机构测算（官方此后未再披露）</td></tr>
-          <tr><td>2026年6月</td><td>$55B+</td><td>机构测算，仍低于同期Anthropic（$62B）</td></tr>
+  <div class="tab-panel" id="tab2" data-page-node-id="yP3g9QoSVmjJ0s3s8PDjZ7">
+    <div class="table-card" data-page-node-id="fzqW8JGcVUd3Eav3nbGNKa">
+      <h3 data-page-node-id="UlRR50vlPtpMGBXuby6QQi">OpenAI ARR 时间线（对照）</h3>
+      <table data-page-node-id="KyEHXC1G414b9gAfQd6VDE">
+        <thead data-page-node-id="8Jldd7lnTDd0qHBmVUluOZ"><tr data-page-node-id="gpjmogppLyTlefrK4bkncY"><th data-page-node-id="MDjxRtzfdQ3bqHHe5er2dN">时间点</th><th data-page-node-id="HFz2n25oWrspTugGMGWrwH">ARR / 年化收入</th><th data-page-node-id="qAycExpiezRfeldDiCK0vR">消息口径</th></tr></thead>
+        <tbody data-page-node-id="HQgoFcpk9N9iDa1W6vWHAK">
+          <tr data-page-node-id="7krnxeD5B4mQFYcPeVYV2A"><td data-page-node-id="EFi84V9WLWPU3QkJ5eQHxA">2022年底</td><td data-page-node-id="NM3LBvjhexiObEv7GhACHD">~$200M</td><td data-page-node-id="DwHmwBwOniORbajyiuZUAE">Sacra估算</td></tr>
+          <tr data-page-node-id="6ZTFBh4RFgUrOG41UgzCW0"><td data-page-node-id="YbYNPWxinTS7shQ5ayGfko">2023年底</td><td data-page-node-id="l9CBCndNxfowBIGK1Oz0oj">$2B</td><td data-page-node-id="pMoN3cmTPIMnAFwoDizuKu">Sacra估算；OpenAI CFO后续确认2023年$2B</td></tr>
+          <tr data-page-node-id="ZFDcaNXmkHG6pU5or9qbwC"><td data-page-node-id="f1FdFcwgt2buzGv1lsSWUh">2024年12月</td><td data-page-node-id="a8VMFUnaZHixEczi25F9OM">$5.5B</td><td data-page-node-id="pjfjgGOvvm1r1Rq2yzApdh">Reuters报道的年化运行率</td></tr>
+          <tr data-page-node-id="yckfzYyezO5fSkXOK6ptRS"><td data-page-node-id="WQVGCtH0LUHgC6Ym0PXEFD">2024全年</td><td data-page-node-id="tNsA9ylOAacclZaFQeZpqW">$6B</td><td data-page-node-id="UOSqlZE0AJJgICjvWUMqBV">OpenAI CFO Sarah Friar口径</td></tr>
+          <tr data-page-node-id="OK9VJyQyHj1FuxcLk9CdeT"><td data-page-node-id="9rZ9ZeTZ3DcwiNMNti0Q9P">2025年6月</td><td data-page-node-id="G012FiUlnzlbnOxTx0mKmG">$10B</td><td data-page-node-id="7BIYRAgQLkNA8CG4BGluVh">OpenAI官方（CNBC/Reuters首报，剔除微软授权及一次性大单）</td></tr>
+          <tr data-page-node-id="im2B9ISuaJrBtEYlNK1hPB"><td data-page-node-id="WWvrc1ST3fIdDPfFE0WFT1">2025年8月</td><td data-page-node-id="j9ZtkE3jhvN6pFoHHOiozC">$13B</td><td data-page-node-id="SsQiPEsqSLLgPENPK04Fjz">融资报道 / Epoch AI（The Information报道年化收入破$13B）</td></tr>
+          <tr data-page-node-id="IYTXQa2GjRnS26j8Mr0MKx"><td data-page-node-id="p9CV1xjA1DXKp5F48Hzkyp">2025年底</td><td data-page-node-id="zvMEKazLvkBITwNq9Bfkyf">$20B+</td><td data-page-node-id="p59Bf6FR6Bc9MpaqFm1KUN">OpenAI CFO Sarah Friar表态，年化收入2025超$20B（较2024年$6B增长约3倍）</td></tr>
+          <tr data-page-node-id="a9rkUgjhEV1xFAeKjpYNCA"><td data-page-node-id="Np0HA3A7WjwrPNtnCsldUQ">2026年2月（官方最后一次披露）</td><td data-page-node-id="eZ0F1luPxreusvnrlVrmCS">$25B</td><td data-page-node-id="i3ot6cQbSv5nPoggMiYIqz">OpenAI官方</td></tr>
+          <tr data-page-node-id="HBLjtSiYCLPHWV9DvpFM93"><td data-page-node-id="7Vu0ry0vE6ZW79L8lscXvT">2026年5月</td><td data-page-node-id="iqMT9PMiSEFaCy2Uaj856z">$40-50B</td><td data-page-node-id="FJhL1AGHuyJgt2hnQt51Yw">机构测算（官方此后未再披露）</td></tr>
+          <tr data-page-node-id="ZQzv2Et5ArEl7RN2SiwY1A"><td data-page-node-id="HEQnPv1avKKpLrljYSApxz">2026年6月</td><td data-page-node-id="eDrB92pW6gLT0mlKS43b8n">$55B+</td><td data-page-node-id="KeYsbuCHl1HSBuW51Z4pmu">机构测算，仍低于同期Anthropic（$62B）</td></tr>
         </tbody>
       </table>
-      <div class="source-note">口径不完全统一（部分为第三方估算，部分为官方披露）；对照Tab1"Anthropic ARR时间线"可见：2023-2024年OpenAI规模领先，但2025年下半年起Anthropic增速反超并持续拉大差距（2026年6月：Anthropic $62B vs OpenAI $55B+）。OpenAI自2026年2月$25B后不再官方披露ARR，后续均为机构测算，跟踪难度上升</div>
+      <div class="source-note" data-page-node-id="9vNW68PsDTAg1erLNE5R0F">口径不完全统一（部分为第三方估算，部分为官方披露）；对照Tab1"Anthropic ARR时间线"可见：2023-2024年OpenAI规模领先，但2025年下半年起Anthropic增速反超并持续拉大差距（2026年6月：Anthropic $62B vs OpenAI $55B+）。OpenAI自2026年2月$25B后不再官方披露ARR，后续均为机构测算，跟踪难度上升</div>
     </div>
 
-    <div class="charts-grid-even">
-      <div class="chart-card">
-        <h3>消费端订阅占ARR比例：Anthropic vs OpenAI</h3>
-        <div class="chart-wrapper"><canvas id="consumerMixChart"></canvas></div>
-        <div class="source-note">来源：SemiAnalysis《Less Consumer, Better Business》图表读数，近似值</div>
+    <div class="charts-grid-even" data-page-node-id="1RH0xnTE5S0Pctktr5Xy7Y">
+      <div class="chart-card" data-page-node-id="EKROmg5Cd6own8lFueA7mC">
+        <h3 data-page-node-id="W7BvlohGIvaORNVBIXtoEZ">消费端订阅占ARR比例：Anthropic vs OpenAI</h3>
+        <div class="chart-wrapper" data-page-node-id="QQHoz5s6RkW71KcLYIOsuY"><canvas id="consumerMixChart" data-page-node-id="BaelbbEc1hwQmHLkd57nsA"></canvas></div>
+        <div class="source-note" data-page-node-id="ZKMM3nMBak2eFaONs93Xzv">来源：SemiAnalysis《Less Consumer, Better Business》图表读数，近似值</div>
       </div>
-      <div class="chart-card">
-        <h3>毛利率对比：Anthropic vs OpenAI</h3>
-        <div class="chart-wrapper"><canvas id="marginCompareChart"></canvas></div>
-        <div class="source-note">来源：SemiAnalysis《Gross Margin Over Time》图表读数，近似值</div>
-      </div>
-    </div>
-
-    <div class="charts-grid">
-      <div class="chart-card">
-        <h3>EBTIT对比：Anthropic vs OpenAI（FY24-28E，$B）</h3>
-        <div class="chart-wrapper"><canvas id="ebtitChart"></canvas></div>
-        <div class="source-note">来源：SemiAnalysis《Annual EBTIT, FY24-28E》图表读数，近似值；2028E累计差距约$250B。注：EBTIT（训练前/利息前/税前收益）为年度口径，与KPI卡片中"3Q26 GAAP EBIT"为单季度口径的不同指标，两者不可直接比较</div>
-      </div>
-      <div class="info-card">
-        <h4>免费用户成本拖累</h4>
-        <p>OpenAI 需支持9亿+免费用户，估算每用户月服务成本约$0.70，历史上侵蚀总毛利率20-30个百分点。若双方ARR均为$100B（1000亿），OpenAI毛利润将比Anthropic少$25B（250亿，注意与右侧图表"2028E累计差距约$250B"为不同口径的两个数字，量级相差10倍，勿混淆）。</p>
-        <p>Anthropic Free MAU约5500-6000万，付费转化率约9%；OpenAI WAU约9.5亿，付费转化率约6%。</p>
+      <div class="chart-card" data-page-node-id="2s086DwUAAEOSo93dQVB4G">
+        <h3 data-page-node-id="HGkNHJiRvB5A6zk8HkInSA">毛利率对比：Anthropic vs OpenAI</h3>
+        <div class="chart-wrapper" data-page-node-id="AeX3QAoHNpK4tJnATUZhiB"><canvas id="marginCompareChart" data-page-node-id="O4Tey8499LoRt3SK4l15rc"></canvas></div>
+        <div class="source-note" data-page-node-id="3DIFQBnAtKxulg4FjRx5iA">来源：SemiAnalysis《Gross Margin Over Time》图表读数，近似值</div>
       </div>
     </div>
 
-    <div class="table-card">
-      <h3>关键差异对比</h3>
-      <table>
-        <thead><tr><th>指标</th><th>Anthropic</th><th>OpenAI</th></tr></thead>
-        <tbody>
-          <tr><td>API/使用量收入占ARR</td><td>75-85%</td><td>低于35%（订阅占65%+，1Q26）</td></tr>
-          <tr><td>消费端订阅占ARR</td><td>~5%</td><td>~40%（2Q26末估算）</td></tr>
-          <tr><td>综合毛利率（2026年中）</td><td>~65%</td><td>~38-40%</td></tr>
-          <tr><td>免费用户规模</td><td>Free MAU约5500-6000万</td><td>WAU约9.5亿</td></tr>
-          <tr><td>2028E累计EBTIT优势</td><td>基准</td><td>落后约$250B</td></tr>
-          <tr><td>每$1算力换收入（不含训练成本）</td><td>$2.10</td><td>$1.60</td></tr>
-          <tr><td>每$1算力换收入（含训练成本，估算）</td><td>$1.70</td><td>$0.68（跌破$1盈亏线）</td></tr>
+    <div class="charts-grid" data-page-node-id="BGZZvRKx3trbIqoHSpAOx3">
+      <div class="chart-card" data-page-node-id="wWHPkGAR4tWjARXdmFcEMe">
+        <h3 data-page-node-id="P2ogzuuzOl3sNIxOl1vXRq">EBTIT对比：Anthropic vs OpenAI（FY24-28E，$B）</h3>
+        <div class="chart-wrapper" data-page-node-id="Q2es21bDSg75jD66cyGQbJ"><canvas id="ebtitChart" data-page-node-id="nTzEGe1gvPc1fnCLOmts1b"></canvas></div>
+        <div class="source-note" data-page-node-id="osytvxq0U67Y9Z4gS2tgAd">来源：SemiAnalysis《Annual EBTIT, FY24-28E》图表读数，近似值；2028E累计差距约$250B。注：EBTIT（训练前/利息前/税前收益）为年度口径，与KPI卡片中"3Q26E GAAP EBIT（第三方预测）"为单季度口径的不同指标，两者不可直接比较</div>
+      </div>
+      <div class="info-card" data-page-node-id="deuaG59HrLmDoSrjRXRtEG">
+        <h4 data-page-node-id="voyeoHrql0IY1DbMRocHqR">免费用户成本拖累</h4>
+        <p data-page-node-id="OvtqovCw7qpXryNgBoE9Ho">OpenAI 需支持9亿+免费用户，估算每用户月服务成本约$0.70，历史上侵蚀总毛利率20-30个百分点。若双方ARR均为$100B（1000亿），OpenAI毛利润将比Anthropic少$25B（250亿，注意与右侧图表"2028E累计差距约$250B"为不同口径的两个数字，量级相差10倍，勿混淆）。</p>
+        <p data-page-node-id="Rr0UYTcrUAnwE2X0qS0UKe">Anthropic Free MAU约5500-6000万，付费转化率约9%；OpenAI WAU约9.5亿，付费转化率约6%。</p>
+      </div>
+    </div>
+
+    <div class="table-card" data-page-node-id="idr0OEmxRLHNaqkYta3FEh">
+      <h3 data-page-node-id="8xnSXhwWxB55bufDPoOqvd">关键差异对比</h3>
+      <table data-page-node-id="kgHF9y7zrrPpZGcv8ubbVk">
+        <thead data-page-node-id="nh6EGiRDTby4subVXLs4it"><tr data-page-node-id="3WOVPqOxQVHHEfRuEDhSo2"><th data-page-node-id="C0Mn46eAM6rDkyDxhN7TYA">指标</th><th data-page-node-id="j69cX5P1QDBIqwxxmIuAh8">Anthropic</th><th data-page-node-id="kZuWyvn0LHfNITbF9TmqDX">OpenAI</th></tr></thead>
+        <tbody data-page-node-id="TnDckW4ZKMq9GdyhSdFqrC">
+          <tr data-page-node-id="ctk7zWCB6FGj9REcuSYOGq"><td data-page-node-id="Lap8fuht4tMGj6UM3REnll">API/使用量收入占ARR</td><td data-page-node-id="OmMS7s2LP62T4I5pdm3K13">75-85%</td><td data-page-node-id="92DH704E7JFabgU8W7q6XM">低于35%（订阅占65%+，1Q26）</td></tr>
+          <tr data-page-node-id="w2jXbcU2XI7dqCKdPhFlLs"><td data-page-node-id="ANYj7z4yBQZ1E8TjJHlsdq">消费端订阅占ARR</td><td data-page-node-id="VdZz0UzCDFUKgEaC0xMiMV">~5%</td><td data-page-node-id="Si8ite6S6a2Pkmu9qsfXui">~40%（2Q26末估算）</td></tr>
+          <tr data-page-node-id="U4DWJbWEpN0Nkk6yIR1iSQ"><td data-page-node-id="Gk6PIK16ub54FTR5bR8GYt">综合毛利率（2026年中）</td><td data-page-node-id="pbiOZVHu7iikFOq6yWsuYd">~65%</td><td data-page-node-id="nqPwCgQK4BEYR1azF8tdqG">~38-40%</td></tr>
+          <tr data-page-node-id="gwortMCdcfH63A3v0AxnZ8"><td data-page-node-id="TnihdEJS93ZWoSWBzaABEC">免费用户规模</td><td data-page-node-id="rVhFybNYoczkDQ7mx1ftL8">Free MAU约5500-6000万</td><td data-page-node-id="mwRB15WSTtw7GBiI1JD1Lh">WAU约9.5亿</td></tr>
+          <tr data-page-node-id="UAZ0UmazgRDynM3RY86uuA"><td data-page-node-id="DVNodDHGHGAt4evPctljW5">2028E累计EBTIT优势</td><td data-page-node-id="sxH6fJLT5utfiuefda9tr0">基准</td><td data-page-node-id="XGefr0oyZ9ANEG36jtcF6g">落后约$250B</td></tr>
+          <tr data-page-node-id="NOrbWBgKV5gFtwyfEhEU2a"><td data-page-node-id="ihGqmhdNi2ARFvWTGg2mbA">每$1算力换收入（不含训练成本）</td><td data-page-node-id="VrF2Zwfn7debbiR1IRk1nN">$2.10</td><td data-page-node-id="5MRG4kv9vJP5wcILPhSBUf">$1.60</td></tr>
+          <tr data-page-node-id="Q5gK12SDgOfxjOES2RNKJU"><td data-page-node-id="scQlq1yrwrSEqRhnxQgZcy">每$1算力换收入（含训练成本，估算）</td><td data-page-node-id="Ev0ZELguATDpdP6Wu81x6t">$1.70</td><td data-page-node-id="7HaV5uj9oWQgYJ5A5047Sc">$0.68（跌破$1盈亏线）</td></tr>
         </tbody>
       </table>
-      <div class="source-note">来源：SemiAnalysis Tokenomics Model；末两行"每$1算力换收入"来自WSJ投资者文件测算（2026年4月）及作者按训练成本预测的推算，口径与其他行不同，仅供交叉参考</div>
+      <div class="source-note" data-page-node-id="hO2t9TS7nw36jOkXj6kjJb">来源：SemiAnalysis Tokenomics Model；末两行"每$1算力换收入"来自WSJ投资者文件测算（2026年4月）及作者按训练成本预测的推算，口径与其他行不同，仅供交叉参考</div>
     </div>
   </div>
-  <div class="tab-panel" id="tab3">
-    <div class="table-card">
-      <h3>Consumer / Team / Enterprise 定价体系</h3>
-      <table>
-        <thead><tr><th>产品线</th><th>档位</th><th>价格</th><th>说明</th></tr></thead>
-        <tbody>
-          <tr><td>Consumer</td><td>Free</td><td>$0</td><td>含Claude Code/Cowork/Claude for Microsoft 365</td></tr>
-          <tr><td>Consumer</td><td>Pro</td><td>$20/月</td><td>付费用户平均月支出约$45</td></tr>
-          <tr><td>Consumer</td><td>Max 5x</td><td>$100/月</td><td>—</td></tr>
-          <tr><td>Consumer</td><td>Max 20x</td><td>$200/月</td><td>—</td></tr>
-          <tr><td>Team</td><td>标准档</td><td>$20/月（按年付费）</td><td>面向5-150席位中小企业</td></tr>
-          <tr><td>Team</td><td>高阶档</td><td>$100/月（按年付费）</td><td>—</td></tr>
-          <tr><td>Enterprise</td><td>超150席位</td><td>$20/月 + 全部API费率</td><td>订阅价不含任何使用额度</td></tr>
-        </tbody>
-      </table>
-      <div class="source-note">来源：Anthropic官网，转引自SemiAnalysis</div>
-    </div>
-
-    <div class="table-card">
-      <h3>API 模型定价（$ / 百万Token）</h3>
-      <table>
-        <thead><tr><th>模型</th><th>基础输入</th><th>5分钟缓存写入</th><th>1小时缓存写入</th><th>缓存命中/刷新</th><th>输出</th></tr></thead>
-        <tbody>
-          <tr><td>Claude Fable 5</td><td>$10</td><td>$12.50</td><td>$20</td><td>$1</td><td>$50</td></tr>
-          <tr><td>Claude Mythos 5（限量）</td><td>$10</td><td>$12.50</td><td>$20</td><td>$1</td><td>$50</td></tr>
-          <tr><td>Claude Opus 4.8/4.7/4.6/4.5</td><td>$5</td><td>$6.25</td><td>$10</td><td>$0.50</td><td>$25</td></tr>
-          <tr><td>Claude Sonnet 5（至2026-08-31）</td><td>$2</td><td>$2.50</td><td>$4</td><td>$0.20</td><td>$10</td></tr>
-          <tr><td>Claude Sonnet 5（2026-09-01起）</td><td>$3</td><td>$3.75</td><td>$6</td><td>$0.30</td><td>$15</td></tr>
-          <tr><td>Claude Haiku 4.5</td><td>$1</td><td>$1.25</td><td>$2</td><td>$0.10</td><td>$5</td></tr>
-        </tbody>
-      </table>
-      <div class="source-note">来源：Anthropic官网定价页，转引自SemiAnalysis（2026-07）</div>
-    </div>
-
-    <div class="info-card">
-      <h4>企业客户渗透最新数据</h4>
-      <p>Claude企业/API收入占比83-85%；财富10强企业中已有8家采用；年消费$100万美元以上的客户数已破千。Coding与Agent场景是调用量与客户留存的主要驱动力。</p>
-    </div>
-
-    <div class="charts-grid-even">
-      <div class="chart-card">
-        <h3>Claude Code 占 GitHub 总提交比例</h3>
-        <div class="chart-wrapper"><canvas id="claudeCodeChart"></canvas></div>
-        <div class="source-note">来源：SemiAnalysis Research，7日移动平均，图表读数近似值</div>
+  <div class="tab-panel" id="tab6" data-page-node-id="mGmHggysCI4TBYmEGVXbfF">
+    <div class="charts-grid" data-page-node-id="WeYusw73X86BQkFrSFUZlG">
+      <div class="chart-card" data-page-node-id="JzyGwwXXJ1iWC0DzFyPfse">
+        <h3 data-page-node-id="xsCoqcWu9WedwsdSz5KrZu">估值里程碑：Anthropic vs OpenAI（$B，对数轴）</h3>
+        <div class="chart-wrapper" data-page-node-id="q84GvVsHxQL1XscAv0AQIy"><canvas id="valTimelineChart" data-page-node-id="AbeX8lYsFN7k7P7mIrbzoC"></canvas></div>
+        <div class="source-note" data-page-node-id="lvOooqQxa0WDx7xKNYAZFO">横轴为真实时间（线性），纵轴对数。Anthropic：Series C（2023/03）$41亿 → Series E（2025/03）$615亿 → Series F（2025/09）$1,830亿 → Series G（2026/02）$3,800亿 → Series H（2026/05）$9,650亿，三年约 235 倍。OpenAI：2019/07 微软入股时约 $9亿（capped-profit 结构）→ 2024/10 $1,570亿 → 2025/03 $3,000亿 → 2025/10 重组后 $5,000亿 → 2026/02 投前 $7,300亿 → 2026/03 交割投后 $8,520亿。**Anthropic 于 2026/05 以 $9,650亿 首次超过 OpenAI 的 $8,520亿**。</div>
       </div>
-      <div class="chart-card">
-        <h3>间接渠道（Bedrock/Foundry）占ARR比例</h3>
-        <div class="chart-wrapper"><canvas id="taasChart"></canvas></div>
-        <div class="source-note">来源：SemiAnalysis Tokenomics Model；注：图中数值为间接渠道占ARR比例，另有20-30%的收入分成是Anthropic向渠道方支付的费率，二者为不同指标</div>
+      <div class="chart-card" data-page-node-id="X6fxYtXEVk8AjfkapxffVQ">
+        <h3 data-page-node-id="IUPCCdxHiydGsOSltNhaTk">ARR 轨迹：Anthropic vs OpenAI（$B，对数轴）</h3>
+        <div class="chart-wrapper" data-page-node-id="YrJnVHS3bJktXYYoG28jmX"><canvas id="arrTimelineChart" data-page-node-id="gm4jO9qf6zqHLOpIAwHBe6"></canvas></div>
+        <div class="source-note" data-page-node-id="QZEeFJYzOcd1s1W9Q6iCZu">仅用<strong data-page-node-id="KwtxGEJ0YF4gkSMWPDICzI">公司披露 / 投资者资料口径（A 口径）</strong>，第三方高频跟踪（B 口径）不入图以免混用——同为 2026/09，OpenAI 的 A 口径为 &gt;$400亿、B 口径为 $834亿，Anthropic 的 A 口径为 &gt;$650亿（7 月底）、B 口径为 $1,003亿，两者不可同列。**交叉点在 2026/04/07**：Anthropic 官方披露 &gt;$300亿，首次反超 OpenAI 当时最后披露的 $250亿（后者已在 $250亿 一线横盘约 5 个月）。</div>
       </div>
     </div>
 
-    <div class="chart-card">
-      <h3>旗舰模型输出定价演变（$/百万输出Token，对数轴）</h3>
-      <div class="chart-wrapper"><canvas id="pricingEvolutionChart"></canvas></div>
-      <div class="source-note">来源：Exponential View《State of the AI Economy》(2026-06-25)图表读数，近似值，标注型号为该时点的Anthropic旗舰模型；Opus 4.1/Opus 4.8档位价格与Tab3定价表官方数据一致。定价峰值出现在Opus 3（约2024年），此后随竞争加剧与推理效率提升持续下探</div>
+    <div class="table-card" data-page-node-id="5XrUHHOeT77NPuyRzjA6em">
+      <h3 data-page-node-id="JUHjgvW8Idwdo8gCDPbxvB">Anthropic 时间线：ARR × 估值 × 资本事件</h3>
+      <table data-page-node-id="rLjhgdrMzpaMyEDGlvW7FR">
+        <thead data-page-node-id="xzvG5KMd3lChizp5F1BfIm"><tr data-page-node-id="QTNd9BFFpAmMANMdYCnl0I"><th style="width:110px" data-page-node-id="absFukAN1HuSuxnBZBSkpx">时间</th><th style="width:130px" data-page-node-id="HWh46V6Wo7dPDCVxpCkr3O">ARR</th><th style="width:130px" data-page-node-id="T7pCY1j9r1gE8eDTCD9ygV">投后估值</th><th data-page-node-id="wgGtD6mtPPvjKZBWYFvo1k">轮次 / 事件</th></tr></thead>
+        <tbody data-page-node-id="2EWoUfIao9iEGw0D6WhxC4">
+          <tr data-page-node-id="maKKGsl3lppvvwRI6JTO3f"><td data-page-node-id="HOEsHa28qYeWGezVeh0u69">2025-03</td><td data-page-node-id="AfVnqbFBXpd8GP5aOWt3He">—</td><td data-page-node-id="SCKFPuCK9sJznwSMcMmv9I"><b data-page-node-id="dFmo26E6djVJt5Ri7aDNav">$615亿</b></td><td data-page-node-id="4tocaSXlfYWBhoJlzowf6M">Series E：$35亿</td></tr>
+          <tr data-page-node-id="Cmxvwh0F4YDdXEBiYytKZG"><td data-page-node-id="A8lD9TUVDYib1X4QhoNfUR">2025-07 / 08</td><td data-page-node-id="gHBj8iMhsW7HO3XSU8khTe">$40亿 → &gt;$50亿</td><td data-page-node-id="gWw4PmpOVG4nYHBTLndHBH">—</td><td data-page-node-id="AmnkVpTjGZtaURD2j0G2Gh">8 月为 Series F 公告中官方披露</td></tr>
+          <tr data-page-node-id="oj7gc1DPXwoPZvPuTwDpYX"><td data-page-node-id="iFZA1asK5NXnQPMS0sn7Sw">2025-09-04</td><td data-page-node-id="grglVhea1HQhYHscFiMhcs">—</td><td data-page-node-id="quxwJdDhsdmqVUmaDDBAQs"><b data-page-node-id="wasjnYF92bZcqaYLsvGyFA">$1,830亿</b></td><td data-page-node-id="ar6XLRVuzDij5hwCnAgwkp">Series F：$130亿（Iconiq、富达、Lightspeed 领投）</td></tr>
+          <tr data-page-node-id="u2aFchaHEIs3uTxBH6CZnA"><td data-page-node-id="5R8oIOh2r9HmEWOimBzLLe">2025-10</td><td data-page-node-id="W3JyT5rXGCL5325P5mc2HP">~$70亿</td><td data-page-node-id="uPTgHgUsLJuuJ1YL3037ta">—</td><td data-page-node-id="HJ4gn3dUGjJDpKs1TGkTC2">Google 云合作公告称运行率「approaching $7B」</td></tr>
+          <tr data-page-node-id="IRR5r7puQEPHrrXHLEe3MA"><td data-page-node-id="E1mveQwnSqnyFTsBwcA8gO">2025-11</td><td data-page-node-id="UK8GKT7RBbPl59K1I1Iubv">—</td><td data-page-node-id="p8oeZ2M3movF6jDqrFQA9B">—</td><td data-page-node-id="TQiC9H1HxQIYUDz9g2ycrz">微软承诺投 $50亿、英伟达承诺投 $100亿</td></tr>
+          <tr data-page-node-id="bJ3LbPW8YZ8dGvGXGDtnDC"><td data-page-node-id="9qsHmrFLyChqiPVfQ6yDjh">2025-12</td><td data-page-node-id="BX7K1ljQFivY5zLDVGeq0L">&gt;$90亿</td><td data-page-node-id="NrFDuRWCIjYezAps7Azwfs">—</td><td data-page-node-id="mOGdpKbeGw4TJuWi7ntH52">达成内部 $9B 年化运行率目标</td></tr>
+          <tr data-page-node-id="GOVlEsQH0aoCt8WX2NNA70"><td data-page-node-id="UBqOdyXKpSR0zVjvCtWDjS">2026-01</td><td data-page-node-id="SuG032tj2MMGiM0ynEoHXe">—</td><td data-page-node-id="hZAbujVflpqsmg2UXuDHtP">$3,500亿</td><td data-page-node-id="9W5Fd72B0kb6IVNXDTnfEH">宣布拟融资 $250亿（宣布时口径）</td></tr>
+          <tr data-page-node-id="hSlcNI9FKTEbXtwTlKxXcB"><td data-page-node-id="JyyROcRzTLPbJ5A20uxm5Z">2026-02-12</td><td data-page-node-id="cSRCwKsUpuVhWiBeFGt6vq">$140亿</td><td data-page-node-id="WU2wk9L2WzHPCvoTx1BM71"><b data-page-node-id="b65iVvKyYi683lQNtfyBHb">$3,800亿</b></td><td data-page-node-id="q3gkLgiG4uD8DhajeszfLR">Series G：$300亿（GIC、Coatue 领投；微软、英伟达、红杉参与）</td></tr>
+          <tr data-page-node-id="w3Ea6zRdST7PHT4iH8Bb6N"><td data-page-node-id="BpVgzRYHUE18UHOvHOVZI7">2026-04-07</td><td data-page-node-id="15u3dJM64Epw0o2ER2pCjk"><b data-page-node-id="frnX3A4qWCqUyTP9kfxnZj">&gt;$300亿</b></td><td data-page-node-id="E7vZbYJeRQCvetr8FyUyJS">—</td><td data-page-node-id="ixFFJeAC2RYxwGZHn8KIYf"><b data-page-node-id="uaDCvv9sC3w4QLNYEOxOMf">官方披露，首次反超 OpenAI 的 $250亿</b></td></tr>
+          <tr data-page-node-id="hOw3YSo0mSPRTkpqqEvggD"><td data-page-node-id="7CsYYGoijsjmXkopkTPETz">2026-04-24</td><td data-page-node-id="tXnU40sjIoYMEpQqdHlJHr">—</td><td data-page-node-id="Aee4IYxwm4MUqks2hv7lde">—</td><td data-page-node-id="XpEr8kRhlMyHr4nS7eYnWd">Google 承诺累计最高再投 $400亿（现金首付 $100亿，对应 $3,500亿估值；余 $300亿 视业绩）</td></tr>
+          <tr data-page-node-id="J8sS6zWA5qgfLqswSxkytX"><td data-page-node-id="pIYWgCistInE6VBCwODtzO">2026-05-28</td><td data-page-node-id="7xcEd6QTAswi0dmBHAAG28">&gt;$470亿</td><td data-page-node-id="HDzufzGyQh6sbpjbHKdHCT"><b data-page-node-id="xhtr9LhofykXl9ZaUbFFYN">$9,650亿</b></td><td data-page-node-id="VqFt1n1vOMW1AkbgBZQ4XO">Series H：$650亿（另含超大规模数据中心 $150亿承诺，其中亚马逊 $50亿）</td></tr>
+          <tr data-page-node-id="g5eDp5cwJhD5g3hufByZjT"><td data-page-node-id="RDRdJCHfyyAWyzrcyEib33">2026-06-01</td><td data-page-node-id="w9SA3ozTAyHrHi4jV05G3m">—</td><td data-page-node-id="hGxH9cymPcT6K0nwRPBDdx">—</td><td data-page-node-id="BOAYP1f4uNpsCWgZu8thVC">向 SEC 保密递交 S-1</td></tr>
+          <tr data-page-node-id="H5Y3WFFyrwuXlbDqJhlgqV"><td data-page-node-id="W6vG47kc20lmK1u8GVFbEw">2026-07 底</td><td data-page-node-id="dkIPkLcd42y3cUKyfigcKc"><b data-page-node-id="2bqIf7h6dNgYPNKDF3h2jg">&gt;$650亿</b></td><td data-page-node-id="zMX7NwLxrLX8AB0m52N5Jw">—</td><td data-page-node-id="tDCwgz4ZS54Fzud2KxN6hq">投资者资料（A 口径）</td></tr>
+          <tr data-page-node-id="v8vcgVXeSnqFUX2pVVKLZi"><td data-page-node-id="ws7ns1yw8OWhfZCSzT9WJd">2026-08-10</td><td data-page-node-id="KxjPV72ReM0b0w83Rn4g7p">$835亿 ⚠️</td><td data-page-node-id="00KV8kBes0mbCB1pIzZRXe">—</td><td data-page-node-id="8l90GBzF3l7TOKdIqkPGYM">华创证券（B 口径，第三方跟踪）</td></tr>
+          <tr data-page-node-id="G4bdQxdWChvwWApkjKuo1z"><td data-page-node-id="ErvCWDMUqBAegCS7VlR4qX">2026-09-07</td><td data-page-node-id="rxbU3yDsfsPEzkzquU2D0f"><b data-page-node-id="9PPTuIBdD21EYMFSWqMqI6">$1,003亿</b> ⚠️</td><td data-page-node-id="nUqHkDDuBDPmowgKJWXysa">—</td><td data-page-node-id="TENzMilo1EnTXC4DYmMCdQ">华创证券（B 口径）；与 A 口径 &gt;$650亿 不可同列</td></tr>
+          <tr data-page-node-id="qgaRYUrZ7DWzA4IFvc90PO"><td data-page-node-id="QEXpnonajTUJynpeFh7pKh">2026 年末</td><td data-page-node-id="s3GCB32RTcwSRraFruvPbL">$1,000–1,200亿</td><td data-page-node-id="QrxYMXthE5AsIPm8gwQJgM">—</td><td data-page-node-id="jt9nG4tGBSxwXhMWlKWjgF">投资者预期（FT），非公司披露</td></tr>
+        </tbody>
+      </table>
+      <details class="fold" data-page-node-id="lf3jBgaBsfSTiZAGYfVxDu">
+        <summary data-page-node-id="uL9NxoM4xFOmOB6TmsHzZW">2025 年之前（2021-05 → 2024-12，共 9 条）</summary>
+        <table data-page-node-id="Mz3ohZLFrUZA6lK0SaglJN">
+          <thead data-page-node-id="l2htu5WX0nLmoGtpxLavKp"><tr data-page-node-id="NomLofDHI98R928M2nrDgC"><th style="width:110px" data-page-node-id="AA2uUCIZbJfAjJAQEjUerD">时间</th><th style="width:130px" data-page-node-id="aw4CDLimdmzhHPc4rF49hO">ARR</th><th style="width:130px" data-page-node-id="WZw2ZY0kH8Trpke5OhgeY3">投后估值</th><th data-page-node-id="WNoxAVDep55eg0pn8YM8wB">轮次 / 事件</th></tr></thead>
+          <tbody data-page-node-id="zRWCNTg7KrChc0SrI7wlYO">
+            <tr data-page-node-id="7yt3Tigd3TdmBIfgxNSqvM"><td data-page-node-id="RDTObUoMTiW2bfKa0kUmDA">2021-05</td><td data-page-node-id="e74UuEYUyI5nKvLXTV7HsI">—</td><td data-page-node-id="sPG8ncyRQjQcW6HaTNBmbr">—</td><td data-page-node-id="PS3K0FyLaSGVjD7zkIDj3M">Series A：$1.24亿</td></tr>
+            <tr data-page-node-id="hG4UDopwuKfTEQqBsaEXUM"><td data-page-node-id="PTkaljKxAqp3VU0WOC0z1o">2022-04</td><td data-page-node-id="cajheRVf3Z6MPTP02bgE19">—</td><td data-page-node-id="tB4yjIgBRmaegsX9DcgfBF">—</td><td data-page-node-id="ZrxlugUVRqIy0k3M1OSABx">Series B：$5.8亿</td></tr>
+            <tr data-page-node-id="cltb1EKGUzH1LoRDs6mKDB"><td data-page-node-id="ZVbSXKL9XaZqhHhEB30UsX">2023-02 / 03</td><td data-page-node-id="2qeMiAZfEf2NF8hwWIluoF">—</td><td data-page-node-id="VEQUMA0N8qSeKMSarJBxm2"><b data-page-node-id="KMQTdiUhzWCaZgFhlp5sum">$41亿</b></td><td data-page-node-id="797Ra99RAg9d4N0dRNeNrE">Google 投 $3亿；同月 Series C 融资 $3亿</td></tr>
+            <tr data-page-node-id="jlFj7XgAo3BIlDi3l2H7kq"><td data-page-node-id="TB9zC4TuIwdY63Qe2KiDtv">2023-09</td><td data-page-node-id="LTDAJDQ5gOaB7arLDSN7bz">—</td><td data-page-node-id="q9dbCx9cWaSNirF4qQbDNb">—</td><td data-page-node-id="6TOb9fpGynYOQKOAErorAi">Amazon 承诺最高 $40亿（首付 $12.5亿），AWS 成为主要云厂商</td></tr>
+            <tr data-page-node-id="OKHh78SHLyt21DuJNGpWxJ"><td data-page-node-id="g6wS8jJD9Nq2XDxir2BhrT">2023-10</td><td data-page-node-id="6FfOFLjzIFnEIXRVpDpMD1">—</td><td data-page-node-id="eFyjxJPJDRUsIBHtOXIWOR">—</td><td data-page-node-id="7ARDa4IvKRFIjdin0JvHhC">Google 承诺最高 $20亿（首付 $5亿）</td></tr>
+            <tr data-page-node-id="8b0sdJGewQeHVdZia0HVmb"><td data-page-node-id="Ag4iwGjlqyBvUACTHIViJO">2023-12</td><td data-page-node-id="5YXaVpiAtgNxvv95Yejvfp"><b data-page-node-id="sH4qAYNqfUgn8PW4dxwCpD">~$1亿</b></td><td data-page-node-id="fB4iG8BrFj1sTtEbhLdjzW">—</td><td data-page-node-id="K7JlEQRcCULrvlP9E5WSMa">ARR 首破 $1亿</td></tr>
+            <tr data-page-node-id="5x1vMbAeAfl7TYWJEUG4Ty"><td data-page-node-id="tB4Vt553l3QEiHoR55mqRB">2024-03</td><td data-page-node-id="h3EyQQshVC2AqhEtP1xp3R">$3.16亿</td><td data-page-node-id="FlUosTFsy1UxbbcxAVJcXv">—</td><td data-page-node-id="n01wUoEMZ4GlabvrWQFZT0">Sacra 估算（Claude 3 Opus 发布后，同比 +1341%）</td></tr>
+            <tr data-page-node-id="AUKWq6OlNv0R32ZDxzlCjD"><td data-page-node-id="GYqnWeBqJg431gGSvcVPK2">2024-11</td><td data-page-node-id="s1uuIkIznsCBcqyrSc2V5P">—</td><td data-page-node-id="IsfFEwpuVG8MATWCD2QwL4">—</td><td data-page-node-id="k9rpbnpYGpppFTTlMe7ee7">Amazon 追加 $40亿，累计 $80亿；AWS 升级为「主要训练伙伴」</td></tr>
+            <tr data-page-node-id="4gJeFNySZGNGcVAO0Mv5fK"><td data-page-node-id="zmhEmmFRhYj2adAJL8h0AC">2024-12</td><td data-page-node-id="nez8yqEczGIAs87G903kn2">~$10亿</td><td data-page-node-id="TRZq7jKGatOpQWfuGcmPvw">—</td><td data-page-node-id="47Mb9oMOp6FEEItcoukD5t">ARR 达 $10亿</td></tr>
+          </tbody>
+        </table>
+      </details>
+      <div class="source-note" data-page-node-id="gfIlUOOnEArPwgH3OtW5eA">来源：SemiAnalysis《Anthropic Funding History》、公司公告与投资者资料、华创证券（B 口径 ARR）、兴业/中信建投/西部/国金等券商研报（Alpha派 检索）、公开报道。ARR 为年化运行率，非经审计收入。⚠️ 标记者为第三方跟踪口径，不可与公司披露数字直接比较。累计私募融资约 $1,000–1,300亿（券商估算区间）。</div>
+    </div>
+
+    <div class="table-card" data-page-node-id="nYc6WD7H3OsLTQPuBSuazx">
+      <h3 data-page-node-id="ogQWAkhmpZcbnD2EYocDHh">OpenAI 时间线：ARR × 估值 × 资本事件</h3>
+      <table data-page-node-id="JQdYDkukpGHMZ6Jx2H8ZNd">
+        <thead data-page-node-id="DTpXvcqvPucCipzEaAeKPH"><tr data-page-node-id="lDS7XXDPJEXGFFn24dCu99"><th style="width:110px" data-page-node-id="QeiXmzQC7PVNt9Bn25HfFy">时间</th><th style="width:130px" data-page-node-id="T7wdR8YV3X14LhiFn4Y9EY">ARR</th><th style="width:140px" data-page-node-id="A0GNWFEWtV6QBpI9Lw8E5p">估值</th><th data-page-node-id="uqG0HLdIFBpvFCLqJ3QWAT">轮次 / 事件</th></tr></thead>
+        <tbody data-page-node-id="rWJ8QzcW75DGJnCSpUAECU">
+          <tr data-page-node-id="8NSv8ZjGXFO0m6oQBlWkkD"><td data-page-node-id="toIpAQ7jzzDBu3n74ODJWD">2025-03</td><td data-page-node-id="E0BQja9696rSepNfNIlZd1">—</td><td data-page-node-id="JBRHBZs6pMMFcRw7lZ3ftj"><b data-page-node-id="Ic631r0DAyXcBHbhUmO2DL">$3,000亿</b></td><td data-page-node-id="vz4sFyeqF4bpMUrDcvlwfJ">Series F：$400亿（软银领投约 $300亿）</td></tr>
+          <tr data-page-node-id="6e6E3okcbljMw3hGeEHoqT"><td data-page-node-id="KlenEuxDnYkfUA8CYKkh5P">2025-06</td><td data-page-node-id="4BQC69Xhmkil477OrQCp5Y">$100亿</td><td data-page-node-id="YZAnzpB0luNZONn2OHwrpe">—</td><td data-page-node-id="SFCBqkMCqLySu1wg3et4TF">官方（CNBC / Reuters 首报）</td></tr>
+          <tr data-page-node-id="8bkyvIRYusB8RjKG1gBB5E"><td data-page-node-id="7iYtySJxqP3grrD11UKzqM">2025-08</td><td data-page-node-id="qmGJZ5AuYfE56QCKiSn9NZ">$130亿</td><td data-page-node-id="ho8CcAEYNB50iZU0dd1DKd">—</td><td data-page-node-id="JOA3VVj98nfo9ovRRkGJAR">The Information / NYT</td></tr>
+          <tr data-page-node-id="krEl1zMP20nuvL9aAXxODv"><td data-page-node-id="gJXkSVwDTPrZG0Rb1unwQU">2025-10</td><td data-page-node-id="FNL39vWwD1GqC4QRhheqOq">—</td><td data-page-node-id="QXWd99mSdF5W4b6PbDgcOX"><b data-page-node-id="6jZvbLpj4A7c1wd44c1bbG">$5,000亿</b></td><td data-page-node-id="xELFzEbeYYK1wj3E1JFEEh">完成营利化重组（OpenAI Group PBC，微软持股 27%）+ 员工售股 $103亿</td></tr>
+          <tr data-page-node-id="7oCAHpiKmlWgzaXKlTiulb"><td data-page-node-id="h8j6yKM18tNOW0wqkGk1Om">2025-12</td><td data-page-node-id="XizouybkMp3ABVhLY3uzSw">$190–214亿</td><td data-page-node-id="e36Lbefjh7ofWXXKC9qHJa">$7,500亿 ⚠️</td><td data-page-node-id="bC0xOFfuIz9KCKsp39P6pN">估值来自券商口径，与 2025/10 的 $5,000亿 存在冲突，见下表</td></tr>
+          <tr data-page-node-id="OWucN3DjVe2lTtoaOBel0W"><td data-page-node-id="CIjOj7y0AWkJSwkfj6RvxF">2025 末</td><td data-page-node-id="p3H9j3IolPTNFc9F3XW16t"><b data-page-node-id="9x2JC8NFQEHzExOqfY4aWa">$200亿+</b>（官方）</td><td data-page-node-id="RVkDLTe0oDDXIcuuAztMKc">—</td><td data-page-node-id="xEDFSB6Ov8FDE3S074ftSc">会计确认收入 $130.7亿，营业亏损 $209.2亿</td></tr>
+          <tr data-page-node-id="5v4hGMOfgkvy4lyGUntxlx"><td data-page-node-id="ihctGH7E6JC2BrLjvueCKc">2026-02-27</td><td data-page-node-id="9y9fCMj369nIib0ogGNDGL">$250亿</td><td data-page-node-id="HLsHK6cdGKDNNJl7eNQQRO">$7,300亿（投前）</td><td data-page-node-id="ofXb8m1G5bIDaw3IAw2nS3">宣布 $1,100亿融资：亚马逊 $500亿、英伟达 $300亿、软银 $300亿</td></tr>
+          <tr data-page-node-id="3AEeoIir32E10QqeoCiFby"><td data-page-node-id="C2q2k150uDHJAA6M0xRH3t">2026-03-31</td><td data-page-node-id="m2bmSzS1k9AsAscpdBQAY0">—</td><td data-page-node-id="KHAgzGbAVrD9Aw47hCnSu6"><b data-page-node-id="NhtUl2rhJjw91Nh1o0R0YZ">$8,520亿</b></td><td data-page-node-id="A0Zje0wV85MdKkiJZCd0l3">扩募交割至 $1,220亿，史上最大单笔私募股权融资</td></tr>
+          <tr data-page-node-id="ZuC3QUVTWPHHbYZg6wipqZ"><td data-page-node-id="6FM69VXan4ntIlnd2t7DzL">2026-06-08</td><td data-page-node-id="Lhw1UyCSWeywMgahqDuu35">—</td><td data-page-node-id="mUCXtLyUb2VSsyD4RfuaOb">—</td><td data-page-node-id="IV8H5lDnbtJTFSUXHuJSVA">向 SEC 保密递交 S-1（晚 Anthropic 一周）</td></tr>
+          <tr data-page-node-id="y36fqkghrDSX7JetJ9rkQY"><td data-page-node-id="Xnd9Nucvh8EsWpl1zsDUpR">2026-07</td><td data-page-node-id="ECAbXUnl0890mFCnnr2Ew3"><b data-page-node-id="Z9Buvc1FGIF5CUQAWLl1jQ">&gt;$400亿</b></td><td data-page-node-id="BXnd7oOtA8enpGS9UgNxEI">—</td><td data-page-node-id="uRNTLiu8Xp7vvlMRYJyFBN">官方；<b data-page-node-id="acVHm886B3wzT6CFuWg58c">企业收入首次超过消费端</b>，结束约 5 个月的 $250亿 平台期</td></tr>
+          <tr data-page-node-id="DcLQIL0LW8YQhFKsKG0kVF"><td data-page-node-id="E0IIvW45wYSwdbwcnqJgtI">2026-08-10</td><td data-page-node-id="vUYT41SzuzK6aoa2hUTVXw">—</td><td data-page-node-id="KFTpNAznnUAcxIRXSNDED3">$8,520亿</td><td data-page-node-id="7nGKpLI7REqmWbxW9AipvM">公司出资 $70亿 员工 tender，估值重申</td></tr>
+          <tr data-page-node-id="jeIJfbfXlteXQovdXK8XFQ"><td data-page-node-id="ChUxUaWcpUTUExVj1eI625">2026-08-14</td><td data-page-node-id="1IXxCnu73NmGwafODo09gV">&gt;$400亿</td><td data-page-node-id="ASpILmSvqO2rJb9IGKeiNH">—</td><td data-page-node-id="tIfQxo16W7Gi689iFFiN9g">公开报道（A 口径）</td></tr>
+          <tr data-page-node-id="hMzYrdXKVrPte1HzA6C2Xx"><td data-page-node-id="fdU7LPuqdFGoKttmLtQoG4">2026-09-06</td><td data-page-node-id="p3r9JoXXgoxIQcoH38cVz3">$834亿 ⚠️</td><td data-page-node-id="2jv0NVcBcfR4O33OdOjVnr">—</td><td data-page-node-id="vXv5fDHjsHquyMRE9KYyyc">华创证券（B 口径）；与 A 口径 &gt;$400亿 冲突</td></tr>
+          <tr data-page-node-id="eD02LqD11lMTbudy4QEaII"><td data-page-node-id="qdHbdGlPYoYFs69kiuOxcu">待定</td><td data-page-node-id="TpCnzYg3wwf3z38t0tTzov">—</td><td data-page-node-id="MBT7JQcFfI5Jin9TMlWj5O">传 $1.2万亿</td><td data-page-node-id="fINhhFXlGF4uHm3S7pgzlT">Pre-IPO 轮目标估值（券商转述，未经公司证实）</td></tr>
+        </tbody>
+      </table>
+      <details class="fold" data-page-node-id="HXZA4lHiHYy9z4JsDqaKJK">
+        <summary data-page-node-id="Yt6P8BAKyipiWXBCQXYXdm">2025 年之前（2015-12 → 2024 末，共 12 条）</summary>
+        <table data-page-node-id="xetP4DIeiuSpLWQeLYM02Q">
+          <thead data-page-node-id="eDzV9ETB7mmBCHDQkcRx8C"><tr data-page-node-id="i4MSADzScALmkO1sLPAy0n"><th style="width:110px" data-page-node-id="nJ7T9cpnDCoTs5i9zybXOD">时间</th><th style="width:130px" data-page-node-id="RJUhIdeyfEYfgv18VI5cp8">ARR</th><th style="width:140px" data-page-node-id="gBH8OPuZc8gud6mF1gV3ED">估值</th><th data-page-node-id="mEn8PD8wrzBSyOLg0om17j">轮次 / 事件</th></tr></thead>
+          <tbody data-page-node-id="3yWlyJUfoBB3txC1utNeFz">
+            <tr data-page-node-id="m9xfacaU7zxAG2IFXB5Xmq"><td data-page-node-id="Cea7GawgqGIyTFZrz5ErY3">2015-12</td><td data-page-node-id="hfcjv6ieREwVMSiMyjkBpQ">—</td><td data-page-node-id="bkEl01QcpKGmAhAkUAztZQ">非营利</td><td data-page-node-id="Mk6wqGh92YvkSyvvQfYXM8">创立，$10亿捐赠承诺（实收约 $1.3亿）</td></tr>
+            <tr data-page-node-id="Nr8Zj53syaVCcw8vgC5NeH"><td data-page-node-id="lWQTCPeMtE2XYVVbF3iMSo">2016-08</td><td data-page-node-id="qdBNfZ4KnpZvWBlFaBd4Dj">—</td><td data-page-node-id="hpngPGcoh03lA3MH5jcsqW">—</td><td data-page-node-id="vKfdnqHHYdYJqzBaL2htXl">Pre-seed：$12万（Y Combinator 等）</td></tr>
+            <tr data-page-node-id="Evp8CHSg0937yQRVpojIGV"><td data-page-node-id="hqQBRHpS9jNCySnduXGDyD">2019-07</td><td data-page-node-id="GYTwRCwsRxwZMS3yFKtFoh">—</td><td data-page-node-id="iKYmuXfAnjINs5ihSwXhqW">~$9亿</td><td data-page-node-id="WySb4AuAB3CCGDXTpT1xtB">微软投资 $10亿，设立 capped-profit 子公司</td></tr>
+            <tr data-page-node-id="p6NKfgGzEH0WNogm0K5el6"><td data-page-node-id="vJ90SUztjDYVruCZPPiY4h">2021</td><td data-page-node-id="aPZ8qLcrTSVBueGEGwwPPq">—</td><td data-page-node-id="H3ZOrTcvSmBYwSAuJWCArF">~$140亿</td><td data-page-node-id="986KfpXfQfNMFD7CCUSan7">微软追投</td></tr>
+            <tr data-page-node-id="xglGFf2k3G46D7BFUe6jj2"><td data-page-node-id="DWgJAuuURz2sz6SIBpsr78">2022 底</td><td data-page-node-id="oeSCEtGhdFGXFkh56qIX8P">~$2亿</td><td data-page-node-id="mko8wrJxrnXgku02M3lUtk">—</td><td data-page-node-id="xlKOAQvRd53d2k7DH6muvK">Sacra 估算</td></tr>
+            <tr data-page-node-id="pBKLdn7sytBDKFBwvf1d02"><td data-page-node-id="tvvYxqb1BxXYenDIBRngD0">2023-01</td><td data-page-node-id="VCjqJy1qt4FGSMLcShBpJG">—</td><td data-page-node-id="dp3MO6t8PRE7rAVf1OtTVH">$290亿</td><td data-page-node-id="HS1ieVT1PnAK91DSzl3MkZ">微软追加 $100亿（多年期）</td></tr>
+            <tr data-page-node-id="3g8SF6AYlvzJupmOhBksz8"><td data-page-node-id="EsXT2HOLcBkonorgMvWcsV">2023-04</td><td data-page-node-id="1UGU6rkJn2RfilaDVdR5eI">—</td><td data-page-node-id="B7f3gwoy257D4xKcGiTfc0">$270–290亿</td><td data-page-node-id="MzZGcwQ81Gc4c8Pj6tkQHF">二级市场约 $3亿（a16z、Founders Fund、红杉、Tiger）</td></tr>
+            <tr data-page-node-id="CAZuYdavgw4HUoYoHISmmP"><td data-page-node-id="XQESKaOPyEWqzhZExyqAZe">2023 底</td><td data-page-node-id="TkXAk0SoMTY87qlX2deTom"><b data-page-node-id="OiKWXaG02RjSdUPPPvHyQL">$20亿</b></td><td data-page-node-id="ng8w7JIhX8upEmQ9Fg9rO0">—</td><td data-page-node-id="PPt7DvSS71FClPxZGVrZ4y">官方口径；CFO 后续确认 2023 年 $20亿</td></tr>
+            <tr data-page-node-id="ZjCedWwUjZCH1jJTWhTy72"><td data-page-node-id="JlVoVyE9D7A3dER0oMBzVL">2024-01</td><td data-page-node-id="70ROn6hEEos7AGEprCY2CH">—</td><td data-page-node-id="WtIQxgw2NlxuEwnz0eDCCu">$860亿</td><td data-page-node-id="nIFzitFMyXMiuO6CTroFkF">员工 tender offer</td></tr>
+            <tr data-page-node-id="yQRFoF5KaPcdqR3m9D1I2Z"><td data-page-node-id="Pq44KKSg6PDTSMneFJzt8i">2024-10-02</td><td data-page-node-id="ZrPxET6axDjfXA6v2ZpoSj">—</td><td data-page-node-id="izueAHFmzMGYVYY1XWpJHE"><b data-page-node-id="F17oXQjeEYJDHAHQ4ItOWQ">$1,570亿</b></td><td data-page-node-id="F5BSct4e6GVAMZJcZYSYh0">Series E：$66亿（Thrive 领投，微软、英伟达、软银、MGX 参与）</td></tr>
+            <tr data-page-node-id="WfXcU67PxVxELhSvKFUyoU"><td data-page-node-id="Mjh9fmVrFn9RPN1WfwlriR">2024-12</td><td data-page-node-id="mObERBJlErZCwSfMrkhvBV">$55亿</td><td data-page-node-id="D1eCkQ2bW0v7oXpF3LZbwC">—</td><td data-page-node-id="C0RDqIdxFE8Fe19nAi6WBS">Reuters 年化运行率 / Epoch AI</td></tr>
+            <tr data-page-node-id="tyAiLQqolxiHy9mUJeVaSS"><td data-page-node-id="oKmB8AX9tVOfhnTArDr7VE">2024 末</td><td data-page-node-id="TThWVd7ITPCgFxxMuoTywn">$60亿（官方）</td><td data-page-node-id="h8b1ZbRSTsLKBO5iygYDin">—</td><td data-page-node-id="nuJR55jyqmjmsG8TnEIE7s">会计确认收入 $37亿（与 ARR 口径分流）</td></tr>
+          </tbody>
+        </table>
+      </details>
+      <div class="source-note" data-page-node-id="0pTInWiyr55dfkxA9GUAwy">来源：国泰海通《OpenAI 深度》（2026/05/30）、兴业证券《OpenAI 深度》（2025/12/28）、海通国际/开源/国金/广发等券商研报（Alpha派 检索）、公开报道。累计融资约 $1,900亿（兴证 2026/09 口径）。2026/04 老股二级交易对应估值约 $7,650亿，较官方 $8,520亿 有一定折价。</div>
+    </div>
+
+    <div class="table-card" data-page-node-id="Ix7iIkaGxNN4IB2BU4Xpbu">
+      <h3 data-page-node-id="WW4pAvIlAYP3Wx2dPgEvBQ">口径冲突与处理方式</h3>
+      <table data-page-node-id="KD2An392ojC9QmWttZ8D1j">
+        <thead data-page-node-id="RorEJycply0gnLgT7LJivl"><tr data-page-node-id="u6m8NB3McAh7SqcVWUbRgE"><th style="width:180px" data-page-node-id="mllgCD7W33Sgmg5ouCgbbE">项目</th><th data-page-node-id="fZe00ofEqJWspNfsZFHMfk">互相冲突的口径</th><th style="width:44%" data-page-node-id="Q8HadJnfdyQaIYzUuHm0GG">处理</th></tr></thead>
+        <tbody data-page-node-id="lR0YT8dmJocoWGg4CysNDa">
+          <tr data-page-node-id="wrdVpJJT0AW85jkcaMwjbK"><td data-page-node-id="KuIW8VTAzQeYv3kbg2EKOj">OpenAI 2025-12 估值</td><td data-page-node-id="CLZFG836THmVuOmT6DSEvx">兴业证券：2025 年 12 月估值「实现 50% 跃升达到 $7,500亿」；另有来源称 2025/10–12 均按 $5,000亿</td><td data-page-node-id="CUDIG71fesruR9d13FenLK">图中不单独设点；与 2026/02 官方宣布的投前 $7,300亿 一并看待，$7,500亿 标为券商口径</td></tr>
+          <tr data-page-node-id="MEIVbqCmTny3id4vcAauta"><td data-page-node-id="e71ULCAFSlNcHpW5EBG17h">OpenAI 2025-03 估值</td><td data-page-node-id="bf4suogNVBkNSHs2zXEmFm">$2,600亿（部分来源）/ $3,000亿（多数中英文来源一致）</td><td data-page-node-id="rwoN9nCXCu1W5KtIbLQGsM">采信 <b data-page-node-id="ce14RUP8ZcWRUgWTgqxIsi">$3,000亿</b>，$2,600亿 可能为 tender 与 primary 的定价差</td></tr>
+          <tr data-page-node-id="k2s7CrPIpezQJpsgVnJG9A"><td data-page-node-id="jUgvjOIYyknXkgTp1p4gDx">OpenAI ARR 2026/06</td><td data-page-node-id="J09FO6OyqGFKyNNFH4XTg7">本看板 Tab2 原表：$55B+（机构测算）／官方与多数来源：约 $25B（2026/02 官方披露后连续约 5 个月平台期）</td><td data-page-node-id="DxpYtNkRqlpt4P0AdzIJT6">本页采信后者。$55B+ 与「官方直到 7 月才突破 $40B」无法衔接，<b data-page-node-id="Z7ZtBvbkc80gXbFMNW7OVE">Tab2 该行建议视为待核</b></td></tr>
+          <tr data-page-node-id="YFuf3CoAnmTNPuudjJ72SH"><td data-page-node-id="f08WS34zhOPqDCk4EQFow1">OpenAI ARR 2026/09</td><td data-page-node-id="J6C6vnqbB9rBOekFqwsVn3">$400亿（A 口径，官方 7 月）vs $834亿（B 口径，9/6）</td><td data-page-node-id="twuHR20Tdjx58yRJgvVB5n">主图仅用 A 口径；B 口径在表中单列并标记，<b data-page-node-id="WMCVGocTwFmKLAsDdws8zn">不可同列比较</b></td></tr>
+          <tr data-page-node-id="FDEHFSYqyuA8YUoIQev31w"><td data-page-node-id="tNZaAHs2jtIWq0SNORD6e9">Anthropic ARR 2026/08–09</td><td data-page-node-id="2fB6vyUmFNIrk9eHcgYrpc">$650亿（A 口径，7 月底）vs $835亿（8/10）、$1,003亿（9/7）</td><td data-page-node-id="649OCb5r87psQo3BqzTdLG">B 口径单独标注；7 月 Yipit 的 $800亿 预测已被其自身说明为高估，不纳入</td></tr>
+          <tr data-page-node-id="t5d2TPnnUEkzE3pK3duUFY"><td data-page-node-id="1lvuSGnAPBZcVfitJHjUiB">Anthropic 2026-01 估值</td><td data-page-node-id="QJhve8UD6J4D6E9F1bUoPY">$3,500亿（融资宣布时）/ $3,800亿（Series G 交割投后）</td><td data-page-node-id="oZiTlVmym3ONBwQvkCEpLI">拆成两个时点分列，不合并</td></tr>
+          <tr data-page-node-id="5GOH8yjVfWaKrlT4dcUwnS"><td data-page-node-id="UELiZt4WE61fayW2UzdvgQ">Google 对 Anthropic 的投资</td><td data-page-node-id="cP0mDnazt6K4IxcAUpkJaM">已投约 $30亿（累计）/ 2026/04 承诺最高再投 $400亿</td><td data-page-node-id="Rbq5gkFdaYWz4umF9sQykU">分列「已投」与「承诺上限」，不混为同一笔</td></tr>
+          <tr data-page-node-id="zr6UXNl4EfeTYJtbo2fslr"><td data-page-node-id="t7OFvlCiO4uNe8bBhwXUkt">Anthropic 早期估值</td><td data-page-node-id="YSARDszK4K3SYHimPhOMH8">Series A / B（2021–2022）投后估值未公开披露</td><td data-page-node-id="c9uijsWnsmHKL1KtdjDTvT">留空，<b data-page-node-id="KYMuOUNp857GVIYbKraqza">不做推算填补</b></td></tr>
+        </tbody>
+      </table>
+      <div class="source-note" data-page-node-id="fWysH9rEBe10S2PPnlYff0">本页数据截至 2026-09-21，以公司公告、投资者资料与券商研报为优先信源。一级市场估值多为交易双方披露或媒体转述，正式引用前建议以 SEC 申报文件为准（两家均已保密递交 S-1，公开版本尚未发布）。</div>
     </div>
   </div>
-  <div class="tab-panel" id="tab4">
-    <div class="caveat-banner">⚠ 本Tab大部分数据来自「模型厂关于近期热点的碎碎念」（谷歌内部大模型调研访谈，2026-07-05），与Tab1/Tab2的SemiAnalysis口径为不同信源，ARR相关表述存在差异，仅作交叉参考，不作为主口径。下方标注"SemiAnalysis"的卡片除外，口径与Tab1/Tab2一致。</div>
-
-    <div class="grid-2">
-      <div class="info-card">
-        <h4>算力供需缺口（SemiAnalysis）</h4>
-        <p>当前OpenAI与Anthropic合计可获取算力仅略超<strong>6GW</strong>，但SemiAnalysis预计到2030年底两家合计算力需求将超过<strong>100GW</strong>——算力瓶颈的本质是供给问题，而非需求不足。</p>
-        <p>这也是Anthropic选择此时IPO的核心动因之一：打开股权和债务融资渠道，用于抢算力、租算力、训练下一代模型。</p>
-      </div>
-      <div class="info-card">
-        <h4>每兆瓦算力ARR效率提升（SemiAnalysis）</h4>
-        <p>Anthropic每兆瓦算力产生的ARR预计年内将达到约<strong>$60M/MW</strong>，而9个月前这一数字仅约<strong>$16M/MW</strong>——接近4倍提升。</p>
-        <p>驱动因素：推理效率提升、token吞吐量提升、新模型定价更高，三者共同作用下，同样的算力能换来更多收入，这正是Tab1毛利率从-94%到~65%的底层机制。</p>
-      </div>
-    </div>
-
-    <div class="grid-2">
-      <div class="info-card">
-        <h4>TPU分配现状</h4>
-        <p>Google V6 在内部已很少使用，基本全部供给Anthropic；新一代V7除DeepMind训练任务外也优先供给Anthropic，甚至Google内部Gemini项目都还没用上。</p>
-        <p>Anthropic弹性占用约200-250万片TPU，占GCP总量30%以上，峰值时期（2026年3-4月）一度接近40%。工作日为保Anthropic的算力需求，Google甚至要停掉自己的部分服务。</p>
-      </div>
-      <div class="info-card">
-        <h4>瓶颈判断：电力 > 芯片本身</h4>
-        <p>近两月首次出现"卡到货但数据中心插不上电"的情况，电力短缺开始成为实质瓶颈。为筛选客户、应对电力限制，TPU与英伟达算力租赁价格预计未来两个月大幅提价，涨幅远超20-30%（长期合同API客户如苹果、三星不受影响）。</p>
-      </div>
-    </div>
-
-    <div class="charts-grid-even">
-      <div class="chart-card">
-        <h3>每$1算力换回收入对比</h3>
-        <div class="chart-wrapper"><canvas id="efficiencyChart"></canvas></div>
-        <div class="source-note">来源：WSJ投资者文件测算（不含训练成本口径，2026年4月）+ 作者按WSJ训练成本预测推算（含训练成本口径）；OpenAI 2028年预计训练支出高达$121B，是含训练成本口径下Anthropic与OpenAI"$85B差距"的主因，OpenAI含训练成本后已跌破$1盈亏线</div>
-      </div>
-      <div class="chart-card">
-        <h3>单机架硬件BOM成本对比（$百万美元）</h3>
-        <div class="chart-wrapper"><canvas id="hardwareCostChart"></canvas></div>
-        <div class="source-note">来源：行业机架级BOM拆解测算；TPU v7机架(64卡)内部BOM约150万美元，为GB200 NVL72(约324万美元)的不到一半；下一代TPU v8i单卡性能已超越GB300</div>
-      </div>
-    </div>
-
-    <div class="table-card">
-      <h3>单机架BOM成本详细拆解（$千美元）</h3>
-      <table>
-        <thead><tr><th>成本项</th><th>NVIDIA GB200 NVL72</th><th>Google TPU v7机架（Ironwood，64卡）</th></tr></thead>
-        <tbody>
-          <tr><td>CPU 晶圆成本</td><td>90</td><td>40</td></tr>
-          <tr><td>CPU DRAM / 其他</td><td>150</td><td>144</td></tr>
-          <tr><td><strong>CPU小计</strong>（36颗Grace CPU / 16颗CPU）</td><td><strong>240</strong></td><td><strong>184</strong></td></tr>
-          <tr><td>HBM</td><td>180</td><td>160</td></tr>
-          <tr><td>加速卡晶圆成本</td><td>160</td><td>51</td></tr>
-          <tr><td>供应商毛利（Nvidia / Broadcom）</td><td>1,728</td><td>422</td></tr>
-          <tr><td>其他</td><td>236</td><td>134</td></tr>
-          <tr><td><strong>加速卡小计</strong>（72颗B200 / 64颗TPU）</td><td><strong>2,304</strong></td><td><strong>768</strong></td></tr>
-          <tr><td>网络</td><td>500</td><td>400</td></tr>
-          <tr><td>其他</td><td>200</td><td>150</td></tr>
-          <tr><td><strong>机架总BOM</strong></td><td><strong>3,244</strong></td><td><strong>1,502</strong></td></tr>
+  <div class="tab-panel" id="tab3" data-page-node-id="5hdt6t7zlwUZF3GarmLQme">
+    <div class="table-card" data-page-node-id="oXx6X4bTvvCCn8p75fuAy1">
+      <h3 data-page-node-id="FO2Z43zPWgfDdJprGUHuGM">Consumer / Team / Enterprise 定价体系</h3>
+      <table data-page-node-id="N6cYEq9RiH30OHIwKcOpJz">
+        <thead data-page-node-id="b4zTL0k6tsVHKT7zNMf8QQ"><tr data-page-node-id="SW93GDcBLfAwlKUfo8NA7A"><th data-page-node-id="f3ORFLq15B2BmUr2IZRmzj">产品线</th><th data-page-node-id="hDlpeNHdswP3PRjxzxp0xr">档位</th><th data-page-node-id="6DPmLqeKcAJ1z3M3VN2v40">价格</th><th data-page-node-id="ishE5bFOxK9uoX2j7lQGsV">说明</th></tr></thead>
+        <tbody data-page-node-id="m2j6lQixGQFNzNLJ7aGQBy">
+          <tr data-page-node-id="SY9UEHZ9N2Lf29eTuFjx8y"><td data-page-node-id="LBOLZdeZ7TAGrIgoGP9CrK">Consumer</td><td data-page-node-id="zPWWVv4LQI4M4CElyLBTII">Free</td><td data-page-node-id="D9S0sJCZzxeEQdG3OzfUrl">$0</td><td data-page-node-id="6Uqq6ls6b8m66JCj4WGCdF">含Claude Code/Cowork/Claude for Microsoft 365</td></tr>
+          <tr data-page-node-id="rHnRjc2hU5JmTY92wjmWHK"><td data-page-node-id="5SF8Jm40LuyJJs7UjIeher">Consumer</td><td data-page-node-id="CBb1Le6YcQ2cqDLljOcD3J">Pro</td><td data-page-node-id="kQtRl3gq2hUELCR3cnNfNE">$20/月</td><td data-page-node-id="DjidmAEKE1PnBGSxfsu134">付费用户平均月支出约$45</td></tr>
+          <tr data-page-node-id="Glg2uqlmPWD3hAjy6EbF2R"><td data-page-node-id="VY8TFsqB3Dcb51japozMhA">Consumer</td><td data-page-node-id="6XpDM3WU3svigDSZT5TX8s">Max 5x</td><td data-page-node-id="ceJuTrlBX4TfACNiD9NwZ3">$100/月</td><td data-page-node-id="JmasAadx8TPLb0pq9TFBYY">—</td></tr>
+          <tr data-page-node-id="9PzbjaQdRC6ePV2B1a6h4i"><td data-page-node-id="FobxcrFUHAR4mSb1bMMHF0">Consumer</td><td data-page-node-id="WbPyGMhBZniTqRM5g5fHLT">Max 20x</td><td data-page-node-id="3yCBpRZ1AsyN2xdMDRNhrL">$200/月</td><td data-page-node-id="wzfFUkjpdSeEEcVit6uMyE">—</td></tr>
+          <tr data-page-node-id="YeEGzS0ls2Yjh9Og0fyajh"><td data-page-node-id="e5XlRVGJn3sDjLJQY6sF6c">Team</td><td data-page-node-id="MWrHP8vrkyMAGOiaCappVH">标准档</td><td data-page-node-id="lyNamPMl1ZXC646oDwlJyW">$20/月（按年付费）</td><td data-page-node-id="pgWtkEseLntQyyigGPsaw6">面向5-150席位中小企业</td></tr>
+          <tr data-page-node-id="YdboRmipuLrN0ZfOxJGa54"><td data-page-node-id="r5UNJSh73Dez6cAav8isbz">Team</td><td data-page-node-id="31FEX0mOwwFrZZpKCQsCUh">高阶档</td><td data-page-node-id="VC5wUMKQinlaiAFZaQ7Yqe">$100/月（按年付费）</td><td data-page-node-id="2geDPtC0VgopQj0zQTbBcH">—</td></tr>
+          <tr data-page-node-id="ybnwmOYsvLR0CIWdnF2vPm"><td data-page-node-id="rP7omkLUAtAB5jQI621BS0">Enterprise</td><td data-page-node-id="8lO9qbXZRdV7rUOiuEPCfg">超150席位</td><td data-page-node-id="TMFa949Cq1IAnUgLHblUGx">$20/月 + 全部API费率</td><td data-page-node-id="D3io6OLR0a0UJ6EVhdEnXv">订阅价不含任何使用额度</td></tr>
         </tbody>
       </table>
-      <div class="source-note">来源：行业机架级BOM拆解测算。核心差异并非芯片晶圆本身（CPU/HBM/晶圆成本两者接近），而在供应商毛利：Nvidia在GB200上留存的毛利（$1,728k）是Broadcom在TPU v7上留存毛利（$422k）的4倍以上，是两种架构总BOM相差超1倍的主因</div>
+      <div class="source-note" data-page-node-id="a1JYpDQ6uJq0csUTIM3Tjc">来源：Anthropic官网，转引自SemiAnalysis</div>
     </div>
 
-    <div class="table-card">
-      <h3>1GW AI算力年化持有+运营成本拆解（$B/年）</h3>
-      <table>
-        <thead><tr><th>成本项</th><th>年化金额（$B）</th><th>占比</th><th>说明</th></tr></thead>
-        <tbody>
-          <tr><td>服务器</td><td>4.6</td><td>58%</td><td>48万块GPU，6,700套系统，6年折旧寿命</td></tr>
-          <tr><td>机房设施</td><td>1.4</td><td>18%</td><td>建筑外壳、供电与散热，14年折旧寿命</td></tr>
-          <tr><td>数据中心网络</td><td>1.0</td><td>13%</td><td>交换与互联网络，6年折旧寿命</td></tr>
-          <tr><td>土地+公用设施</td><td>0.033</td><td>&lt;1%</td><td>土地按资金成本计，公用设施14年寿命</td></tr>
-          <tr><td><strong>资本性支出小计</strong></td><td><strong>7.0</strong></td><td><strong>89%</strong></td><td>—</td></tr>
-          <tr><td>电费</td><td>0.594</td><td>8%</td><td>运行整套机队的电力，占运营支出66%</td></tr>
-          <tr><td>其他运营支出</td><td>0.308</td><td>4%</td><td>人员、维护、管理费用</td></tr>
-          <tr><td><strong>运营支出小计</strong></td><td><strong>0.9</strong></td><td><strong>11%</strong></td><td>—</td></tr>
-          <tr><td><strong>合计</strong></td><td><strong>7.9</strong></td><td><strong>100%</strong></td><td>年化持有+运营总成本</td></tr>
+    <div class="table-card" data-page-node-id="dnGLYjMdJTnLkLzVsg1So9">
+      <h3 data-page-node-id="p5DpuwFaU9FaEqJUL0IUxX">API 模型定价（$ / 百万Token）</h3>
+      <table data-page-node-id="8jUliuY1qPfCtQk9la5brY">
+        <thead data-page-node-id="AVOmaWqjrJxGKIMMPKYQk1"><tr data-page-node-id="D0OaXzH0ZHoGZxwb51c2ij"><th data-page-node-id="zQBqXNaUZj8ybiZh9BUOsV">模型</th><th data-page-node-id="LsmtVcmaKjFsXxacLQRlLv">基础输入</th><th data-page-node-id="d20rjHYlBLMzhRgAnijAhz">5分钟缓存写入</th><th data-page-node-id="2PZmczvJeC0ofdxe26lGGQ">1小时缓存写入</th><th data-page-node-id="FG8HNacwvHBRSHdIlDgaRI">缓存命中/刷新</th><th data-page-node-id="QLtIpk4TZi2P2VA3e3n8en">输出</th></tr></thead>
+        <tbody data-page-node-id="KytoXNR93Ecd4RfRDM92lq">
+          <tr data-page-node-id="3f0eXVb13DcyyI0vxA5R6N"><td data-page-node-id="WljUuL9gL16wBFaKVaLxIt">Claude Fable 5</td><td data-page-node-id="7MWZXT8MESnEDJn4fjIB9k">$10</td><td data-page-node-id="FGXOOfsD5OW2wTfhY2C0jU">$12.50</td><td data-page-node-id="cRKDxpXiy9pnTqpVr2B1sN">$20</td><td data-page-node-id="IZT4LGPRVi1fVDditczsEs">$1</td><td data-page-node-id="Ipc4RnN5pBfKGdFc2fN3iB">$50</td></tr>
+          <tr data-page-node-id="GBDu0NVgUZmCDOmTgSnMfc"><td data-page-node-id="YIZ6lvWsSD1x7mmkczAAK9">Claude Mythos 5（限量）</td><td data-page-node-id="ckhpKX8yy0HHIZaDhKYB90">$10</td><td data-page-node-id="LDvYExX64ViQC1s18qBcW9">$12.50</td><td data-page-node-id="quGmBXO9hd5M8GG6513o4o">$20</td><td data-page-node-id="r7iSLLyDFGXryHbMxhl7Fr">$1</td><td data-page-node-id="XaGaqmmnr7RH3vsAXcFUum">$50</td></tr>
+          <tr data-page-node-id="kaIlf9yn3WgpbNT42yTe8X"><td data-page-node-id="nPDMfrHSnLNxotwpdXQUNf">Claude Opus 4.8/4.7/4.6/4.5</td><td data-page-node-id="djFWBxZFuaydx52Z6mj11S">$5</td><td data-page-node-id="BSCfYQnSnbEXHLf5jGY8Pm">$6.25</td><td data-page-node-id="R5DHcCxD7MdDeUV0MWd6GH">$10</td><td data-page-node-id="N8Jahm4ClcpaZnFCy4TkN5">$0.50</td><td data-page-node-id="se7czO6FxWsdTINHDwRVtY">$25</td></tr>
+          <tr data-page-node-id="GTOGOUi0MXPUBnRyE19bkG"><td data-page-node-id="2Qn3c7jFczvXyqLtROUj0L">Claude Sonnet 5（至2026-08-31）</td><td data-page-node-id="Yir13X5z6FGrVi1Yo2hbp0">$2</td><td data-page-node-id="UXbm5w2gErDnuNRPAd05MS">$2.50</td><td data-page-node-id="trpsL49KrQ1NGAxBQIntyl">$4</td><td data-page-node-id="TtgLYgFThjP24Rn7XV1W1F">$0.20</td><td data-page-node-id="gc0hrIKMsuc5CqDW7YKSz0">$10</td></tr>
+          <tr data-page-node-id="RGjZ9NX1hOuA8xELsJ49l6"><td data-page-node-id="GOruU6osCxixrFceFLKptm">Claude Sonnet 5（2026-09-01起）</td><td data-page-node-id="hN1WzfPQKywKfkQDtG9Qrc">$3</td><td data-page-node-id="oHvU7ofGxaV2dbEWIytKkA">$3.75</td><td data-page-node-id="6RPleauI5gokaEv3Mnfr6P">$6</td><td data-page-node-id="GJml9YMul0WH0Zf1hChGzo">$0.30</td><td data-page-node-id="K6Dx7aRyi62It8YA0YGSCs">$15</td></tr>
+          <tr data-page-node-id="SQnscgODCDHvyUV69SjxD7"><td data-page-node-id="GsAWrXKOXjA2kAUggAI1KA">Claude Haiku 4.5</td><td data-page-node-id="FS5IE4MFhcd0iqbeLPzcm3">$1</td><td data-page-node-id="upjkmkTlSaR3tLWFcoAl0X">$1.25</td><td data-page-node-id="twaC4lVbfnza1RkjqsdVbE">$2</td><td data-page-node-id="CP5py4AG2Xne8oyE4SHX0X">$0.10</td><td data-page-node-id="88zim7kuRCrGZgYRBETERv">$5</td></tr>
         </tbody>
       </table>
-      <div class="source-note">来源：Exponential View《State of the AI Economy》(2026-06-25)；口径为1GW IT容量（6,700套GB200 NVL72系统，48万块GPU）的年化成本（含资金成本），非一次性建设CapEx。按各项折旧年限粗略反推一次性CapEx：服务器约$27.6B（4.6×6年）+ 机房设施约$19.6B（1.4×14年）+ 网络约$6.0B（1.0×6年），合计约<strong>$50-55B/GW</strong>（因年化数含资金成本溢价，实际一次性支出可能略低于此数）。交叉验证：用上表GB200 NVL72机架BOM（$3.244M/机架）× 6,700套 = <strong>$21.7B</strong>，仅计算硬件本身，与此处反推的服务器成本（$27.6B）量级一致，差异或来自存储/冗余/集成费用等口径差异</div>
+      <div class="source-note" data-page-node-id="N9CerIIxEIEBvuWDAYLzkN">来源：Anthropic官网定价页，转引自SemiAnalysis（2026-07）</div>
     </div>
 
-    <div class="grid-2">
-      <div class="info-card">
-        <h4>架构路线之争：MoE"小专家" vs "大专家"</h4>
-        <p>OpenAI/Google现有MoE架构倾向"小专家"路线（专家数量多、单专家维度小），早期适配LongCoT式深度思考，对物理/数学等规则固定问题有效，但编程这类高动态性任务效果存疑。</p>
-        <p>Anthropic 2025年为长文本/长程任务选择"大专家"架构，配合大量高质量反馈循环数据，被认为是其coding场景领先的架构性根源。追赶方需重新预训练不同架构模型，短期难以弥补，这种领先可能形成难以打破的正循环。</p>
+    <div class="info-card" data-page-node-id="lyhVvR3qBlSbFkBCAQxbK9">
+      <h4 data-page-node-id="O2G1c4GOrOF3divucXY6o4">企业客户渗透最新数据</h4>
+      <p data-page-node-id="yzxLjAi0VPVB8eBrpw8quC">Claude企业/API收入占比83-85%；财富10强企业中已有8家采用；年消费$100万美元以上的客户数已破千。Coding与Agent场景是调用量与客户留存的主要驱动力。</p>
+    </div>
+
+    <div class="charts-grid-even" data-page-node-id="ZMhUECFzFUlZtWkjIL82Xm">
+      <div class="chart-card" data-page-node-id="dJrc0vrCUfgDgYc9FxO3x9">
+        <h3 data-page-node-id="InZArN82s3glYmgPlV7DaZ">Claude Code 占 GitHub 总提交比例</h3>
+        <div class="chart-wrapper" data-page-node-id="blROSTtc9jaHjILW3W5KHn"><canvas id="claudeCodeChart" data-page-node-id="U7BJDk3wzzewH7s8zQP5n7"></canvas></div>
+        <div class="source-note" data-page-node-id="qTsKh6jdlJpUITIgRqYSC1">来源：SemiAnalysis Research，7日移动平均，图表读数近似值</div>
       </div>
-      <div class="chart-card">
-        <h3>Google TPU 出货量路线图（万片）</h3>
-        <div class="chart-wrapper"><canvas id="tpuRoadmapChart"></canvas></div>
-        <div class="source-note">来源：谷歌内部调研访谈；2028年Google-台积电合资TPU工厂投产为关键产能释放节点</div>
+      <div class="chart-card" data-page-node-id="Jbzcw5lpsN6gYZFuQZNDZp">
+        <h3 data-page-node-id="fbZLblP71DUdEtjAVUQ36F">间接渠道（Bedrock/Foundry）占ARR比例</h3>
+        <div class="chart-wrapper" data-page-node-id="wZggf1iAxeZCYbmazQhPpu"><canvas id="taasChart" data-page-node-id="PXwY7t5nBNbCFAyvg8kPsC"></canvas></div>
+        <div class="source-note" data-page-node-id="aVaOCFPsK8itnGRxXnd0BD">来源：SemiAnalysis Tokenomics Model；注：图中数值为间接渠道占ARR比例，另有20-30%的收入分成是Anthropic向渠道方支付的费率，二者为不同指标</div>
       </div>
     </div>
 
-    <div class="table-card">
-      <h3>TPU 量产（MP）时间表</h3>
-      <table>
-        <thead><tr><th>型号</th><th>代号</th><th>代工厂</th><th>制程</th><th>Compute Die数量</th><th>Die尺寸（mm²）</th><th>量产（MP）时间</th></tr></thead>
-        <tbody>
-          <tr><td>TPU v7</td><td>Ironwood</td><td>Broadcom</td><td>3nm</td><td>2</td><td>600</td><td>2025年已量产</td></tr>
-          <tr><td>TPU v8x</td><td>Zebrafish</td><td>MediaTek</td><td>3nm</td><td>1</td><td>400</td><td>2026年下半年量产</td></tr>
-          <tr><td>TPU v8ax / v8p</td><td>Sunfish</td><td>Broadcom</td><td>3nm</td><td>4</td><td>490</td><td>2027年量产</td></tr>
-          <tr><td>TPU v8e</td><td>Humufish</td><td>MediaTek</td><td>2nm</td><td>4</td><td>490</td><td>2027年下半年量产</td></tr>
-          <tr><td>TPU v9p</td><td>Pumafish</td><td>Broadcom</td><td>2nm</td><td>8</td><td>510</td><td>2027年量产</td></tr>
-          <tr><td>TPU v9e</td><td>—</td><td>MediaTek</td><td>2nm</td><td>12</td><td>约500</td><td>2028年量产</td></tr>
-        </tbody>
-      </table>
-      <div class="source-note">来源：行业TPU产品路线图测算。双代工策略（Broadcom + MediaTek并行）+ Compute Die数量随制程收缩持续增加（2颗→12颗），显示Google通过chiplet堆叠弥补单die性能提升放缓的路径</div>
-    </div>
-
-    <div class="table-card">
-      <h3>TPU 出货量分型号明细（万片）</h3>
-      <table>
-        <thead><tr><th>型号</th><th>代工厂</th><th>2026E</th><th>2027E</th></tr></thead>
-        <tbody>
-          <tr><td>TPU v7（Ironwood）</td><td>Broadcom</td><td>180</td><td>—（已进入量产尾声，产能让位v8系列）</td></tr>
-          <tr><td>TPU v8x（Zebrafish）</td><td>MediaTek</td><td>40</td><td>200</td></tr>
-          <tr><td>TPU v8ax / v8p（Sunfish）</td><td>Broadcom</td><td>90</td><td>330</td></tr>
-          <tr><td>TPU v8e（Humufish）</td><td>MediaTek</td><td>30</td><td>170</td></tr>
-          <tr><td><strong>合计</strong></td><td>—</td><td><strong>340</strong></td><td><strong>700</strong></td></tr>
-        </tbody>
-      </table>
-      <div class="source-note">来源：行业TPU出货量测算，图表读数近似值，各型号已按官方2026E 340万/2027E 700万合计口径调整，仅供观察型号结构变化（v7逐步让位给v8系列，Broadcom与MediaTek双供应商占比大致均衡）</div>
+    <div class="chart-card" data-page-node-id="BYikMHLJRkHAUgJCqlrIKY">
+      <h3 data-page-node-id="vvBqtS2zjvoSoytYxoPiJM">旗舰模型输出定价演变（$/百万输出Token，对数轴）</h3>
+      <div class="chart-wrapper" data-page-node-id="S4qZ0oMNwffgQ5JkxU47qi"><canvas id="pricingEvolutionChart" data-page-node-id="HQ1Pd5JwQzJHIm6hrEECe1"></canvas></div>
+      <div class="source-note" data-page-node-id="VPNSk1TrdiuELU07NgRSDt">来源：Exponential View《State of the AI Economy》(2026-06-25)图表读数，近似值，标注型号为该时点的Anthropic旗舰模型；Opus 4.1/Opus 4.8档位价格与Tab3定价表官方数据一致。定价峰值出现在Opus 3（约2024年），此后随竞争加剧与推理效率提升持续下探</div>
     </div>
   </div>
-  <div class="tab-panel" id="tab5">
-    <div class="grid-2">
-      <div class="info-card">
-        <h4>开源侵蚀速度：72% → 33%（一年内）</h4>
-        <p>据Exponential View统计，在OpenRouter（自选模型路由平台）上，Google+OpenAI+Anthropic三家闭源龙头合计token份额从一年前的<strong>72%</strong>降至目前的<strong>33%</strong>，份额被DeepSeek、MiniMax、Xiaomi、Tencent等开源模型抢走。</p>
-        <p>OpenRouter用户是主动选择模型路由的价格敏感型开发者，并非市场整体截面，但方向性信号值得关注——闭源前沿模型的定价权正被开源追赶者持续压缩。</p>
+  <div class="tab-panel" id="tab4" data-page-node-id="edPy6SsSYPPf7isik2jKXP">
+    <div class="caveat-banner" data-page-node-id="wna68tB5hZd5dY8eokSDAx">⚠ 本Tab大部分数据来自「模型厂关于近期热点的碎碎念」（谷歌内部大模型调研访谈，2026-07-05），与Tab1/Tab2的SemiAnalysis口径为不同信源，ARR相关表述存在差异，仅作交叉参考，不作为主口径。下方标注"SemiAnalysis"的卡片除外，口径与Tab1/Tab2一致。</div>
+
+    <div class="grid-2" data-page-node-id="GLbUdCTNXKw2rkIco0gwWX">
+      <div class="info-card" data-page-node-id="zHOXNgM8QCdaK7FDqMRT40">
+        <h4 data-page-node-id="J0fmJcCqElYDBDvEaqi7S1">算力供需缺口（SemiAnalysis）</h4>
+        <p data-page-node-id="bgiWk5GzzbNWwCpRXpsn0L">当前OpenAI与Anthropic合计可获取算力仅略超<strong data-page-node-id="jTMCTWgicobffnmZaMJlRp">6GW</strong>，但SemiAnalysis预计到2030年底两家合计算力需求将超过<strong data-page-node-id="Q8KsErCz3O5jDAfHRYgL5a">100GW</strong>——算力瓶颈的本质是供给问题，而非需求不足。</p>
+        <p data-page-node-id="GTeL6kfj3nCWC7XDL1lxfE">这也是Anthropic选择此时IPO的核心动因之一：打开股权和债务融资渠道，用于抢算力、租算力、训练下一代模型。</p>
       </div>
-      <div class="chart-card">
-        <h3>前沿模型商品化速度（达到同一能力门槛所需最低单价，$/M tok，对数轴）</h3>
-        <div class="chart-wrapper"><canvas id="commoditizationChart"></canvas></div>
-        <div class="source-note">来源：Exponential View《State of the AI Economy》(2026-06-25)，图表读数近似值；闭源前沿线代表Claude/GPT等旗舰模型首发价，开源线代表约1年后追平同等能力的开源模型价格</div>
+      <div class="info-card" data-page-node-id="VMb8Q0uNSDSuQAYJlEDd8k">
+        <h4 data-page-node-id="nFDZTWQ9lKUGEYbDiwNVx9">每兆瓦算力ARR效率提升（SemiAnalysis）</h4>
+        <p data-page-node-id="gbO77cPf28jI3E8rmKPakL">Anthropic每兆瓦算力产生的ARR预计年内将达到约<strong data-page-node-id="ISWHq2KkuhI4u6gdoueEDZ">$60M/MW</strong>，而9个月前这一数字仅约<strong data-page-node-id="H8vKXwzQZGUQIc8IhMmGj2">$16M/MW</strong>——接近4倍提升。</p>
+        <p data-page-node-id="97o4D46R18IPTlzaDPBWJw">驱动因素：推理效率提升、token吞吐量提升、新模型定价更高，三者共同作用下，同样的算力能换来更多收入，这正是Tab1毛利率从-94%到~65%的底层机制。</p>
       </div>
     </div>
 
-    <div class="bottom-grid">
-      <div>
-        <div class="section-title"><span class="icon">📅</span>催化剂跟踪</div>
-        <div class="table-card">
-          <div class="timeline" id="catalystTimeline"><!-- JS填充 --></div>
+    <div class="grid-2" data-page-node-id="Bcv2DpwdrTA4oPqNMAQPH4">
+      <div class="info-card" data-page-node-id="HUvC9yZrlS0VFlFhB5jQa4">
+        <h4 data-page-node-id="HDUQOqCQSJvck3oFg1QGRP">TPU分配现状</h4>
+        <p data-page-node-id="ARQVR8dmWXBHSAyHTzVxjO">Google V6 在内部已很少使用，基本全部供给Anthropic；新一代V7除DeepMind训练任务外也优先供给Anthropic，甚至Google内部Gemini项目都还没用上。</p>
+        <p data-page-node-id="Edc373jJSE0EtxgRKyJNCV">Anthropic弹性占用约200-250万片TPU，占GCP总量30%以上，峰值时期（2026年3-4月）一度接近40%。工作日为保Anthropic的算力需求，Google甚至要停掉自己的部分服务。</p>
+      </div>
+      <div class="info-card" data-page-node-id="E0DoPvytLY5uP0Yt7iKE4E">
+        <h4 data-page-node-id="paxNTUyyEA40imOY5fvz6V">瓶颈判断：电力 > 芯片本身</h4>
+        <p data-page-node-id="Rq5mhIFYGbG389J6bRG3fB">近两月首次出现"卡到货但数据中心插不上电"的情况，电力短缺开始成为实质瓶颈。为筛选客户、应对电力限制，TPU与英伟达算力租赁价格预计未来两个月大幅提价，涨幅远超20-30%（长期合同API客户如苹果、三星不受影响）。</p>
+      </div>
+    </div>
+
+    <div class="charts-grid-even" data-page-node-id="kvWoRD2SviJqj5Oc28ruQF">
+      <div class="chart-card" data-page-node-id="dWBZ7JAALo43ob0aEuYmer">
+        <h3 data-page-node-id="N4WQ7Id5SEBoVyOp8w7a3M">每$1算力换回收入对比</h3>
+        <div class="chart-wrapper" data-page-node-id="shPR8N54aZdHkyUk02h8lc"><canvas id="efficiencyChart" data-page-node-id="JlHRv4WBN1KAO50skXgsn3"></canvas></div>
+        <div class="source-note" data-page-node-id="SdLEcIUcOxBMrwHX1dLAHi">来源：WSJ投资者文件测算（不含训练成本口径，2026年4月）+ 作者按WSJ训练成本预测推算（含训练成本口径）；OpenAI 2028年预计训练支出高达$121B，是含训练成本口径下Anthropic与OpenAI"$85B差距"的主因，OpenAI含训练成本后已跌破$1盈亏线</div>
+      </div>
+      <div class="chart-card" data-page-node-id="DbRbIpRaoZyn2xepf5SH5H">
+        <h3 data-page-node-id="KyBUuTyoQFHGC8dQWr6hmA">单机架硬件BOM成本对比（$百万美元）</h3>
+        <div class="chart-wrapper" data-page-node-id="E2bzGc2XiIdzdXDwaLPshj"><canvas id="hardwareCostChart" data-page-node-id="dikKINM3ZBzXy5PtHdPlUU"></canvas></div>
+        <div class="source-note" data-page-node-id="pEuXiXGD0Le5zKZ5uAeFOP">来源：行业机架级BOM拆解测算；TPU v7机架(64卡)内部BOM约150万美元，为GB200 NVL72(约324万美元)的不到一半；下一代TPU v8i单卡性能已超越GB300</div>
+      </div>
+    </div>
+
+    <div class="table-card" data-page-node-id="2QfuyLxDZFDt5wdCGYJd9d">
+      <h3 data-page-node-id="wa2mPqBo6W8xLaIbceL6UI">单机架BOM成本详细拆解（$千美元）</h3>
+      <table data-page-node-id="1HUcZxipGrK72qQJSArWCC">
+        <thead data-page-node-id="UkAF2rXTsYC8uxLs1WH8kO"><tr data-page-node-id="4QptImjkIwD7jqE7QQFR08"><th data-page-node-id="tDWNAxUtGqOd43I5EscMeU">成本项</th><th data-page-node-id="YiXEws7mGV2lBRhuWudl6l">NVIDIA GB200 NVL72</th><th data-page-node-id="oz1hq7ADul4lY1rNFEcxTq">Google TPU v7机架（Ironwood，64卡）</th></tr></thead>
+        <tbody data-page-node-id="sIIuGujmmZBMSBQfxYjhdd">
+          <tr data-page-node-id="FFCfRAeI6rvL5o3JSPPmch"><td data-page-node-id="BpUOrm3FVcqFq0wYyCXlRm">CPU 晶圆成本</td><td data-page-node-id="LE8rTpps0wy5BXkDUx98fg">90</td><td data-page-node-id="EPA7xPpOQqwG8WaL4uxTNU">40</td></tr>
+          <tr data-page-node-id="S7xA5h6buS67OEwBt2xgGn"><td data-page-node-id="uXGhnzMjusQfNy1VpFFs5a">CPU DRAM / 其他</td><td data-page-node-id="WdMRCJ0iIAX6C26IBcufQI">150</td><td data-page-node-id="SOkpQI8hp9NNZVPUyRUL8A">144</td></tr>
+          <tr data-page-node-id="yTmRcKgM1O4yXKiALPXDLP"><td data-page-node-id="MT87NATtEuYup6wsHFPTEa"><strong data-page-node-id="poQ2q0vnDsrLkcIDGhK7iR">CPU小计</strong>（36颗Grace CPU / 16颗CPU）</td><td data-page-node-id="Ud5BKINDPArk6RL1Ckbu67"><strong data-page-node-id="IE8Kw42oypntnnKGR5vGIk">240</strong></td><td data-page-node-id="hqBsKHcpZ6ajeYHQ0WBH7O"><strong data-page-node-id="DD1DAlLPuY89OFNyUiO73E">184</strong></td></tr>
+          <tr data-page-node-id="k0p3pxw9Xd6K8QijDHnfbr"><td data-page-node-id="lZ8EJHQIqxHQL1AtwafVW8">HBM</td><td data-page-node-id="WlesqvtuBmbdMlVW94QpF6">180</td><td data-page-node-id="darv3r99YjemYG8kxe55Bq">160</td></tr>
+          <tr data-page-node-id="ATCq1YIYXtXYhBIlrKuZD2"><td data-page-node-id="aMZajCw7Ss2fA1ty8TCTf1">加速卡晶圆成本</td><td data-page-node-id="yqoqqh2bkBfUvhBfnWPjPG">160</td><td data-page-node-id="OxHlaDXDp3E9RsqGWd1G1T">51</td></tr>
+          <tr data-page-node-id="15lh9CL3Bt6LWvC31S6GT6"><td data-page-node-id="4rlDmS8TjP8on3ucb0KptT">供应商毛利（Nvidia / Broadcom）</td><td data-page-node-id="62GrIduqxAeyVtcQ5BceCC">1,728</td><td data-page-node-id="4fOigdzcZUIjF3XNd9aWEa">422</td></tr>
+          <tr data-page-node-id="aCnZMxswnKmi384QNalHFy"><td data-page-node-id="8CMdCoF5OOMdLlN1RtZWRa">其他</td><td data-page-node-id="2nx7BTqptLxIKvnHAAzVCp">236</td><td data-page-node-id="54lJmuTcaG18fnWHH7t4Pj">134</td></tr>
+          <tr data-page-node-id="DzL6uyjv2VFCM23PPQ4wEc"><td data-page-node-id="pvDZdM2AAesl5PgMPd8BVH"><strong data-page-node-id="PoE3HORWgUSvvovN2JhQ95">加速卡小计</strong>（72颗B200 / 64颗TPU）</td><td data-page-node-id="7MgH4ID57ca1FoaXMNMO8T"><strong data-page-node-id="0HkwA1Mc4OD1WD3bHQIJr3">2,304</strong></td><td data-page-node-id="1Z2aG8kQ9YuX4fu405xDWX"><strong data-page-node-id="amGqWETH8dImitU6ZASmKF">768</strong></td></tr>
+          <tr data-page-node-id="FtcZbXck749i4FKfPLRPry"><td data-page-node-id="1wahrLFxqfQbnFd2FhpNTw">网络</td><td data-page-node-id="3gYA6z6IFWqB8jaVDzeA61">500</td><td data-page-node-id="JbG4WwFnS5JeZ2C4MQTMIj">400</td></tr>
+          <tr data-page-node-id="KQ0bXXQsRVEXVLQE93qDPb"><td data-page-node-id="t6zFFxL4SNAwojnPscX7kZ">其他</td><td data-page-node-id="VbzDhlFEZKpUMZjYNQjeAG">200</td><td data-page-node-id="t8qoeMFKcr5UxLvzQVLFxx">150</td></tr>
+          <tr data-page-node-id="fBrCEH0RTHGqP2pgMiJBFq"><td data-page-node-id="AMdxKjySXAhEyglEwDTF37"><strong data-page-node-id="fFFLmM5fVBgtL4JvP64o0n">机架总BOM</strong></td><td data-page-node-id="IXL8BGDu29nyaHCqlDvxdK"><strong data-page-node-id="9QeklEAOXmdxLc3IYrwN6v">3,244</strong></td><td data-page-node-id="3F6l5EcmFoDjf1CZLp52hL"><strong data-page-node-id="l8CVuBzdZSX80FjRhIBHBy">1,502</strong></td></tr>
+        </tbody>
+      </table>
+      <div class="source-note" data-page-node-id="TP7IWKD2hAuPswbBT5NHHk">来源：行业机架级BOM拆解测算。核心差异并非芯片晶圆本身（CPU/HBM/晶圆成本两者接近），而在供应商毛利：Nvidia在GB200上留存的毛利（$1,728k）是Broadcom在TPU v7上留存毛利（$422k）的4倍以上，是两种架构总BOM相差超1倍的主因</div>
+    </div>
+
+    <div class="table-card" data-page-node-id="OqFHjOojySe4hnvmYXxoUE">
+      <h3 data-page-node-id="hC2O6psX0TEom6q957XRdS">1GW AI算力年化持有+运营成本拆解（$B/年）</h3>
+      <table data-page-node-id="v3vMACV7qHVS6w1BTb3K9P">
+        <thead data-page-node-id="dabxywZLK6jnpKwiggf9Di"><tr data-page-node-id="5NWyKRZFFOFhUbziqTFFJC"><th data-page-node-id="qQKJhSiQSUYFaZSqzOrZSz">成本项</th><th data-page-node-id="1HZfHEsi3d33IxNFoDangQ">年化金额（$B）</th><th data-page-node-id="mf0Bppo0xA5we74zZLA7qk">占比</th><th data-page-node-id="PvpiVMWAJsukbwDhfRZNK8">说明</th></tr></thead>
+        <tbody data-page-node-id="4NmlrObpUc9BLxDKvRF01m">
+          <tr data-page-node-id="RL2EVi13X0qL23bgOh1HcL"><td data-page-node-id="r7GU1YwzEJYP2SPMDdSqOw">服务器</td><td data-page-node-id="WXb1cTvPrSZz9HN5k8YENm">4.6</td><td data-page-node-id="6egJmGW6rBBfl1xH2JXDoD">58%</td><td data-page-node-id="Te9X0VUt9KjpMBEtNUafM7">48万块GPU，6,700套系统，6年折旧寿命</td></tr>
+          <tr data-page-node-id="r3nQACfj5j8MFsv8E7mTHv"><td data-page-node-id="NtflsFo6hnoNpzioCq1Z4W">机房设施</td><td data-page-node-id="VqGUWHTmY84V2v3etGnlO0">1.4</td><td data-page-node-id="aHeppmyQFahVt34GdUKRuw">18%</td><td data-page-node-id="eohVM4XDLMAATXENDsb78k">建筑外壳、供电与散热，14年折旧寿命</td></tr>
+          <tr data-page-node-id="GuRggVmwoXIi5ABIISONdl"><td data-page-node-id="70cVyJgUifb6N3UxnyCxOq">数据中心网络</td><td data-page-node-id="rSfyQlEm8rwuff6kOSjnH3">1.0</td><td data-page-node-id="8NpznyYHDCBJWKuiDv6JcH">13%</td><td data-page-node-id="naIICXoEstIN3aDrxUEFkB">交换与互联网络，6年折旧寿命</td></tr>
+          <tr data-page-node-id="O1LT3hglds0v9QN20qT2jD"><td data-page-node-id="lGvWxqJwNq4tnBgg3pqVqD">土地+公用设施</td><td data-page-node-id="LZ8W3ggrgLN8dWsbQ2hiIt">0.033</td><td data-page-node-id="2xaW1DdVtOlMzXGuvhn0S8">&lt;1%</td><td data-page-node-id="6mDH0D1AdG4BKTAftqIq7U">土地按资金成本计，公用设施14年寿命</td></tr>
+          <tr data-page-node-id="2P8QAQImtWcjeQhb20IfpJ"><td data-page-node-id="PZXSSvwFEAYkSAwYOcfJNx"><strong data-page-node-id="ezPlxqb11qodTJXo7jXeOt">资本性支出小计</strong></td><td data-page-node-id="tv7HFFp1clYfIVeVaILbOC"><strong data-page-node-id="4bgSyL0OclbX7vXecVcixI">7.0</strong></td><td data-page-node-id="jTogKXAmZWtLxT3xO2V3HH"><strong data-page-node-id="6ssQFtNciCW7xAtmpojisg">89%</strong></td><td data-page-node-id="PXoA5oNjZXu9hrwFgpoHhE">—</td></tr>
+          <tr data-page-node-id="YdWQxXUJjsf6ynGVGGgXQT"><td data-page-node-id="Z7GrEoVgokdYrzhB9SsMzA">电费</td><td data-page-node-id="4ZKFsCviE1shc08yOLfcwe">0.594</td><td data-page-node-id="c6G4iZDyG6BQJDDnKw0koJ">8%</td><td data-page-node-id="PtCqIaILnPtwBPIf2txdwm">运行整套机队的电力，占运营支出66%</td></tr>
+          <tr data-page-node-id="1cvfnBQCDhQkEQ4YmVIfcV"><td data-page-node-id="tE4E42uGeToiEAkj64MmKA">其他运营支出</td><td data-page-node-id="CPDfPBSGRtIfDmktt3bqhk">0.308</td><td data-page-node-id="Q225hlF0lxclLFXeKcPgXj">4%</td><td data-page-node-id="jYzeRjR5or6VGVRYgfJZ5P">人员、维护、管理费用</td></tr>
+          <tr data-page-node-id="KfhL5IxdzB5FNXNJYMLNpw"><td data-page-node-id="RxFtEIFkBFigAGfwBdKtUZ"><strong data-page-node-id="6S27BAxm2YdFYGKGGbazOz">运营支出小计</strong></td><td data-page-node-id="9Fs4C6QgWgNHs4Fk1NGQXv"><strong data-page-node-id="WDuptufXmrSFnXFxQXeFsu">0.9</strong></td><td data-page-node-id="hTprdB74jf9hSoGudSFM66"><strong data-page-node-id="RQhHFlbw8h6ZcyUJZPibhb">11%</strong></td><td data-page-node-id="OpmJ8HkuASTYvXCnffu4yH">—</td></tr>
+          <tr data-page-node-id="2HII0h4weXiARhO9huuFNO"><td data-page-node-id="8qysirEu9RqIH43ZO1pDUr"><strong data-page-node-id="lF4Lw9LzCCBOGAtTyn4Vk6">合计</strong></td><td data-page-node-id="Xkur6uU4bWJO66ZTMjsrWV"><strong data-page-node-id="c994wuDvBF0EI5aUOiD6lO">7.9</strong></td><td data-page-node-id="sMIQdTvWDQ7dAjNUVajDTJ"><strong data-page-node-id="qEhRrqUT6LxGyvVIQAToKx">100%</strong></td><td data-page-node-id="7iMGGLrEtcT2AJADKWBDpq">年化持有+运营总成本</td></tr>
+        </tbody>
+      </table>
+      <div class="source-note" data-page-node-id="YU7bMl4n0skzoHhrmdeDfU">来源：Exponential View《State of the AI Economy》(2026-06-25)；口径为1GW IT容量（6,700套GB200 NVL72系统，48万块GPU）的年化成本（含资金成本），非一次性建设CapEx。按各项折旧年限粗略反推一次性CapEx：服务器约$27.6B（4.6×6年）+ 机房设施约$19.6B（1.4×14年）+ 网络约$6.0B（1.0×6年），合计约<strong data-page-node-id="JJvj9ZcCA5CmcqaX0QI0yJ">$50-55B/GW</strong>（因年化数含资金成本溢价，实际一次性支出可能略低于此数）。交叉验证：用上表GB200 NVL72机架BOM（$3.244M/机架）× 6,700套 = <strong data-page-node-id="PHBzvDj0roitOaAXOJfSkN">$21.7B</strong>，仅计算硬件本身，与此处反推的服务器成本（$27.6B）量级一致，差异或来自存储/冗余/集成费用等口径差异</div>
+    </div>
+
+    <div class="grid-2" data-page-node-id="EgBE1Sk6wyJ03J1xrhm2sF">
+      <div class="info-card" data-page-node-id="UCkbXJoIfGHmeHxlAiMrem">
+        <h4 data-page-node-id="nuIMiF7OrBQG0vrTAl4gVh">架构路线之争：MoE"小专家" vs "大专家"</h4>
+        <p data-page-node-id="O0TQw93qSLDqf43CuQpBPe">OpenAI/Google现有MoE架构倾向"小专家"路线（专家数量多、单专家维度小），早期适配LongCoT式深度思考，对物理/数学等规则固定问题有效，但编程这类高动态性任务效果存疑。</p>
+        <p data-page-node-id="T2Hv3YDSMpIFqASeOag7qT">Anthropic 2025年为长文本/长程任务选择"大专家"架构，配合大量高质量反馈循环数据，被认为是其coding场景领先的架构性根源。追赶方需重新预训练不同架构模型，短期难以弥补，这种领先可能形成难以打破的正循环。</p>
+      </div>
+      <div class="chart-card" data-page-node-id="I1pRj8e9vo4uQZhvlfGCiZ">
+        <h3 data-page-node-id="cWlVUCObUj5kVhGElA6ZjX">Google TPU 出货量路线图（万片）</h3>
+        <div class="chart-wrapper" data-page-node-id="2apKhnm6VR03XEaH7qf9mN"><canvas id="tpuRoadmapChart" data-page-node-id="6i5BUoJUA02fB20yhBWSLD"></canvas></div>
+        <div class="source-note" data-page-node-id="o71dE9Ptxj0CDAoAVSdG3F">来源：谷歌内部调研访谈；2028年Google-台积电合资TPU工厂投产为关键产能释放节点</div>
+      </div>
+    </div>
+
+    <div class="table-card" data-page-node-id="hUImmrTavz1ZXxqGmNukcK">
+      <h3 data-page-node-id="vFuu0HUX1ylDywAv8Q5gxI">TPU 量产（MP）时间表</h3>
+      <table data-page-node-id="UKT8hcRNHL9FZdT3CEkYMS">
+        <thead data-page-node-id="Ivj1u53wJhr5H9sc3zzE7C"><tr data-page-node-id="rhrFRg65QiVs0wHlGvblyi"><th data-page-node-id="BGFIYf9yJZapTgXagVbVnN">型号</th><th data-page-node-id="Hqqct5ON8VIBDlhKlck5TR">代号</th><th data-page-node-id="1zGVU4p1HMHJuFyWJapk05">代工厂</th><th data-page-node-id="t5xXpcKKrBrYpRBKQfiRjh">制程</th><th data-page-node-id="ejMxea23pIfsvNdbtBJITN">Compute Die数量</th><th data-page-node-id="F1FQ6cHWaBcz7vL8CQCxV6">Die尺寸（mm²）</th><th data-page-node-id="EwQ8Ncl1SkhL1OhdDVsYJp">量产（MP）时间</th></tr></thead>
+        <tbody data-page-node-id="Ijva6LB5uKT20gYyzviEWJ">
+          <tr data-page-node-id="6cHbukYJrUyub7FhDCPN0S"><td data-page-node-id="o1SlirSjIq2QoPICKcj1d5">TPU v7</td><td data-page-node-id="Uzf1PxY6i7SOyYBF51kYJe">Ironwood</td><td data-page-node-id="Vm83IocSpV31VRn98DXEhq">Broadcom</td><td data-page-node-id="0KqdCpg37sGMLq2CR3nzqc">3nm</td><td data-page-node-id="gkjnzkWhrTBk6UiqAr8YWh">2</td><td data-page-node-id="i7aciRu9Gtwj1hnMIDXbwE">600</td><td data-page-node-id="Erh8K2EDSBYaAXAjm8l7N9">2025年已量产</td></tr>
+          <tr data-page-node-id="DDKiQP299Zwq7VcPiDw8dw"><td data-page-node-id="qUiTYEamquBZ7T1INdRrnN">TPU v8x</td><td data-page-node-id="G82G8jI6ZuOQporyC5uMkF">Zebrafish</td><td data-page-node-id="CdETI7pZtq5z4MrfhuiA8x">MediaTek</td><td data-page-node-id="vBuPMkn83wDnjtuIxsLxVl">3nm</td><td data-page-node-id="L5CDWxIVATJYqhU7C4nz2v">1</td><td data-page-node-id="KrwMJz99OHnwkTBw6w5Nbm">400</td><td data-page-node-id="4hunpvTA9UdPIGyA77D1lC">2026年下半年量产</td></tr>
+          <tr data-page-node-id="V8qOAPxxFD8j21RYMj4rvR"><td data-page-node-id="fKfLdirPu6sfdhI4B8f15n">TPU v8ax / v8p</td><td data-page-node-id="bbxYYSpU9w1io5JvBs649H">Sunfish</td><td data-page-node-id="kDabvKYnIRmHKBMo6AwXVi">Broadcom</td><td data-page-node-id="2Apxbhg81IxCBZzGBZdHAV">3nm</td><td data-page-node-id="btuuBvBOw2ddGh4fniAuEa">4</td><td data-page-node-id="TfcTH4c0QmgdbyoLiQk0Bh">490</td><td data-page-node-id="osYgp3Vgvc8xkGR803hNgv">2027年量产</td></tr>
+          <tr data-page-node-id="AuXWhHk5TPzvKxaQCNYEfV"><td data-page-node-id="npSTnGdIXpQYBjeqFVARCz">TPU v8e</td><td data-page-node-id="7z4XqKs1x7EkfJDjngQq5s">Humufish</td><td data-page-node-id="fYD5srcdUaKpHANcZMTT9z">MediaTek</td><td data-page-node-id="lGX46ejSA6UtwRkfk3AhQo">2nm</td><td data-page-node-id="eEExkbPwQpjOvbvrw2iYvM">4</td><td data-page-node-id="haetNJttAh92ADs28U6KjL">490</td><td data-page-node-id="X093qrbX37s32kqLjXxi1W">2027年下半年量产</td></tr>
+          <tr data-page-node-id="hKyzUSgfrbwRLloFW1Kljf"><td data-page-node-id="XDMZD6ulcs16FccGZxdIR7">TPU v9p</td><td data-page-node-id="5gLEQonTqJ90j28g5fyoJs">Pumafish</td><td data-page-node-id="MC19GaxJd6XOVdHYACBCMD">Broadcom</td><td data-page-node-id="3cKwoYVDXTBpBlBWAeetE9">2nm</td><td data-page-node-id="nAh01Et2D4nsJUe7km5RBU">8</td><td data-page-node-id="gpTppMZb9G00YOvMTAieh2">510</td><td data-page-node-id="ReOq7DrQlVrTFSIYXjNr69">2027年量产</td></tr>
+          <tr data-page-node-id="5DDCpiB4wWoM50kWeJ41qy"><td data-page-node-id="V5yPYx35q5fSyT9f6rX8iO">TPU v9e</td><td data-page-node-id="3Bh9Tk9QnlKLNUNBe1USWE">—</td><td data-page-node-id="c4yuDPgVRcyv01dDtkzK5k">MediaTek</td><td data-page-node-id="Ve4xtpGqJTr4dTGxGQmLHm">2nm</td><td data-page-node-id="LiCJHdHMwskoRmIFrSm3T9">12</td><td data-page-node-id="QBKO6h8MmjaWBpBhPcWpXU">约500</td><td data-page-node-id="talvBRVYAFKNssvIWhWcMn">2028年量产</td></tr>
+        </tbody>
+      </table>
+      <div class="source-note" data-page-node-id="MInKwY45T4hw3RjaxumI5v">来源：行业TPU产品路线图测算。双代工策略（Broadcom + MediaTek并行）+ Compute Die数量随制程收缩持续增加（2颗→12颗），显示Google通过chiplet堆叠弥补单die性能提升放缓的路径</div>
+    </div>
+
+    <div class="table-card" data-page-node-id="NZ9WneiYcnV2twCDd3C0t1">
+      <h3 data-page-node-id="ExUYnuQbXH6no2Y43VVNcV">TPU 出货量分型号明细（万片）</h3>
+      <table data-page-node-id="rnMHGKB6ROSG4MacZMHJTs">
+        <thead data-page-node-id="WinI4DNReFglbgJ9HBfWVo"><tr data-page-node-id="wCR5dVVWQ21CPHFCr1PVAH"><th data-page-node-id="8QwomI46AgodQKJMgx1w0f">型号</th><th data-page-node-id="q1MQuNJipItsVkXjmfvv6x">代工厂</th><th data-page-node-id="6lSrS2N0yuo9XFcccEtOCz">2026E</th><th data-page-node-id="oQAXeoMzbw1ubQQzNT5o9q">2027E</th></tr></thead>
+        <tbody data-page-node-id="qaABrDLVEhGpn5TefyvcI5">
+          <tr data-page-node-id="54LFy7gGtDQD0LnKRsHFWJ"><td data-page-node-id="HqQl3Myxm7skzpVIBOBJ8f">TPU v7（Ironwood）</td><td data-page-node-id="FRrPbeJ4o6rOeb05BD24GO">Broadcom</td><td data-page-node-id="H9zvOwOK6AOpJFQAAURXi9">180</td><td data-page-node-id="AuSIAkYndG2Elqyz3yjJQ9">—（已进入量产尾声，产能让位v8系列）</td></tr>
+          <tr data-page-node-id="59pFdu8cd4ckqVrEubqCDR"><td data-page-node-id="h6f2a49Bgm3kRRJG8MqCG9">TPU v8x（Zebrafish）</td><td data-page-node-id="NHbLFKvv9CbOFGgPmOFRsD">MediaTek</td><td data-page-node-id="o5sEYcorXY5XSRRAHJRAay">40</td><td data-page-node-id="oTXs63EE3z2SFEmGGuMDXc">200</td></tr>
+          <tr data-page-node-id="Dq00XnplmeZtJrdWoK26vK"><td data-page-node-id="ssIG7SiaN6JFmLZj3FSzhe">TPU v8ax / v8p（Sunfish）</td><td data-page-node-id="E2zZegwHaXnwyWA6zQEeNJ">Broadcom</td><td data-page-node-id="wYPhtGjBkReVJjGK7E79EH">90</td><td data-page-node-id="qi8zoHds6Y0Ecix8qNDrBh">330</td></tr>
+          <tr data-page-node-id="oB6vRMHDvU1mGDaFPkGAEo"><td data-page-node-id="cmRxfILmPSx9nCloHpCDra">TPU v8e（Humufish）</td><td data-page-node-id="r1VZ7DhloagAnzHREeIu9N">MediaTek</td><td data-page-node-id="fPRlbneygF4zl5AEZ1TzfL">30</td><td data-page-node-id="SmEEMPQhvHyolFNPSuiHqX">170</td></tr>
+          <tr data-page-node-id="1mR3RC49bvoT82gxPJCTKl"><td data-page-node-id="rs6Lr7dBfW1tYH4Yi4xLYg"><strong data-page-node-id="UDysft7nOtRopNG9wFKnmp">合计</strong></td><td data-page-node-id="ha4E253dUBBeeWEWYo0rKf">—</td><td data-page-node-id="747elyIn8HhBIemurPkF9t"><strong data-page-node-id="JSAj22mvPslBKzinzxIvJm">340</strong></td><td data-page-node-id="0bSQM3MZc443GIoPQX1f1z"><strong data-page-node-id="4cKyCyN8GZEOG5J9LGyPQN">700</strong></td></tr>
+        </tbody>
+      </table>
+      <div class="source-note" data-page-node-id="afBxHRbWS0XRSArGYYZ2A3">来源：行业TPU出货量测算，图表读数近似值，各型号已按官方2026E 340万/2027E 700万合计口径调整，仅供观察型号结构变化（v7逐步让位给v8系列，Broadcom与MediaTek双供应商占比大致均衡）</div>
+    </div>
+  </div>
+  <div class="tab-panel" id="tab5" data-page-node-id="JWyXi9xNYVo2UvPasKRL68">
+    <div class="grid-2" data-page-node-id="aJpQ2x76zkGdmPEQ1CkAaz">
+      <div class="info-card" data-page-node-id="KwhVb4Pq1Llu0V3RDypPmR">
+        <h4 data-page-node-id="X774opmJTuc6ZV4btJi84k">开源侵蚀速度：72% → 33%（一年内）</h4>
+        <p data-page-node-id="RCIf2O6PaSxLf5JDpK1xTr">据Exponential View统计，在OpenRouter（自选模型路由平台）上，Google+OpenAI+Anthropic三家闭源龙头合计token份额从一年前的<strong data-page-node-id="XCxBQCBps2mmA1LuTKeZPc">72%</strong>降至目前的<strong data-page-node-id="ycFaWYplEORLArdfUAocHb">33%</strong>，份额被DeepSeek、MiniMax、Xiaomi、Tencent等开源模型抢走。</p>
+        <p data-page-node-id="FRpRcaHbAuCLVnoMa8uO42">OpenRouter用户是主动选择模型路由的价格敏感型开发者，并非市场整体截面，但方向性信号值得关注——闭源前沿模型的定价权正被开源追赶者持续压缩。</p>
+      </div>
+      <div class="chart-card" data-page-node-id="1vgEgCpVL0D7l01oaSQOa9">
+        <h3 data-page-node-id="HaIW489B60D5jTXoN8PEfF">前沿模型商品化速度（达到同一能力门槛所需最低单价，$/M tok，对数轴）</h3>
+        <div class="chart-wrapper" data-page-node-id="LXd3qaCm1OwE6C4xmJhOks"><canvas id="commoditizationChart" data-page-node-id="Q7tBD6wIWL2KkxqvTMet2C"></canvas></div>
+        <div class="source-note" data-page-node-id="D3KANgceccwKTlBZBUf2ce">来源：Exponential View《State of the AI Economy》(2026-06-25)，图表读数近似值；闭源前沿线代表Claude/GPT等旗舰模型首发价，开源线代表约1年后追平同等能力的开源模型价格</div>
+      </div>
+    </div>
+
+    <div class="bottom-grid" data-page-node-id="5YF5qnhE69QPzseqE5fqRk">
+      <div data-page-node-id="GBLXu3Bs9zGZ4mfCvkSo5W">
+        <div class="section-title" data-page-node-id="HcsgTeUZaLehGQEt2BFGXZ"><span class="icon" data-page-node-id="qwTqRCWtchhsM2Kur8p848">📅</span>催化剂跟踪</div>
+        <div class="table-card" data-page-node-id="QeQJEoZJFKauufHAFQ0apF">
+          <div class="timeline" id="catalystTimeline" data-page-node-id="FdW1klXawmnWT4YTgEqHal"><!-- JS填充 --></div>
         </div>
       </div>
-      <div>
-        <div class="section-title"><span class="icon">💡</span>当前判断</div>
-        <div class="judgment-card">
-          <h3 style="font-size:13px; color:var(--text-secondary); margin-bottom:10px;">核心逻辑</h3>
-          <div class="judgment-text" id="coreLogic"></div>
-          <h3 style="font-size:13px; color:var(--text-secondary); margin:14px 0 10px;">主要风险</h3>
-          <div id="riskList"></div>
+      <div data-page-node-id="jJfujkLY2FWWdHgdCD0GZj">
+        <div class="section-title" data-page-node-id="tIK9akELZXu4aj0NpYxzMr"><span class="icon" data-page-node-id="Gw0bGHQCvlMGTcGSnajlbF">💡</span>当前判断</div>
+        <div class="judgment-card" data-page-node-id="hTGPfRTnyOjlkmCe1Bpd1R">
+          <h3 style="font-size:13px; color:var(--text-secondary); margin-bottom:10px;" data-page-node-id="iA97aSdHitLudbwG2uXGvG">核心逻辑</h3>
+          <div class="judgment-text" id="coreLogic" data-page-node-id="WcWtToXh8mnG9eUj3eSDuS"></div>
+          <h3 style="font-size:13px; color:var(--text-secondary); margin:14px 0 10px;" data-page-node-id="bF2M0gYC1IbtENmbp0lmBl">主要风险</h3>
+          <div id="riskList" data-page-node-id="4PBrC19S033CoSjyjqzOg0"></div>
         </div>
       </div>
     </div>
 
-    <div class="info-card">
-      <h4>本期关键判断（2026-07-09）</h4>
-      <p><strong>1）2B/高价值客户策略更接近可持续现金流：</strong>今年谁更专注企业级、抢占高价值模型客户，谁就更接近可持续现金流。Anthropic的企业集中度与大客户扩张，在估值定价上获得"质量溢价"，这是其融资顺利、IPO抢跑的重要底层支撑。</p>
-      <p><strong>2）出口管制边际缓和不改主力收入引擎：</strong>Fable5/Mythos5的"分级开放"与"部分解禁"并未动摇Anthropic主力收入引擎；政策边际缓和叠加年内算力集中上量，或支撑ARR增速韧性延续至下半场。</p>
-      <p><strong>3）OpenAI跟踪难度上升，Codex转化效果待观察：</strong>OpenAI不披露期延长（自2026年2月$25B后未再官方披露）叠加上市时间线分歧，增加了跟踪难度；但市场对Codex评价明显提升，其能否将Claude"战略性放弃"的部分2C客户转化为商业化收入，仍需持续观察。</p>
+    <div class="info-card" data-page-node-id="Sz4zsPeA1GtYX3kyAghqr9">
+      <h4 data-page-node-id="XsqsrubbHhlwMh45iDE7YE">本期关键判断（2026-07-09）</h4>
+      <p data-page-node-id="5WkYfADCIFUpk1RjJ12byG"><strong data-page-node-id="lWxugcTHASyUUDbdbTBPEB">1）2B/高价值客户策略更接近可持续现金流：</strong>今年谁更专注企业级、抢占高价值模型客户，谁就更接近可持续现金流。Anthropic的企业集中度与大客户扩张，在估值定价上获得"质量溢价"，这是其融资顺利、IPO抢跑的重要底层支撑。</p>
+      <p data-page-node-id="gaKMSOPhiFA06Bvctp0WHj"><strong data-page-node-id="K9fWRAnixE0lnFEH3CXPp3">ARR跟踪补充（2026-09-14）：</strong>Yipit 8月初测的净新增ARR约$4-5B，较7月隐含约$8B放缓；B2B样本未齐，不能据此确认8月总ARR或收入下滑。Yipit此前约$80B的7月预测已被其说明为高估，应以修正后的可比数据继续观察。</p>
+      <p data-page-node-id="esoGkdGc8r2usSuhej0J7Z"><strong data-page-node-id="KULEHCE8rBVYnjl490mEin">2）出口管制边际缓和不改主力收入引擎：</strong>Fable5/Mythos5的"分级开放"与"部分解禁"并未动摇Anthropic主力收入引擎；政策边际缓和叠加年内算力集中上量，或支撑ARR增速韧性延续至下半场。</p>
+      <p data-page-node-id="yIiEz9FswgyvFRYRL1kvgZ"><strong data-page-node-id="51DfFaRqtrPBnV4pHtmp5S">3）OpenAI跟踪难度上升，Codex转化效果待观察：</strong>OpenAI不披露期延长（自2026年2月$25B后未再官方披露）叠加上市时间线分歧，增加了跟踪难度；但市场对Codex评价明显提升，其能否将Claude"战略性放弃"的部分2C客户转化为商业化收入，仍需持续观察。</p>
     </div>
   </div>
 
+  <div class="tab-panel" id="tab7">
+    <div class="caveat-banner">⚠ 本节 IPO 时点与估值口径均来自媒体报道与投资者预期，<b>未获公司确认</b>。公司官方确认的事项只有两件：2026-06-01 向 SEC 保密递交 S-1 草稿（股数与发行价均未设定）、发行取决于市场条件。正式引用前建议以 SEC 公开招股书为准。</div>
+
+    <div class="section-title"><span class="icon">🚀</span>IPO 进程（2026-06 → 2026-11E）</div>
+
+    <div class="kpi-mini">
+      <div class="km"><div class="k">目标估值</div><div class="v">~$2.0万亿</div><div class="n">投资者预期；官方最后一次定价为 H 轮 $9,650 亿</div></div>
+      <div class="km"><div class="k">目标募资</div><div class="v">最高 $1,000亿</div><div class="n">若落地将超 SpaceX 2026-06 的 $857 亿纪录</div></div>
+      <div class="km"><div class="k">目标挂牌</div><div class="v warn">2026-11</div><div class="n">窗口已由 10 月后移；10 月挂牌概率约 6%（WSJ/NYT 9/18）</div></div>
+    </div>
+
+    <div class="table-card">
+      <h3>IPO 进程时间线</h3>
+      <div class="timeline">
+        <div class="tl-item">
+          <div class="tl-dot tl-dot-verified"></div>
+          <div class="tl-date">2026-06-01</div>
+          <div class="tl-content">
+            <div class="tl-event">向 SEC 保密递交 S-1 草稿（依 Rule 135 确认递交事实）；股数、发行价、价格区间均未设定</div>
+            <div class="tl-meta">预期影响：正面｜唯一经公司确认的 IPO 节点</div>
+          </div>
+          <span class="tl-status status-verified">✅ 已验证</span>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot tl-dot-verified"></div>
+          <div class="tl-date">2026-09-05</div>
+          <div class="tl-content">
+            <div class="tl-event">路透：原定 9 月中旬公开招股书推迟至 9 月下旬；推迟与一笔债务融资的敲定节奏有关</div>
+            <div class="tl-meta">预期影响：中性｜按惯例，参与信贷安排的银行分析师需先与公司会面，公司才会公开招股书</div>
+          </div>
+          <span class="tl-status status-verified">✅ 已验证</span>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot tl-dot-pending"></div>
+          <div class="tl-date">2026-09-12</div>
+          <div class="tl-content">
+            <div class="tl-event">彭博／路透：英伟达洽谈以<b>锚定投资者</b>身份参与 IPO，拟投资最高 $100 亿（约占募资规模 10%）</div>
+            <div class="tl-meta">预期影响：正面｜谈判仍在推进，金额与条件均可能调整；公司拒绝置评</div>
+          </div>
+          <span class="tl-status status-pending">🕐 待观察</span>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot tl-dot-verified"></div>
+          <div class="tl-date">2026-09-14</div>
+          <div class="tl-content">
+            <div class="tl-event">Axios：上市地选定<b>纳斯达克</b>，公司仍预计 2026 年内完成上市</div>
+            <div class="tl-meta">预期影响：正面｜对照面：OpenAI 方面表示今年不会上市</div>
+          </div>
+          <span class="tl-status status-verified">✅ 已验证</span>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot tl-dot-verified"></div>
+          <div class="tl-date">2026-09-18</div>
+          <div class="tl-content">
+            <div class="tl-event">WSJ／NYT：挂牌窗口由 10 月明确后移至 11 月，10 月前挂牌概率降至约 6%；理由是希望在路演前拿到<b>完整三季度财报</b></div>
+            <div class="tl-meta">预期影响：中性｜承销端观点认为延迟是"观感问题而非需求问题"，公司亦可能整体推过中期选举</div>
+          </div>
+          <span class="tl-status status-verified">✅ 已验证</span>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot tl-dot-pending"></div>
+          <div class="tl-date">2026-09-底（E）</div>
+          <div class="tl-content">
+            <div class="tl-event">公开递交 S-1 注册声明（预计）；公开申报起算后，路演不得早于 15 天</div>
+            <div class="tl-meta">预期影响：正面｜公开版将一次性披露财务报表、股份类别、风险因素、主要股东与募资用途</div>
+          </div>
+          <span class="tl-status status-pending">🕐 待观察</span>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot tl-dot-pending"></div>
+          <div class="tl-date">2026-10-中（E）</div>
+          <div class="tl-content">
+            <div class="tl-event">路演启动（预计），机构簿记约两周；价格区间通常在此前一轮 S-1/A 中给出</div>
+            <div class="tl-meta">预期影响：正面｜路演期间的需求反馈会反向推动区间</div>
+          </div>
+          <span class="tl-status status-pending">🕐 待观察</span>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot tl-dot-pending"></div>
+          <div class="tl-date">2026-11（E）</div>
+          <div class="tl-content">
+            <div class="tl-event">目标挂牌：媒体口径为"美国中期选举前数日"，公司亦可能推至选举之后；定价在挂牌前夜确定</div>
+            <div class="tl-meta">预期影响：正面｜锁定期通常 90–180 天，公司据报在研究<b>超 180 天</b>的更长锁定</div>
+          </div>
+          <span class="tl-status status-pending">🕐 待观察</span>
+        </div>
+      </div>
+      <div class="source-note">来源：SEC 与公司公告（保密递交）、路透社（9/5 推迟、9/18 窗口后移）、金融时报（承销阵容、财务口径）、彭博与路透（英伟达锚定）、Axios（上市地）、WSJ 与 NYT（挂牌概率）。上市时间表存在两个版本（见下表），本时间线按较新口径排列并保留较早口径。</div>
+    </div>
+
+    <div class="grid-2">
+      <div class="info-card">
+        <h4>承销阵容与发行结构</h4>
+        <p><b>主承销：</b>摩根士丹利（左席，交易战略顾问）、高盛（稳定价格代理，负责上市初期关键时段）；摩根大通、花旗参与。部分报道另列巴克莱，且对高盛是否为唯一稳定价格代理，媒体口径不完全一致。</p>
+        <p><b>上市地：</b>纳斯达克（Axios，2026-09-14）。</p>
+        <p><b>锚定投资者：</b>英伟达洽谈最高 $100 亿（彭博 9/12、路透）。</p>
+        <p><b>股权结构：</b>公司据报在考虑<b>超级投票权股份</b>（Dario Amodei 持股约 2%）；研究<b>超 180 天锁定期</b>；发行可能采「新股 + 老股」方式。</p>
+        <p><b>债务铺垫：</b>约 <b>$150 亿循环信贷额度</b>（报道称摩根士丹利牵头），作为上市前流动性后盾。</p>
+        <p style="color:var(--neutral);font-weight:600">⚠ 口径提示：$100 亿这个数字同时存在两处——2025-11 英伟达对 Anthropic 的既有投资承诺（对应采购 $300 亿微软 Azure 算力），以及本次 IPO 锚定投资，属两件独立事项，不可合并计算。</p>
+      </div>
+      <div class="info-card">
+        <h4>估值与募资口径</h4>
+        <p><b>目标估值：</b>约 $2 万亿（多数报道；口径区间 $1.5–2 万亿，个别机构喊 $3 万亿）。属<b>投资者预期</b>，不是任何一笔已成交价格。</p>
+        <p><b>隐含估值倍数：</b>$2 万亿 ÷ 2026-07 ARR $650 亿 ≈ <b>31x</b>；÷ 公司年末预测的 $1,200 亿 ≈ <b>17x</b>（BeBeez 测算）。</p>
+        <p><b>募资规模：</b>最高 $1,000 亿（含超额配售口径未统一）。若落地将超过 SpaceX 于 2026-06 创下的纪录（估值 $1.77 万亿、募资 $857 亿）。</p>
+        <p><b>最新一次官方定价：</b>H 轮（2026-05-28）融资 $650 亿、投后 $9,650 亿，由 Altimeter、Dragoneer、Greenoaks、红杉领投。</p>
+        <p><b>财务支撑：</b>2Q26 收入 $115 亿（同比约 14 倍）；3Q26 预计连续第二个季度实现调整后营业利润为正；毛利率 &gt;80%（剔除向分销伙伴的收入分成与模型训练成本，路透／FT 9/13 报道，未能独立核实）。</p>
+        <p><b>指数纳入：</b>S&amp;P 道琼斯指数公司 2026-06-04 拒绝为超大市值上市放宽规则，现行标准为上市满 12 个月、公众持股 ≥10%、GAAP 盈利为正 —— 指数基金<b>最早 2027 年底</b>才能买入。</p>
+      </div>
+    </div>
+
+    <div class="table-card">
+      <h3>上市时间表：两个版本（不合并）</h3>
+      <table>
+        <thead><tr><th>版本</th><th>招股书公开</th><th>路演</th><th>挂牌</th><th>依据</th></tr></thead>
+        <tbody>
+          <tr><td>A（较早）</td><td>9 月下旬</td><td>10 月中旬</td><td>11 月中期选举前数日</td><td>路透社（9/5）</td></tr>
+          <tr><td>B（较新）</td><td>9 月底（顺延）</td><td>10 月中旬</td><td>11 月，可能整体推过中期选举</td><td>WSJ／NYT（9/18）</td></tr>
+        </tbody>
+      </table>
+      <div class="source-note">两版本差异集中在「招股书公开时点」与「是否推过选举」；10 月挂牌概率已被报道降至约 6%。不合并、不取平均。</div>
+    </div>
+
+    <div class="info-card">
+      <h4>IPO 定价的外部扰动：GPT-6 Astra（2026-09-03 发布）</h4>
+      <p><b>1）企业侧份额出现反向信号：</b>在 Ramp 追踪的企业 AI 支出中，Astra 约占 <b>13%</b>，Anthropic 的 Claude Fable 约 <b>8%</b>；在 OpenRouter 上，上周用户花在 OpenAI 模型上的支出<b>首次超过 Anthropic</b> —— 为两年半以来首次。部分潜在 IPO 投资者向路透表示正重新评估 Anthropic 作为"企业 AI 首选供应商"的定位。</p>
+      <p><b>2）但多数机构判断不构成实质威胁：</b>现有股东与拟同时认购两家的投资者认为，Anthropic 在企业侧的规模优势尚在，且大企业内部替换既有供应商需要时间；前沿模型代际领先地位本就反复易手。</p>
+      <p><b>3）公司侧应对：</b>据报道 Anthropic 正考虑推出新模型对冲。另需注意时序——Dario Amodei 于 9/12 发表的 3,800 字长文（呼吁行业放缓能力发布节奏）其议题设置早于本次时间表调整，<b>不宜把 IPO 推迟解读为"安全转向"所致</b>。</p>
+    </div>
+
+    <div class="section-title"><span class="icon">⚖️</span>诉讼与合规</div>
+
+    <div class="table-card">
+      <h3>图书版权：Bartz v. Anthropic —— 已和解核准，分配争议未决</h3>
+      <table>
+        <thead><tr><th>项目</th><th>事实</th><th>状态</th></tr></thead>
+        <tbody>
+          <tr><td>和解金额</td><td><b>$15 亿</b>，为美国版权史上金额最高的和解案</td><td><span class="lit-badge lit-closed">已核准</span></td></tr>
+          <tr><td>程序路径</td><td>2025-06 承审法官 William Alsup 裁定「以合法取得的书籍训练模型可构成合理使用，从盗版渠道取得则不在保护范围」；2025-09 双方达成和解；Alsup 退休后由 Araceli Martínez-Olguín 法官承办，<b>2026-07-20 核准和解</b></td><td><span class="lit-badge lit-closed">已核准</span></td></tr>
+          <tr><td>覆盖范围</td><td>约 <b>48.2 万部</b>作品（另有报道称约 50 万部）；认领率 &gt;92%；每部权利人约 $3,000</td><td>—</td></tr>
+          <tr><td>执行义务</td><td>判令 30 日内销毁自盗版库下载的原始文件及衍生副本</td><td><span class="lit-badge lit-watch">执行中</span></td></tr>
+          <tr><td>未了部分</td><td>和解仅了结 2025-08-25 之前「输入端」的既有索赔，<b>不含模型输出侧</b></td><td><span class="lit-badge lit-active">开放</span></td></tr>
+          <tr><td>分配争议</td><td>索赔申报出现广泛错误，作者与出版商之间就分配口径存在冲突；争议期由 30 天<b>延长至 60 天</b>（自 9/2–9/4 收到通知起算），争议未决的作品不进入首次分配</td><td><span class="lit-badge lit-active">进行中</span></td></tr>
+        </tbody>
+      </table>
+      <div class="source-note">来源：加州北区联邦地院裁定与和解网站公告、Authors Guild、Publishers Lunch（2026-09 争议期延长）。</div>
+    </div>
+
+    <div class="table-card">
+      <h3>音乐版权：一案变五案，且已把创办人列为被告</h3>
+      <table>
+        <thead><tr><th>案件</th><th>提起时间 / 法院</th><th>涉作品</th><th>索赔</th><th>状态</th></tr></thead>
+        <tbody>
+          <tr><td>UMG + Concord + ABKCO 原案<br><span style="color:var(--text-secondary)">No. 5:24-cv-03811</span></td><td>2023-10-18 田纳西中区（纳什维尔）提起，2024 年移转加州北区</td><td>约 500 首歌词</td><td>初期约 $7,500 万</td><td>取证已结束；2026-03-23 原告申请部分简易判决（援引 218 项其称为无争议的事实）；<b>2026-10-21 简易判决听审（Eumi Lee 法官）</b></td></tr>
+          <tr><td>同批原告另案<br><span style="color:var(--text-secondary)">No. 5:26-cv-00880</span></td><td>2026-01-28，加州北区</td><td>逾 20,000 首</td><td><b>逾 $30 亿</b></td><td>原告 2026-04-24 胜诉驳回 Anthropic 的中止申请；Anthropic 于 2026-08-03 前完成应诉</td></tr>
+          <tr><td>BMG</td><td>2026-03-17，同一法院</td><td>493 首词曲</td><td>未披露总额（主张移除版权管理信息）</td><td>审理中</td></tr>
+          <tr><td>Round Hill Music</td><td>2026-08-17，同时起诉 Anthropic 与 Suno</td><td>各案列约 500 首代表曲目，拟扩至逾万首</td><td>各案或达数亿、乃至接近或超过 $10 亿</td><td>审理中</td></tr>
+          <tr><td>Sony Music Publishing + Warner Chappell<br><span style="color:var(--text-secondary)">含 35 家出版实体，48 页诉状</span></td><td>2026-09，加州北区（请求陪审团）</td><td>数万首</td><td>每首最高 <b>$15 万</b> + 每次移除版权管理信息 $25,000；按法定上限计可达<b>数十亿美元</b></td><td>审理中；原告基本沿用 Alsup 的论证</td></tr>
+        </tbody>
+      </table>
+      <div class="source-note">共同点：火力集中在<b>数据取得渠道</b>（BitTorrent、盗版歌词站、未授权第三方数据集），而非"训练行为本身是否合法"。被告名单已含创办人本人 —— Concord 一方的 2026-01 另案与 2026-09 索尼／华纳案均将创办人列为被告。来源：各案 docket、Music Business Worldwide、Hollywood Reporter、中央社／INSIDE、中华网（2026-09-17）。</div>
+    </div>
+
+    <div class="info-card">
+      <h4>「巴拿马计划」与判例含义 —— 为什么这一节不是脚注</h4>
+      <p><b>1）事实面：</b>法庭文件披露，Anthropic 自 2024 年初起斥资数千万美元批量购入二手书，液压切除书脊后高速扫描、销毁实体，仅保留数字版用于训练；内部文件表述为不希望外界知悉。另据 Bartz 案证据，共同创办人 Benjamin Mann 被指个人使用 BitTorrent 下载数百万份盗版文件（其中含歌本与歌词），该部分证据已成为音乐侧新案的核心。</p>
+      <p><b>2）判例面：</b>Alsup 2025-06 的裁定划出一条线 —— <b>采购纸质书并数字化用于内部训练属"高度转化性"的合理使用；从 LibGen／PiLiMi 下载约 700 万册则构成侵权</b>。这条线的意义在于把争点从"训练是否合法"移到"数据怎么拿到"，后续针对其他大模型公司的同类诉讼大概率沿用同一战场。</p>
+      <p><b>3）对本标的的三重影响：</b>其一，$15 亿已实际支付、音乐侧在途索赔按法定上限可达数十亿美元，两者与已披露的财务数据同量级；其二，2026-10-21 的简易判决听审正落在路演窗口内，属可能影响发行定价的事件型风险；其三，数据获取成本与合规成本将长期抬升，直接作用于模型迭代节奏与毛利率。</p>
+      <p style="color:var(--down);font-weight:600">⚠ 本项此前未进入看板的风险列表（原列表为代币预算、开源侵蚀、算力电力、监管延迟四项），本次一并补入 tab5「主要风险」。</p>
+    </div>
+
+    <div class="source-note">本节口径纪律：① IPO 时点与估值均为媒体转述与投资者预期，公司仅确认"已保密递交"与"发行取决于市场条件"，正式引用前以 SEC 公开招股书为准；② 诉讼金额中的"按法定上限计算"为理论最大值，与实际判决或和解金额不可等同；③ 案件提起时间以 docket 记载为准（音乐侧原案为 2023-10-18，2026-01-28 为同批原告的另案，两者不可混为一案）。</div>
+  </div>
 </div>
 
 <script>
@@ -531,19 +876,19 @@
    ════════════════════════════════════════════════════════════ */
 const DATA = {
   kpis: [
-    { label: "最新ARR（6月14日，Yipit）", value: "$62B", trend: "up", trendText: "较2025年底$9B大幅跳升，6月仍陡峭增长" },
-    { label: "综合毛利率", value: "~65%", trend: "up", trendText: "2024年为-94%" },
-    { label: "3Q26 GAAP EBIT", value: "$1.0B", trend: "up", trendText: "6%利润率" },
-    { label: "SemiAnalysis估值预测", value: "$6万亿", trend: "flat", trendText: "2027E ARR $300B×20x PS" },
+    { label: "8月净新增ARR（Yipit初测）", value: "$4-5B", trend: "down", trendText: "7月隐含约$8B；8月B2B样本待补" },
+    { label: "综合毛利率（模型估计）", value: "~65%", trend: "up", trendText: "2024年为-94%" },
+    { label: "3Q26E GAAP EBIT（第三方预测）", value: "$1.0B", trend: "up", trendText: "预测利润率6%；非实际披露" },
+    { label: "SemiAnalysis估值预测", value: "$6万亿", trend: "flat", trendText: "2027E ARR $300B×20x EV/ARR" },
   ],
   tab1: {
     arrTrend: {
-      labels: ["2025-07", "2025-08", "2025-10", "2025-12", "2026-02", "2026-04", "2026-05", "2026-06-14"],
-      data: [4, 5, 7, 9, 14, 30, 45.5, 62],
-      openai: [10, 13, null, 20, 25, null, 45, 55],
+      labels: ["2025-07", "2025-08", "2025-10", "2025-12", "2026-02", "2026-04", "2026-05", "2026-06-14", "2026-06-30"],
+      data: [4, 5, 7, 9, 14, 30, 45.5, 62, 69],
+      openai: [10, 13, null, 20, 25, null, 45, 55, null],
     },
     marginTrend: {
-      labels: ["1Q24","2Q24","3Q24","4Q24","1Q25","2Q25","3Q25","4Q25","1Q26","2Q26","3Q26","4Q26"],
+      labels: ["1Q24","2Q24","3Q24","4Q24","1Q25","2Q25","3Q25","4Q25","1Q26模型","2Q26模型","3Q26E","4Q26E"],
       data: [-94,-94,-94,-94,38,38,38,38,60,62,64,65],
     },
     nnarr: {
@@ -551,7 +896,7 @@ const DATA = {
       data: [3,7,11,10,10,10],
     },
     modelRevenue: {
-      labels: ["1Q24","2Q24","3Q24","4Q24","1Q25","2Q25","3Q25","4Q25","1Q26","2Q26","3Q26","4Q26"],
+      labels: ["1Q24","2Q24","3Q24","4Q24","1Q25","2Q25","3Q25","4Q25","1Q26模型","2Q26模型","3Q26E","4Q26E"],
       series: [
         { name: "Opus 4.6 Fast Mode", data: [0,0,0,0,0,0,0,0,2036,4316,6996,10196], color: "#7c3aed" },
         { name: "Opus 4.6/4.5", data: [0,0,0,0,0,0,0,2322,17815,38305,62964,94313], color: "#2563eb" },
@@ -562,17 +907,17 @@ const DATA = {
   },
   tab2: {
     consumerMix: {
-      labels: ["1Q24","2Q24","3Q24","4Q24","1Q25","2Q25","3Q25","4Q25","1Q26","2Q26","3Q26","4Q26"],
+      labels: ["1Q24","2Q24","3Q24","4Q24","1Q25","2Q25","3Q25","4Q25","1Q26模型","2Q26模型","3Q26E","4Q26E"],
       anthropic: [11,7,9,8,7,8,6,5,5,5,5,4],
       openai: [59,58,60,65,65,66,66,55,45,40,35,30],
     },
     marginCompare: {
-      labels: ["1Q24","2Q24","3Q24","4Q24","1Q25","2Q25","3Q25","4Q25","1Q26","2Q26","3Q26","4Q26"],
+      labels: ["1Q24","2Q24","3Q24","4Q24","1Q25","2Q25","3Q25","4Q25","1Q26模型","2Q26模型","3Q26E","4Q26E"],
       anthropic: [-94,-94,-94,-94,38,38,38,38,60,62,64,65],
       openai: [40,40,40,40,40,40,38,38,38,39,38,38],
     },
     ebtit: {
-      labels: ["2024","2025","2026","2027","2028"],
+      labels: ["2024模型","2025模型","2026E","2027E","2028E"],
       anthropic: [-5,15,60,90,130],
       openai: [-5,-5,-5,15,40],
     },
@@ -609,25 +954,63 @@ const DATA = {
     catalysts: [
       { date: "2026-06-01", event: "Anthropic秘密提交IPO申请", impact: "正面", status: "verified" },
       { date: "2026-06", event: "Bloomberg专访Dario Amodei：1Q26收入环比>3x，年化~80x，远超原定10x/年算力规划", impact: "正面", status: "verified" },
-      { date: "2026-06-14", event: "Yipit数据显示ARR达约$62B，打破\"6月后Claude失速\"传言", impact: "正面", status: "verified" },
+      { date: "2026-06-14", event: "Yipit估算Anthropic ARR约$62B（当时的第三方模型值）", impact: "正面", status: "verified" },
       { date: "2026-07-08", event: "SemiAnalysis发布3Q26财务预测报告", impact: "中性", status: "verified" },
+      { date: "2026-08-18", event: "Yipit承认截至7/26约$80B的预测偏高；公司投资者资料显示7月底运行率超过$65B", impact: "中性", status: "verified" },
+      { date: "2026-09-07", event: "Yipit的8月初测：净新增ARR约$4-5B，低于7月隐含约$8B；B2B样本未齐", impact: "负面", status: "pending" },
       { date: "一周内（市场传言）", event: "Fable5/Mythos5出口限制分级解禁：Mythos5已有限解禁，Fable5待批准", impact: "正面", status: "pending" },
       { date: "待定", event: "下一轮股权/债务融资（对标Alphabet 2026年6月$84.75B股权融资）", impact: "正面", status: "pending" },
       { date: "待定", event: "NYT报道OpenAI考虑IPO推迟至2027年（此前已秘密提交、估值目标约$1万亿），Anthropic抢跑窗口", impact: "正面", status: "pending" },
       { date: "待定", event: "电力/TPU供给瓶颈演变（近两月租赁价格预期大幅提价）", impact: "负面", status: "pending" },
+      { date: "2026-09-05", event: "路透：原定9月中旬公开招股书推迟至9月下旬，与一笔债务融资的敲定节奏有关", impact: "中性", status: "verified" },
+      { date: "2026-09-12", event: "彭博/路透：英伟达洽谈以锚定投资者身份参与IPO，拟投资最高$100亿（约占募资10%）", impact: "正面", status: "pending" },
+      { date: "2026-09-14", event: "Axios：上市地选定纳斯达克；公司仍预计2026年内完成上市", impact: "正面", status: "verified" },
+      { date: "2026-09-18", event: "WSJ/NYT：挂牌窗口由10月后移至11月，10月挂牌概率降至约6%；要在路演前拿到完整Q3财报", impact: "中性", status: "verified" },
+      { date: "2026-09-底E", event: "公开递交S-1（预计）；公开申报后路演不得早于15天", impact: "正面", status: "pending" },
+      { date: "2026-10-中E", event: "路演启动（预计），机构簿记约两周", impact: "正面", status: "pending" },
+      { date: "2026-10-21", event: "UMG等音乐出版商原案简易判决听审（Eumi Lee 法官）——正落在路演窗口内", impact: "负面", status: "pending" },
+      { date: "2026-11E", event: "目标挂牌（媒体口径：中期选举前数日；亦可能推过选举）", impact: "正面", status: "pending" },
     ],
-    coreLogic: "Anthropic在增长率与盈利能力两大核心财务指标上是AI实验室竞赛的明显赢家：API收入占比75-85%、毛利率已升至~65%、3Q26 GAAP EBIT转正（6%利润率）。SemiAnalysis给出$6万亿估值基准（2027E ARR $300B×20倍PS），但OpenAI通过Codex/API业务正在追赶，且算力/电力短缺是双方共同的硬约束。",
+    coreLogic: "Anthropic在增长率与盈利能力两大核心财务指标上是AI实验室竞赛的明显赢家：API收入占比75-85%、第三方模型毛利率约65%、3Q26E GAAP EBIT（第三方预测）转正（6%利润率）。SemiAnalysis给出$6万亿估值基准（2027E ARR $300B×20倍EV/ARR），但OpenAI通过Codex/API业务正在追赶，且算力/电力短缺是双方共同的硬约束。IPO侧：2026-06-01已保密递交S-1，目标估值约2万亿美元、募资最高1000亿美元，窗口落在11月；但两处事件型风险正叠加在这一窗口上——音乐版权原案2026-10-21简易判决听审，以及GPT-6 Astra在企业支出与路由份额上出现的反向信号。",
     risks: [
       "代币预算担忧（TokenBudgeting）：Claude Code企业用户平均月支出仅$150-250，90%用户日支出低于$30，高消费案例是长尾而非主流，企业渗透率仍低，短期风险有限",
       "开源模型与OpenAI降价策略侵蚀定价权：OpenRouter上闭源三巨头合计token份额一年内从72%降至33%",
       "Google/Meta编程模型突破，coding市场从双雄变四强",
       "算力短缺与电力瓶颈：2030年AI Labs算力需求缺口90GW+净新增",
       "美国监管延迟前沿模型发布，削弱Anthropic对开源的领先窗口",
+      "版权诉讼在途：Bartz案$15亿和解已核准但分配争议未决（争议期延至60天）；UMG等音乐出版商原案2026-10-21简易判决听审；2026-01同批原告另案索赔逾$30亿；Sony+Warner Chappell于2026-09加入，按法定上限计数万首作品曝险可达数十亿美元——风险集中在数据取得渠道而非训练行为本身",
+      "IPO定价扰动：OpenAI于2026-09-03发布的GPT-6 Astra已在企业支出份额与OpenRouter路由上出现反超信号，若延续可能压低企业AI领导者的发行溢价",
     ],
     commoditization: {
       labels: ["2023","2024上半年","2024下半年","2025上半年","2025下半年","2026"],
       frontier: [40, 15, 6, 2, 1, 0.3],
       openWeight: [null, null, null, 2, 0.3, 0.1],
+    },
+  },
+  tab6: {
+    valTimeline: {
+      // x = 年份小数（year + (month-0.5)/12），y = 投后估值（$B）
+      anthropic: [
+        { x: 2023.208, y: 4.1 }, { x: 2025.208, y: 61.5 }, { x: 2025.708, y: 183 },
+        { x: 2026.125, y: 380 }, { x: 2026.375, y: 965 },
+      ],
+      openai: [
+        { x: 2019.542, y: 0.9 }, { x: 2023.042, y: 29 }, { x: 2024.042, y: 86 },
+        { x: 2024.792, y: 157 }, { x: 2025.208, y: 300 }, { x: 2025.792, y: 500 },
+        { x: 2026.125, y: 730 }, { x: 2026.208, y: 852 }, { x: 2026.625, y: 852 },
+      ],
+    },
+    arrTimeline: {
+      // 仅 A 口径（公司披露 / 投资者资料）
+      anthropic: [
+        { x: 2023.958, y: 0.1 }, { x: 2024.958, y: 1 }, { x: 2025.958, y: 9 },
+        { x: 2026.125, y: 14 }, { x: 2026.292, y: 30 }, { x: 2026.375, y: 47 }, { x: 2026.542, y: 65 },
+      ],
+      openai: [
+        { x: 2022.958, y: 0.2 }, { x: 2023.958, y: 2 }, { x: 2024.958, y: 5.5 },
+        { x: 2025.458, y: 10 }, { x: 2025.625, y: 13 }, { x: 2025.958, y: 20 },
+        { x: 2026.125, y: 25 }, { x: 2026.542, y: 40 },
+      ],
     },
   },
 };
@@ -800,6 +1183,43 @@ document.addEventListener('DOMContentLoaded', () => {
     },
     options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'top', labels: { font: { size: 11 } } } },
       scales: { x: { ticks: { font: { size: 10 } } }, y: { type: 'logarithmic', ticks: { font: { size: 11 }, callback: (v) => ['0.1','1','10','100'].includes(String(v)) ? '$'+v : null } } } },
+  });
+
+  /* ── Tab6：ARR 与估值时间线（对数轴 + 线性时间轴） ── */
+  const fmtYr = (v) => Math.floor(v) + '-' + String(Math.round((v - Math.floor(v)) * 12 + 0.5)).padStart(2, '0');
+  const logTick = (v) => Number.isInteger(Math.log10(v)) ? '$' + v + 'B' : '';
+  const tlLine = (label, data, color, dash) => Object.assign({
+    label: label, data: data, borderColor: color,
+    backgroundColor: color + '1a', tension: 0.25,
+    pointRadius: 4, pointHoverRadius: 6, fill: false,
+  }, dash ? { borderDash: [4, 3] } : {});
+  const tlOpts = (xmin, ymin, ymax) => ({
+    responsive: true, maintainAspectRatio: false,
+    interaction: { mode: 'nearest', intersect: false },
+    plugins: {
+      legend: { position: 'top', labels: { font: { size: 11 } } },
+      tooltip: { callbacks: { label: (ctx) => ctx.dataset.label + '：$' + ctx.parsed.y + 'B（' + fmtYr(ctx.parsed.x) + '）' } },
+    },
+    scales: {
+      x: { type: 'linear', min: xmin, max: 2027, grid: { color: '#f1f5f9' }, ticks: { font: { size: 10 }, stepSize: 1 } },
+      y: { type: 'logarithmic', min: ymin, max: ymax, grid: { color: '#f1f5f9' }, ticks: { font: { size: 11 }, callback: logTick } },
+    },
+  });
+  new Chart(document.getElementById('valTimelineChart'), {
+    type: 'line',
+    data: { datasets: [
+      tlLine('Anthropic', DATA.tab6.valTimeline.anthropic, '#2563eb', false),
+      tlLine('OpenAI', DATA.tab6.valTimeline.openai, '#d97706', true),
+    ] },
+    options: tlOpts(2019, 0.5, 2000),
+  });
+  new Chart(document.getElementById('arrTimelineChart'), {
+    type: 'line',
+    data: { datasets: [
+      tlLine('Anthropic', DATA.tab6.arrTimeline.anthropic, '#2563eb', false),
+      tlLine('OpenAI', DATA.tab6.arrTimeline.openai, '#d97706', true),
+    ] },
+    options: tlOpts(2022, 0.05, 200),
   });
 
   const statusMap = { pending: ['tl-dot-pending','status-pending','🕐 待观察'], verified: ['tl-dot-verified','status-verified','✅ 已验证'], falsified: ['tl-dot-falsified','status-falsified','❌ 已证伪'] };

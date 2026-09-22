@@ -1,0 +1,539 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>钻针 · PCB产业链</title>
+<style>
+:root {
+  --bg:#f8f9fa; --card:#fff; --border:#e9ecef;
+  --text:#212529; --text2:#6c757d;
+  --accent:#0891b2; --up:#16a34a; --dn:#dc2626; --warn:#d97706;
+  --up-bg:#f0fdf4; --dn-bg:#fef2f2; --warn-bg:#fffbeb;
+  --tag-bg:#ecfeff; --tag:#0e7490;
+  --sh: 0 1px 3px rgba(0,0,0,.08),0 1px 2px rgba(0,0,0,.04);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;background:var(--bg);color:var(--text);font-size:14px;line-height:1.6}
+
+/* header */
+.hdr{background:var(--card);border-bottom:1px solid var(--border);padding:14px 28px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:var(--sh)}
+.hdr-l{display:flex;align-items:center;gap:12px}
+.hdr-title{font-size:19px;font-weight:700}
+.hdr-sub{font-size:11px;color:var(--text2)}
+.back-link{display:inline-flex;align-items:center;gap:4px;font-size:11px;color:var(--text2);text-decoration:none;padding:4px 10px;border:1px solid var(--border);border-radius:6px;background:var(--bg);white-space:nowrap}.back-link:hover{color:var(--accent);border-color:var(--accent)}
+.badge-up{display:inline-flex;align-items:center;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600;background:var(--up-bg);color:var(--up);border:1px solid #86efac}
+.badge-tag{display:inline-flex;align-items:center;padding:3px 10px;border-radius:12px;font-size:11px;background:var(--tag-bg);color:var(--tag);border:1px solid #a5f3fc}
+.hdr-meta{font-size:11px;color:var(--text2);text-align:right}
+
+/* layout */
+.wrap{max-width:1360px;margin:0 auto;padding:20px 28px}
+
+/* section title */
+.st{font-size:13px;font-weight:700;margin-bottom:11px;padding-bottom:6px;border-bottom:2px solid var(--accent);display:flex;align-items:center;gap:6px}
+
+/* card */
+.card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:16px 18px;box-shadow:var(--sh)}
+
+/* kpi grid */
+.kpi-g{display:grid;grid-template-columns:repeat(4,1fr);gap:11px;margin-bottom:20px}
+.kpi .lbl{font-size:10px;color:var(--text2);text-transform:uppercase;letter-spacing:.4px;margin-bottom:4px}
+.kpi .val{font-size:19px;font-weight:700;margin-bottom:3px}
+.kpi .note{font-size:10px;color:var(--text2)}
+.c-up{color:var(--up)} .c-warn{color:var(--warn)} .c-dn{color:var(--dn)}
+
+/* criteria */
+.crit-g{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:20px}
+.crit .cl{font-size:10px;font-weight:700;color:var(--text2);text-transform:uppercase;margin-bottom:3px}
+.crit .cv{font-size:12px;font-weight:600;margin-bottom:2px}
+.crit .cn{font-size:10px;color:var(--text2)}
+
+/* ── TABS ── */
+.tab-nav{display:flex;gap:0;border-bottom:2px solid var(--border);margin-bottom:14px}
+.tab-btn{padding:8px 16px;font-size:12px;font-weight:600;color:var(--text2);background:none;border:none;cursor:pointer;white-space:nowrap;border-bottom:2px solid transparent;margin-bottom:-2px;transition:color .15s,border-color .15s}
+.tab-btn:hover{color:var(--accent)}
+.tab-btn.active{color:var(--accent);border-bottom-color:var(--accent)}
+.tab-pane{display:none}
+.tab-pane.active{display:block}
+
+/* company table */
+.ctable{width:100%;border-collapse:collapse;margin-bottom:14px;font-size:12px}
+.ctable th{text-align:left;padding:6px 8px;font-size:10px;font-weight:600;color:var(--text2);background:var(--bg);border-bottom:1px solid var(--border);white-space:nowrap}
+.ctable td{padding:8px 8px;border-bottom:1px solid var(--border);vertical-align:middle}
+.ctable tr:last-child td{border-bottom:none}
+.ctable tr:hover td{background:#fafbfc}
+.ctable td strong{white-space:nowrap}
+.tab-step-hd{display:flex;align-items:center;gap:10px;font-size:13px;font-weight:700;color:var(--text);padding:8px 12px;background:var(--bg);border-left:3px solid var(--accent);border-radius:0 6px 6px 0;margin-bottom:12px}
+.tab-step-hd .step-num{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:50%;background:var(--accent);color:#fff;font-size:11px;font-weight:800;flex-shrink:0}
+.tab-step-hd .step-note{margin-left:auto;font-size:10px;font-weight:400;color:var(--text2)}
+
+/* assessment badges */
+.a-super{display:inline-block;padding:1px 7px;border-radius:3px;font-size:10px;font-weight:700;background:var(--up-bg);color:var(--up);border:1px solid #86efac}
+.a-meet{display:inline-block;padding:1px 7px;border-radius:3px;font-size:10px;font-weight:700;background:var(--tag-bg);color:var(--tag);border:1px solid #a5f3fc}
+.a-miss{display:inline-block;padding:1px 7px;border-radius:3px;font-size:10px;font-weight:700;background:var(--warn-bg);color:var(--warn);border:1px solid #fcd34d}
+.a-na{display:inline-block;padding:1px 7px;border-radius:3px;font-size:10px;color:var(--text2);background:var(--bg);border:1px solid var(--border)}
+
+/* yoy numbers */
+.yp{color:var(--up);font-weight:600} .yn{color:var(--dn);font-weight:600}
+code{font-size:10px;background:var(--tag-bg);color:var(--tag);padding:1px 5px;border-radius:3px}
+
+/* segment summary */
+.seg-sum{font-size:12px;color:var(--text2);background:var(--bg);border-radius:6px;padding:10px 12px;border-left:3px solid var(--accent);margin-top:8px}
+
+/* charts row */
+.chart-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px}
+.chart-box{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:14px 16px}
+.chart-box h4{font-size:10px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:.4px;margin-bottom:10px}
+.chart-wrap{position:relative;height:180px}
+
+/* summary table */
+.sum-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;margin-bottom:20px}
+.sum-item{padding:10px 12px;border-radius:8px;background:var(--card);border:1px solid var(--border)}
+.sum-seg{font-size:10px;font-weight:700;color:var(--text2);margin-bottom:3px}
+.sum-val{font-size:12px;font-weight:600}
+.sum-note{font-size:10px;color:var(--text2);margin-top:2px}
+
+/* bottom grids */
+.b-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px}
+.tl-item{display:flex;gap:10px;padding:8px 0;border-bottom:1px solid var(--border)}
+.tl-item:last-child{border-bottom:none}
+.tl-dot{width:8px;height:8px;border-radius:50%;margin-top:5px;flex-shrink:0}
+.tl-d-p{background:var(--warn)} .tl-d-t{background:var(--accent)} .tl-d-r{background:var(--dn)}
+.tl-date{font-size:10px;color:var(--text2);white-space:nowrap;min-width:60px;margin-top:2px}
+.tl-evt{font-size:12px;font-weight:500}
+.tl-meta{font-size:10px;color:var(--text2);margin-top:1px}
+.tl-st{font-size:10px;padding:1px 6px;border-radius:3px;white-space:nowrap;align-self:flex-start;margin-top:2px}
+.st-p{background:var(--warn-bg);color:var(--warn)}
+.st-t{background:var(--tag-bg);color:var(--tag)}
+.st-r{background:var(--dn-bg);color:var(--dn)}
+
+.j-grid{display:grid;grid-template-columns:2fr 1fr;gap:12px;margin-bottom:20px}
+.logic-box{font-size:13px;line-height:1.8;background:var(--bg);border-radius:6px;padding:12px 14px;border-left:3px solid var(--accent);margin-bottom:10px}
+.strat-g{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.strat-i{padding:7px 9px;border-radius:6px;font-size:11px}
+.s-core{background:var(--up-bg);border:1px solid #86efac}
+.s-atk{background:var(--tag-bg);border:1px solid #a5f3fc}
+.s-wch{background:var(--warn-bg);border:1px solid #fcd34d}
+.strat-l{font-size:10px;font-weight:700;margin-bottom:2px}
+.risk-i{display:flex;gap:6px;margin-bottom:6px;font-size:12px}
+.rn{background:var(--dn-bg);color:var(--dn);font-size:10px;font-weight:700;padding:1px 5px;border-radius:3px;flex-shrink:0;margin-top:2px}
+
+/* 2Q26 earnings module */
+.earn-hero{background:linear-gradient(135deg,#ecfeff 0%,#fff 52%,#f0fdf4 100%);border:1px solid #bae6fd;border-radius:12px;padding:18px 20px;margin-bottom:16px;box-shadow:var(--sh)}
+.earn-head{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:14px}
+.earn-title{font-size:18px;font-weight:800;letter-spacing:.1px}
+.earn-sub{font-size:11px;color:var(--text2);margin-top:3px}
+.earn-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.earn-kpi{background:rgba(255,255,255,.86);border:1px solid var(--border);border-radius:8px;padding:11px 12px}
+.earn-kpi .ek{font-size:10px;font-weight:700;color:var(--text2);margin-bottom:4px}
+.earn-kpi .ev{font-size:13px;font-weight:700;line-height:1.45}
+.earn-kpi .en{font-size:10px;color:var(--text2);margin-top:4px;line-height:1.45}
+.earn-split{display:grid;grid-template-columns:1.15fr .85fr;gap:12px;margin-bottom:14px}
+.earn-list{display:grid;gap:8px}
+.earn-item{padding:9px 11px;background:var(--bg);border-radius:7px;border-left:3px solid var(--accent);font-size:12px;line-height:1.65}
+.earn-item.warn{border-left-color:var(--warn);background:var(--warn-bg)}
+.earn-item.risk{border-left-color:var(--dn);background:var(--dn-bg)}
+.table-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.table-scroll .ctable{min-width:980px}
+.source-note{font-size:10px;color:var(--text2);padding:9px 11px;background:#f8fafc;border:1px dashed #cbd5e1;border-radius:7px;line-height:1.55}
+.callout-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.callout{border:1px solid var(--border);border-radius:8px;padding:11px 12px;background:#fff}
+.callout h4{font-size:12px;margin-bottom:5px;color:var(--accent)}
+.callout p,.callout li{font-size:11px;color:var(--text2);line-height:1.65}
+.callout ul{padding-left:16px}
+
+@media(max-width:900px){.kpi-g{grid-template-columns:repeat(2,1fr)}.chart-row{grid-template-columns:1fr}.crit-g{grid-template-columns:1fr}.b-grid{grid-template-columns:1fr}.j-grid{grid-template-columns:1fr}.sum-grid{grid-template-columns:repeat(2,1fr)}.earn-grid{grid-template-columns:repeat(2,1fr)}.earn-split,.callout-grid{grid-template-columns:1fr}}
+
+/* ── 折叠功能 ── */
+.st {
+  cursor: pointer;
+  user-select: none;
+  justify-content: space-between;
+}
+.st-arrow {
+  font-size: 13px;
+  color: var(--text2);
+  transition: transform 0.25s ease;
+  display: inline-block;
+  flex-shrink: 0;
+}
+.sec-body {
+  overflow: hidden;
+  transition: max-height 0.35s cubic-bezier(0.4,0,0.2,1), opacity 0.25s ease;
+  max-height: 9999px;
+  opacity: 1;
+}
+.sec-body.collapsed {
+  max-height: 0 !important;
+  opacity: 0;
+}
+.st.collapsed .st-arrow {
+  transform: rotate(-90deg);
+}
+
+/* ── Tooltip（修订历史 / 数据冲突）── */
+.tip-host {
+  border-bottom: 1px dashed var(--accent);
+  cursor: help;
+  display: inline;
+}
+.tip-host::after {
+  content: '▲';
+  font-size: 7px;
+  color: var(--accent);
+  vertical-align: super;
+  margin-left: 2px;
+  opacity: 0.65;
+}
+.tip-bubble {
+  display: none;
+  position: fixed;
+  z-index: 9999;
+  background: #1e293b;
+  color: #f1f5f9;
+  border-radius: 8px;
+  padding: 10px 13px;
+  font-size: 11px;
+  line-height: 1.5;
+  min-width: 240px;
+  max-width: 320px;
+  box-shadow: 0 6px 20px rgba(0,0,0,.3);
+  pointer-events: none;
+}
+.tip-bubble.visible { display: block; }
+.tip-title {
+  font-size: 10px;
+  font-weight: 700;
+  color: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: .5px;
+  margin-bottom: 7px;
+  padding-bottom: 5px;
+  border-bottom: 1px solid rgba(255,255,255,.1);
+}
+.tip-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 0;
+  border-bottom: 1px solid rgba(255,255,255,.05);
+}
+.tip-row:last-of-type { border-bottom: none; }
+.tip-date { color: #94a3b8; white-space: nowrap; min-width: 44px; font-size: 10px; }
+.tip-val  { font-weight: 600; flex: 1; }
+.tip-delta-up { color: #4ade80; font-size: 10px; }
+.tip-delta-dn { color: #f87171; font-size: 10px; }
+.tip-delta-eq { color: #94a3b8; font-size: 10px; }
+.tip-src  { color: #64748b; font-size: 10px; white-space: nowrap; }
+.tip-note {
+  font-size: 10px;
+  color: #94a3b8;
+  margin-top: 7px;
+  padding-top: 6px;
+  border-top: 1px solid rgba(255,255,255,.1);
+  line-height: 1.6;
+}
+.tip-conflict-row { display: flex; flex-direction: column; gap: 3px; padding: 4px 0; border-bottom: 1px solid rgba(255,255,255,.05); }
+.tip-conflict-row:last-of-type { border-bottom: none; }
+.tip-conflict-src { color: #fbbf24; font-size: 10px; }
+.tip-conflict-val { font-size: 11px; }
+.tip-chosen { color: #4ade80; font-size: 10px; margin-top: 5px; padding-top: 5px; border-top: 1px solid rgba(255,255,255,.1); }
+
+
+.split-header{display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap;margin:18px 0 22px}
+.split-header h1{font-size:28px;line-height:1.25;margin:3px 0 5px}
+.split-header p{color:var(--text2);font-size:12px;margin:0}
+.split-nav{display:flex;gap:7px;flex-wrap:wrap;margin:12px 0 18px}
+.split-nav a{font-size:12px;font-weight:700;padding:7px 11px;border:1px solid var(--border);border-radius:6px;background:var(--card);color:var(--text2);text-decoration:none}
+.split-nav a:hover,.split-nav a[aria-current="page"]{color:var(--accent);border-color:var(--accent);background:var(--tag-bg)}
+.split-source{font-size:11px;color:var(--text2);margin:24px 0;padding:12px;border:1px solid var(--border);border-radius:6px;background:var(--bg)}
+.split-main .tab-pane{display:block}
+.svg-chart,.svg-chart svg{width:100%;height:100%;display:block}
+@media(max-width:800px){.split-header h1{font-size:22px}.split-main .ctable{display:block;overflow-x:auto}}
+</style><style>
+/* industry-dashboard-shell:start */
+:root{--bg:#f4f6f1;--card:#fff;--paper:#fff;--border:#dce2d8;--line:#dce2d8;
+ --text:#1d292c;--text-primary:#1d292c;--text2:#667477;--text-secondary:#667477;
+ --accent:#247052;--deep:#23483f;--green:#247052}
+body{background:#f4f6f1!important;font-family:"Microsoft YaHei","PingFang SC","Segoe UI",sans-serif}
+.industry-shell{position:relative;z-index:101;display:flex;align-items:center;gap:10px 14px;
+ flex-wrap:wrap;padding:11px max(20px,calc((100vw - 1280px)/2));background:#23483f;
+ color:#fff;font:500 12px/1.5 "Microsoft YaHei","PingFang SC",sans-serif}
+.industry-shell *{box-sizing:border-box}
+.industry-shell a{color:#d7f2df!important;text-decoration:none!important;font-weight:700}
+.industry-shell a:hover{text-decoration:underline!important}
+.industry-shell__name{font-weight:800;font-size:13px;color:#fff}
+.industry-shell__kind{border:1px solid #91bd9e;border-radius:999px;padding:2px 8px;color:#e9f8ed}
+.industry-shell__asof{margin-left:auto;color:#e2efe5}
+body a[data-industry-legacy-back="1"]{display:none!important}
+@media(max-width:680px){.industry-shell{padding:10px 15px}.industry-shell__asof{margin-left:0;width:100%}}
+/* industry-dashboard-shell:end */
+</style></head>
+<body><!-- industry-dashboard-shell:start --><nav class="industry-shell" aria-label="行业看板统一导航"><a href="../industry-fundamentals-entry.html">行业看板</a><span aria-hidden="true">/</span><span class="industry-shell__name">钻针 · PCB产业链</span><span class="industry-shell__kind">环节专题</span><span class="industry-shell__asof">数据日期与口径见正文</span></nav><!-- industry-dashboard-shell:end --><!-- industry-review:start --><aside class="industry-review" style="padding:10px 20px;background:#fff8e5;color:#665424;font-size:12px;line-height:1.7;border-bottom:1px solid #e7ddbc"><strong>口径说明 · 页面修订2026-09-22</strong>｜最新财务表与2026-05-12历史研究分开；原文注明26Q2未复核的判断仍待资料验证。</aside><!-- industry-review:end --><div class="wrap split-main">
+<header class="split-header"><div><a class="back-link" href="../industry-fundamentals-entry.html" data-industry-legacy-back="1">← 行业基本面入口</a><h1>钻针</h1><p>高端钻针供给、耗材价值量与公司比较。</p></div><a class="back-link" href="PCB-dashboard.html">返回 PCB 总览</a></header>
+<nav class="split-nav" aria-label="PCB看板导航"><a href="PCB-dashboard.html">总览</a><a href="pcb-manufacturing-dashboard.html">PCB 制造</a><a href="ccl-dashboard.html">CCL 覆铜板</a><a href="electronic-cloth-dashboard.html">电子布</a><a href="drill-dashboard.html" aria-current="page">钻针</a><a href="pcb-equipment-dashboard.html">PCB 设备</a></nav>
+
+<div class="st">钻针 · 竞争格局与跟踪数据</div>
+<div class="card"><div class="tab-pane active" id="tab-drill">
+    <!-- 业绩表 -->
+    <table class="ctable">
+      <thead><tr><th>公司</th><th>代码</th><th>披露状态</th><th>26Q2收入</th><th>收入YoY</th><th>26Q2毛利率</th><th>毛利率YoY</th><th>26Q2扣非</th><th>扣非YoY</th><th>口径 / 跟踪点</th></tr></thead>
+      <tbody>
+        <tr><td><strong>鼎泰高科</strong></td><td><code>301377</code></td><td><span class="a-meet">已披露</span></td><td>11.29亿</td><td><span class="yp">+134.7%</span></td><td>57.8%</td><td><span class="yp">+17.6pct</span></td><td>4.15亿</td><td><span class="yp">+409.2%</span></td><td style="color:var(--text2)">钻针与精密工具等公司整体口径</td></tr>
+        <tr><td><strong>中钨高新</strong></td><td><code>000657</code></td><td><span class="a-meet">已披露</span></td><td>93.78亿</td><td><span class="yp">+110.4%</span></td><td>30.3%</td><td><span class="yp">+8.7pct</span></td><td>11.37亿</td><td><span class="yp">+305.7%</span></td><td style="color:var(--text2)">含矿业等业务，不能等同金洲钻针</td></tr>
+      </tbody>
+    </table>
+    <div style="font-size:11px;color:var(--text2);padding:8px 10px;background:#f8fafc;border-radius:6px;margin:8px 0"><strong>26Q2财务口径：</strong>本表为26Q2单季度公司合并报表，YoY对比25Q2；收入、毛利率及扣非取项目 <a title="本地研究底稿，未随公开看板发布" aria-disabled="true">PCB季度业绩对比.xlsx</a> 缓存值。中钨包含矿业等业务，不是金洲钻针单独业绩。业绩状态只表示已披露，不代表超预期。</div>
+    <div style="font-size:11px;padding:8px 10px;background:#ecfeff;border-radius:6px;border:1px solid #a5f3fc;margin-top:8px">
+      📌 <strong>中钨金洲前期调研（260512浙商线下，26Q2未复核）：</strong>26Q1 PCB钻针出货2.8亿只，全年预计12亿只+；2亿只项目2026年6-7月投产（+1,500万支/月）；AiP PCB市占率<strong>80%+</strong>（0.2mm以上全球第一），全球前20大AiP基板厂已合作19家，与生益科技签订保供协议；<strong>40倍径以上全行业唯一批量供应</strong>（50倍已量产，60倍通过客户验证）；M9钻针寿命700-900孔（vs市场普通200孔）
+    </div>
+
+    <div style="font-size:11px;color:var(--text2);margin:10px 0">下方出货、产能及竞争格局沿用前期调研；26Q1节点保留为历史数据，尚未据26Q2财报验证。</div>
+    <!-- 全球竞争格局 -->
+    <div style="margin-top:16px;margin-bottom:6px;font-weight:700;font-size:12px;color:var(--accent)">▍ 全球竞争格局（前期调研判断，待复核）</div>
+    <table class="ctable">
+      <thead><tr><th>公司</th><th>月产量（PCB钻针）</th><th>2026目标</th><th>AI PCB市占率</th><th>核心优势/状态</th><th>梯队</th></tr></thead>
+      <tbody>
+        <tr><td><strong>鼎泰高科</strong> 301377</td><td><strong data-tip="dingtech-capacity">1.3亿支/月</strong></td><td><strong>2亿支/月（26年底）</strong></td><td><span class="yp"><strong>~40%+</strong></span></td><td>设备自制（成本1/3进口价）；毛利率53%最高；50亿智造基地在建</td><td style="color:var(--up);font-weight:700">第一梯队</td></tr>
+        <tr><td><strong>中钨金洲</strong> 000657子</td><td><strong>9,000万支/月（超产能）</strong></td><td><strong>约1亿支/月（6-7月投产）</strong></td><td><span class="yp"><strong data-tip="zhongwu-aip-share">80%+（AiP PCB）</strong></span></td><td>瑞士设备保有量行业最多；40倍径以上无竞品；全产业链（矿→粉→针）</td><td style="color:var(--up);font-weight:700">第一梯队</td></tr>
+        <tr style="color:var(--text2)"><td>佑能工具（日本）</td><td>未核实</td><td>前期说法待核</td><td>未核实</td><td>暂无可核验的26Q2经营数据</td><td>待核</td></tr>
+        <tr style="color:var(--text2)"><td>尖点科技（8021.TW）</td><td>未核实</td><td>前期说法待核</td><td>未核实</td><td>暂无可核验的26Q2经营数据</td><td>待核</td></tr>
+      </tbody>
+    </table>
+    <div style="font-size:11px;color:var(--text2);margin-top:6px;padding:8px 10px;background:#fef2f2;border-radius:6px;border:1px solid #fecaca">
+      ⚠️ <strong>前期竞争格局判断，26Q2未复核：</strong>原调研认为鼎泰与金洲在高端钻针中更具竞争力；其他厂商的出货、财务与经营状态缺少可核验的26Q2资料，不能据此判定退出或破产。
+    </div>
+
+    <!-- 鼎泰产能路线图 -->
+    <div style="margin-top:16px;margin-bottom:6px;font-weight:700;font-size:12px;color:var(--accent)">▍ 鼎泰高科产能路线图</div>
+    <table class="ctable">
+      <thead><tr><th>时间节点</th><th>月产能</th><th>关键事件</th></tr></thead>
+      <tbody>
+        <tr><td>2024年均值</td><td>~5,000-6,000万支/月</td><td>AI PCB需求启动，订单开始排期</td></tr>
+        <tr><td>2025年</td><td>~8,000-9,000万支/月</td><td>AI扩产期，产线快速爬坡</td></tr>
+        <tr><td><strong>2026Q1</strong></td><td><strong>1.3亿支/月</strong></td><td>供不应求确认，毛利率同比+15pct至53%</td></tr>
+        <tr><td>2026年底目标</td><td><strong>2亿支/月</strong></td><td>新产线投产，配套AI PCB扩产节奏</td></tr>
+      </tbody>
+    </table>
+
+    <!-- AI钻针价值量阶梯 -->
+    <div style="margin-top:16px;margin-bottom:6px;font-weight:700;font-size:12px;color:var(--accent)">▍ AI钻针价值量阶梯（长径比→价格体系）</div>
+    <table class="ctable">
+      <thead><tr><th>长径比</th><th>代表规格</th><th>单支价格（元）</th><th>寿命（孔/支）</th><th>应用场景</th></tr></thead>
+      <tbody>
+        <tr><td>&lt;30倍</td><td>0.2/5mm</td><td>1.5-1.6元</td><td>1,000-2,000孔</td><td>普通服务器PCB</td></tr>
+        <tr><td>30-40倍</td><td>0.2/7-8mm</td><td><strong>3-4元</strong></td><td>400-800孔</td><td>GB200/GB300 AI板（当前主流需求段）</td></tr>
+        <tr style="background:#fefce8"><td>40-50倍</td><td>0.2/8.5-9.5mm</td><td><strong style="color:var(--warn)">8-10元</strong></td><td>200-400孔</td><td>Rubin 144、M9厚板（<strong>利润贡献最大段</strong>）</td></tr>
+        <tr style="background:#fef2f2"><td>50倍+</td><td>0.2/10mm+</td><td><strong style="color:var(--dn)">15-20元</strong></td><td>&lt;200孔</td><td>CPX正交背板、Ultra 576</td></tr>
+      </tbody>
+    </table>
+    <div style="font-size:11px;color:var(--text2);margin-top:4px;padding:6px 10px;background:#f8f9fa;border-radius:5px">
+      材料升级对寿命的影响：M6(2,000孔) → M7(1,000孔) → M8(400-500孔) → M9(100-200孔)；M9需<strong>分3-4次分段钻孔</strong>
+    </div>
+
+    <!-- 机柜维度消耗量 -->
+    <div style="margin-top:14px;margin-bottom:6px;font-weight:700;font-size:12px;color:var(--accent)">▍ 机柜维度钻针消耗量（量价双乘数效应）</div>
+    <table class="ctable">
+      <thead><tr><th>机柜型号</th><th>单柜用钻量</th><th>均价（元/支）</th><th>单柜钻针价值量</th><th>vs GB200倍数</th></tr></thead>
+      <tbody>
+        <tr><td>GB200 NVL72</td><td>~3,000支</td><td>1.5元</td><td>~4,500元</td><td>1×</td></tr>
+        <tr><td>GB300 NVL72</td><td>~7,000支</td><td>3-4元</td><td>~2.5万元</td><td><span class="yp">5.5×</span></td></tr>
+        <tr style="background:#fefce8"><td>Rubin 144</td><td>~15,000支</td><td>8-10元</td><td>~13.5万元</td><td><span class="yp" style="font-weight:700">30×</span></td></tr>
+        <tr style="background:#fef2f2"><td>Rubin CPX</td><td>~30,000支</td><td>10-15元</td><td>~37.5万元</td><td><span class="yp" style="font-weight:700">83×</span></td></tr>
+        <tr style="background:#fef2f2"><td><strong>Rubin Ultra 576</strong></td><td>~50,000支</td><td><strong>15-20元</strong></td><td><strong>~75万元</strong></td><td><span class="yp" style="font-weight:700;color:var(--dn)">167×</span></td></tr>
+      </tbody>
+    </table>
+    <div style="font-size:11px;color:var(--text2);margin-top:4px;padding:6px 10px;background:#f0fdf4;border-radius:5px;border-left:3px solid var(--up)">
+      💡 单柜钻针价值量从GB200的4,500元→Ultra 576的75万元，<strong>增长167倍</strong>。每台机柜卖出，钻针受益是AI PCB里弹性最纯粹、最即时的环节——没有客户认证等待，随出货线性兑现。
+    </div>
+
+    <!-- 核心壁垒 -->
+    <div style="margin-top:16px;margin-bottom:6px;font-weight:700;font-size:12px;color:var(--accent)">▍ 核心壁垒（为何鼎泰份额持续扩张）</div>
+    <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:14px">
+      <div style="padding:10px 12px;background:#f0fdf4;border-radius:8px;border:1px solid #86efac">
+        <div style="font-weight:700;font-size:12px;margin-bottom:4px;color:var(--up)">① 设备自制（核心壁垒）</div>
+        <div style="font-size:11px;color:var(--text2)">鼎泰自研钻针研磨机与生产设备，竞争对手须从外部采购，鼎泰设备成本比外采低40-50%，同时掌握工艺参数不外泄。</div>
+      </div>
+      <div style="padding:10px 12px;background:#eff6ff;border-radius:8px;border:1px solid #93c5fd">
+        <div style="font-weight:700;font-size:12px;margin-bottom:4px;color:#1d4ed8">② 材料优势</div>
+        <div style="font-size:11px;color:var(--text2)">AI PCB钻针需超细钨钢棒材（直径0.1-0.3mm），鼎泰与钨矿/粉冶企业深度绑定，优先获取高纯度钨材，台湾厂商依赖日本供应链，成本偏高。</div>
+      </div>
+      <div style="padding:10px 12px;background:#fefce8;border-radius:8px;border:1px solid #fde68a">
+        <div style="font-weight:700;font-size:12px;margin-bottom:4px;color:#92400e">③ 客户认证先发</div>
+        <div style="font-size:11px;color:var(--text2)">已通过鸿海、比亚迪等大客户认证，且认证周期约6-12个月。AI PCB扩产节奏紧张，客户无意愿切换二供，鼎泰份额具粘性。</div>
+      </div>
+      <div style="padding:10px 12px;background:#fdf4ff;border-radius:8px;border:1px solid #d8b4fe">
+        <div style="font-weight:700;font-size:12px;margin-bottom:4px;color:#7e22ce">④ 规模效应（双强共有）</div>
+        <div style="font-size:11px;color:var(--text2)">前期调研估计鼎泰与金洲合计月产出约2.2亿支；该出货量及其他厂商状态尚未按26Q2披露复核。规模化可能摊薄固定成本，仍需用分产品经营数据验证。</div>
+      </div>
+    </div>
+
+    <div class="seg-sum"><strong>26Q2财务观察：</strong>鼎泰高科收入11.29亿元、毛利率57.8%；中钨高新收入93.78亿元、毛利率30.3%，但中钨含矿业等业务。下方机柜钻针价值量是前期情景测算，不是公司已实现收入；出货量、份额与替代技术状态仍需分产品披露验证。</div>
+
+    <div class="chart-row" style="margin-top:14px">
+      <div class="chart-box"><h4>钻针 — 季度收入（亿元）</h4><div class="chart-wrap"><div id="c-drill-rev" class="svg-chart"></div></div></div>
+      <div class="chart-box"><h4>钻针 — 毛利率（%）</h4><div class="chart-wrap"><div id="c-drill-gm" class="svg-chart"></div></div></div>
+    </div>
+  </div></div>
+<p class="split-source">本页由原 PCB 研究看板的「钻针」分栏迁出，原有表格及季度图表数据保留。公司财务表及季度趋势已更新至 2026Q2；其余产品、价格和产能资料保留原调研日期，2Q26 跨环节更新见 <a href="PCB-dashboard.html">PCB 总览</a>。<a title="本地研究底稿，未随公开看板发布" aria-disabled="true">查看拆分前历史完整版</a>。</p>
+</div>
+<script>const QTR = ['23Q1','23Q2','23Q3','23Q4','24Q1','24Q2','24Q3','24Q4','25Q1','25Q2','25Q3','25Q4','26Q1','26Q2'];
+const COLORS = ['#0891b2','#16a34a','#8b5cf6','#d97706','#f43f5e','#64748b'];
+
+// ── 修订历史 & 数据冲突 数据字典 ──
+// 维护说明：每次数字更新时，把旧值连同来源移入 records，新值写入看板表格
+// type: 'history' = 同一指标的时间修订序列
+// type: 'conflict' = 多来源说法不同，需标注采用哪个
+const tipData = {
+
+  'dingtech-capacity': {
+    type: 'history',
+    label: '鼎泰高科 — 月产量修订记录',
+    records: [
+      { date: '2026Q1实际', value: '1.3亿支/月', delta: '↑', source: '鼎泰高科纪要' },
+      { date: '2025年11月底', value: '1.15亿支/月', delta: '↑', source: '2025Q3交流会' },
+      { date: '2025Q4', value: '1.1亿支/月', delta: '↑', source: '鼎泰高科纪要' },
+      { date: '2025H1', value: '~1.0亿支/月', delta: '↑', source: '鼎泰高科纪要' },
+      { date: '2024均', value: '~8,500万支/月', delta: '—', source: '鼎泰高科纪要' },
+    ],
+    note: '目标：2026年中1.5亿→2026年底2亿→2027年极限2.5亿 | 持续上修=供不应求确认'
+  },
+
+  'ccl-fr4-price': {
+    type: 'history',
+    label: 'FR-4 CCL 价格（元/张）修订记录',
+    records: [
+      { date: '2026年Q1', value: '150-200元/张', delta: '↑', source: '中金/国泰海通研报' },
+      { date: '2026年1月', value: '日本龙头宣布3月起涨30%', delta: '↑', source: '开源研报' },
+      { date: '2025年底', value: '累计涨价25个点以上', delta: '↑', source: '开源研报' },
+      { date: '2025年中', value: '120-130元/张', delta: '↑', source: '建滔4轮涨价' },
+      { date: '2025年初', value: '~100元/张', delta: '—', source: '中金研报' },
+    ],
+    note: '2021年历史高点210-220元/张；本轮接近但未超历史高点 | 建滔2025年共涨4轮，2026年已涨2轮'
+  },
+
+  'diamond-drill-status': {
+    type: 'conflict',
+    label: '金刚石钻针 — 替代威胁评估',
+    sources: [
+      { source: '市场担忧', value: '金刚石钻针可能替代传统钨钢针，改变鼎泰/金洲竞争格局' },
+      { source: '研报核实（天风/长江机械）', value: '实验室阶段，全球年产仅~56万只（月均不足5万支），是鼎泰单月产量的0.04%' },
+      { source: '行业定位', value: '补充方案而非替代；传统钨钢+TEC/PVD涂层升级仍是主流且成本更优' },
+    ],
+    chosen: '短期1-2年内不影响竞争格局；主要参与者（沃尔德/四方达）仍在少数客户测试中，未进小批量出货',
+    note: '⚠ 长期（3年+）技术路线仍有不确定性，需持续跟踪测试进展'
+  },
+
+  'zhongwu-aip-share': {
+    type: 'conflict',
+    label: 'AI PCB钻针市占率 — 来源分歧',
+    sources: [
+      { source: '中钨金洲纪要260512（自述）', value: '80%+（AiP PCB，0.2mm以上规格）' },
+      { source: '鼎泰高科纪要（自述）',       value: '全球最大，目标40%+（全规格PCB钻针）' },
+      { source: '产量推算交叉验证',            value: '鼎泰1.3亿 vs 金洲9,000万 → 产量比≈59:41，80%不可信' },
+    ],
+    chosen: '金洲80%可能特指AiP载板最后一道通孔工序（极小径超长径比），金洲是该子分类唯一批量供应商；整体AI PCB钻针份额两强接近，实际以产量比59:41更可信',
+    note: '⚠ 自述市占率存在口径选择偏差，企业倾向于选对自己最有利的子分类'
+  }
+
+};
+
+// ── Tooltip 渲染逻辑 ──
+const tipBubble = document.createElement('div');
+tipBubble.className = 'tip-bubble';
+document.body.appendChild(tipBubble);
+
+function buildTipHtml(key) {
+  const d = tipData[key];
+  if (!d) return '';
+  const icon = d.type === 'history' ? '📅' : '⚠️';
+  let html = `<div class="tip-title">${icon} ${d.label}</div>`;
+  if (d.type === 'history') {
+    d.records.forEach(r => {
+      const dc = r.delta === '↑' ? 'tip-delta-up' : r.delta === '↓' ? 'tip-delta-dn' : 'tip-delta-eq';
+      html += `<div class="tip-row">
+        <span class="tip-date">${r.date}</span>
+        <span class="tip-val">${r.value}</span>
+        <span class="${dc}">${r.delta}</span>
+        <span class="tip-src">${r.source}</span>
+      </div>`;
+    });
+  } else if (d.type === 'conflict') {
+    d.sources.forEach(s => {
+      html += `<div class="tip-conflict-row">
+        <span class="tip-conflict-src">来源：${s.source}</span>
+        <span class="tip-conflict-val">${s.value}</span>
+      </div>`;
+    });
+    if (d.chosen) html += `<div class="tip-chosen">✓ 采用：${d.chosen}</div>`;
+  }
+  if (d.note) html += `<div class="tip-note">${d.note}</div>`;
+  return html;
+}
+
+function positionTip(e) {
+  const bw = tipBubble.offsetWidth, bh = tipBubble.offsetHeight;
+  const x = e.clientX + 14, y = e.clientY + 14;
+  tipBubble.style.left = (x + bw > window.innerWidth - 10 ? e.clientX - bw - 14 : x) + 'px';
+  tipBubble.style.top  = (y + bh > window.innerHeight - 10 ? e.clientY - bh - 14 : y) + 'px';
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('[data-tip]').forEach(el => {
+    el.classList.add('tip-host');
+    el.addEventListener('mouseenter', e => {
+      tipBubble.innerHTML = buildTipHtml(el.dataset.tip);
+      tipBubble.classList.add('visible');
+      positionTip(e);
+    });
+    el.addEventListener('mousemove', positionTip);
+    el.addEventListener('mouseleave', () => tipBubble.classList.remove('visible'));
+  });
+});
+
+
+
+function renderTrend(id, companies, metric) {
+  const host = document.getElementById(id); if (!host) return;
+  const W=700,H=220,left=39,right=12,top=37,bottom=29;
+  const vals=companies.flatMap(c=>c[metric]).map(v=>metric==='gm'?v*100:v);
+  const lo=metric==='gm'?Math.floor((Math.min(...vals)-2)/5)*5:0;
+  const hi=Math.ceil((Math.max(...vals)+2)/5)*5;
+  const x=i=>left+(W-left-right)*i/(QTR.length-1);
+  const y=v=>top+(H-top-bottom)*(hi-v)/(hi-lo);
+  const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  let svg=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${metric==='gm'?'季度毛利率':'季度收入'}趋势图" preserveAspectRatio="xMidYMid meet">`;
+  for(let i=0;i<=4;i++){const v=lo+(hi-lo)*i/4, yy=y(v);svg+=`<line x1="${left}" y1="${yy}" x2="${W-right}" y2="${yy}" stroke="#e5eaf0"/><text x="${left-5}" y="${yy+3}" text-anchor="end" fill="#64748b" font-size="9">${v.toFixed(0)}${metric==='gm'?'%':''}</text>`;}
+  QTR.forEach((q,i)=>{if(i%2===0||i===QTR.length-1)svg+=`<text x="${x(i)}" y="${H-8}" text-anchor="middle" fill="#64748b" font-size="9">${q}</text>`;});
+  companies.forEach((c,i)=>{const color=COLORS[i%COLORS.length],vs=c[metric].map(v=>metric==='gm'?v*100:v);svg+=`<polyline points="${vs.map((v,j)=>`${x(j)},${y(v)}`).join(' ')}" fill="none" stroke="${color}" stroke-width="2.4" stroke-linejoin="round"/><circle cx="${x(vs.length-1)}" cy="${y(vs.at(-1))}" r="3.5" fill="${color}"/>`;});
+  let lx=left;companies.forEach((c,i)=>{svg+=`<line x1="${lx}" y1="15" x2="${lx+13}" y2="15" stroke="${COLORS[i%COLORS.length]}" stroke-width="3"/><text x="${lx+17}" y="18" fill="#334155" font-size="10">${esc(c.name)}</text>`;lx+=Math.max(80,28+String(c.name).length*11);});
+  host.innerHTML=svg+'</svg>';
+}
+function mkRevChart(id, companies){renderTrend(id,companies,'rev')}
+function mkGmChart(id, companies){renderTrend(id,companies,'gm')}
+function renderCapex(){
+  const host=document.getElementById('c-pcb-capex');if(!host)return;
+  const years=['2018','2019','2020','2021','2022','2023','2024','2025','2026E'];
+  const series=[
+    ['鹏鼎控股',[40.4,38.5,54.5,69.7,43.4,35.1,28.4,66.3,168],'#7c3aed'],
+    ['胜宏科技',[11.6,14.8,21,15.4,10.6,6.4,8.3,66.2,200],'#dc2626'],
+    ['深南电路',[11.8,21.8,24.9,26.6,33.8,32.5,25.3,37.7,94.3],'#0891b2'],
+    ['沪电股份',[2.7,4.4,3.7,5,8.8,8.1,21.5,32,70.4],'#16a34a'],
+    ['景旺电子',[5.3,9.2,18.8,23.9,18.9,14.5,18.5,27.7,60.9],'#d97706'],
+    ['生益电子',[2.7,5.8,10.7,9.8,6.9,6.2,4.2,16.4,49.2],'#94a3b8']];
+  const W=700,H=240,L=37,R=10,T=27,B=45,max=700,step=(W-L-R)/years.length,bw=step*.55;
+  const y=v=>H-B-(H-T-B)*v/max;
+  let svg=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="PCB厂资本开支堆叠柱状图" preserveAspectRatio="none">`;
+  for(let v=0;v<=700;v+=175){let yy=y(v);svg+=`<line x1="${L}" y1="${yy}" x2="${W-R}" y2="${yy}" stroke="#e5eaf0"/><text x="${L-5}" y="${yy+3}" text-anchor="end" fill="#64748b" font-size="9">${v}</text>`;}
+  years.forEach((yr,j)=>{let sum=0,x=L+step*j+(step-bw)/2;series.forEach(s=>{let val=s[1][j],h=y(sum)-y(sum+val);svg+=`<rect x="${x}" y="${y(sum+val)}" width="${bw}" height="${h}" fill="${s[2]}"><title>${s[0]} ${yr}：${val}亿元</title></rect>`;sum+=val;});svg+=`<text x="${x+bw/2}" y="${H-B+14}" text-anchor="middle" fill="#64748b" font-size="9">${yr}</text>`;});
+  let lx=L;series.forEach(s=>{svg+=`<rect x="${lx}" y="${H-17}" width="8" height="8" fill="${s[2]}"/><text x="${lx+11}" y="${H-9}" fill="#334155" font-size="9">${s[0]}</text>`;lx+=100;});host.innerHTML=svg+'</svg>';
+}
+
+const D = {
+  drill: [
+    {"name": "鼎泰高科", "rev": [2.76259, 3.06394, 3.44557, 3.93014, 3.32756, 3.79816, 4.16002, 4.51057, 4.23286, 4.80983, 5.53053, 6.86216, 8.14117, 11.28735], "gm": [0.390643, 0.337017, 0.401828, 0.333921, 0.337684, 0.354349, 0.371658, 0.363306, 0.380467, 0.402985, 0.428775, 0.45991, 0.532544, 0.578489]},
+    {"name": "中钨高新", "rev": [30.56863, 34.89201, 30.01969, 31.87967, 29.66776, 38.40077, 34.21803, 45.14113, 33.91702, 44.57133, 49.06439, 48.83237, 70.06834, 93.78091], "gm": [0.172348, 0.153877, 0.159926, 0.1896, 0.141606, 0.154929, 0.147532, 0.384066, 0.206261, 0.216095, 0.228512, 0.284891, 0.304503, 0.303296]},
+  ],
+};
+
+mkRevChart('c-drill-rev', D.drill);
+mkGmChart('c-drill-gm', D.drill);
+
+</script></body></html>

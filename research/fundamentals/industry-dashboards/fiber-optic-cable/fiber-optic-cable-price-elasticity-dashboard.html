@@ -110,8 +110,26 @@
     .hm{grid-template-columns:70px repeat(5,1fr)}
   }
 </style>
-</head>
-<body>
+<style>
+/* industry-dashboard-shell:start */
+:root{--bg:#f4f6f1;--card:#fff;--paper:#fff;--border:#dce2d8;--line:#dce2d8;
+ --text:#1d292c;--text-primary:#1d292c;--text2:#667477;--text-secondary:#667477;
+ --accent:#247052;--deep:#23483f;--green:#247052}
+body{background:#f4f6f1!important;font-family:"Microsoft YaHei","PingFang SC","Segoe UI",sans-serif}
+.industry-shell{position:relative;z-index:101;display:flex;align-items:center;gap:10px 14px;
+ flex-wrap:wrap;padding:11px max(20px,calc((100vw - 1280px)/2));background:#23483f;
+ color:#fff;font:500 12px/1.5 "Microsoft YaHei","PingFang SC",sans-serif}
+.industry-shell *{box-sizing:border-box}
+.industry-shell a{color:#d7f2df!important;text-decoration:none!important;font-weight:700}
+.industry-shell a:hover{text-decoration:underline!important}
+.industry-shell__name{font-weight:800;font-size:13px;color:#fff}
+.industry-shell__kind{border:1px solid #91bd9e;border-radius:999px;padding:2px 8px;color:#e9f8ed}
+.industry-shell__asof{margin-left:auto;color:#e2efe5}
+body a[data-industry-legacy-back="1"]{display:none!important}
+@media(max-width:680px){.industry-shell{padding:10px 15px}.industry-shell__asof{margin-left:0;width:100%}}
+/* industry-dashboard-shell:end */
+</style></head>
+<body><!-- industry-dashboard-shell:start --><nav class="industry-shell" aria-label="行业看板统一导航"><a href="../industry-fundamentals-entry.html">行业看板</a><span aria-hidden="true">/</span><span class="industry-shell__name">光纤光缆 · 涨价弹性测算看板</span><span class="industry-shell__kind">模型测算</span><span class="industry-shell__asof">数据日期与口径见正文</span></nav><!-- industry-dashboard-shell:end --><!-- industry-review:start --><aside class="industry-review" style="padding:10px 20px;background:#fff8e5;color:#665424;font-size:12px;line-height:1.7;border-bottom:1px solid #e7ddbc"><strong>口径说明 · 页面修订2026-09-22</strong>｜历史260429模型/2026-06-16页面。市值亨通1200、中天920、长飞1250亿元为旧输入，交易基准日未标，不代表现价；最新已存交互版见光纤主看板。70元为独立假设，原分项加权75元不能作为其依据。</aside><!-- industry-review:end -->
 
 <header class="hdr">
   <div class="hdr-l">
@@ -120,7 +138,7 @@
     <span class="badge-up">🟢 上行</span>
   </div>
   <div style="display:flex;align-items:center;gap:16px;">
-    <a class="back-link" href="光纤光缆_看板.html">← 光纤光缆框架看板</a>
+    <a class="back-link" href="fiber-optic-cable-dashboard.html">← 光纤光缆框架看板</a>
     <div class="hdr-meta">
       三家龙头涨价弹性模型<br>
       更新：2026-06-16 ｜ 测算底稿：260429
@@ -156,7 +174,7 @@
     <div class="kpi">
       <div class="lbl">情景假设来源</div>
       <div class="val val-sm">集采价格暴涨</div>
-      <div class="note">运营商框采 + 散纤需求共振<br>需 4 月后电信框采验证</div>
+      <div class="note">运营商框采 + 散纤需求共振<br>原计划于4月后验证；截至2026-09-22结果待补</div>
     </div>
   </div>
 
@@ -258,7 +276,7 @@
       <ul class="assume">
         <li><b>2025 国内单价 22.7 元</b>：散纤占比 10%（单价 18~20）+ 运营商占比 90%（单价 ~23，加权后 22.7）；中国移动 1H25 高基数 24。</li>
         <li><b>其他光纤生产效率</b>：657A/654E 等品种综合效率较 G652D 低 35~40%，年产值转换效率按七折计。</li>
-        <li><b>2026 国内单价 70 元</b>：散纤占比升至 25%（单价 90）+ 运营商占比 75%（单价 ~70），待 4 月后电信框采更新验证。</li>
+        <li><b>2026 国内单价70元：独立情景假设，待核</b>。原分项为散纤25%×90元＋运营商75%×约70元，按列示点值加权为75元，与70元不同，不能用作70元的推导依据。保留70元情景，不擅改底稿；框采结果待补。</li>
         <li><b>长飞定价特殊性</b>：A2 散单少，单价主要考虑数据中心用纤价格；其他品种国内/海外单价 100 元（亨通/中天为 140 元）。</li>
         <li><b>成缆加成</b>：假设（光缆−光纤）部分不涨价，仅看光纤涨价带来的收入增量；总产量增长另行计入。</li>
         <li><b>期间费用</b>：2026 同比 +10%。</li>
@@ -281,7 +299,7 @@
   <div class="foot">
     <b>数据源</b>：<code>workwork/knowledge/database/光纤数据/副本【请勿转发】个股测算 260429(1).xlsx</code>（Shiwen Li, RS 测算模型）<br>
     <b>代码口径</b>：本看板以 Excel 为准 — 亨通 <code>600487.SH</code>、中天 <code>600522.SH</code>（已修正框架看板的 002512）、长飞 <code>6869.HK</code>（港股）。<br>
-    <b>配套</b>：<a href="光纤光缆_看板.html" style="color:var(--accent)">光纤光缆框架看板</a>（行业格局/催化剂/标的映射）｜<b>货币</b>：人民币亿元，长飞市值为港股市值折算。
+    <b>配套</b>：<a href="fiber-optic-cable-dashboard.html" style="color:var(--accent)">光纤光缆框架看板</a>（行业格局/催化剂/标的映射）｜<b>货币</b>：人民币亿元，长飞市值为港股市值折算。
   </div>
 
 </div>

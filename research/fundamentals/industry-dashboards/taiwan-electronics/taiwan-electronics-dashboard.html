@@ -76,12 +76,30 @@ code{font-size:10px;background:var(--tag-bg);color:var(--tag);padding:1px 5px;bo
 @media(max-width:1100px){.kpi-g{grid-template-columns:repeat(2,1fr)}.seg-grid{grid-template-columns:repeat(3,1fr)}}
 @media(max-width:700px){.seg-grid{grid-template-columns:repeat(2,1fr)}}
 </style>
-</head>
-<body>
+<style>
+/* industry-dashboard-shell:start */
+:root{--bg:#f4f6f1;--card:#fff;--paper:#fff;--border:#dce2d8;--line:#dce2d8;
+ --text:#1d292c;--text-primary:#1d292c;--text2:#667477;--text-secondary:#667477;
+ --accent:#247052;--deep:#23483f;--green:#247052}
+body{background:#f4f6f1!important;font-family:"Microsoft YaHei","PingFang SC","Segoe UI",sans-serif}
+.industry-shell{position:relative;z-index:101;display:flex;align-items:center;gap:10px 14px;
+ flex-wrap:wrap;padding:11px max(20px,calc((100vw - 1280px)/2));background:#23483f;
+ color:#fff;font:500 12px/1.5 "Microsoft YaHei","PingFang SC",sans-serif}
+.industry-shell *{box-sizing:border-box}
+.industry-shell a{color:#d7f2df!important;text-decoration:none!important;font-weight:700}
+.industry-shell a:hover{text-decoration:underline!important}
+.industry-shell__name{font-weight:800;font-size:13px;color:#fff}
+.industry-shell__kind{border:1px solid #91bd9e;border-radius:999px;padding:2px 8px;color:#e9f8ed}
+.industry-shell__asof{margin-left:auto;color:#e2efe5}
+body a[data-industry-legacy-back="1"]{display:none!important}
+@media(max-width:680px){.industry-shell{padding:10px 15px}.industry-shell__asof{margin-left:0;width:100%}}
+/* industry-dashboard-shell:end */
+</style></head>
+<body><!-- industry-dashboard-shell:start --><nav class="industry-shell" aria-label="行业看板统一导航"><a href="../industry-fundamentals-entry.html">行业看板</a><span aria-hidden="true">/</span><span class="industry-shell__name">台股电子产业链月度看板</span><span class="industry-shell__kind">数据跟踪</span><span class="industry-shell__asof">数据日期与口径见正文</span></nav><!-- industry-dashboard-shell:end --><!-- industry-review:start --><aside class="industry-review" style="padding:10px 20px;background:#fff8e5;color:#665424;font-size:12px;line-height:1.7;border-bottom:1px solid #e7ddbc"><strong>口径说明 · 页面修订2026-09-22</strong>｜历史快照：数据截止2026-06-25，最新可比月营收2026-05。涨幅区间为2025年初至该截止日；本次未用新月份替换原始Excel。</aside><!-- industry-review:end -->
 
 <div class="hdr">
   <div class="hdr-l">
-    <a class="back-link" href="../industry-fundamentals-entry.html">← 行业基本面入口</a>
+    <a class="back-link" href="../industry-fundamentals-entry.html" data-industry-legacy-back="1">← 行业基本面入口</a>
     <div class="hdr-title">台股电子产业链月度看板</div>
     <span class="badge-tag">AI服务器/PCB/封测/IC设计</span>
   </div>
@@ -91,7 +109,7 @@ code{font-size:10px;background:var(--tag-bg);color:var(--tag);padding:1px 5px;bo
 <div class="wrap">
 
   <div class="st">概览 KPI</div>
-  
+
 <div class="kpi-g">
   <div class="kpi card"><div class="lbl">覆盖公司</div><div class="val">36</div><div class="note">13个产业链环节</div></div>
   <div class="kpi card"><div class="lbl">合计市值</div><div class="val">1,001,341</div><div class="note">亿新台币</div></div>
@@ -105,79 +123,79 @@ code{font-size:10px;background:var(--tag-bg);color:var(--tag);padding:1px 5px;bo
     <div class="seg-card" data-target="sec-0">
       <div class="seg-name">服务器ODM/EMS</div>
       <div class="seg-row"><span>5家 · 65,785亿</span></div>
-      <div class="seg-row"><span class="lbl2">YTD</span><span class="c-up">+52.0%</span></div>
+      <div class="seg-row"><span class="lbl2">2025年初至今</span><span class="c-up">+52.0%</span></div>
       <div class="seg-row"><span class="lbl2">营收YoY</span><span class="c-up">+45.3%</span></div>
     </div>
     <div class="seg-card" data-target="sec-1">
       <div class="seg-name">PCB/载板</div>
       <div class="seg-row"><span>6家 · 43,007亿</span></div>
-      <div class="seg-row"><span class="lbl2">YTD</span><span class="c-up">+404.8%</span></div>
+      <div class="seg-row"><span class="lbl2">2025年初至今</span><span class="c-up">+404.8%</span></div>
       <div class="seg-row"><span class="lbl2">营收YoY</span><span class="c-up">+45.4%</span></div>
     </div>
     <div class="seg-card" data-target="sec-2">
       <div class="seg-name">CCL/材料</div>
       <div class="seg-row"><span>3家 · 26,478亿</span></div>
-      <div class="seg-row"><span class="lbl2">YTD</span><span class="c-up">+707.4%</span></div>
+      <div class="seg-row"><span class="lbl2">2025年初至今</span><span class="c-up">+707.4%</span></div>
       <div class="seg-row"><span class="lbl2">营收YoY</span><span class="c-up">+90.8%</span></div>
     </div>
     <div class="seg-card" data-target="sec-3">
       <div class="seg-name">PCB钻针</div>
       <div class="seg-row"><span>1家 · 817亿</span></div>
-      <div class="seg-row"><span class="lbl2">YTD</span><span class="">0.0%</span></div>
+      <div class="seg-row"><span class="lbl2">2025年初至今</span><span class="">0.0%</span></div>
       <div class="seg-row"><span class="lbl2">营收YoY</span><span class="c-up">+86.3%</span></div>
     </div>
     <div class="seg-card" data-target="sec-4">
       <div class="seg-name">电源/散热</div>
       <div class="seg-row"><span>5家 · 72,233亿</span></div>
-      <div class="seg-row"><span class="lbl2">YTD</span><span class="c-up">+196.7%</span></div>
+      <div class="seg-row"><span class="lbl2">2025年初至今</span><span class="c-up">+196.7%</span></div>
       <div class="seg-row"><span class="lbl2">营收YoY</span><span class="c-up">+53.1%</span></div>
     </div>
     <div class="seg-card" data-target="sec-5">
       <div class="seg-name">晶圆代工</div>
       <div class="seg-row"><span>3家 · 644,850亿</span></div>
-      <div class="seg-row"><span class="lbl2">YTD</span><span class="c-up">+199.7%</span></div>
+      <div class="seg-row"><span class="lbl2">2025年初至今</span><span class="c-up">+199.7%</span></div>
       <div class="seg-row"><span class="lbl2">营收YoY</span><span class="c-up">+24.0%</span></div>
     </div>
     <div class="seg-card" data-target="sec-6">
       <div class="seg-name">封测</div>
       <div class="seg-row"><span>3家 · 35,951亿</span></div>
-      <div class="seg-row"><span class="lbl2">YTD</span><span class="c-up">+410.9%</span></div>
+      <div class="seg-row"><span class="lbl2">2025年初至今</span><span class="c-up">+410.9%</span></div>
       <div class="seg-row"><span class="lbl2">营收YoY</span><span class="c-up">+61.7%</span></div>
     </div>
     <div class="seg-card" data-target="sec-7">
       <div class="seg-name">IC设计</div>
       <div class="seg-row"><span>5家 · 86,760亿</span></div>
-      <div class="seg-row"><span class="lbl2">YTD</span><span class="c-up">+184.1%</span></div>
+      <div class="seg-row"><span class="lbl2">2025年初至今</span><span class="c-up">+184.1%</span></div>
       <div class="seg-row"><span class="lbl2">营收YoY</span><span class="c-up">+46.6%</span></div>
     </div>
     <div class="seg-card" data-target="sec-8">
       <div class="seg-name">存储</div>
       <div class="seg-row"><span>1家 · 16,458亿</span></div>
-      <div class="seg-row"><span class="lbl2">YTD</span><span class="c-up">+1530.8%</span></div>
+      <div class="seg-row"><span class="lbl2">2025年初至今</span><span class="c-up">+1530.8%</span></div>
       <div class="seg-row"><span class="lbl2">营收YoY</span><span class="c-up">+730.1%</span></div>
     </div>
     <div class="seg-card" data-target="sec-9">
       <div class="seg-name">硅片</div>
       <div class="seg-row"><span>1家 · 4,972亿</span></div>
-      <div class="seg-row"><span class="lbl2">YTD</span><span class="c-up">+183.2%</span></div>
+      <div class="seg-row"><span class="lbl2">2025年初至今</span><span class="c-up">+183.2%</span></div>
       <div class="seg-row"><span class="lbl2">营收YoY</span><span class="c-dn">-3.3%</span></div>
     </div>
     <div class="seg-card" data-target="sec-10">
       <div class="seg-name">连接器</div>
       <div class="seg-row"><span>1家 · 2,504亿</span></div>
-      <div class="seg-row"><span class="lbl2">YTD</span><span class="c-up">+17.1%</span></div>
+      <div class="seg-row"><span class="lbl2">2025年初至今</span><span class="c-up">+17.1%</span></div>
       <div class="seg-row"><span class="lbl2">营收YoY</span><span class="c-up">+9.0%</span></div>
     </div>
     <div class="seg-card" data-target="sec-11">
       <div class="seg-name">光通信/CPO</div>
       <div class="seg-row"><span>1家 · 715亿</span></div>
-      <div class="seg-row"><span class="lbl2">YTD</span><span class="c-up">+159.0%</span></div>
+      <div class="seg-row"><span class="lbl2">2025年初至今</span><span class="c-up">+159.0%</span></div>
       <div class="seg-row"><span class="lbl2">营收YoY</span><span class="c-dn">-24.8%</span></div>
     </div>
     <div class="seg-card" data-target="sec-12">
       <div class="seg-name">半导体设备/检测</div>
       <div class="seg-row"><span>1家 · 812亿</span></div>
-      <div class="seg-row"><span class="lbl2">YTD</span><span class="c-dn">-21.2%</span></div>
+      <div class="seg-row"><span class="lbl2">2025年初至今</span><span class="c-dn">-21.2%</span></div>
       <div class="seg-row"><span class="lbl2">营收YoY</span><span class="c-dn">-40.6%</span></div>
     </div>
   </div>
@@ -189,7 +207,7 @@ code{font-size:10px;background:var(--tag-bg);color:var(--tag);padding:1px 5px;bo
     <table class="ctable" id="all-table">
       <thead><tr>
         <th data-k="sector">产业链环节</th><th data-k="name">公司</th><th data-k="code">代码</th><th>A股映射</th>
-        <th data-k="mktcap">市值(亿)</th><th data-k="ytd">YTD</th><th data-k="d20">近20日</th>
+        <th data-k="mktcap">市值(亿)</th><th data-k="ytd">2025年初至今</th><th data-k="d20">近20日</th>
         <th data-k="latest_month">最新月</th><th data-k="latest_rev">月营收(亿)</th>
         <th data-k="mom">单月MoM</th><th data-k="yoy">单月YoY</th><th data-k="cum_yoy">累计YoY</th><th>业务看点</th>
       </tr></thead>
@@ -735,12 +753,12 @@ code{font-size:10px;background:var(--tag-bg);color:var(--tag);padding:1px 5px;bo
     </tr></tbody>
     </table>
     <div class="footnote">
-      点击表头可排序；YTD=2025年初至今涨跌幅，近20日=近20个交易日涨跌幅；单月MoM/YoY基于最新已披露月营收计算，累计YoY=当年累计营收(至最新披露月)同比去年同期累计，更能平滑单月波动。<br>
+      点击表头可排序；区间涨幅=2025年初至数据截止日涨跌幅，近20日=近20个交易日涨跌幅；单月MoM/YoY基于最新已披露月营收计算，累计YoY=当年累计营收(至最新披露月)同比去年同期累计，更能平滑单月波动。<br>
       A股映射为<strong>产业链逻辑对标</strong>，非精确可比公司：<span class="amap amap-strong">强</span>=股权或业务模式直接对应，<span class="amap amap-mid">中</span>=同环节但规模/模式有差异，<span class="amap amap-weak">弱</span>=仅产业链位置相近、体量或商业模式差距大。鼠标悬停查看对标逻辑说明，具体投资决策请结合自身研判复核。
     </div>
   </div>
 
-  
+
     <div class="tab-pane" id="sec-0">
       <div class="chart-box">
         <h4>服务器ODM/EMS · 各公司月营收趋势（亿新台币）</h4>
@@ -748,11 +766,11 @@ code{font-size:10px;background:var(--tag-bg);color:var(--tag);padding:1px 5px;bo
       </div>
       <table class="ctable">
         <thead><tr>
-          <th>公司</th><th>代码</th><th>A股映射</th><th>市值(亿)</th><th>YTD</th><th>近20日</th>
+          <th>公司</th><th>代码</th><th>A股映射</th><th>市值(亿)</th><th>2025年初至今</th><th>近20日</th>
           <th>最新月</th><th>月营收(亿)</th><th>单月MoM</th><th>单月YoY</th><th>累计YoY</th><th>业务看点</th>
         </tr></thead>
         <tbody><tr>
-      
+
       <td><strong>鸿海(富士康) Foxconn</strong></td>
       <td><code>2317.TW</code></td>
       <td class="amap-cell"><span class="amap amap-strong" title="[强] 鸿海集团子公司，AI服务器ODM代工业务直接对应">工业富联<br><code>601138.SH</code></span></td>
@@ -767,7 +785,7 @@ code{font-size:10px;background:var(--tag-bg);color:var(--tag);padding:1px 5px;bo
       <td class="desc-cell">全球最大EMS，AI服务器整机/机柜，NV液冷MGX合作</td>
     </tr>
 <tr>
-      
+
       <td><strong>广达 Quanta</strong></td>
       <td><code>2382.TW</code></td>
       <td class="amap-cell"><span class="amap amap-mid" title="[中] 同为AI服务器ODM代工模式，非股权关联">工业富联<br><code>601138.SH</code></span></td>
@@ -782,7 +800,7 @@ code{font-size:10px;background:var(--tag-bg);color:var(--tag);padding:1px 5px;bo
       <td class="desc-cell">AI服务器ODM龙头(GB200主供)，订单可见度至2027年</td>
     </tr>
 <tr>
-      
+
       <td><strong>纬颖 Wiwynn</strong></td>
       <td><code>6669.TW</code></td>
       <td class="amap-cell"><span class="amap amap-mid" title="[中] 云端服务器代工，业务模式与工业富联最相近">工业富联<br><code>601138.SH</code></span></td>
@@ -797,7 +815,7 @@ code{font-size:10px;background:var(--tag-bg);color:var(--tag);padding:1px 5px;bo
       <td class="desc-cell">云端服务器/ASIC服务器(AWS主要客户)</td>
     </tr>
 <tr>
-      
+
       <td><strong>纬创 Wistron</strong></td>
       <td><code>3231.TW</code></td>
       <td class="amap-cell"><span class="amap amap-mid" title="[中] 同为AI服务器ODM代工模式，非股权关联">工业富联<br><code>601138.SH</code></span></td>
@@ -812,7 +830,7 @@ code{font-size:10px;background:var(--tag-bg);color:var(--tag);padding:1px 5px;bo
       <td class="desc-cell">AI服务器爆发式增长，2026年AI营收三位数增长</td>
     </tr>
 <tr>
-      
+
       <td><strong>英业达 Inventec</strong></td>
       <td><code>2356.TW</code></td>
       <td class="amap-cell"><span class="amap amap-mid" title="[中] 同为AI服务器ODM代工模式，非股权关联">工业富联<br><code>601138.SH</code></span></td>
@@ -835,11 +853,11 @@ code{font-size:10px;background:var(--tag-bg);color:var(--tag);padding:1px 5px;bo
       </div>
       <table class="ctable">
         <thead><tr>
-          <th>公司</th><th>代码</th><th>A股映射</th><th>市值(亿)</th><th>YTD</th><th>近20日</th>
+          <th>公司</th><th>代码</th><th>A股映射</th><th>市值(亿)</th><th>2025年初至今</th><th>近20日</th>
           <th>最新月</th><th>月营收(亿)</th><th>单月MoM</th><th>单月YoY</th><th>累计YoY</th><th>业务看点</th>
         </tr></thead>
         <tbody><tr>
-      
+
       <td><strong>欣兴电子 Unimicron</strong></td>
       <td><code>3037.TW</code></td>
       <td class="amap-cell"><span class="amap amap-mid" title="[中] ABF载板，逻辑对标深南电路/兴森科技国产替代进度">深南电路<br><code>002916.SZ</code></span></td>
@@ -854,7 +872,7 @@ code{font-size:10px;background:var(--tag-bg);color:var(--tag);padding:1px 5px;bo
       <td class="desc-cell">ABF载板龙头，AI载板+AI HDI产品，Intel/AMD主供</td>
     </tr>
 <tr>
-      
+
       <td><strong>南亚电路板 Nan Ya PCB</strong></td>
       <td><code>8046.TW</code></td>
       <td class="amap-cell"><span class="amap amap-mid" title="[中] AI服务器PCB为主业，业务结构相近">沪电股份<br><code>002463.SZ</code></span></td>
@@ -869,7 +887,7 @@ code{font-size:10px;background:var(--tag-bg);color:var(--tag);padding:1px 5px;bo
       <td class="desc-cell">ABF载板大厂，受益Intel/AMD服务器CPU</td>
     </tr>
 <tr>
-      
+
       <td><strong>臻鼎-KY</strong></td>
       <td><code>4958.TW</code></td>
       <td class="amap-cell"><span class="amap amap-strong" title="[强] 鹏鼎控股为臻鼎-KY在A股上市的核心子公司，股权直接关联">鹏鼎控股<br><code>002938.SZ</code></span></td>
@@ -884,7 +902,7 @@ code{font-size:10px;background:var(--tag-bg);color:var(--tag);padding:1px 5px;bo
       <td class="desc-cell">全球大型 PCB 厂，Apple、消费电子、服务器相关</td>
     </tr>
 <tr>
-      
+
       <td><strong>金像电 GCE</strong></td>
       <td><code>2368.TW</code></td>
       <td class="amap-cell"><span class="amap amap-mid" title="[中] AI服务器PCB，业务结构相近">沪电股份<br><code>002463.SZ</code></span></td>
@@ -899,7 +917,7 @@ code{font-size:10px;background:var(--tag-bg);color:var(--tag);padding:1px 5px;bo
       <td class="desc-cell">AI高阶PCB龙头</td>
     </tr>
 <tr>
-      
+
       <td><strong>景硕 Kinsus</strong></td>
       <td><code>3189.TW</code></td>
       <td class="amap-cell"><span class="amap amap-mid" title="[中] ABF载板，逻辑对标深南电路/兴森科技">深南电路<br><code>002916.SZ</code></span></td>
@@ -914,7 +932,7 @@ code{font-size:10px;background:var(--tag-bg);color:var(--tag);padding:1px 5px;bo
       <td class="desc-cell">ABF载板(高毛利)，先进产线聚焦AI应用，载板价格双位数涨幅</td>
     </tr>
 <tr>
-      
+
       <td><strong>健鼎 Tripod</strong></td>
       <td><code>3044.TW</code></td>
       <td class="amap-cell"><span class="amap amap-mid" title="[中] 多层板/HDI，客户结构相近">胜宏科技<br><code>300476.SZ</code></span></td>
@@ -937,11 +955,11 @@ code{font-size:10px;background:var(--tag-bg);color:var(--tag);padding:1px 5px;bo
       </div>
       <table class="ctable">
         <thead><tr>
-          <th>公司</th><th>代码</th><th>A股映射</th><th>市值(亿)</th><th>YTD</th><th>近20日</th>
+          <th>公司</th><th>代码</th><th>A股映射</th><th>市值(亿)</th><th>2025年初至今</th><th>近20日</th>
           <th>最新月</th><th>月营收(亿)</th><th>单月MoM</th><th>单月YoY</th><th>累计YoY</th><th>业务看点</th>
         </tr></thead>
         <tbody><tr>
-      
+
       <td><strong>台光电 TUC</strong></td>
       <td><code>2383.TW</code></td>
       <td class="amap-cell"><span class="amap amap-strong" title="[强] 全球CCL双寡头之一，业务模式与客户结构高度相似">生益科技<br><code>600183.SH</code></span></td>
@@ -956,7 +974,7 @@ code{font-size:10px;background:var(--tag-bg);color:var(--tag);padding:1px 5px;bo
       <td class="desc-cell">高频高速覆铜板龙头，AI服务器CCL主供</td>
     </tr>
 <tr>
-      
+
       <td><strong>台燿 Ventec</strong></td>
       <td><code>6274.TWO</code></td>
       <td class="amap-cell"><span class="amap amap-strong" title="[强] 高频高速CCL，产品结构与生益科技最相近">生益科技<br><code>600183.SH</code></span></td>
@@ -971,7 +989,7 @@ code{font-size:10px;background:var(--tag-bg);color:var(--tag);padding:1px 5px;bo
       <td class="desc-cell">覆铜板/高速材料，营收同比+27%</td>
     </tr>
 <tr>
-      
+
       <td><strong>联茂 ITEQ</strong></td>
       <td><code>6213.TW</code></td>
       <td class="amap-cell"><span class="amap amap-mid" title="[中] CCL，规模较小，逻辑对标生益科技/华正新材">生益科技<br><code>600183.SH</code></span></td>
@@ -994,11 +1012,11 @@ code{font-size:10px;background:var(--tag-bg);color:var(--tag);padding:1px 5px;bo
       </div>
       <table class="ctable">
         <thead><tr>
-          <th>公司</th><th>代码</th><th>A股映射</th><th>市值(亿)</th><th>YTD</th><th>近20日</th>
+          <th>公司</th><th>代码</th><th>A股映射</th><th>市值(亿)</th><th>2025年初至今</th><th>近20日</th>
           <th>最新月</th><th>月营收(亿)</th><th>单月MoM</th><th>单月YoY</th><th>累计YoY</th><th>业务看点</th>
         </tr></thead>
         <tbody><tr>
-      
+
       <td><strong>尖点</strong></td>
       <td><code>8021.TW</code></td>
       <td class="amap-cell"><span class="amap amap-mid" title="[中] PCB钻针环节直接可比">鼎泰高科<br><code>301377.SZ</code></span></td>
@@ -1021,11 +1039,11 @@ code{font-size:10px;background:var(--tag-bg);color:var(--tag);padding:1px 5px;bo
       </div>
       <table class="ctable">
         <thead><tr>
-          <th>公司</th><th>代码</th><th>A股映射</th><th>市值(亿)</th><th>YTD</th><th>近20日</th>
+          <th>公司</th><th>代码</th><th>A股映射</th><th>市值(亿)</th><th>2025年初至今</th><th>近20日</th>
           <th>最新月</th><th>月营收(亿)</th><th>单月MoM</th><th>单月YoY</th><th>累计YoY</th><th>业务看点</th>
         </tr></thead>
         <tbody><tr>
-      
+
       <td><strong>台达电 Delta</strong></td>
       <td><code>2308.TW</code></td>
       <td class="amap-cell"><span class="amap amap-weak" title="[弱] 电源管理，台达电业务更多元(工业自动化+车用)，A股无精确对标">麦格米特<br><code>002851.SZ</code></span></td>
@@ -1040,7 +1058,7 @@ code{font-size:10px;background:var(--tag-bg);color:var(--tag);padding:1px 5px;bo
       <td class="desc-cell">AI电源+液冷解决方案龙头，800V高压直流，4月营收587亿新台币(+44%YoY)，液冷营收占比快速提升</td>
     </tr>
 <tr>
-      
+
       <td><strong>奇鋐 AVC</strong></td>
       <td><code>3017.TW</code></td>
       <td class="amap-cell"><span class="amap amap-mid" title="[中] 服务器散热模组，业务环节相近">飞荣达<br><code>300602.SZ</code></span></td>
@@ -1055,7 +1073,7 @@ code{font-size:10px;background:var(--tag-bg);color:var(--tag);padding:1px 5px;bo
       <td class="desc-cell">AI散热模组龙头，4大CSP水冷市占40-50%，4月营收同比+71.6%</td>
     </tr>
 <tr>
-      
+
       <td><strong>光宝 Lite-On</strong></td>
       <td><code>2301.TW</code></td>
       <td class="amap-cell"><span class="amap amap-weak" title="多元化光电/电源集团，A股无直接对标">暂无对标</span></td>
@@ -1070,7 +1088,7 @@ code{font-size:10px;background:var(--tag-bg);color:var(--tag);padding:1px 5px;bo
       <td class="desc-cell">云端相关营收Q1同比+70%，AI电源供应器</td>
     </tr>
 <tr>
-      
+
       <td><strong>健策 Jentech</strong></td>
       <td><code>3653.TW</code></td>
       <td class="amap-cell"><span class="amap amap-mid" title="[中] 均热板/散热材料，环节相近">中石科技<br><code>300684.SZ</code></span></td>
@@ -1085,7 +1103,7 @@ code{font-size:10px;background:var(--tag-bg);color:var(--tag);padding:1px 5px;bo
       <td class="desc-cell">散热均温板/液冷板，受益AI散热景气提升</td>
     </tr>
 <tr>
-      
+
       <td><strong>双鸿 Auras</strong></td>
       <td><code>3324.TWO</code></td>
       <td class="amap-cell"><span class="amap amap-strong" title="[强] AI服务器液冷散热龙头，业务模式最相近">英维克<br><code>002837.SZ</code></span></td>
@@ -1108,11 +1126,11 @@ code{font-size:10px;background:var(--tag-bg);color:var(--tag);padding:1px 5px;bo
       </div>
       <table class="ctable">
         <thead><tr>
-          <th>公司</th><th>代码</th><th>A股映射</th><th>市值(亿)</th><th>YTD</th><th>近20日</th>
+          <th>公司</th><th>代码</th><th>A股映射</th><th>市值(亿)</th><th>2025年初至今</th><th>近20日</th>
           <th>最新月</th><th>月营收(亿)</th><th>单月MoM</th><th>单月YoY</th><th>累计YoY</th><th>业务看点</th>
         </tr></thead>
         <tbody><tr>
-      
+
       <td><strong>台积电 TSMC</strong></td>
       <td><code>2330.TW</code></td>
       <td class="amap-cell"><span class="amap amap-weak" title="[弱] 晶圆代工逻辑对标，制程/体量差距悬殊，非真正可比">中芯国际<br><code>688981.SH</code></span></td>
@@ -1127,7 +1145,7 @@ code{font-size:10px;background:var(--tag-bg);color:var(--tag);padding:1px 5px;bo
       <td class="desc-cell">全球最大晶圆代工厂，AI芯片制造核心（3nm/2nm先进制程），CoWoS先进封装主导者，2026 Capex 520-560亿美元</td>
     </tr>
 <tr>
-      
+
       <td><strong>联电 UMC</strong></td>
       <td><code>2303.TW</code></td>
       <td class="amap-cell"><span class="amap amap-mid" title="[中] 成熟制程晶圆代工，业务结构相近">华虹半导体<br><code>688347.SH</code></span></td>
@@ -1142,7 +1160,7 @@ code{font-size:10px;background:var(--tag-bg);color:var(--tag);padding:1px 5px;bo
       <td class="desc-cell">成熟制程代工（28nm及以上），电源管理/车用芯片，8英寸稼动率回升</td>
     </tr>
 <tr>
-      
+
       <td><strong>世界先进</strong></td>
       <td><code>5347.TWO</code></td>
       <td class="amap-cell"><span class="amap amap-mid" title="[中] 特殊制程(功率器件/电源管理代工)，环节相近">华润微<br><code>688396.SH</code></span></td>
@@ -1165,11 +1183,11 @@ code{font-size:10px;background:var(--tag-bg);color:var(--tag);padding:1px 5px;bo
       </div>
       <table class="ctable">
         <thead><tr>
-          <th>公司</th><th>代码</th><th>A股映射</th><th>市值(亿)</th><th>YTD</th><th>近20日</th>
+          <th>公司</th><th>代码</th><th>A股映射</th><th>市值(亿)</th><th>2025年初至今</th><th>近20日</th>
           <th>最新月</th><th>月营收(亿)</th><th>单月MoM</th><th>单月YoY</th><th>累计YoY</th><th>业务看点</th>
         </tr></thead>
         <tbody><tr>
-      
+
       <td><strong>日月光投控 ASE</strong></td>
       <td><code>3711.TW</code></td>
       <td class="amap-cell"><span class="amap amap-strong" title="[强] 全球封测龙头对A股封测龙头，业务模式相近">长电科技<br><code>600584.SH</code></span></td>
@@ -1184,7 +1202,7 @@ code{font-size:10px;background:var(--tag-bg);color:var(--tag);padding:1px 5px;bo
       <td class="desc-cell">全球最大封测厂，CoWoS先进封装扩产，2026年先进封装营收指引35亿美元</td>
     </tr>
 <tr>
-      
+
       <td><strong>京元电子 KYEC</strong></td>
       <td><code>2449.TW</code></td>
       <td class="amap-cell"><span class="amap amap-mid" title="[中] 纯测试业务，逻辑对标华天科技/晶方科技">华天科技<br><code>002185.SZ</code></span></td>
@@ -1199,7 +1217,7 @@ code{font-size:10px;background:var(--tag-bg);color:var(--tag);padding:1px 5px;bo
       <td class="desc-cell">AI芯片测试龙头，AI相关营收占比从27%提升至40%，2026年Capex 500亿新台币</td>
     </tr>
 <tr>
-      
+
       <td><strong>颖崴 Winnoz</strong></td>
       <td><code>6515.TW</code></td>
       <td class="amap-cell"><span class="amap amap-mid" title="[中] IC测试，规模较小标的对标">伟测科技<br><code>688372.SH</code></span></td>
@@ -1222,11 +1240,11 @@ code{font-size:10px;background:var(--tag-bg);color:var(--tag);padding:1px 5px;bo
       </div>
       <table class="ctable">
         <thead><tr>
-          <th>公司</th><th>代码</th><th>A股映射</th><th>市值(亿)</th><th>YTD</th><th>近20日</th>
+          <th>公司</th><th>代码</th><th>A股映射</th><th>市值(亿)</th><th>2025年初至今</th><th>近20日</th>
           <th>最新月</th><th>月营收(亿)</th><th>单月MoM</th><th>单月YoY</th><th>累计YoY</th><th>业务看点</th>
         </tr></thead>
         <tbody><tr>
-      
+
       <td><strong>联发科 MediaTek</strong></td>
       <td><code>2454.TW</code></td>
       <td class="amap-cell"><span class="amap amap-weak" title="手机SoC设计龙头，A股暂无同体量对标">暂无对标</span></td>
@@ -1241,7 +1259,7 @@ code{font-size:10px;background:var(--tag-bg);color:var(--tag);padding:1px 5px;bo
       <td class="desc-cell">全球前五大IC设计，AI手机/边缘AI芯片，ASIC设计服务</td>
     </tr>
 <tr>
-      
+
       <td><strong>信骅 Aspeed</strong></td>
       <td><code>5274.TWO</code></td>
       <td class="amap-cell"><span class="amap amap-weak" title="服务器BMC芯片，A股暂无直接对标">暂无对标</span></td>
@@ -1256,7 +1274,7 @@ code{font-size:10px;background:var(--tag-bg);color:var(--tag);padding:1px 5px;bo
       <td class="desc-cell">服务器管理芯片(BMC)全球龙头，受益AI服务器拉货</td>
     </tr>
 <tr>
-      
+
       <td><strong>创意电子 GUC</strong></td>
       <td><code>3443.TW</code></td>
       <td class="amap-cell"><span class="amap amap-strong" title="[强] ASIC设计服务(NRE+量产)，商业模式高度相似">芯原股份<br><code>688521.SH</code></span></td>
@@ -1271,7 +1289,7 @@ code{font-size:10px;background:var(--tag-bg);color:var(--tag);padding:1px 5px;bo
       <td class="desc-cell">台积电旗下ASIC设计服务，AI定制芯片设计</td>
     </tr>
 <tr>
-      
+
       <td><strong>世芯-KY</strong></td>
       <td><code>3661.TW</code></td>
       <td class="amap-cell"><span class="amap amap-strong" title="[强] ASIC定制芯片设计，云端customer custom silicon模式对标">芯原股份<br><code>688521.SH</code></span></td>
@@ -1286,7 +1304,7 @@ code{font-size:10px;background:var(--tag-bg);color:var(--tag);padding:1px 5px;bo
       <td class="desc-cell">ASIC</td>
     </tr>
 <tr>
-      
+
       <td><strong>祥硕 ASMedia</strong></td>
       <td><code>5269.TW</code></td>
       <td class="amap-cell"><span class="amap amap-weak" title="USB/PCIe芯片，A股暂无直接对标">暂无对标</span></td>
@@ -1309,11 +1327,11 @@ code{font-size:10px;background:var(--tag-bg);color:var(--tag);padding:1px 5px;bo
       </div>
       <table class="ctable">
         <thead><tr>
-          <th>公司</th><th>代码</th><th>A股映射</th><th>市值(亿)</th><th>YTD</th><th>近20日</th>
+          <th>公司</th><th>代码</th><th>A股映射</th><th>市值(亿)</th><th>2025年初至今</th><th>近20日</th>
           <th>最新月</th><th>月营收(亿)</th><th>单月MoM</th><th>单月YoY</th><th>累计YoY</th><th>业务看点</th>
         </tr></thead>
         <tbody><tr>
-      
+
       <td><strong>南亚科 Nanya Tech</strong></td>
       <td><code>2408.TW</code></td>
       <td class="amap-cell"><span class="amap amap-mid" title="[中] 存储芯片，南亚科为DRAM IDM、兆易创新以设计为主，业务模式有差异">兆易创新<br><code>603986.SH</code></span></td>
@@ -1336,11 +1354,11 @@ code{font-size:10px;background:var(--tag-bg);color:var(--tag);padding:1px 5px;bo
       </div>
       <table class="ctable">
         <thead><tr>
-          <th>公司</th><th>代码</th><th>A股映射</th><th>市值(亿)</th><th>YTD</th><th>近20日</th>
+          <th>公司</th><th>代码</th><th>A股映射</th><th>市值(亿)</th><th>2025年初至今</th><th>近20日</th>
           <th>最新月</th><th>月营收(亿)</th><th>单月MoM</th><th>单月YoY</th><th>累计YoY</th><th>业务看点</th>
         </tr></thead>
         <tbody><tr>
-      
+
       <td><strong>环球晶</strong></td>
       <td><code>6488.TWO</code></td>
       <td class="amap-cell"><span class="amap amap-mid" title="[中] 半导体硅片，环球晶体量更大，逻辑对标">沪硅产业<br><code>688126.SH</code></span></td>
@@ -1363,11 +1381,11 @@ code{font-size:10px;background:var(--tag-bg);color:var(--tag);padding:1px 5px;bo
       </div>
       <table class="ctable">
         <thead><tr>
-          <th>公司</th><th>代码</th><th>A股映射</th><th>市值(亿)</th><th>YTD</th><th>近20日</th>
+          <th>公司</th><th>代码</th><th>A股映射</th><th>市值(亿)</th><th>2025年初至今</th><th>近20日</th>
           <th>最新月</th><th>月营收(亿)</th><th>单月MoM</th><th>单月YoY</th><th>累计YoY</th><th>业务看点</th>
         </tr></thead>
         <tbody><tr>
-      
+
       <td><strong>嘉泽端子 Lotes</strong></td>
       <td><code>3533.TW</code></td>
       <td class="amap-cell"><span class="amap amap-weak" title="[弱] 连接器，立讯精密业务范围远大于嘉泽，仅连接器环节可比">立讯精密<br><code>002475.SZ</code></span></td>
@@ -1390,11 +1408,11 @@ code{font-size:10px;background:var(--tag-bg);color:var(--tag);padding:1px 5px;bo
       </div>
       <table class="ctable">
         <thead><tr>
-          <th>公司</th><th>代码</th><th>A股映射</th><th>市值(亿)</th><th>YTD</th><th>近20日</th>
+          <th>公司</th><th>代码</th><th>A股映射</th><th>市值(亿)</th><th>2025年初至今</th><th>近20日</th>
           <th>最新月</th><th>月营收(亿)</th><th>单月MoM</th><th>单月YoY</th><th>累计YoY</th><th>业务看点</th>
         </tr></thead>
         <tbody><tr>
-      
+
       <td><strong>上诠(FOCI)</strong></td>
       <td><code>3363.TWO</code></td>
       <td class="amap-cell"><span class="amap amap-weak" title="[弱] 光通信元件，上诠规模远小于中际旭创，仅产业链环节对标">中际旭创<br><code>300308.SZ</code></span></td>
@@ -1417,11 +1435,11 @@ code{font-size:10px;background:var(--tag-bg);color:var(--tag);padding:1px 5px;bo
       </div>
       <table class="ctable">
         <thead><tr>
-          <th>公司</th><th>代码</th><th>A股映射</th><th>市值(亿)</th><th>YTD</th><th>近20日</th>
+          <th>公司</th><th>代码</th><th>A股映射</th><th>市值(亿)</th><th>2025年初至今</th><th>近20日</th>
           <th>最新月</th><th>月营收(亿)</th><th>单月MoM</th><th>单月YoY</th><th>累计YoY</th><th>业务看点</th>
         </tr></thead>
         <tbody><tr>
-      
+
       <td><strong>鸿准 Foxconn Industrial</strong></td>
       <td><code>2354.TW</code></td>
       <td class="amap-cell"><span class="amap amap-weak" title="[弱] 富士康集团精密结构件子公司，与工业富联同属富士康体系">工业富联<br><code>601138.SH</code></span></td>
