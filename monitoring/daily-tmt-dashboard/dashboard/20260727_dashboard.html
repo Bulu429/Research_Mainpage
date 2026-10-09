@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TMT池 · 日频技术面看板</title>
+<style>
+:root {
+  --bg:             #F5F2EC;
+  --bg-subtle:      #EDE9E1;
+  --card:           #FFFFFF;
+  --border:         #DDD8CE;
+  --border-light:   #EDE9E3;
+  --text:           #1C1917;
+  --text-secondary: #6B6459;
+  --text-muted:     #A09A90;
+  --navy:           #1B3A5C;
+  --gold:           #8B7335;
+  --up:             #D13B3B;
+  --up-bg:          #FBEAEA;
+  --down:           #16915A;
+  --down-bg:        #E6F5EC;
+  --font-body: -apple-system, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+  --font-data: "SF Mono", "Consolas", monospace;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 14px; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  line-height: 1.6;
+  padding: 28px 36px 60px;
+  min-width: 1100px;
+}
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: var(--bg-subtle); }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+.header {
+  display: flex; align-items: flex-end; justify-content: space-between;
+  margin-bottom: 20px; padding-bottom: 16px;
+  border-bottom: 1px solid var(--border);
+}
+.header-title { font-size: 20px; font-weight: 700; color: var(--text); }
+.header-title span { color: var(--navy); }
+.header-meta { font-size: 11px; color: var(--text-muted); margin-top: 4px; line-height: 1.8; }
+.header-meta b { color: var(--text-secondary); }
+
+.stats-row {
+  display: flex; gap: 12px; margin-bottom: 18px; flex-wrap: wrap;
+}
+.stat-card {
+  background: var(--card); border: 1px solid var(--border); border-radius: 8px;
+  padding: 10px 16px; min-width: 108px;
+}
+.stat-card .label { font-size: 10px; color: var(--text-muted); }
+.stat-card .value { font-size: 20px; font-weight: 700; margin-top: 2px; font-family: var(--font-data); }
+.stat-card .value.up { color: var(--up); }
+.stat-card .value.down { color: var(--down); }
+
+.strategy-panel {
+  background: var(--card); border: 1px solid var(--border); border-radius: 8px;
+  margin-bottom: 18px; overflow: hidden;
+}
+.strategy-head {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 10px 14px; border-bottom: 1px solid var(--border-light); background: #FBFAF7;
+}
+.strategy-title { font-size: 13px; font-weight: 700; color: var(--navy); }
+.strategy-meta { font-size: 10px; color: var(--text-muted); font-family: var(--font-data); }
+.strategy-grid {
+  display: grid; grid-template-columns: 1.25fr 1fr 1fr 1fr; gap: 0;
+}
+.strategy-card {
+  padding: 12px 14px; border-right: 1px solid var(--border-light); min-height: 116px;
+}
+.strategy-card:last-child { border-right: 0; }
+.strategy-label {
+  font-size: 10px; font-weight: 700; color: var(--text-muted);
+  margin-bottom: 8px; letter-spacing: .4px;
+}
+.strategy-main { font-size: 13px; font-weight: 700; color: var(--text); line-height: 1.5; margin-bottom: 8px; }
+.strategy-sub { font-size: 11px; color: var(--text-secondary); line-height: 1.8; }
+.strategy-list { display: flex; flex-wrap: wrap; gap: 4px; }
+.strategy-empty { font-size: 11px; color: var(--text-muted); }
+
+.toolbar {
+  display: flex; gap: 10px; align-items: center; margin-bottom: 14px; flex-wrap: wrap;
+}
+.toolbar input[type=text] {
+  padding: 6px 10px; border: 1px solid var(--border); border-radius: 6px;
+  font-size: 12px; width: 200px; background: var(--card); color: var(--text);
+}
+.toolbar select {
+  padding: 6px 10px; border: 1px solid var(--border); border-radius: 6px;
+  font-size: 12px; background: var(--card); color: var(--text);
+}
+.toolbar .legend { font-size: 10px; color: var(--text-muted); margin-left: auto; display: flex; align-items: center; gap: 10px; }
+.dot { display:inline-block; width:8px; height:8px; border-radius:50%; margin-right:3px; vertical-align:middle; }
+.dot.up { background: var(--up); }
+.dot.down { background: var(--down); }
+.dot.na { background: var(--border); }
+
+table { width: 100%; border-collapse: collapse; background: var(--card); border-radius: 8px; overflow: hidden; }
+thead th {
+  text-align: left; font-size: 10px; font-weight: 700; color: var(--text-secondary);
+  padding: 8px 8px; border-bottom: 1px solid var(--border); background: var(--bg-subtle);
+  cursor: pointer; white-space: nowrap; user-select: none;
+}
+thead th:hover { color: var(--navy); }
+thead th.sorted::after { content: ' \25BE'; }
+thead th.sorted.asc::after { content: ' \25B4'; }
+tbody td { padding: 6px 8px; font-size: 12px; border-bottom: 1px solid var(--border-light); }
+tbody tr:hover { background: var(--bg-subtle); }
+tr.group-row td {
+  font-size: 10px; font-weight: 700; color: var(--gold); letter-spacing: .5px;
+  background: var(--bg-subtle); padding: 6px 8px 4px; border-bottom: 1px solid var(--border);
+}
+.num { text-align: right; font-family: var(--font-data); }
+.col-industry { width: 180px; min-width: 180px; max-width: 220px; white-space: nowrap; }
+.industry-cell { display: inline-flex; align-items: baseline; gap: 6px; white-space: nowrap; }
+.industry-sub { font-size: 10px; color: var(--text-muted); }
+.pct-bar-track { width: 34px; height: 6px; background: var(--border-light); border-radius: 3px; overflow: hidden; flex-shrink: 0; }
+.pct-bar-fill { height: 100%; margin-left: auto; }
+.name-cell { font-weight: 600; }
+.code-cell { color: var(--text-muted); font-size: 10px; font-family: var(--font-data); }
+.pct { font-weight: 600; }
+.pct.up { color: var(--up); }
+.pct.down { color: var(--down); }
+.pct.flat { color: var(--text-muted); }
+.tag-newhigh {
+  display: inline-block; font-size: 9px; font-weight: 700; padding: 1px 5px;
+  border-radius: 3px; background: var(--up-bg); color: var(--up); border: 1px solid rgba(139,58,58,.25);
+}
+.tag-suspended {
+  display: inline-block; font-size: 9px; font-weight: 700; padding: 1px 5px;
+  margin-left: 4px; border-radius: 3px; background: var(--bg-subtle); color: var(--text-secondary);
+  border: 1px solid var(--border); cursor: help;
+}
+.dd-text { font-size: 11px; }
+
+.commentary {
+  background: var(--card); border: 1px solid var(--border); border-radius: 8px;
+  padding: 12px 16px; margin-bottom: 18px;
+}
+.commentary-row { display: flex; align-items: flex-start; gap: 10px; padding: 4px 0; font-size: 12px; line-height: 1.9; }
+.commentary-row + .commentary-row { border-top: 1px dashed var(--border-light); }
+.commentary-label {
+  flex-shrink: 0; width: 88px; font-size: 11px; font-weight: 700; color: var(--text-secondary); padding-top: 2px;
+}
+.chip {
+  display: inline-flex; align-items: center; border-radius: 4px; padding: 1px 6px;
+  font-size: 11px; font-weight: 600; margin: 1px 3px 1px 0; white-space: nowrap;
+}
+.chip.up { background: var(--up-bg); color: var(--up); border: 1px solid rgba(139,58,58,.2); }
+.chip.down { background: var(--down-bg); color: var(--down); border: 1px solid rgba(46,97,72,.2); }
+.chip.plain { background: var(--bg-subtle); color: var(--text-secondary); border: 1px solid var(--border-light); }
+.commentary-text { font-size: 11px; color: var(--text-muted); }
+
+.footer { margin-top: 20px; font-size: 10px; color: var(--text-muted); text-align: center; }
+</style>
+<style id="unified-dashboard-overrides">
+/* Unified A+B dashboard shell: warm research chrome + dense terminal data blocks. */
+:root{--bg:#f5f2ec;--bg-subtle:#ede9e1;--card:#fffefa;--border:#ddd8ce;--border-light:#ede9e3;--text:#1c1917;--text-secondary:#6b6459;--text-muted:#a09a90;--navy:#1b3a5c;--gold:#8b7335;--up:#c83b3b;--down:#20875b}
+body{background:var(--bg);color:var(--text);font-family:"Noto Sans SC","Microsoft YaHei",sans-serif;padding:30px 38px 60px;min-width:0}.header{margin-bottom:22px;padding-bottom:18px}.header-title{font-size:27px;letter-spacing:-.03em}.header-meta{font-size:12px}.stats-row{gap:12px}.stat-card{border-radius:8px;box-shadow:0 10px 26px rgba(28,25,23,.05)}.strategy-panel,table,.commentary{border-radius:8px}.toolbar select,.toolbar input{border-radius:6px}thead th{font-size:11px}tbody td{padding:8px;font-size:12px}
+@media(max-width:900px){body{padding:22px 18px 48px}.stats-row{grid-template-columns:repeat(2,1fr)!important}.strategy-grid{grid-template-columns:1fr!important}.toolbar{flex-wrap:wrap}}
+</style>
+<!-- TMT_HISTORY_NAV -->
+<link rel="stylesheet" href="history-nav.css">
+<script src="history-data.js"></script>
+<script src="history-nav.js" defer></script>
+<!-- /TMT_HISTORY_NAV -->
+</head>
+<body>
+
+<div class="header">
+  <div>
+    <div class="header-title">TMT池 · <span>日频技术面看板</span></div>
+    <div class="header-meta" id="metaLine"></div>
+  </div>
+</div>
+
+<div class="stats-row" id="statsRow"></div>
+
+<div class="strategy-panel" id="strategyPanel"></div>
+
+<div class="commentary" id="commentary"></div>
+
+<div class="toolbar">
+  <input type="text" id="searchBox" placeholder="搜索代码/名称...">
+  <select id="industryFilter"></select>
+  <div class="legend">
+    <span><span class="dot up"></span>价格在均线上方</span>
+    <span><span class="dot down"></span>价格在均线下方</span>
+    <span><span class="dot na"></span>数据不足</span>
+    <span>均线位置列顺序：5日 / 20日 / 60日</span>
+  </div>
+</div>
+
+<table>
+  <thead>
+    <tr>
+      <th data-key="idx">#</th>
+      <th data-key="name">名称</th>
+      <th data-key="l1" class="col-industry">行业</th>
+      <th data-key="pct_chg" class="num">涨跌幅</th>
+      <th data-key="turn_pct" class="num">换手率</th>
+      <th data-key="turn_avg20" class="num">近20日平均换手率</th>
+      <th data-key="vol_ratio" class="num">放量</th>
+      <th data-key="amt_yi" class="num">成交额(亿)</th>
+      <th data-key="ma" style="text-align:center;">均线位置</th>
+      <th data-key="drawdown" class="num">阶段高点回撤</th>
+      <th data-key="pullback_623" class="num">6/23至今回调</th>
+    </tr>
+  </thead>
+  <tbody id="tbody"></tbody>
+</table>
+
+<div class="footer" id="footerNote"></div>
+
+<script>
+const DATA = {"latest_date": "2026-07-27", "data_start": "2026-01-02", "n_trading_days": 141, "generated_at": "2026-08-04 11:06", "l1_order": ["指数", "光模块", "光纤光缆", "服务器", "PCB", "存储", "液冷", "电-柜内", "电-柜外", "国产算力", "半导体设备材料零部件", "云", "软件应用"], "stocks": [{"code": "399006.SZ", "name": "创业板指", "l1": "指数", "l2": null, "close": 3480.8702, "pct_chg": -2.65, "turn_pct": 3.79, "turn_avg20": 5.11, "vol_ratio": 0.61, "amt_yi": 4469.33, "ma_pos": {"5": 0, "20": 0, "60": 0}, "period_high": 4371.9891, "period_low": 3149.5962, "drawdown": -20.38, "pullback_623": -23.29, "is_period_high": false, "as_of": "2026-07-24", "n_days": 134, "lag_reason": "停牌"}, {"code": "000688.SH", "name": "科创50", "l1": "指数", "l2": null, "close": 1807.951, "pct_chg": 1.16, "turn_pct": 2.92, "turn_avg20": 4.72, "vol_ratio": 0.64, "amt_yi": 1230.92, "ma_pos": {"5": 0, "20": 0, "60": 0}, "period_high": 2207.8648, "period_low": 1256.2103, "drawdown": -18.11, "pullback_623": -16.06, "is_period_high": false, "as_of": "2026-07-27", "n_days": 135, "lag_reason": null}, {"code": "300308.SZ", "name": "中际旭创", "l1": "光模块", "l2": null, "close": 1076.94, "pct_chg": 2.91, "turn_pct": 3.05, "turn_avg20": 4.05, "vol_ratio": 0.69, "amt_yi": 267.09, "ma_pos": {"5": 0, "20": 0, "60": 0}, "period_high": 1382.33, "period_low": 525.3683, "drawdown": -22.09, "pullback_623": -34.75, "is_period_high": false, "as_of": "2026-07-27", "n_days": 135, "lag_reason": null}, {"code": "300502.SZ", "name": "新易盛", "l1": "光模块", "l2": null, "close": 491, "pct_chg": 3.15, "turn_pct": 2.96, "turn_avg20": 4.35, "vol_ratio": 0.61, "amt_yi": 171.29, "ma_pos": {"5": 0, "20": 0, "60": 0}, "period_high": 610.49, "period_low": 256.7094, "drawdown": -19.57, "pullback_623": -31.72, "is_period_high": false, "as_of": "2026-07-27", "n_days": 135, "lag_reason": null}, {"code": "002384.SZ", "name": "东山精密", "l1": "光模块", "l2": "新光模块", "close": 211.9, "pct_chg": 6.39, "turn_pct": 6.78, "turn_avg20": 8.41, "vol_ratio": 0.68, "amt_yi": 166.32, "ma_pos": {"5": 0, "20": 0, "60": 0}, "period_high": 275.8, "period_low": 72.33, "drawdown": -23.17, "pullback_623": -36.62, "is_period_high": false, "as_of": "2026-07-27", "n_days": 135, "lag_reason": null}, {"code": "000988.SZ", "name": "华工科技", "l1": "光模块", "l2": "新光模块", "close": 111.76, "pct_chg": 3.3, "turn_pct": 4.78, "turn_avg20": 8.02, "vol_ratio": 0.42, "amt_yi": 42.71, "ma_pos": {"5": 1, "20": 0, "60": 0}, "period_high": 184.61, "period_low": 73.7972, "drawdown": -39.46, "pullback_623": -45.4, "is_period_high": false, "as_of": "2026-07-27", "n_days": 135, "lag_reason": null}, {"code": "002281.SZ", "name": "光迅科技", "l1": "光模块", "l2": "新光模块", "close": 192.85, "pct_chg": 3.24, "turn_pct": 6.72, "turn_avg20": 9.76, "vol_ratio": 0.59, "amt_yi": 60.28, "ma_pos": {"5": 1, "20": 0, "60": 0}, "period_high": 276.08, "period_low": 66.33, "drawdown": -30.15, "pullback_623": -41.45, "is_period_high": false, "as_of": "2026-07-27", "n_days": 135, "lag_reason": null}, {"code": "301205.SZ", "name": "联特科技", "l1": "光模块", "l2": "新光模块", "close": 240.39, "pct_chg": 3.99, "turn_pct": 14.98, "turn_avg20": 13.12, "vol_ratio": 1.06, "amt_yi": 22.33, "ma_pos": {"5": 1, "20": 0, "60": 0}, "period_high": 360.8009, "period_low": 161.9516, "drawdown": -33.37, "pullback_623": -36.71, "is_period_high": false, "as_of": "2026-07-27", "n_days": 135, "lag_reason": null}, {"code": "603083.SH", "name": "剑桥科技", "l1": "光模块", "l2": "新光模块", "close": 173.78, "pct_chg": 4.18, "turn_pct": 7.54, "turn_avg20": 9.97, "vol_ratio": 0.63, "amt_yi": 31.09, "ma_pos": {"5": 1, "20": 0, "60": 0}, "period_high": 262.21, "period_low": 100.7267, "drawdown": -33.72, "pullback_623": -44.81, "is_period_high": false, "as_of": "2026-07-27", "n_days": 135, "lag_reason": null}, {"code": "601231.SH", "name": "环旭电子", "l1": "光模块", "l2": "新光模块", "close": 24.77, "pct_chg": 3.47, "turn_pct": 3.0, "turn_avg20": 4.87, "vol_ratio": 0.49, "amt_yi": 5.01, "ma_pos": {"5": 1, "20": 0, "60": 0}, "period_high": 47.8058, "period_low": 23.73, "drawdown": -48.19, "pullback_623": -41.4, "is_period_high": false, "as_of": "2026-07-27", "n_days": 135, "lag_reason": null}, {"code": "002475.SZ", "name": "立讯精密", "l1": "光模块", "l2": "新光模块", "close": 62.89, "pct_chg": 3.8, "turn_pct": 2.29, "turn_avg20": 3.21, "vol_ratio": 0.68, "amt_yi": 65.42, "ma_pos": {"5": 1, "20": 1, "60": 0}, "period_high": 80.15, "period_low": 46.28, "drawdown": -21.53, "pullback_623": -15.76, "is_period_high": false, "as_of": "2026-07-27", "n_days": 135, "lag_reason": null}, {"code": "300394.SZ", "name": "天孚通信", "l1": "光模块", "l2": "无源器件", "close": 209.19, "pct_chg": 2.84, "turn_pct": 4.28, "turn_avg20": 7.41, "vol_ratio": 0.46, "amt_yi": 53.15, "ma_pos": {"5": 0, "20": 0, "60": 0}, "period_high": 354.6683, "period_low": 131.6333, "drawdown": -41.02, "pullback_623": -47.56, "is_period_high": false, "as_of": "2026-07-27", "n_days": 135, "lag_reason": null}, {"code": "688167.SH", "name": "炬光科技", "l1": "光模块", "l2": "无源器件", "close": 215.11, "pct_chg": 5.6, "turn_pct": 5.55, "turn_avg20": 6.43, "vol_ratio": 0.66, "amt_yi": 13.11, "ma_pos": {"5": 1, "20": 0, "60": 0}, "period_high": 413, "period_low": 122.2521, "drawdown": -47.92, "pullback_623": -53.21, "is_period_high": false, "as_of": "2026-07-27", "n_days": 135, "lag_reason": null}, {"code": "300620.SZ", "name": "光库科技", "l1": "光模块", "l2": "无源器件", "close": 240.2, "pct_chg": 4.41, "turn_pct": 6.69, "turn_avg20": 9.68, "vol_ratio": 0.54, "amt_yi": 19.65, "ma_pos": {"5": 1, "20": 0, "60": 0}, "period_high": 406, "period_low": 141.5235, "drawdown": -40.84, "pullback_623": -47.62, "is_period_high": false, "as_of": "2026-07-27", "n_days": 135, "lag_reason": null}, {"code": "688195.SH", "name": "腾景科技", "l1": "光模块", "l2": "无源器件", "close": 125.56, "pct_chg": 4.11, "turn_pct": 4.98, "turn_avg20": 6.18, "vol_ratio": 0.64, "amt_yi": 7.28, "ma_pos": {"5": 1, "20": 0, "60": 0}, "period_high": 283.5088, "period_low": 112.8, "drawdown": -55.71, "pullback_623": -47.98, "is_period_high": false, "as_of": "2026-07-27", "n_days": 135, "lag_reason": null}, {"code": "300570.SZ", "name": "太辰光", "l1": "光模块", "l2": "无源器件", "close": 140.99, "pct_chg": 3.72, "turn_pct": 7.07, "turn_avg20": 10.45, "vol_ratio": 0.45, "amt_yi": 15.04, "ma_pos": {"5": 0, "20": 0, "60": 0}, "period_high": 281.18, "period_low": 102.18, "drawdown": -49.86, "pullback_623": -59.26, "is_period_high": false, "as_of": "2026-07-27", "n_days": 135, "lag_reason": null}, {"code": "301486.SZ", "name": "致尚科技", "l1": "光模块", "l2": "无源器件", "close": 149.13, "pct_chg": 6.14, "turn_pct": 7.65, "turn_avg20": 9.62, "vol_ratio": 0.62, "amt_yi": 6.25, "ma_pos": {"5": 1, "20": 0, "60": 0}, "period_high": 292.5, "period_low": 126.12, "drawdown": -49.02, "pullback_623": -50.48, "is_period_high": false, "as_of": "2026-07-27", "n_days": 135, "lag_reason": null}, {"code": "688127.SH", "name": "蓝特光学", "l1": "光模块", "l2": "无源器件", "close": 62.52, "pct_chg": 1.82, "turn_pct": 3.5, "turn_avg20": 5.0, "vol_ratio": 0.53, "amt_yi": 4.34, "ma_pos": {"5": 0, "20": 0, "60": 0}, "period_high": 103.9398, "period_low": 38.7295, "drawdown": -39.85, "pullback_623": -32.03, "is_period_high": false, "as_of": "2026-07-27", "n_days": 135, "lag_reason": null}, {"code": "688498.SH", "name": "源杰科技", "l1": "光模块", "l2": "激光器", "close": 1473.01, "pct_chg": 5.97, "turn_pct": 5.4, "turn_avg20": 5.98, "vol_ratio": 0.8, "amt_yi": 69.98, "ma_pos": {"5": 1, "20": 0, "60": 1}, "period_high": 1886, "period_low": 445.7483, "drawdown": -21.9, "pullback_623": -41.71, "is_period_high": false, "as_of": "2026-07-27", "n_days": 135, "lag_reason": null}, {"code": "002428.SZ", "name": "云南锗业", "l1": "光模块", "l2": "激光器", "close": 79.04, "pct_chg": 1.23, "turn_pct": 13.01, "turn_avg20": 12.31, "vol_ratio": 0.82, "amt_yi": 51.52, "ma_pos": {"5": 1, "20": 0, "60": 0}, "period_high": 130.0878, "period_low": 30.9371, "drawdown": -39.24, "pullback_623": -39.4, "is_period_high": false, "as_of": "2026-07-27", "n_days": 135, "lag_reason": null}, {"code": "600703.SH", "name": "三安光电", "l1": "光模块", "l2": "激光器", "close": 12.33, "pct_chg": 4.76, "turn_pct": 4.79, "turn_avg20": 8.41, "vol_ratio": 0.38, "amt_yi": 18.03, "ma_pos": {"5": 1, "20": 0, "60": 0}, "period_high": 21.81, "period_low": 11.4, "drawdown": -43.47, "pullback_623": -36.55, "is_period_high": false, "as_of": "2026-07-27", "n_days": 135, "lag_reason": null}, {"code": "300782.SZ", "name": "卓胜微", "l1": "光模块", "l2": "激光器", "close": 72.9, "pct_chg": 2.68, "turn_pct": 3.32, "turn_avg20": 5.93, "vol_ratio": 0.42, "amt_yi": 7.74, "ma_pos": {"5": 0, "20": 0, "60": 0}, "period_high": 140.88, "period_low": 71, "drawdown": -48.25, "pullback_623": -39.56, "is_period_high": false, "as_of": "2026-07-27", "n_days": 135, "lag_reason": null}, {"code": "6869.HK", "name": "长飞光纤", "l1": "光纤光缆", "l2": null, "close": 125.7, "pct_chg": 3.8, "turn_pct": 5.65, "turn_avg20": 8.61, "vol_ratio": 0.48, "amt_yi": 28.92, "ma_pos": {"5": 0, "20": 0, "60": 0}, "period_high": 287.1083, "period_low": 47.0794, "drawdown": -56.22, "pullback_623": -66.11, "is_period_high": false, "as_of": "2026-07-27", "n_days": 137, "lag_reason": null}, {"code": "600487.SH", "name": "亨通光电", "l1": "光纤光缆", "l2": null, "close": 55.55, "pct_chg": 5.95, "turn_pct": 8.85, "turn_avg20": 11.29, "vol_ratio": 0.57, "amt_yi": 84.2, "ma_pos": {"5": 0, "20": 0, "60": 0}, "period_high": 122.7003, "period_low": 23.9914, "drawdown": -54.73, "pullback_623": -60.27, "is_period_high": false, "as_of": "2026-07-27", "n_days": 135, "lag_reason": null}, {"code": "600522.SH", "name": "中天科技", "l1": "光纤光缆", "l2": null, "close": 32.66, "pct_chg": 4.05, "turn_pct": 6.48, "turn_avg20": 9.89, "vol_ratio": 0.46, "amt_yi": 54.67, "ma_pos": {"5": 0, "20": 0, "60": 0}, "period_high": 68.1, "period_low": 17.98, "drawdown": -52.04, "pullback_623": -51.88, "is_period_high": false, "as_of": "2026-07-27", "n_days": 135, "lag_reason": null}, {"code": "600498.SH", "name": "烽火通信", "l1": "光纤光缆", "l2": null, "close": 37.83, "pct_chg": 4.04, "turn_pct": 7.48, "turn_avg20": 11.18, "vol_ratio": 0.45, "amt_yi": 21.66, "ma_pos": {"5": 0, "20": 0, "60": 0}, "period_high": 84.69, "period_low": 35.28, "drawdown": -55.33, "pullback_623": -59.85, "is_period_high": false, "as_of": "2026-07-27", "n_days": 135, "lag_reason": null}, {"code": "600105.SH", "name": "​​永鼎股份​​", "l1": "光纤光缆", "l2": null, "close": 35.2, "pct_chg": 4.86, "turn_pct": 8.41, "turn_avg20": 10.59, "vol_ratio": 0.56, "amt_yi": 32.06, "ma_pos": {"5": 0, "20": 0, "60": 0}, "period_high": 72.96, "period_low": 25.2057, "drawdown": -51.75, "pullback_623": -49.7, "is_period_high": false, "as_of": "2026-07-27", "n_days": 135, "lag_reason": null}, {"code": "002491.SZ", "name": "​​通鼎互联​​", "l1": "光纤光缆", "l2": null, "close": 16.57, "pct_chg": 5.47, "turn_pct": 24.92, "turn_avg20": 18.65, "vol_ratio": 0.97, "amt_yi": 31.24, "ma_pos": {"5": 1, "20": 0, "60": 0}, "period_high": 38.5, "period_low": 5.88, "drawdown": -56.96, "pullback_623": -58.94, "is_period_high": false, "as_of": "2026-07-27", "n_days": 135, "lag_reason": null}, {"code": "600869.SH", "name": "​​远东股份​​", "l1": "光纤光缆", "l2": null, "close": 15.48, "pct_chg": 5.67, "turn_pct": 6.88, "turn_avg20": 9.12, "vol_ratio": 0.49, "amt_yi": 12.68, "ma_pos": {"5": 1, "20": 0, "60": 0}, "period_high": 37.77, "period_low": 8.21, "drawdown": -59.02, "pullback_623": -63.22, "is_period_high": false, "as_of": "2026-07-27", "n_days": 135, "lag_reason": null}, {"code": "603618.SH", "name": "​​杭电股份​​", "l1": "光纤光缆", "l2": null, "close": 25.88, "pct_chg": 5.03, "turn_pct": 18.81, "turn_avg20": 19.93, "vol_ratio": 0.65, "amt_yi": 16.21, "ma_pos": {"5": 0, "20": 0, "60": 0}, "period_high": 57.19, "period_low": 8.22, "drawdown": -54.75, "pullback_623": -59.37, "is_period_high": false, "as_of": "2026-07-27", "n_days": 135, "lag_reason": null}, {"code": "000070.SZ", "name": "​​特发信息​​", "l1": "光纤光缆", "l2": null, "close": 13.66, "pct_chg": 5.08, "turn_pct": 9.04, "turn_avg20": 14.6, "vol_ratio": 0.47, "amt_yi": 6.32, "ma_pos": {"5": 1, "20": 0, "60": 0}, "period_high": 25.33, "period_low": 11.23, "drawdown": -46.07, "pullback_623": -44.39, "is_period_high": false, "as_of": "2026-07-27", "n_days": 135, "lag_reason": null}, {"code": "601138.SH", "name": "工业富联", "l1": "服务器", "l2": "服务器", "close": 61.55, "pct_chg": 2.16, "turn_pct": 2.54, "turn_avg20": 4.49, "vol_ratio": 0.51, "amt_yi": 49.64, "ma_pos": {"5": 1, "20": 0, "60": 0}, "period_high": 81.05, "period_low": 47.6, "drawdown": -24.06, "pullback_623": -28.12, "is_period_high": false, "as_of": "2026-07-27", "n_days": 135, "lag_reason": null}, {"code": "002463.SZ", "name": "沪电股份", "l1": "PCB", "l2": null, "close": 117.5, "pct_chg": 4.71, "turn_pct": 3.51, "turn_avg20": 5.68, "vol_ratio": 0.53, "amt_yi": 53.25, "ma_pos": {"5": 1, "20": 0, "60": 0}, "period_high": 154.99, "period_low": 65.6642, "drawdown": -24.19, "pullback_623": -28.58, "is_period_high": false, "as_of": "2026-07-27", "n_days": 135, "lag_reason": null}, {"code": "300476.SZ", "name": "胜宏科技", "l1": "PCB", "l2": null, "close": 238.66, "pct_chg": 3.76, "turn_pct": 3.61, "turn_avg20": 6.07, "vol_ratio": 0.49, "amt_yi": 50.56, "ma_pos": {"5": 1, "20": 0, "60": 0}, "period_high": 392.95, "period_low": 224.11, "drawdown": -39.26, "pullback_623": -47.89, "is_period_high": false, "as_of": "2026-07-27", "n_days": 135, "lag_reason": null}, {"code": "002916.SZ", "name": "深南电路", "l1": "PCB", "l2": null, "close": 353.44, "pct_chg": 6.2, "turn_pct": 4.2, "turn_avg20": 5.97, "vol_ratio": 0.6, "amt_yi": 34.36, "ma_pos": {"5": 1, "20": 0, "60": 0}, "period_high": 457.9, "period_low": 211.4978, "drawdown": -22.81, "pullback_623": -32.65, "is_period_high": false, "as_of": "2026-07-27", "n_days": 135, "lag_reason": null}, {"code": "688183.SH", "name": "生益电子", "l1": "PCB", "l2": null, "close": 102.83, "pct_chg": 6.25, "turn_pct": 4.93, "turn_avg20": 8.04, "vol_ratio": 0.5, "amt_yi": 12.14, "ma_pos": {"5": 1, "20": 0, "60": 0}, "period_high": 141.07, "period_low": 76.8359, "drawdown": -27.11, "pullback_623": -29.69, "is_period_high": false, "as_of": "2026-07-27", "n_days": 135, "lag_reason": null}, {"code": "002938.SZ", "name": "鹏鼎控股", "l1": "PCB", "l2": "新PCB", "close": 93.29, "pct_chg": 5.54, "turn_pct": 3.37, "turn_avg20": 5.88, "vol_ratio": 0.51, "amt_yi": 20.78, "ma_pos": {"5": 1, "20": 0, "60": 0}, "period_high": 119.91, "period_low": 48.6687, "drawdown": -22.2, "pullback_623": -27.87, "is_period_high": false, "as_of": "2026-07-27", "n_days": 135, "lag_reason": null}, {"code": "603228.SH", "name": "景旺电子", "l1": "PCB", "l2": "新PCB", "close": 82.06, "pct_chg": 10.0, "turn_pct": 13.08, "turn_avg20": 10.5, "vol_ratio": 1.43, "amt_yi": 43.7, "ma_pos": {"5": 1, "20": 1, "60": 1}, "period_high": 87.5, "period_low": 53.475, "drawdown": -6.22, "pullback_623": -5.08, "is_period_high": false, "as_of": "2026-07-27", "n_days": 135, "lag_reason": null}, {"code": "001389.SZ", "name": "广合科技​​", "l1": "PCB", "l2": "新PCB", "close": 167.51, "pct_chg": 4.37, "turn_pct": 4.55, "turn_avg20": 7.66, "vol_ratio": 0.49, "amt_yi": 11.37, "ma_pos": {"5": 1, "20": 0, "60": 0}, "period_high": 237.25, "period_low": 78.8, "drawdown": -29.4, "pullback_623": -25.91, "is_period_high": false, "as_of": "2026-07-27", "n_days": 135, "lag_reason": null}, {"code": "600601.SH", "name": "​​方正科技​​", "l1": "PCB", "l2": "新PCB", "close": 10.5, "pct_chg": 3.45, "turn_pct": 4.29, "turn_avg20": 9.59, "vol_ratio": 0.34, "amt_yi": 13.01, "ma_pos": {"5": 1, "20": 0, "60": 0}, "period_high": 15.12, "period_low": 9.35, "drawdown": -30.56, "pullback_623": -34.59, "is_period_high": false, "as_of": "2026-07-27", "n_days": 135, "lag_reason": null}, {"code": "002815.SZ", "name": "​​崇达技术​​", "l1": "PCB", "l2": "新PCB", "close": 12.06, "pct_chg": 3.52, "turn_pct": 5.78, "turn_avg20": 10.95, "vol_ratio": 0.39, "amt_yi": 4.34, "ma_pos": {"5": 0, "20": 0, "60": 0}, "period_high": 20.14, "period_low": 11.65, "drawdown": -40.12, "pullback_623": -42.7, "is_period_high": false, "as_of": "2026-07-27", "n_days": 135, "lag_reason": null}, {"code": "002436.SZ", "name": "​​兴森科技​​", "l1": "PCB", "l2": "新PCB", "close": 35.7, "pct_chg": 5.62, "turn_pct": 8.86, "turn_avg20": 8.72, "vol_ratio": 0.86, "amt_yi": 45.06, "ma_pos": {"5": 1, "20": 0, "60": 0}, "period_high": 53.53, "period_low": 19.6341, "drawdown": -33.31, "pullback_623": -48.39, "is_period_high": false, "as_of": "2026-07-27", "n_days": 135, "lag_reason": null}, {"code": "600183.SH", "name": "生益科技", "l1": "PCB", "l2": "CCL", "close": 125.99, "pct_chg": 6.13, "turn_pct": 4.73, "turn_avg20": 5.89, "vol_ratio": 0.66, "amt_yi": 69.51, "ma_pos": {"5": 0, "20": 0, "60": 0}, "period_high": 187.2, "period_low": 51.3431, "drawdown": -32.7, "pullback_623": -42.74, "is_period_high": false, "as_of": "2026-07-27", "n_days": 135, "lag_reason": null}, {"code": "688519.SH", "name": "南亚新材", "l1": "PCB", "l2": "CCL", "close": 239.8, "pct_chg": 7.22, "turn_pct": 5.83, "turn_avg20": 7.13, "vol_ratio": 0.59, "amt_yi": 14.78, "ma_pos": {"5": 1, "20": 0, "60": 0}, "period_high": 410.1, "period_low": 71.7882, "drawdown": -41.53, "pullback_623": -41.97, "is_period_high": false, "as_of": "2026-07-27", "n_days": 135, "lag_reason": null}, {"code": "1888.HK", "name": "建滔积层板", "l1": "PCB", "l2": "CCL", "close": 40.18, "pct_chg": 6.52, "turn_pct": 8.18, "turn_avg20": 8.64, "vol_ratio": 0.6, "amt_yi": 38.79, "ma_pos": {"5": 0, "20": 0, "60": 0}, "period_high": 104.2, "period_low": 12.3521, "drawdown": -61.44, "pullback_623": -68.0, "is_period_high": false, "as_of": "2026-07-27", "n_days": 137, "lag_reason": null}, {"code": "603186.SH", "name": "​​华正新材​​", "l1": "PCB", "l2": "CCL", "close": 135.2, "pct_chg": 8.59, "turn_pct": 13.15, "turn_avg20": 15.74, "vol_ratio": 0.61, "amt_yi": 16.91, "ma_pos": {"5": 0, "20": 0, "60": 0}, "period_high": 262.8, "period_low": 49.2797, "drawdown": -48.55, "pullback_623": -56.66, "is_period_high": false, "as_of": "2026-07-27", "n_days": 135, "lag_reason": null}, {"code": "002636.SZ", "name": "​​金安国纪​​", "l1": "PCB", "l2": "CCL", "close": 63.69, "pct_chg": 10.0, "turn_pct": 16.22, "turn_avg20": 19.78, "vol_ratio": 0.54, "amt_yi": 24.01, "ma_pos": {"5": 0, "20": 0, "60": 0}, "period_high": 119.97, "period_low": 15.9906, "drawdown": -46.91, "pullback_623": -55.5, "is_period_high": false, "as_of": "2026-07-27", "n_days": 135, "lag_reason": null}, {"code": "301217.SZ", "name": "铜冠铜箔", "l1": "PCB", "l2": "CCL", "close": 96.88, "pct_chg": 7.51, "turn_pct": 15.22, "turn_avg20": 17.33, "vol_ratio": 0.62, "amt_yi": 32.51, "ma_pos": {"5": 1, "20": 0, "60": 0}, "period_high": 200, "period_low": 29.92, "drawdown": -51.56, "pullback_623": -57.95, "is_period_high": false, "as_of": "2026-07-27", "n_days": 135, "lag_reason": null}, {"code": "301511.SZ", "name": "德福科技", "l1": "PCB", "l2": "CCL", "close": 81.5, "pct_chg": 7.98, "turn_pct": 7.16, "turn_avg20": 10.47, "vol_ratio": 0.46, "amt_yi": 18.62, "ma_pos": {"5": 1, "20": 0, "60": 0}, "period_high": 169.63, "period_low": 28.3638, "drawdown": -51.95, "pullback_623": -59.6, "is_period_high": false, "as_of": "2026-07-27", "n_days": 135, "lag_reason": null}, {"code": "300395.SZ", "name": "菲利华", "l1": "PCB", "l2": "CCL", "close": 82.06, "pct_chg": 5.48, "turn_pct": 4.45, "turn_avg20": 6.13, "vol_ratio": 0.51, "amt_yi": 14.77, "ma_pos": {"5": 1, "20": 0, "60": 0}, "period_high": 151.46, "period_low": 75.36, "drawdown": -45.82, "pullback_623": -47.36, "is_period_high": false, "as_of": "2026-07-27", "n_days": 135, "lag_reason": null}, {"code": "603256.SH", "name": "宏和科技", "l1": "PCB", "l2": "CCL", "close": 160.35, "pct_chg": 10.0, "turn_pct": 14.85, "turn_avg20": 10.42, "vol_ratio": 1.12, "amt_yi": 34.78, "ma_pos": {"5": 1, "20": 0, "60": 0}, "period_high": 297, "period_low": 35.6068, "drawdown": -46.01, "pullback_623": -51.28, "is_period_high": false, "as_of": "2026-07-27", "n_days": 135, "lag_reason": null}, {"code": "002080.SZ", "name": "中材科技", "l1": "PCB", "l2": "CCL", "close": 51.94, "pct_chg": 10.0, "turn_pct": 6.87, "turn_avg20": 7.46, "vol_ratio": 0.61, "amt_yi": 22.66, "ma_pos": {"5": 1, "20": 0, "60": 0}, "period_high": 97.67, "period_low": 35.3999, "drawdown": -46.82, "pullback_623": -48.84, "is_period_high": false, "as_of": "2026-07-27", "n_days": 135, "lag_reason": null}, {"code": "600176.SH", "name": "​​中国巨石​​", "l1": "PCB", "l2": "CCL", "close": 41.07, "pct_chg": 9.99, "turn_pct": 11.15, "turn_avg20": 10.43, "vol_ratio": 0.75, "amt_yi": 90.65, "ma_pos": {"5": 1, "20": 0, "60": 0}, "period_high": 74.12, "period_low": 17.4195, "drawdown": -44.59, "pullback_623": -35.18, "is_period_high": false, "as_of": "2026-07-27", "n_days": 135, "lag_reason": null}, {"code": "301377.SZ", "name": "鼎泰高科", "l1": "PCB", "l2": "钻针", "close": 414.38, "pct_chg": 4.48, "turn_pct": 5.38, "turn_avg20": 6.11, "vol_ratio": 0.72, "amt_yi": 18.68, "ma_pos": {"5": 1, "20": 0, "60": 1}, "period_high": 659.6, "period_low": 142.5982, "drawdown": -37.18, "pullback_623": -46.92, "is_period_high": false, "as_of": "2026-07-27", "n_days": 135, "lag_reason": null}, {"code": "000657.SZ", "name": "中钨高新", "l1": "PCB", "l2": "钻针", "close": 58.99, "pct_chg": 6.27, "turn_pct": 6.05, "turn_avg20": 8.18, "vol_ratio": 0.53, "amt_yi": 30.9, "ma_pos": {"5": 1, "20": 0, "60": 0}, "period_high": 108.052, "period_low": 28.4269, "drawdown": -45.41, "pullback_623": -54.18, "is_period_high": false, "as_of": "2026-07-27", "n_days": 135, "lag_reason": null}, {"code": "688308.SH", "name": "​​欧科亿​", "l1": "PCB", "l2": "钻针", "close": 96.54, "pct_chg": 4.92, "turn_pct": 7.3, "turn_avg20": 9.3, "vol_ratio": 0.56, "amt_yi": 8.2, "ma_pos": {"5": 0, "20": 0, "60": 0}, "period_high": 200.73, "period_low": 31.58, "drawdown": -51.91, "pullback_623": -58.8, "is_period_high": false, "as_of": "2026-07-27", "n_days": 135, "lag_reason": null}, {"code": "301200.SZ", "name": "大族数控", "l1": "PCB", "l2": "钻孔设备", "close": 265.17, "pct_chg": 1.86, "turn_pct": 5.86, "turn_avg20": 6.37, "vol_ratio": 0.75, "amt_yi": 10.01, "ma_pos": {"5": 1, "20": 0, "60": 0}, "period_high": 387.54, "period_low": 120.3556, "drawdown": -31.58, "pullback_623": -31.26, "is_period_high": false, "as_of": "2026-07-27", "n_days": 135, "lag_reason": null}, {"code": "688630.SH", "name": "芯碁微装", "l1": "PCB", "l2": "钻孔设备", "close": 420.9, "pct_chg": 2.96, "turn_pct": 7.72, "turn_avg20": 7.6, "vol_ratio": 0.93, "amt_yi": 26.47, "ma_pos": {"5": 1, "20": 0, "60": 1}, "period_high": 555.5, "period_low": 139.0486, "drawdown": -24.23, "pullback_623": -33.35, "is_period_high": false, "as_of": "2026-07-27", "n_days": 135, "lag_reason": null}, {"code": "603986.SH", "name": "兆易创新", "l1": "存储", "l2": "NOR", "close": 434.03, "pct_chg": -5.03, "turn_pct": 10.15, "turn_avg20": 9.82, "vol_ratio": 0.75, "amt_yi": 269.1, "ma_pos": {"5": 0, "20": 0, "60": 0}, "period_high": 840, "period_low": 235.3372, "drawdown": -48.33, "pullback_623": -45.11, "is_period_high": false, "as_of": "2026-07-27", "n_days": 135, "lag_reason": null}, {"code": "688123.SH", "name": "聚辰股份", "l1": "存储", "l2": "NOR", "close": 131.23, "pct_chg": 2.91, "turn_pct": 8.84, "turn_avg20": 12.41, "vol_ratio": 0.48, "amt_yi": 14.17, "ma_pos": {"5": 1, "20": 0, "60": 0}, "period_high": 217.12, "period_low": 100.796, "drawdown": -39.56, "pullback_623": -17.78, "is_period_high": false, "as_of": "2026-07-27", "n_days": 135, "lag_reason": null}, {"code": "688008.SH", "name": "澜起科技", "l1": "存储", "l2": "接口", "close": 227.45, "pct_chg": -2.66, "turn_pct": 5.5, "turn_avg20": 7.04, "vol_ratio": 0.67, "amt_yi": 130.79, "ma_pos": {"5": 1, "20": 0, "60": 0}, "period_high": 315.89, "period_low": 125.28, "drawdown": -28.0, "pullback_623": -26.7, "is_period_high": false, "as_of": "2026-07-27", "n_days": 135, "lag_reason": null}, {"code": "300223.SZ", "name": "北京君正", "l1": "存储", "l2": "SLC NAND", "close": 145.66, "pct_chg": 1.4, "turn_pct": 9.34, "turn_avg20": 11.21, "vol_ratio": 0.55, "amt_yi": 53.87, "ma_pos": {"5": 0, "20": 0, "60": 0}, "period_high": 259.56, "period_low": 104.1863, "drawdown": -43.88, "pullback_623": -34.21, "is_period_high": false, "as_of": "2026-07-27", "n_days": 135, "lag_reason": null}, {"code": "688766.SH", "name": "普冉股份", "l1": "存储", "l2": "EE", "close": 371.78, "pct_chg": -4.58, "turn_pct": 14.44, "turn_avg20": 11.61, "vol_ratio": 0.76, "amt_yi": 48.74, "ma_pos": {"5": 0, "20": 0, "60": 0}, "period_high": 870, "period_low": 152.6064, "drawdown": -57.27, "pullback_623": -47.05, "is_period_high": false, "as_of": "2026-07-27", "n_days": 135, "lag_reason": null}, {"code": "001309.SZ", "name": "德明利", "l1": "存储", "l2": "存储模组", "close": 401.6, "pct_chg": 0.43, "turn_pct": 14.81, "turn_avg20": 11.63, "vol_ratio": 0.74, "amt_yi": 84.52, "ma_pos": {"5": 0, "20": 0, "60": 0}, "period_high": 970, "period_low": 228.4594, "drawdown": -58.6, "pullback_623": -47.64, "is_period_high": false, "as_of": "2026-07-27", "n_days": 135, "lag_reason": null}, {"code": "300475.SZ", "name": "香农芯创", "l1": "存储", "l2": "存储模组", "close": 165.84, "pct_chg": 2.63, "turn_pct": 8.37, "turn_avg20": 12.15, "vol_ratio": 0.47, "amt_yi": 43.95, "ma_pos": {"5": 0, "20": 0, "60": 0}, "period_high": 306.25, "period_low": 121.98, "drawdown": -45.85, "pullback_623": -49.32, "is_period_high": false, "as_of": "2026-07-27", "n_days": 135, "lag_reason": null}, {"code": "688525.SH", "name": "佰维存储", "l1": "存储", "l2": "存储模组", "close": 241.13, "pct_chg": 2.01, "turn_pct": 7.9, "turn_avg20": 10.54, "vol_ratio": 0.48, "amt_yi": 67.15, "ma_pos": {"5": 0, "20": 0, "60": 0}, "period_high": 507, "period_low": 124.0234, "drawdown": -52.44, "pullback_623": -44.38, "is_period_high": false, "as_of": "2026-07-27", "n_days": 135, "lag_reason": null}, {"code": "603929.SH", "name": "亚翔集成", "l1": "存储", "l2": "洁净室", "close": 177.44, "pct_chg": 7.21, "turn_pct": 10.01, "turn_avg20": 9.43, "vol_ratio": 0.81, "amt_yi": 14.92, "ma_pos": {"5": 1, "20": 0, "60": 0}, "period_high": 276.2, "period_low": 104.1411, "drawdown": -35.76, "pullback_623": -30.47, "is_period_high": false, "as_of": "2026-07-27", "n_days": 135, "lag_reason": null}, {"code": "002837.SZ", "name": "英维克", "l1": "液冷", "l2": "液冷", "close": 61.26, "pct_chg": 4.36, "turn_pct": 4.17, "turn_avg20": 7.1, "vol_ratio": 0.48, "amt_yi": 18.61, "ma_pos": {"5": 1, "20": 0, "60": 0}, "period_high": 92.9655, "period_low": 55.46, "drawdown": -34.1, "pullback_623": -38.62, "is_period_high": false, "as_of": "2026-07-27", "n_days": 135, "lag_reason": null}, {"code": "300731.SZ", "name": "科创新源", "l1": "液冷", "l2": "液冷", "close": 36.7, "pct_chg": 4.95, "turn_pct": 5.48, "turn_avg20": 5.57, "vol_ratio": 0.71, "amt_yi": 2.61, "ma_pos": {"5": 1, "20": 0, "60": 0}, "period_high": 68.537, "period_low": 34.97, "drawdown": -46.45, "pullback_623": -48.59, "is_period_high": false, "as_of": "2026-07-27", "n_days": 135, "lag_reason": null}, {"code": "002706.SZ", "name": "良信股份", "l1": "电-柜内", "l2": "断路器", "close": 8.94, "pct_chg": 1.25, "turn_pct": 1.9, "turn_avg20": 3.2, "vol_ratio": 0.52, "amt_yi": 1.43, "ma_pos": {"5": 0, "20": 0, "60": 0}, "period_high": 15.06, "period_low": 8.75, "drawdown": -40.64, "pullback_623": -27.72, "is_period_high": false, "as_of": "2026-07-27", "n_days": 135, "lag_reason": null}, {"code": "002484.SZ", "name": "江海股份", "l1": "电-柜内", "l2": "电容", "close": 69.95, "pct_chg": 10.0, "turn_pct": 7.74, "turn_avg20": 8.49, "vol_ratio": 0.7, "amt_yi": 27.25, "ma_pos": {"5": 1, "20": 0, "60": 0}, "period_high": 111.02, "period_low": 26.2785, "drawdown": -36.99, "pullback_623": -44.09, "is_period_high": false, "as_of": "2026-07-27", "n_days": 135, "lag_reason": null}, {"code": "002851.SZ", "name": "麦格米特", "l1": "电-柜内", "l2": "电源", "close": 130.63, "pct_chg": 6.84, "turn_pct": 6.94, "turn_avg20": 8.59, "vol_ratio": 0.64, "amt_yi": 34.36, "ma_pos": {"5": 1, "20": 0, "60": 0}, "period_high": 188.79, "period_low": 91.03, "drawdown": -30.81, "pullback_623": -43.6, "is_period_high": false, "as_of": "2026-07-27", "n_days": 135, "lag_reason": null}, {"code": "300870.SZ", "name": "欧陆通", "l1": "电-柜内", "l2": "电源", "close": 212.5, "pct_chg": 4.7, "turn_pct": 7.52, "turn_avg20": 8.02, "vol_ratio": 0.72, "amt_yi": 11.36, "ma_pos": {"5": 0, "20": 0, "60": 0}, "period_high": 380.06, "period_low": 155.251, "drawdown": -44.09, "pullback_623": -53.51, "is_period_high": false, "as_of": "2026-07-27", "n_days": 135, "lag_reason": null}, {"code": "2577.HK", "name": "英诺赛科", "l1": "电-柜内", "l2": "功率器件", "close": 44.12, "pct_chg": 0.27, "turn_pct": 1.33, "turn_avg20": 3.3, "vol_ratio": 0.31, "amt_yi": 1.42, "ma_pos": {"5": 0, "20": 0, "60": 0}, "period_high": 86.2, "period_low": 42.3, "drawdown": -48.82, "pullback_623": -47.11, "is_period_high": false, "as_of": "2026-07-27", "n_days": 137, "lag_reason": null}, {"code": "605111.SH", "name": "新洁能", "l1": "电-柜内", "l2": "功率器件", "close": 56.26, "pct_chg": 1.99, "turn_pct": 5.88, "turn_avg20": 8.66, "vol_ratio": 0.49, "amt_yi": 10.46, "ma_pos": {"5": 1, "20": 0, "60": 0}, "period_high": 99.14, "period_low": 36.0651, "drawdown": -43.25, "pullback_623": -34.69, "is_period_high": false, "as_of": "2026-07-27", "n_days": 135, "lag_reason": null}, {"code": "300661.SZ", "name": "圣邦股份", "l1": "电-柜内", "l2": "模拟器件", "close": 98.89, "pct_chg": -1.51, "turn_pct": 4.37, "turn_avg20": 4.72, "vol_ratio": 0.73, "amt_yi": 17.09, "ma_pos": {"5": 0, "20": 0, "60": 0}, "period_high": 143.48, "period_low": 62.3411, "drawdown": -31.08, "pullback_623": -30.03, "is_period_high": false, "as_of": "2026-07-27", "n_days": 135, "lag_reason": null}, {"code": "002028.SZ", "name": "思源电气", "l1": "电-柜外", "l2": "AI-配电", "close": 168.3, "pct_chg": 3.45, "turn_pct": 2.54, "turn_avg20": 2.43, "vol_ratio": 1.09, "amt_yi": 23.5, "ma_pos": {"5": 1, "20": 1, "60": 0}, "period_high": 233.51, "period_low": 147.05, "drawdown": -27.93, "pullback_623": -21.88, "is_period_high": false, "as_of": "2026-07-27", "n_days": 135, "lag_reason": null}, {"code": "688676.SH", "name": "金盘科技", "l1": "电-柜外", "l2": "AI-配电", "close": 72.22, "pct_chg": 5.88, "turn_pct": 5.64, "turn_avg20": 5.43, "vol_ratio": 0.98, "amt_yi": 10.38, "ma_pos": {"5": 1, "20": 0, "60": 0}, "period_high": 105.4855, "period_low": 60.25, "drawdown": -31.54, "pullback_623": -30.37, "is_period_high": false, "as_of": "2026-07-27", "n_days": 135, "lag_reason": null}, {"code": "600089.SH", "name": "特变电工", "l1": "电-柜外", "l2": "AI-配电", "close": 20.65, "pct_chg": 1.28, "turn_pct": 2.89, "turn_avg20": 2.97, "vol_ratio": 0.97, "amt_yi": 24.53, "ma_pos": {"5": 1, "20": 1, "60": 0}, "period_high": 32.2438, "period_low": 18.66, "drawdown": -35.96, "pullback_623": -15.12, "is_period_high": false, "as_of": "2026-07-27", "n_days": 135, "lag_reason": null}, {"code": "601179.SH", "name": "中国西电", "l1": "电-柜外", "l2": "AI-配电", "close": 14.09, "pct_chg": 3.99, "turn_pct": 11.42, "turn_avg20": 6.12, "vol_ratio": 2.03, "amt_yi": 39.14, "ma_pos": {"5": 1, "20": 1, "60": 0}, "period_high": 20.108, "period_low": 9.4209, "drawdown": -29.93, "pullback_623": -20.3, "is_period_high": false, "as_of": "2026-07-27", "n_days": 135, "lag_reason": null}, {"code": "002335.SZ", "name": "科华数据", "l1": "电-柜外", "l2": "AI-配电", "close": 30.3, "pct_chg": 2.43, "turn_pct": 3.94, "turn_avg20": 5.97, "vol_ratio": 0.5, "amt_yi": 5.86, "ma_pos": {"5": 0, "20": 0, "60": 0}, "period_high": 48.7258, "period_low": 29.35, "drawdown": -37.82, "pullback_623": -28.38, "is_period_high": false, "as_of": "2026-07-27", "n_days": 135, "lag_reason": null}, {"code": "002364.SZ", "name": "中恒电气", "l1": "电-柜外", "l2": "AI-配电", "close": 40, "pct_chg": 10.01, "turn_pct": 12.03, "turn_avg20": 13.8, "vol_ratio": 0.67, "amt_yi": 15.3, "ma_pos": {"5": 1, "20": 0, "60": 0}, "period_high": 59.0408, "period_low": 25.5927, "drawdown": -32.25, "pullback_623": -33.22, "is_period_high": false, "as_of": "2026-07-27", "n_days": 135, "lag_reason": null}, {"code": "300274.SZ", "name": "阳光电源", "l1": "电-柜外", "l2": "AI-发电", "close": 116.21, "pct_chg": 2.46, "turn_pct": 2.85, "turn_avg20": 5.04, "vol_ratio": 0.52, "amt_yi": 46.45, "ma_pos": {"5": 1, "20": 0, "60": 0}, "period_high": 190.09, "period_low": 101.61, "drawdown": -38.87, "pullback_623": -36.76, "is_period_high": false, "as_of": "2026-07-27", "n_days": 135, "lag_reason": null}, {"code": "000338.SZ", "name": "潍柴动力", "l1": "电-柜外", "l2": "AI-发电", "close": 28.45, "pct_chg": 3.01, "turn_pct": 1.67, "turn_avg20": 2.17, "vol_ratio": 0.77, "amt_yi": 22.81, "ma_pos": {"5": 1, "20": 1, "60": 0}, "period_high": 35.34, "period_low": 17.4, "drawdown": -19.5, "pullback_623": -10.67, "is_period_high": false, "as_of": "2026-07-27", "n_days": 135, "lag_reason": null}, {"code": "300153.SZ", "name": "科泰电源", "l1": "电-柜外", "l2": "AI-发电", "close": 20.06, "pct_chg": 3.72, "turn_pct": 3.33, "turn_avg20": 4.71, "vol_ratio": 0.63, "amt_yi": 1.44, "ma_pos": {"5": 1, "20": 0, "60": 0}, "period_high": 39.3429, "period_low": 19.31, "drawdown": -49.01, "pullback_623": -20.47, "is_period_high": false, "as_of": "2026-07-27", "n_days": 135, "lag_reason": null}, {"code": "600875.SH", "name": "东方电气", "l1": "电-柜外", "l2": "AI-发电", "close": 26.03, "pct_chg": 1.76, "turn_pct": 2.82, "turn_avg20": 4.29, "vol_ratio": 0.6, "amt_yi": 9.23, "ma_pos": {"5": 0, "20": 0, "60": 0}, "period_high": 44.22, "period_low": 24.395, "drawdown": -41.14, "pullback_623": -22.53, "is_period_high": false, "as_of": "2026-07-27", "n_days": 135, "lag_reason": null}, {"code": "600893.SH", "name": "航发动力", "l1": "电-柜外", "l2": "AI-发电", "close": 35.15, "pct_chg": 1.59, "turn_pct": 1.66, "turn_avg20": 2.8, "vol_ratio": 0.57, "amt_yi": 7.58, "ma_pos": {"5": 1, "20": 0, "60": 0}, "period_high": 61.9824, "period_low": 32.33, "drawdown": -43.29, "pullback_623": -16.39, "is_period_high": false, "as_of": "2026-07-27", "n_days": 135, "lag_reason": null}, {"code": "002353.SZ", "name": "杰瑞股份", "l1": "电-柜外", "l2": "AI-发电", "close": 151.02, "pct_chg": 10.0, "turn_pct": 5.34, "turn_avg20": 3.65, "vol_ratio": 1.48, "amt_yi": 43.89, "ma_pos": {"5": 1, "20": 1, "60": 1}, "period_high": 173.66, "period_low": 71.4481, "drawdown": -13.04, "pullback_623": -22.43, "is_period_high": false, "as_of": "2026-07-27", "n_days": 135, "lag_reason": null}, {"code": "603308.SH", "name": "应流股份", "l1": "电-柜外", "l2": "AI-发电", "close": 47.02, "pct_chg": 6.62, "turn_pct": 4.52, "turn_avg20": 5.01, "vol_ratio": 0.78, "amt_yi": 9.23, "ma_pos": {"5": 1, "20": 0, "60": 0}, "period_high": 83, "period_low": 40.87, "drawdown": -43.35, "pullback_623": -37.95, "is_period_high": false, "as_of": "2026-07-27", "n_days": 135, "lag_reason": null}, {"code": "0981.HK", "name": "中芯国际", "l1": "国产算力", "l2": "先进制程", "close": 70.65, "pct_chg": -0.98, "turn_pct": 1.85, "turn_avg20": 3.4, "vol_ratio": 0.48, "amt_yi": 53.88, "ma_pos": {"5": 0, "20": 0, "60": 0}, "period_high": 89.4, "period_low": 50.7, "drawdown": -20.97, "pullback_623": -19.84, "is_period_high": false, "as_of": "2026-07-27", "n_days": 137, "lag_reason": null}, {"code": "1347.HK", "name": "华虹半导体", "l1": "国产算力", "l2": "先进制程", "close": 148.6, "pct_chg": -0.8, "turn_pct": 5.94, "turn_avg20": 7.59, "vol_ratio": 0.64, "amt_yi": 53.88, "ma_pos": {"5": 0, "20": 0, "60": 0}, "period_high": 215.2, "period_low": 77.65, "drawdown": -30.95, "pullback_623": -22.05, "is_period_high": false, "as_of": "2026-07-27", "n_days": 137, "lag_reason": null}, {"code": "688820.SH", "name": "盛合晶微", "l1": "国产算力", "l2": "先进封装", "close": 142.66, "pct_chg": 1.26, "turn_pct": 6.94, "turn_avg20": 13.85, "vol_ratio": 0.39, "amt_yi": 16.81, "ma_pos": {"5": 0, "20": 0, "60": 0}, "period_high": 229, "period_low": 76.65, "drawdown": -37.7, "pullback_623": -40.35, "is_period_high": false, "as_of": "2026-07-27", "n_days": 66, "lag_reason": null}, {"code": "600584.SH", "name": "长电科技", "l1": "国产算力", "l2": "先进封装", "close": 82.35, "pct_chg": -0.66, "turn_pct": 10.31, "turn_avg20": 15.9, "vol_ratio": 0.54, "amt_yi": 115.94, "ma_pos": {"5": 0, "20": 0, "60": 1}, "period_high": 106.64, "period_low": 38.2481, "drawdown": -22.78, "pullback_623": -27.97, "is_period_high": false, "as_of": "2026-07-27", "n_days": 135, "lag_reason": null}, {"code": "002156.SZ", "name": "通富微电", "l1": "国产算力", "l2": "先进封装", "close": 76.67, "pct_chg": 0.04, "turn_pct": 18.84, "turn_avg20": 15.5, "vol_ratio": 1.27, "amt_yi": 172.77, "ma_pos": {"5": 1, "20": 1, "60": 1}, "period_high": 78.71, "period_low": 39.4958, "drawdown": -2.59, "pullback_623": -20.38, "is_period_high": false, "as_of": "2026-07-27", "n_days": 135, "lag_reason": null}, {"code": "688362.SH", "name": "甬矽电子", "l1": "国产算力", "l2": "先进封装", "close": 77.26, "pct_chg": -1.57, "turn_pct": 9.87, "turn_avg20": 14.5, "vol_ratio": 0.56, "amt_yi": 22.16, "ma_pos": {"5": 0, "20": 0, "60": 1}, "period_high": 114.8, "period_low": 34.18, "drawdown": -32.7, "pullback_623": -19.23, "is_period_high": false, "as_of": "2026-07-27", "n_days": 135, "lag_reason": null}, {"code": "688372.SH", "name": "伟测科技", "l1": "国产算力", "l2": "先进封装", "close": 126.3, "pct_chg": 6.22, "turn_pct": 7.36, "turn_avg20": 11.29, "vol_ratio": 0.49, "amt_yi": 11.21, "ma_pos": {"5": 0, "20": 0, "60": 0}, "period_high": 188.88, "period_low": 110.2967, "drawdown": -33.13, "pullback_623": -32.65, "is_period_high": false, "as_of": "2026-07-27", "n_days": 135, "lag_reason": null}, {"code": "688041.SH", "name": "海光信息", "l1": "国产算力", "l2": "GPU", "close": 313.59, "pct_chg": -0.22, "turn_pct": 2.35, "turn_avg20": 3.83, "vol_ratio": 0.54, "amt_yi": 65.14, "ma_pos": {"5": 0, "20": 0, "60": 0}, "period_high": 370.3, "period_low": 206.9451, "drawdown": -15.31, "pullback_623": -15.33, "is_period_high": false, "as_of": "2026-07-27", "n_days": 135, "lag_reason": null}, {"code": "688256.SH", "name": "寒武纪", "l1": "国产算力", "l2": "GPU", "close": 1241.02, "pct_chg": 1.31, "turn_pct": 2.77, "turn_avg20": 4.25, "vol_ratio": 0.56, "amt_yi": 103.48, "ma_pos": {"5": 0, "20": 0, "60": 0}, "period_high": 1595.55, "period_low": 651.3533, "drawdown": -22.22, "pullback_623": -24.09, "is_period_high": false, "as_of": "2026-07-27", "n_days": 135, "lag_reason": null}, {"code": "688795.SH", "name": "摩尔线程", "l1": "国产算力", "l2": "GPU", "close": 605.86, "pct_chg": 0.97, "turn_pct": 3.98, "turn_avg20": 10.1, "vol_ratio": 0.33, "amt_yi": 7.12, "ma_pos": {"5": 0, "20": 0, "60": 0}, "period_high": 759, "period_low": 505.32, "drawdown": -20.18, "pullback_623": -14.92, "is_period_high": false, "as_of": "2026-07-27", "n_days": 135, "lag_reason": null}, {"code": "6082.HK", "name": "壁仞科技", "l1": "国产算力", "l2": "GPU", "close": 34.8, "pct_chg": -5.07, "turn_pct": 10.16, "turn_avg20": 13.99, "vol_ratio": 0.54, "amt_yi": 6.5, "ma_pos": {"5": 0, "20": 0, "60": 0}, "period_high": 68, "period_low": 28.1, "drawdown": -48.82, "pullback_623": -51.4, "is_period_high": false, "as_of": "2026-07-27", "n_days": 137, "lag_reason": null}, {"code": "9903.HK", "name": "天数智芯", "l1": "国产算力", "l2": "GPU", "close": 597, "pct_chg": 6.04, "turn_pct": 13.93, "turn_avg20": 21.29, "vol_ratio": 0.65, "amt_yi": 11.21, "ma_pos": {"5": 1, "20": 1, "60": 1}, "period_high": 793, "period_low": 156.8, "drawdown": -24.72, "pullback_623": -41.45, "is_period_high": false, "as_of": "2026-07-27", "n_days": 133, "lag_reason": null}, {"code": "688802.SH", "name": "沐曦股份", "l1": "国产算力", "l2": "GPU", "close": 830.2, "pct_chg": 1.05, "turn_pct": 7.66, "turn_avg20": 15.16, "vol_ratio": 0.46, "amt_yi": 11.43, "ma_pos": {"5": 0, "20": 0, "60": 1}, "period_high": 981.88, "period_low": 491.96, "drawdown": -15.45, "pullback_623": -9.12, "is_period_high": false, "as_of": "2026-07-27", "n_days": 135, "lag_reason": null}, {"code": "688521.SH", "name": "芯原股份", "l1": "国产算力", "l2": "ASIC", "close": 224.59, "pct_chg": 1.26, "turn_pct": 3.08, "turn_avg20": 5.88, "vol_ratio": 0.39, "amt_yi": 26.97, "ma_pos": {"5": 0, "20": 0, "60": 0}, "period_high": 371.14, "period_low": 144.23, "drawdown": -39.49, "pullback_623": -32.04, "is_period_high": false, "as_of": "2026-07-27", "n_days": 135, "lag_reason": null}, {"code": "688702.SH", "name": "盛科通信", "l1": "国产算力", "l2": "超节点", "close": 381.48, "pct_chg": -2.38, "turn_pct": 11.13, "turn_avg20": 11.76, "vol_ratio": 0.95, "amt_yi": 46.92, "ma_pos": {"5": 0, "20": 1, "60": 1}, "period_high": 430.15, "period_low": 128.6, "drawdown": -11.31, "pullback_623": 7.07, "is_period_high": false, "as_of": "2026-07-27", "n_days": 135, "lag_reason": null}, {"code": "002371.SZ", "name": "北方华创", "l1": "半导体设备材料零部件", "l2": "设备", "close": 770, "pct_chg": 1.72, "turn_pct": 3.64, "turn_avg20": 3.94, "vol_ratio": 0.88, "amt_yi": 107.48, "ma_pos": {"5": 1, "20": 0, "60": 1}, "period_high": 934.5155, "period_low": 423.6971, "drawdown": -17.6, "pullback_623": -7.7, "is_period_high": false, "as_of": "2026-07-27", "n_days": 135, "lag_reason": null}, {"code": "688012.SH", "name": "中微公司", "l1": "半导体设备材料零部件", "l2": "设备", "close": 399.77, "pct_chg": 2.9, "turn_pct": 3.35, "turn_avg20": 4.51, "vol_ratio": 0.69, "amt_yi": 96.06, "ma_pos": {"5": 1, "20": 0, "60": 1}, "period_high": 471.59, "period_low": 196.8261, "drawdown": -15.23, "pullback_623": -7.71, "is_period_high": false, "as_of": "2026-07-27", "n_days": 135, "lag_reason": null}, {"code": "688072.SH", "name": "拓荆科技", "l1": "半导体设备材料零部件", "l2": "设备", "close": 791.9, "pct_chg": 0.11, "turn_pct": 5.06, "turn_avg20": 5.87, "vol_ratio": 0.85, "amt_yi": 70.75, "ma_pos": {"5": 1, "20": 1, "60": 1}, "period_high": 850.01, "period_low": 316.7201, "drawdown": -6.84, "pullback_623": -11.1, "is_period_high": false, "as_of": "2026-07-27", "n_days": 125, "lag_reason": null}, {"code": "688147.SH", "name": "微导纳米", "l1": "半导体设备材料零部件", "l2": "设备", "close": 118.22, "pct_chg": 0.21, "turn_pct": 4.88, "turn_avg20": 7.46, "vol_ratio": 0.54, "amt_yi": 8.29, "ma_pos": {"5": 0, "20": 0, "60": 1}, "period_high": 161.88, "period_low": 61.468, "drawdown": -26.97, "pullback_623": -20.8, "is_period_high": false, "as_of": "2026-07-27", "n_days": 135, "lag_reason": null}, {"code": "688082.SH", "name": "盛美上海", "l1": "半导体设备材料零部件", "l2": "设备", "close": 307, "pct_chg": 2.34, "turn_pct": 4.66, "turn_avg20": 7.3, "vol_ratio": 0.51, "amt_yi": 17.47, "ma_pos": {"5": 0, "20": 0, "60": 1}, "period_high": 447.95, "period_low": 139.74, "drawdown": -31.47, "pullback_623": -27.54, "is_period_high": false, "as_of": "2026-07-27", "n_days": 135, "lag_reason": null}, {"code": "688627.SH", "name": "精智达", "l1": "半导体设备材料零部件", "l2": "设备", "close": 510, "pct_chg": 2.77, "turn_pct": 6.91, "turn_avg20": 8.3, "vol_ratio": 0.74, "amt_yi": 26.56, "ma_pos": {"5": 0, "20": 0, "60": 1}, "period_high": 715, "period_low": 209.9073, "drawdown": -28.67, "pullback_623": -27.29, "is_period_high": false, "as_of": "2026-07-27", "n_days": 135, "lag_reason": null}, {"code": "688120.SH", "name": "华海清科", "l1": "半导体设备材料零部件", "l2": "设备", "close": 271.5, "pct_chg": 2.88, "turn_pct": 4.2, "turn_avg20": 5.46, "vol_ratio": 0.71, "amt_yi": 39.86, "ma_pos": {"5": 1, "20": 0, "60": 1}, "period_high": 344, "period_low": 111.7106, "drawdown": -21.08, "pullback_623": 9.31, "is_period_high": false, "as_of": "2026-07-27", "n_days": 135, "lag_reason": null}, {"code": "688037.SH", "name": "芯源微", "l1": "半导体设备材料零部件", "l2": "设备", "close": 349.3, "pct_chg": 2.13, "turn_pct": 4.09, "turn_avg20": 5.79, "vol_ratio": 0.63, "amt_yi": 20.12, "ma_pos": {"5": 1, "20": 0, "60": 1}, "period_high": 439.05, "period_low": 154, "drawdown": -20.44, "pullback_623": 1.83, "is_period_high": false, "as_of": "2026-07-27", "n_days": 135, "lag_reason": null}, {"code": "688630.SH", "name": "芯碁微装", "l1": "半导体设备材料零部件", "l2": "设备", "close": 420.9, "pct_chg": 2.96, "turn_pct": 7.72, "turn_avg20": 7.6, "vol_ratio": 0.93, "amt_yi": 26.47, "ma_pos": {"5": 1, "20": 0, "60": 1}, "period_high": 555.5, "period_low": 139.0486, "drawdown": -24.23, "pullback_623": -33.35, "is_period_high": false, "as_of": "2026-07-27", "n_days": 135, "lag_reason": null}, {"code": "0522.HK", "name": "ASMPT", "l1": "半导体设备材料零部件", "l2": "设备", "close": 161.6, "pct_chg": -1.1, "turn_pct": 1.46, "turn_avg20": 2.34, "vol_ratio": 0.51, "amt_yi": 4.66, "ma_pos": {"5": 0, "20": 0, "60": 0}, "period_high": 238.8, "period_low": 80.6708, "drawdown": -32.33, "pullback_623": -27.05, "is_period_high": false, "as_of": "2026-07-27", "n_days": 137, "lag_reason": null}, {"code": "688361.SH", "name": "中科飞测", "l1": "半导体设备材料零部件", "l2": "设备", "close": 389.43, "pct_chg": 8.96, "turn_pct": 5.64, "turn_avg20": 5.42, "vol_ratio": 1.06, "amt_yi": 53.36, "ma_pos": {"5": 1, "20": 1, "60": 1}, "period_high": 446.5, "period_low": 150.38, "drawdown": -12.78, "pullback_623": 29.05, "is_period_high": false, "as_of": "2026-07-27", "n_days": 135, "lag_reason": null}, {"code": "300567.SZ", "name": "精测电子", "l1": "半导体设备材料零部件", "l2": "设备", "close": 231.95, "pct_chg": 3.27, "turn_pct": 5.03, "turn_avg20": 6.73, "vol_ratio": 0.66, "amt_yi": 20.95, "ma_pos": {"5": 1, "20": 0, "60": 1}, "period_high": 317.6, "period_low": 94.9297, "drawdown": -26.97, "pullback_623": -10.66, "is_period_high": false, "as_of": "2026-07-27", "n_days": 130, "lag_reason": null}, {"code": "300604.SZ", "name": "长川科技", "l1": "半导体设备材料零部件", "l2": "设备", "close": 304.7, "pct_chg": 0.4, "turn_pct": 6.28, "turn_avg20": 7.32, "vol_ratio": 0.8, "amt_yi": 83.84, "ma_pos": {"5": 0, "20": 0, "60": 1}, "period_high": 374, "period_low": 105.9505, "drawdown": -18.53, "pullback_623": -3.3, "is_period_high": false, "as_of": "2026-07-27", "n_days": 135, "lag_reason": null}, {"code": "688200.SH", "name": "华峰测控", "l1": "半导体设备材料零部件", "l2": "设备", "close": 385.58, "pct_chg": 4.78, "turn_pct": 5.15, "turn_avg20": 5.55, "vol_ratio": 0.78, "amt_yi": 25.33, "ma_pos": {"5": 1, "20": 0, "60": 1}, "period_high": 543, "period_low": 129.8716, "drawdown": -28.99, "pullback_623": -12.31, "is_period_high": false, "as_of": "2026-07-27", "n_days": 135, "lag_reason": null}, {"code": "603061.SH", "name": "金海通", "l1": "半导体设备材料零部件", "l2": "设备", "close": 308.19, "pct_chg": 4.61, "turn_pct": 7.6, "turn_avg20": 8.28, "vol_ratio": 0.77, "amt_yi": 12.63, "ma_pos": {"5": 1, "20": 0, "60": 0}, "period_high": 523, "period_low": 106.3899, "drawdown": -41.07, "pullback_623": -22.49, "is_period_high": false, "as_of": "2026-07-27", "n_days": 135, "lag_reason": null}, {"code": "688409.SH", "name": "富创精密", "l1": "半导体设备材料零部件", "l2": "零部件", "close": 199, "pct_chg": 6.42, "turn_pct": 5.47, "turn_avg20": 6.38, "vol_ratio": 0.66, "amt_yi": 18.05, "ma_pos": {"5": 1, "20": 0, "60": 1}, "period_high": 306.25, "period_low": 69.51, "drawdown": -35.02, "pullback_623": -19.11, "is_period_high": false, "as_of": "2026-07-27", "n_days": 135, "lag_reason": null}, {"code": "301611.SZ", "name": "珂玛科技", "l1": "半导体设备材料零部件", "l2": "零部件", "close": 100.1, "pct_chg": 5.81, "turn_pct": 9.33, "turn_avg20": 10.05, "vol_ratio": 0.62, "amt_yi": 13.14, "ma_pos": {"5": 1, "20": 0, "60": 0}, "period_high": 184.48, "period_low": 86.6529, "drawdown": -45.74, "pullback_623": -33.03, "is_period_high": false, "as_of": "2026-07-27", "n_days": 135, "lag_reason": null}, {"code": "688797.SH", "name": "臻宝科技", "l1": "半导体设备材料零部件", "l2": "零部件", "close": 370.01, "pct_chg": -2.95, "turn_pct": 20.42, "turn_avg20": 24.83, "vol_ratio": 0.58, "amt_yi": 21.82, "ma_pos": {"5": 0, "20": 0, "60": null}, "period_high": 742.18, "period_low": 293.65, "drawdown": -50.15, "pullback_623": -46.65, "is_period_high": false, "as_of": "2026-07-27", "n_days": 24, "lag_reason": null}, {"code": "688502.SH", "name": "茂莱光学", "l1": "半导体设备材料零部件", "l2": "零部件", "close": 381.78, "pct_chg": 6.64, "turn_pct": 7.43, "turn_avg20": 11.67, "vol_ratio": 0.41, "amt_yi": 5.24, "ma_pos": {"5": 0, "20": 0, "60": 0}, "period_high": 693.6, "period_low": 289.8439, "drawdown": -44.96, "pullback_623": -36.37, "is_period_high": false, "as_of": "2026-07-27", "n_days": 135, "lag_reason": null}, {"code": "688019.SH", "name": "安集科技", "l1": "半导体设备材料零部件", "l2": "材料", "close": 264.9, "pct_chg": 3.28, "turn_pct": 5.87, "turn_avg20": 7.34, "vol_ratio": 0.7, "amt_yi": 24.8, "ma_pos": {"5": 1, "20": 0, "60": 1}, "period_high": 343.9, "period_low": 168.5125, "drawdown": -22.97, "pullback_623": -7.71, "is_period_high": false, "as_of": "2026-07-27", "n_days": 135, "lag_reason": null}, {"code": "300054.SZ", "name": "鼎龙股份", "l1": "半导体设备材料零部件", "l2": "材料", "close": 74.17, "pct_chg": 0.51, "turn_pct": 6.08, "turn_avg20": 7.71, "vol_ratio": 0.65, "amt_yi": 30.05, "ma_pos": {"5": 0, "20": 0, "60": 0}, "period_high": 105.97, "period_low": 39.0138, "drawdown": -30.01, "pullback_623": -24.86, "is_period_high": false, "as_of": "2026-07-27", "n_days": 135, "lag_reason": null}, {"code": "688126.SH", "name": "沪硅产业", "l1": "半导体设备材料零部件", "l2": "材料", "close": 26.7, "pct_chg": 3.41, "turn_pct": 5.12, "turn_avg20": 9.3, "vol_ratio": 0.4, "amt_yi": 24.19, "ma_pos": {"5": 1, "20": 0, "60": 0}, "period_high": 41.06, "period_low": 16.61, "drawdown": -34.97, "pullback_623": -30.74, "is_period_high": false, "as_of": "2026-07-27", "n_days": 135, "lag_reason": null}, {"code": "300666.SZ", "name": "江丰电子", "l1": "半导体设备材料零部件", "l2": "材料", "close": 240.85, "pct_chg": 4.96, "turn_pct": 10.05, "turn_avg20": 11.11, "vol_ratio": 0.69, "amt_yi": 46.86, "ma_pos": {"5": 1, "20": 0, "60": 0}, "period_high": 394.33, "period_low": 100.1005, "drawdown": -38.92, "pullback_623": -34.11, "is_period_high": false, "as_of": "2026-07-27", "n_days": 130, "lag_reason": null}, {"code": "002409.SZ", "name": "雅克科技", "l1": "半导体设备材料零部件", "l2": "材料", "close": 169.35, "pct_chg": 10.0, "turn_pct": 19.53, "turn_avg20": 14.53, "vol_ratio": 1.21, "amt_yi": 85.79, "ma_pos": {"5": 1, "20": 0, "60": 1}, "period_high": 236.09, "period_low": 77.0076, "drawdown": -28.27, "pullback_623": -19.0, "is_period_high": false, "as_of": "2026-07-27", "n_days": 135, "lag_reason": null}, {"code": "688146.SH", "name": "中船特气", "l1": "半导体设备材料零部件", "l2": "材料", "close": 284.94, "pct_chg": 15.98, "turn_pct": 16.65, "turn_avg20": 12.09, "vol_ratio": 1.34, "amt_yi": 65.44, "ma_pos": {"5": 1, "20": 1, "60": 1}, "period_high": 389.99, "period_low": 40.8047, "drawdown": -26.94, "pullback_623": -31.79, "is_period_high": false, "as_of": "2026-07-27", "n_days": 132, "lag_reason": null}, {"code": "688268.SH", "name": "华特气体", "l1": "半导体设备材料零部件", "l2": "材料", "close": 156.48, "pct_chg": 5.01, "turn_pct": 13.51, "turn_avg20": 14.05, "vol_ratio": 0.7, "amt_yi": 13.51, "ma_pos": {"5": 1, "20": 0, "60": 0}, "period_high": 277.3036, "period_low": 59.45, "drawdown": -43.57, "pullback_623": -41.96, "is_period_high": false, "as_of": "2026-07-27", "n_days": 135, "lag_reason": null}, {"code": "688300.SH", "name": "联瑞新材", "l1": "半导体设备材料零部件", "l2": "材料", "close": 131.78, "pct_chg": 6.7, "turn_pct": 9.3, "turn_avg20": 10.56, "vol_ratio": 0.6, "amt_yi": 11.15, "ma_pos": {"5": 1, "20": 0, "60": 0}, "period_high": 272.54, "period_low": 59.6515, "drawdown": -51.65, "pullback_623": -60.62, "is_period_high": false, "as_of": "2026-07-27", "n_days": 135, "lag_reason": null}, {"code": "300346.SZ", "name": "南大光电", "l1": "半导体设备材料零部件", "l2": "材料", "close": 55.75, "pct_chg": 4.01, "turn_pct": 8.65, "turn_avg20": 12.6, "vol_ratio": 0.47, "amt_yi": 27.02, "ma_pos": {"5": 1, "20": 0, "60": 0}, "period_high": 92.65, "period_low": 43.9811, "drawdown": -39.83, "pullback_623": -31.69, "is_period_high": false, "as_of": "2026-07-27", "n_days": 135, "lag_reason": null}, {"code": "3896.HK", "name": "金山云", "l1": "云", "l2": "公有云", "close": 5.25, "pct_chg": 4.58, "turn_pct": 2.2, "turn_avg20": 4.11, "vol_ratio": 0.53, "amt_yi": 2.45, "ma_pos": {"5": 1, "20": 1, "60": 0}, "period_high": 9.42, "period_low": 4.28, "drawdown": -44.27, "pullback_623": 13.04, "is_period_high": false, "as_of": "2026-07-27", "n_days": 137, "lag_reason": null}, {"code": "688158.SH", "name": "优刻得-W", "l1": "云", "l2": "公有云", "close": 29.93, "pct_chg": 2.25, "turn_pct": 3.73, "turn_avg20": 7.09, "vol_ratio": 0.45, "amt_yi": 4.0, "ma_pos": {"5": 0, "20": 0, "60": 0}, "period_high": 52.76, "period_low": 27.41, "drawdown": -43.27, "pullback_623": -22.63, "is_period_high": false, "as_of": "2026-07-27", "n_days": 135, "lag_reason": null}, {"code": "300113.SZ", "name": "顺网科技", "l1": "云", "l2": "边缘云", "close": 16.51, "pct_chg": 3.38, "turn_pct": 4.36, "turn_avg20": 6.1, "vol_ratio": 0.66, "amt_yi": 3.23, "ma_pos": {"5": 0, "20": 0, "60": 0}, "period_high": 29.9111, "period_low": 15.97, "drawdown": -44.8, "pullback_623": -13.59, "is_period_high": false, "as_of": "2026-07-27", "n_days": 135, "lag_reason": null}, {"code": "300017.SZ", "name": "网宿科技", "l1": "云", "l2": "边缘云", "close": 13.33, "pct_chg": 2.54, "turn_pct": 5.39, "turn_avg20": 8.6, "vol_ratio": 0.58, "amt_yi": 14.75, "ma_pos": {"5": 0, "20": 0, "60": 0}, "period_high": 22.1266, "period_low": 10.3952, "drawdown": -39.76, "pullback_623": -8.6, "is_period_high": false, "as_of": "2026-07-27", "n_days": 135, "lag_reason": null}, {"code": "688316.SH", "name": "青云科技-U", "l1": "云", "l2": "混合云", "close": 44.08, "pct_chg": 0.64, "turn_pct": 4.43, "turn_avg20": 6.92, "vol_ratio": 0.55, "amt_yi": 0.7, "ma_pos": {"5": 0, "20": 0, "60": 0}, "period_high": 91.37, "period_low": 43.8, "drawdown": -51.76, "pullback_623": -26.29, "is_period_high": false, "as_of": "2026-07-27", "n_days": 135, "lag_reason": null}, {"code": "300442.SZ", "name": "润泽科技", "l1": "云", "l2": "字节IDC", "close": 66.28, "pct_chg": 2.28, "turn_pct": 2.85, "turn_avg20": 6.29, "vol_ratio": 0.38, "amt_yi": 12.49, "ma_pos": {"5": 0, "20": 0, "60": 0}, "period_high": 103.0835, "period_low": 55.824, "drawdown": -35.7, "pullback_623": -26.23, "is_period_high": false, "as_of": "2026-07-27", "n_days": 129, "lag_reason": null}, {"code": "603881.SH", "name": "数据港", "l1": "云", "l2": "阿里IDC", "close": 24.48, "pct_chg": 1.07, "turn_pct": 5.53, "turn_avg20": 9.26, "vol_ratio": 0.58, "amt_yi": 6.6, "ma_pos": {"5": 0, "20": 0, "60": 0}, "period_high": 36.2402, "period_low": 22.01, "drawdown": -32.45, "pullback_623": -12.63, "is_period_high": false, "as_of": "2026-07-27", "n_days": 135, "lag_reason": null}, {"code": "002929.SZ", "name": "润建股份", "l1": "云", "l2": "阿里IDC", "close": 51.28, "pct_chg": 2.77, "turn_pct": 7.15, "turn_avg20": 13.91, "vol_ratio": 0.41, "amt_yi": 5.17, "ma_pos": {"5": 0, "20": 0, "60": 0}, "period_high": 97.78, "period_low": 40.57, "drawdown": -47.56, "pullback_623": -24.78, "is_period_high": false, "as_of": "2026-07-27", "n_days": 135, "lag_reason": null}, {"code": "9698.HK", "name": "万国数据-SW", "l1": "云", "l2": "阿里IDC", "close": 31.16, "pct_chg": -0.83, "turn_pct": 0.54, "turn_avg20": 0.41, "vol_ratio": 1.29, "amt_yi": 1.86, "ma_pos": {"5": 0, "20": 1, "60": 0}, "period_high": 46, "period_low": 27.86, "drawdown": -32.26, "pullback_623": 4.64, "is_period_high": false, "as_of": "2026-07-27", "n_days": 137, "lag_reason": null}, {"code": "300383.SZ", "name": "光环新网", "l1": "云", "l2": "IDC", "close": 12.7, "pct_chg": 3.17, "turn_pct": 3.52, "turn_avg20": 5.94, "vol_ratio": 0.57, "amt_yi": 6.27, "ma_pos": {"5": 0, "20": 0, "60": 0}, "period_high": 18.7539, "period_low": 11.9, "drawdown": -32.28, "pullback_623": 1.81, "is_period_high": false, "as_of": "2026-07-27", "n_days": 135, "lag_reason": null}, {"code": "600845.SH", "name": "宝信软件", "l1": "云", "l2": "IDC", "close": 17.75, "pct_chg": 1.66, "turn_pct": 1.59, "turn_avg20": 3.76, "vol_ratio": 0.39, "amt_yi": 1.95, "ma_pos": {"5": 0, "20": 0, "60": 0}, "period_high": 24.7279, "period_low": 16.36, "drawdown": -28.22, "pullback_623": 2.88, "is_period_high": false, "as_of": "2026-07-27", "n_days": 135, "lag_reason": null}, {"code": "0100.HK", "name": "MiniMax", "l1": "软件应用", "l2": "大模型", "close": 229.6, "pct_chg": 17.14, "turn_pct": 37.99, "turn_avg20": 31.29, "vol_ratio": 1.04, "amt_yi": 15.94, "ma_pos": {"5": 1, "20": 0, "60": 0}, "period_high": 1238, "period_low": 193.1, "drawdown": -81.45, "pullback_623": -62.6, "is_period_high": false, "as_of": "2026-07-27", "n_days": 132, "lag_reason": null}, {"code": "2513.HK", "name": "智谱AI", "l1": "软件应用", "l2": "大模型", "close": 1281, "pct_chg": 3.56, "turn_pct": 84.63, "turn_avg20": 130.07, "vol_ratio": 0.58, "amt_yi": 55.3, "ma_pos": {"5": 1, "20": 0, "60": 0}, "period_high": 2410, "period_low": 131.5, "drawdown": -46.85, "pullback_623": -59.02, "is_period_high": false, "as_of": "2026-07-27", "n_days": 133, "lag_reason": null}, {"code": "9888.HK", "name": "百度集团-SW", "l1": "软件应用", "l2": "大模型", "close": 104.3, "pct_chg": 0.0, "turn_pct": 0.3, "turn_avg20": 0.51, "vol_ratio": 0.56, "amt_yi": 6.88, "ma_pos": {"5": 0, "20": 0, "60": 0}, "period_high": 160.5, "period_low": 98.75, "drawdown": -35.02, "pullback_623": -2.58, "is_period_high": false, "as_of": "2026-07-27", "n_days": 137, "lag_reason": null}, {"code": "002230.SZ", "name": "科大讯飞", "l1": "软件应用", "l2": "大模型", "close": 39.73, "pct_chg": 2.19, "turn_pct": 1.47, "turn_avg20": 2.45, "vol_ratio": 0.57, "amt_yi": 10.79, "ma_pos": {"5": 0, "20": 0, "60": 0}, "period_high": 63.7, "period_low": 38.88, "drawdown": -37.63, "pullback_623": -3.56, "is_period_high": false, "as_of": "2026-07-27", "n_days": 135, "lag_reason": null}, {"code": "1024.HK", "name": "快手-W", "l1": "软件应用", "l2": "AIGC", "close": 42.66, "pct_chg": 1.33, "turn_pct": 0.94, "turn_avg20": 2.95, "vol_ratio": 0.31, "amt_yi": 11.79, "ma_pos": {"5": 0, "20": 0, "60": 0}, "period_high": 81.5499, "period_low": 40.19, "drawdown": -47.69, "pullback_623": -2.35, "is_period_high": false, "as_of": "2026-07-27", "n_days": 137, "lag_reason": null}, {"code": "300624.SZ", "name": "万兴科技", "l1": "软件应用", "l2": "AIGC", "close": 46.08, "pct_chg": 3.83, "turn_pct": 4.62, "turn_avg20": 6.83, "vol_ratio": 0.61, "amt_yi": 2.88, "ma_pos": {"5": 0, "20": 0, "60": 0}, "period_high": 109.82, "period_low": 44.38, "drawdown": -58.04, "pullback_623": -8.22, "is_period_high": false, "as_of": "2026-07-27", "n_days": 135, "lag_reason": null}, {"code": "1357.HK", "name": "美图公司", "l1": "软件应用", "l2": "AIGC", "close": 3.95, "pct_chg": 0.51, "turn_pct": 1.13, "turn_avg20": 2.16, "vol_ratio": 0.5, "amt_yi": 1.33, "ma_pos": {"5": 0, "20": 0, "60": 0}, "period_high": 9.1538, "period_low": 3.61, "drawdown": -56.85, "pullback_623": 15.12, "is_period_high": false, "as_of": "2026-07-27", "n_days": 135, "lag_reason": null}, {"code": "3738.HK", "name": "阜博集团", "l1": "软件应用", "l2": "AIGC", "close": 2.39, "pct_chg": 4.37, "turn_pct": 0.63, "turn_avg20": 1.0, "vol_ratio": 0.63, "amt_yi": 0.33, "ma_pos": {"5": 0, "20": 1, "60": 0}, "period_high": 6.32, "period_low": 2.22, "drawdown": -62.18, "pullback_623": 2.9, "is_period_high": false, "as_of": "2026-07-27", "n_days": 137, "lag_reason": null}, {"code": "688111.SH", "name": "金山办公", "l1": "软件应用", "l2": "办公", "close": 240.8, "pct_chg": 6.11, "turn_pct": 4.7, "turn_avg20": 5.28, "vol_ratio": 0.91, "amt_yi": 22.25, "ma_pos": {"5": 1, "20": 1, "60": 1}, "period_high": 377.7978, "period_low": 198.876, "drawdown": -36.26, "pullback_623": 19.48, "is_period_high": false, "as_of": "2026-07-27", "n_days": 135, "lag_reason": null}, {"code": "688208.SH", "name": "合合信息", "l1": "软件应用", "l2": "办公", "close": 26.43, "pct_chg": 1.61, "turn_pct": 1.62, "turn_avg20": 3.4, "vol_ratio": 0.48, "amt_yi": 1.78, "ma_pos": {"5": 0, "20": 1, "60": 0}, "period_high": 40.35, "period_low": 23.89, "drawdown": -34.5, "pullback_623": 9.81, "is_period_high": false, "as_of": "2026-07-27", "n_days": 135, "lag_reason": null}, {"code": "688095.SH", "name": "福昕软件", "l1": "软件应用", "l2": "办公", "close": 51.17, "pct_chg": 3.69, "turn_pct": 5.01, "turn_avg20": 4.53, "vol_ratio": 0.99, "amt_yi": 1.39, "ma_pos": {"5": 0, "20": 0, "60": 0}, "period_high": 127.8369, "period_low": 49.35, "drawdown": -59.97, "pullback_623": 1.75, "is_period_high": false, "as_of": "2026-07-27", "n_days": 135, "lag_reason": null}, {"code": "688369.SH", "name": "致远互联", "l1": "软件应用", "l2": "办公", "close": 16.32, "pct_chg": 3.62, "turn_pct": 1.78, "turn_avg20": 3.36, "vol_ratio": 0.43, "amt_yi": 0.26, "ma_pos": {"5": 1, "20": 0, "60": 0}, "period_high": 33.59, "period_low": 15.75, "drawdown": -51.41, "pullback_623": 0.46, "is_period_high": false, "as_of": "2026-07-27", "n_days": 135, "lag_reason": null}, {"code": "603171.SH", "name": "税友股份", "l1": "软件应用", "l2": "金融", "close": 36.23, "pct_chg": 3.81, "turn_pct": 3.65, "turn_avg20": 4.57, "vol_ratio": 0.73, "amt_yi": 1.39, "ma_pos": {"5": 1, "20": 0, "60": 0}, "period_high": 88.1684, "period_low": 34.9, "drawdown": -58.91, "pullback_623": 1.76, "is_period_high": false, "as_of": "2026-07-27", "n_days": 135, "lag_reason": null}, {"code": "600588.SH", "name": "用友网络", "l1": "软件应用", "l2": "企业服务", "close": 9.32, "pct_chg": 3.9, "turn_pct": 2.9, "turn_avg20": 3.04, "vol_ratio": 0.94, "amt_yi": 4.75, "ma_pos": {"5": 0, "20": 1, "60": 0}, "period_high": 19.01, "period_low": 8.75, "drawdown": -50.97, "pullback_623": 10.91, "is_period_high": false, "as_of": "2026-07-27", "n_days": 135, "lag_reason": null}, {"code": "0268.HK", "name": "金蝶国际", "l1": "软件应用", "l2": "企业服务", "close": 7.18, "pct_chg": 2.72, "turn_pct": 1.13, "turn_avg20": 1.84, "vol_ratio": 0.64, "amt_yi": 1.99, "ma_pos": {"5": 0, "20": 1, "60": 0}, "period_high": 16.68, "period_low": 5.68, "drawdown": -56.95, "pullback_623": 32.43, "is_period_high": false, "as_of": "2026-07-27", "n_days": 137, "lag_reason": null}, {"code": "300378.SZ", "name": "鼎捷数智", "l1": "软件应用", "l2": "企业服务", "close": 27.55, "pct_chg": 4.32, "turn_pct": 3.59, "turn_avg20": 4.7, "vol_ratio": 0.63, "amt_yi": 2.12, "ma_pos": {"5": 0, "20": 0, "60": 0}, "period_high": 64.645, "period_low": 26.41, "drawdown": -57.38, "pullback_623": -12.96, "is_period_high": false, "as_of": "2026-07-27", "n_days": 135, "lag_reason": null}, {"code": "002315.SZ", "name": "焦点科技", "l1": "软件应用", "l2": "企业服务", "close": 24.41, "pct_chg": 3.56, "turn_pct": 3.2, "turn_avg20": 3.78, "vol_ratio": 0.86, "amt_yi": 1.71, "ma_pos": {"5": 0, "20": 1, "60": 0}, "period_high": 46.3562, "period_low": 22.37, "drawdown": -47.34, "pullback_623": 8.12, "is_period_high": false, "as_of": "2026-07-27", "n_days": 135, "lag_reason": null}, {"code": "300170.SZ", "name": "汉得信息", "l1": "软件应用", "l2": "企业服务", "close": 14.31, "pct_chg": 3.55, "turn_pct": 3.05, "turn_avg20": 4.98, "vol_ratio": 0.56, "amt_yi": 4.21, "ma_pos": {"5": 0, "20": 0, "60": 0}, "period_high": 30.636, "period_low": 13.82, "drawdown": -53.29, "pullback_623": -9.02, "is_period_high": false, "as_of": "2026-07-27", "n_days": 135, "lag_reason": null}, {"code": "0241.HK", "name": "阿里健康", "l1": "软件应用", "l2": "生活场景医疗", "close": 3.41, "pct_chg": 2.1, "turn_pct": 1.09, "turn_avg20": 2.14, "vol_ratio": 0.51, "amt_yi": 2.19, "ma_pos": {"5": 0, "20": 1, "60": 0}, "period_high": 7.78, "period_low": 3.07, "drawdown": -56.17, "pullback_623": 9.45, "is_period_high": false, "as_of": "2026-07-27", "n_days": 137, "lag_reason": null}, {"code": "6618.HK", "name": "京东健康", "l1": "软件应用", "l2": "生活场景医疗", "close": 37.78, "pct_chg": 2.11, "turn_pct": 0.44, "turn_avg20": 1.04, "vol_ratio": 0.43, "amt_yi": 1.71, "ma_pos": {"5": 1, "20": 1, "60": 0}, "period_high": 69.65, "period_low": 31.98, "drawdown": -45.76, "pullback_623": 16.29, "is_period_high": false, "as_of": "2026-07-27", "n_days": 137, "lag_reason": null}, {"code": "300253.SZ", "name": "卫宁健康", "l1": "软件应用", "l2": "院端医疗", "close": 6.78, "pct_chg": 3.99, "turn_pct": 3.07, "turn_avg20": 3.54, "vol_ratio": 0.84, "amt_yi": 3.51, "ma_pos": {"5": 0, "20": 0, "60": 0}, "period_high": 14.73, "period_low": 6.52, "drawdown": -53.97, "pullback_623": 3.55, "is_period_high": false, "as_of": "2026-07-27", "n_days": 135, "lag_reason": null}, {"code": "300451.SZ", "name": "创业慧康", "l1": "软件应用", "l2": "院端医疗", "close": 3.31, "pct_chg": 4.75, "turn_pct": 2.12, "turn_avg20": 2.56, "vol_ratio": 0.81, "amt_yi": 0.84, "ma_pos": {"5": 1, "20": 1, "60": 0}, "period_high": 6.63, "period_low": 3.14, "drawdown": -50.08, "pullback_623": 3.78, "is_period_high": false, "as_of": "2026-07-27", "n_days": 135, "lag_reason": null}, {"code": "2506.HK", "name": "讯飞医疗科技", "l1": "软件应用", "l2": "院端医疗", "close": 66.6, "pct_chg": -0.08, "turn_pct": 0.14, "turn_avg20": 0.31, "vol_ratio": 0.36, "amt_yi": 0.02, "ma_pos": {"5": 0, "20": 0, "60": 0}, "period_high": 107.7, "period_low": 65.3, "drawdown": -38.16, "pullback_623": -17.73, "is_period_high": false, "as_of": "2026-07-27", "n_days": 137, "lag_reason": null}, {"code": "2228.HK", "name": "晶泰控股", "l1": "软件应用", "l2": "制药 AI4S", "close": 7.17, "pct_chg": -0.42, "turn_pct": 1.67, "turn_avg20": 1.67, "vol_ratio": 0.94, "amt_yi": 4.26, "ma_pos": {"5": 1, "20": 0, "60": 0}, "period_high": 13.97, "period_low": 6.56, "drawdown": -48.68, "pullback_623": 1.63, "is_period_high": false, "as_of": "2026-07-27", "n_days": 137, "lag_reason": null}, {"code": "3696.HK", "name": "英矽智能", "l1": "软件应用", "l2": "制药 AI4S", "close": 47.76, "pct_chg": 1.49, "turn_pct": 9.46, "turn_avg20": 28.17, "vol_ratio": 0.38, "amt_yi": 3.33, "ma_pos": {"5": 1, "20": 1, "60": 1}, "period_high": 76.9, "period_low": 32.88, "drawdown": -37.89, "pullback_623": 14.19, "is_period_high": false, "as_of": "2026-07-27", "n_days": 137, "lag_reason": null}], "weekly_context": {"available": true, "data_date": "2026-08-03", "last_date": "2026-08-01", "ma4": {"status": "blocked", "nav": 6.0188, "ma4": 6.6915, "diff_pct": -10.05}, "holdings": [{"code": "1888.HK", "name": "建滔积层板", "ind": "PCB", "sub": "CCL", "mom3": -53.15, "pct_w": -22.0, "rank": 170}, {"code": "301511.SZ", "name": "德福科技", "ind": "PCB", "sub": "铜箔", "mom3": -43.1, "pct_w": -12.16, "rank": 159}, {"code": "600522.SH", "name": "中天科技", "ind": "光纤光缆", "sub": "光纤光缆", "mom3": -37.5, "pct_w": -9.14, "rank": 137}, {"code": "000657.SZ", "name": "中钨高新", "ind": "PCB", "sub": "钻针", "mom3": -33.73, "pct_w": -10.81, "rank": 114}, {"code": "688498.SH", "name": "源杰科技", "ind": "光模块", "sub": "光芯片", "mom3": -32.13, "pct_w": -21.43, "rank": 108}, {"code": "002384.SZ", "name": "东山精密", "ind": "光模块", "sub": "光芯片", "mom3": -29.23, "pct_w": -13.91, "rank": 90}, {"code": "301377.SZ", "name": "鼎泰高科", "ind": "PCB", "sub": "钻针", "mom3": -25.02, "pct_w": -11.72, "rank": 81}, {"code": "002938.SZ", "name": "鹏鼎控股", "ind": "PCB", "sub": "新PCB", "mom3": -17.23, "pct_w": -7.79, "rank": 52}, {"code": "0100.HK", "name": "MiniMax", "ind": "软件应用", "sub": "大模型", "mom3": -14.15, "pct_w": 17.65, "rank": 46}], "top_candidates": [{"code": "0268.HK", "name": "金蝶国际", "ind": "软件应用", "sub": "企业服务", "mom3": 19.34, "pct_w": 19.17, "rank": 1}, {"code": "1357.HK", "name": "美图公司", "ind": "软件应用", "sub": "AIGC", "mom3": 17.12, "pct_w": 20.1, "rank": 2}, {"code": "688208.SH", "name": "合合信息", "ind": "软件应用", "sub": "办公", "mom3": 17.09, "pct_w": 12.76, "rank": 3}, {"code": "688111.SH", "name": "金山办公", "ind": "软件应用", "sub": "办公", "mom3": 15.32, "pct_w": 18.79, "rank": 4}, {"code": "600588.SH", "name": "用友网络", "ind": "软件应用", "sub": "企业服务", "mom3": 14.58, "pct_w": 23.52, "rank": 5}, {"code": "688369.SH", "name": "致远互联", "ind": "软件应用", "sub": "办公", "mom3": 14.29, "pct_w": 39.68, "rank": 6}, {"code": "002315.SZ", "name": "焦点科技", "ind": "软件应用", "sub": "企业服务", "mom3": 14.13, "pct_w": 14.09, "rank": 7}, {"code": "603171.SH", "name": "税友股份", "ind": "软件应用", "sub": "金融", "mom3": 12.59, "pct_w": 30.72, "rank": 8}, {"code": "688095.SH", "name": "福昕软件", "ind": "软件应用", "sub": "办公", "mom3": 9.98, "pct_w": 35.83, "rank": 9}, {"code": "3696.HK", "name": "英矽智能", "ind": "软件应用", "sub": "制药 AI4S", "mom3": 6.73, "pct_w": -2.89, "rank": 10}, {"code": "300253.SZ", "name": "卫宁健康", "ind": "软件应用", "sub": "院端医疗", "mom3": 6.45, "pct_w": 16.41, "rank": 11}, {"code": "300170.SZ", "name": "汉得信息", "ind": "软件应用", "sub": "企业服务", "mom3": 5.65, "pct_w": 20.48, "rank": 12}, {"code": "6618.HK", "name": "京东健康", "ind": "软件应用", "sub": "生活场景医疗", "mom3": 5.63, "pct_w": 6.49, "rank": 13}, {"code": "300451.SZ", "name": "创业慧康", "ind": "软件应用", "sub": "院端医疗", "mom3": 4.69, "pct_w": 12.97, "rank": 14}, {"code": "600089.SH", "name": "特变电工", "ind": "电-柜外", "sub": "AI-配电", "mom3": 4.39, "pct_w": 2.7, "rank": 15}, {"code": "603228.SH", "name": "景旺电子", "ind": "PCB", "sub": "新PCB", "mom3": 3.78, "pct_w": -2.55, "rank": 16}, {"code": "3738.HK", "name": "阜博集团", "ind": "软件应用", "sub": "AIGC", "mom3": 3.77, "pct_w": 8.3, "rank": 17}, {"code": "0241.HK", "name": "阿里健康", "ind": "软件应用", "sub": "生活场景医疗", "mom3": 3.46, "pct_w": 7.49, "rank": 18}, {"code": "300383.SZ", "name": "光环新网", "ind": "云", "sub": "IDC", "mom3": 3.44, "pct_w": 9.83, "rank": 19}, {"code": "002028.SZ", "name": "思源电气", "ind": "电-柜外", "sub": "AI-配电", "mom3": 3.15, "pct_w": -3.79, "rank": 20}], "buy": [{"code": "1357.HK", "name": "美图公司", "ind": "软件应用", "sub": "AIGC", "mom3": 17.12, "pct_w": 20.1, "rank": 2}, {"code": "688208.SH", "name": "合合信息", "ind": "软件应用", "sub": "办公", "mom3": 17.09, "pct_w": 12.76, "rank": 3}, {"code": "688111.SH", "name": "金山办公", "ind": "软件应用", "sub": "办公", "mom3": 15.32, "pct_w": 18.79, "rank": 4}], "sell": {"code": "600522.SH", "name": "中天科技", "ind": "光纤光缆", "sub": "光纤光缆", "mom3": -37.5, "pct_w": -9.14, "rank": 137}, "zscore": [{"code": "300308.SZ", "name": "中际旭创", "ind": "光模块", "sub": "光模块", "mom3": -17.55, "pct_w": -0.13808, "rank": 56, "signal": "✅ 正常", "z6": -0.7, "z4": 0.2}, {"code": "688630.SH", "name": "芯碁微装", "ind": "半导体设备材料零部件", "sub": "设备", "mom3": -30.06, "pct_w": -0.20443, "rank": 98, "signal": "↓ 双向走弱", "z6": -0.6, "z4": -0.6}, {"code": "301377.SZ", "name": "鼎泰高科", "ind": "PCB", "sub": "钻针", "mom3": -25.02, "pct_w": -0.11725, "rank": 81, "signal": "🟡 关注预警", "z6": -1.6, "z4": -0.9}, {"code": "0981.HK", "name": "中芯国际", "ind": "国产算力", "sub": "先进制程", "mom3": -20.59, "pct_w": -0.11352, "rank": 66, "signal": "✅ 正常", "z6": 0.9, "z4": 0.8}, {"code": "688702.SH", "name": "盛科通信-U", "ind": "国产算力", "sub": "超节点", "mom3": -9.61, "pct_w": -0.12409, "rank": 39, "signal": "🟢 主题强势", "z6": 2.3, "z4": 2.9}, {"code": "6869.HK", "name": "长飞光纤光缆", "ind": "光纤光缆", "sub": "光纤光缆", "mom3": -39.46, "pct_w": -0.20107, "rank": 147, "signal": "🔴 减仓信号", "z6": -2.1, "z4": -2.4}, {"code": "688120.SH", "name": "华海清科", "ind": "半导体设备材料零部件", "sub": "设备", "mom3": -20.83, "pct_w": -0.02622, "rank": 69, "signal": "🟢 主题强势", "z6": 3.7, "z4": 2.7}, {"code": "600487.SH", "name": "亨通光电", "ind": "光纤光缆", "sub": "光纤光缆", "mom3": -38.8, "pct_w": -0.09193, "rank": 144, "signal": "🔴 减仓信号", "z6": -3.6, "z4": -2.8}, {"code": "688630.SH", "name": "芯碁微装", "ind": "半导体设备材料零部件", "sub": "设备", "mom3": -30.06, "pct_w": -0.20443, "rank": 98, "signal": "↓ 双向走弱", "z6": -0.6, "z4": -0.6}, {"code": "688702.SH", "name": "盛科通信", "ind": "国产算力", "sub": "超节点", "mom3": -9.61, "pct_w": -0.12409, "rank": 39, "signal": "🟢 主题强势", "z6": 2.3, "z4": 2.9}, {"code": "688041.SH", "name": "海光信息", "ind": "国产算力", "sub": "GPU", "mom3": -21.53, "pct_w": -0.11862, "rank": 71, "signal": "↓ 双向走弱", "z6": 1.0, "z4": 1.1}, {"code": "0981.HK", "name": "中芯国际", "ind": "国产算力", "sub": "先进制程", "mom3": -20.59, "pct_w": -0.11352, "rank": 66, "signal": "✅ 正常", "z6": 0.9, "z4": 0.8}, {"code": "300308.SZ", "name": "中际旭创", "ind": "光模块", "sub": "光模块", "mom3": -17.55, "pct_w": -0.13808, "rank": 56, "signal": "✅ 正常", "z6": -0.7, "z4": 0.2}, {"code": "688120.SH", "name": "华海清科", "ind": "半导体设备材料零部件", "sub": "设备", "mom3": -20.83, "pct_w": -0.02622, "rank": 69, "signal": "🟢 主题强势", "z6": 3.7, "z4": 2.7}, {"code": "688403.SH", "name": "汇成股份", "ind": "国产算力", "sub": "先进封装", "mom3": -44.47, "pct_w": -0.21078, "rank": 160, "signal": "🔴 减仓信号", "z6": 0.1, "z4": -2.2}, {"code": "002156.SZ", "name": "通富微电", "ind": "国产算力", "sub": "先进封装", "mom3": -20.04, "pct_w": -0.25979, "rank": 62, "signal": "↓ 双向走弱", "z6": 1.4, "z4": 1.9}], "industry_leaders": [{"name": "软件应用", "count": 12}]}, "market_pullback_context": {"available": true, "as_of": "2026-08-03", "start_date": "2026-06-23", "source_label": "623海外见顶", "coverage": 168, "stock_count": 168}};
+const pullbackContext = DATA.market_pullback_context || {};
+
+const metaLine = document.getElementById('metaLine');
+metaLine.innerHTML = `最新交易日：<b>${DATA.latest_date}</b> ·
+  数据区间：<b>${DATA.data_start}</b> 至 <b>${DATA.latest_date}</b>（共 <b>${DATA.n_trading_days}</b> 个交易日）·
+  6/23回调数据：<b>${pullbackContext.as_of || '未读取'}</b> ·
+  生成时间：${DATA.generated_at}`;
+
+document.getElementById('footerNote').innerHTML =
+  `"阶段高点/阶段新高" 指数据起始日（${DATA.data_start}）以来的区间最高价，非严格意义上的52周新高（数据长度不足52周时以此为近似）。` +
+  `均线/涨跌幅/回撤均按各标的自身换手率非0的交易日序列计算（已剔除非交易日的横向填充价，港股与A股假期不同步时按各自日历处理）。` +
+  `“6/23至今回调”直接读取周频工作簿“市值情况”sheet的“623海外见顶”列，本质为6/23至市值表更新日的区间涨跌幅，正值表示上涨；无匹配数据时显示“—”。` +
+  `名称后标 <span class="tag-suspended" style="margin-left:0;">停牌</span> 表示A股标的近期无成交、判断为停牌；标 <span style="color:var(--gold);">*</span> 表示港股标的因假期未同步至最新交易日，鼠标悬停均可查看具体日期。`;
+
+const stocks = DATA.stocks;
+const maxAbsPct = Math.max(...stocks.filter(s => s.pct_chg !== null && s.pct_chg !== undefined).map(s => Math.abs(s.pct_chg)), 0.01);
+
+// 统计卡
+const up = stocks.filter(s => s.pct_chg > 0).length;
+const down = stocks.filter(s => s.pct_chg < 0).length;
+const flat = stocks.length - up - down;
+const newHigh = stocks.filter(s => s.is_period_high).length;
+const aboveMa20 = stocks.filter(s => s.ma_pos['20'] === 1).length;
+const avgTurn = stocks.reduce((s,x) => s + (x.turn_pct||0), 0) / stocks.length;
+
+const stats = [
+  { label: '标的总数', value: stocks.length, cls: '' },
+  { label: '上涨/下跌/平', value: `${up}/${down}/${flat}`, cls: '' },
+  { label: '阶段新高', value: newHigh, cls: 'up' },
+  { label: '站上20日线', value: aboveMa20, cls: '' },
+  { label: '平均换手率', value: avgTurn.toFixed(2)+'%', cls: '' },
+  { label: '6/23回调覆盖', value: `${pullbackContext.coverage || 0}/${pullbackContext.stock_count || stocks.length}`, cls: '' },
+];
+document.getElementById('statsRow').innerHTML = stats.map(s =>
+  `<div class="stat-card"><div class="label">${s.label}</div><div class="value ${s.cls}">${s.value}</div></div>`
+).join('');
+
+function median(values) {
+  const arr = values.filter(v => v !== null && v !== undefined && Number.isFinite(v)).slice().sort((a, b) => a - b);
+  if (!arr.length) return null;
+  const mid = Math.floor(arr.length / 2);
+  return arr.length % 2 ? arr[mid] : (arr[mid - 1] + arr[mid]) / 2;
+}
+
+function fmt(v, digits = 1) {
+  if (v === null || v === undefined || !Number.isFinite(v)) return '—';
+  return `${v > 0 ? '+' : ''}${v.toFixed(digits)}%`;
+}
+
+function strategyChip(label, cls = 'plain', title = '') {
+  return `<span class="chip ${cls}" ${title ? `title="${title}"` : ''}>${label}</span>`;
+}
+
+function buildIndustryStats() {
+  return DATA.l1_order.map(l1 => {
+    const items = stocks.filter(s => s.l1 === l1 && s.pct_chg !== null && s.pct_chg !== undefined);
+    if (!items.length) return null;
+    const pctList = items.map(s => s.pct_chg);
+    const volList = items.map(s => s.vol_ratio).filter(v => v !== null && v !== undefined);
+    const upCount = items.filter(s => s.pct_chg > 0).length;
+    return {
+      l1,
+      n: items.length,
+      medianPct: median(pctList),
+      upRatio: upCount / items.length * 100,
+      medianVol: median(volList),
+      ma20Ratio: items.filter(s => s.ma_pos['20'] === 1).length / items.length * 100,
+      newHigh: items.filter(s => s.is_period_high).length,
+    };
+  }).filter(Boolean);
+}
+
+function renderStrategyPanel() {
+  const weekly = DATA.weekly_context || {};
+  const panel = document.getElementById('strategyPanel');
+  const industryStats = buildIndustryStats();
+  const liquidStats = industryStats.filter(g => g.n >= 3);
+  const dailyLeaders = liquidStats.slice().sort((a, b) => b.medianPct - a.medianPct).slice(0, 4);
+  const dailyWeak = liquidStats.slice().sort((a, b) => a.medianPct - b.medianPct).slice(0, 3);
+  const weeklyLeaderNames = new Set((weekly.industry_leaders || []).map(x => x.name));
+  const holdingCodes = new Set((weekly.holdings || []).map(s => s.code));
+  const candidateCodes = new Set([...(weekly.top_candidates || []).map(s => s.code), ...(weekly.buy || []).map(s => s.code)]);
+  const weeklyByCode = {};
+  [...(weekly.holdings || []), ...(weekly.top_candidates || []), ...(weekly.buy || []), ...(weekly.zscore || [])].forEach(s => {
+    if (s && s.code) weeklyByCode[s.code] = s;
+  });
+
+  const confirmed = dailyLeaders.filter(g => weeklyLeaderNames.has(g.l1) && g.medianPct > 0 && g.upRatio >= 55);
+  const divergence = dailyWeak.filter(g => weeklyLeaderNames.has(g.l1) && g.medianPct < 0);
+  const riskStocks = stocks
+    .filter(s => holdingCodes.has(s.code) && s.pct_chg !== null && s.pct_chg < 0 && (s.vol_ratio >= 1.1 || s.ma_pos['5'] === 0))
+    .sort((a, b) => a.pct_chg - b.pct_chg)
+    .slice(0, 5);
+  const warmCandidates = stocks
+    .filter(s => candidateCodes.has(s.code) && s.pct_chg !== null && s.pct_chg > 0 && (s.vol_ratio >= 1.1 || s.ma_pos['20'] === 1 || s.is_period_high))
+    .sort((a, b) => {
+      const rankDiff = (weeklyByCode[a.code]?.rank ?? 999) - (weeklyByCode[b.code]?.rank ?? 999);
+      return rankDiff || b.pct_chg - a.pct_chg;
+    })
+    .slice(0, 5);
+
+  const leaderText = dailyLeaders.map(g => `${g.l1} ${fmt(g.medianPct)} / 上涨${g.upRatio.toFixed(0)}%`).join('；');
+  const confirmText = confirmed.length
+    ? confirmed.map(g => strategyChip(`${g.l1} ${fmt(g.medianPct)}`, 'up', `周频强势方向，今日上涨占比 ${g.upRatio.toFixed(0)}%`)).join('')
+    : '<span class="strategy-empty">今日领涨暂未与周频Top方向明显重合，先按日内修复看待。</span>';
+  const riskText = riskStocks.length
+    ? riskStocks.map(s => strategyChip(`${s.name} ${fmt(s.pct_chg)}`, 'down', `周频持仓/监控；放量倍数 ${s.vol_ratio ?? '—'}，MA5=${s.ma_pos['5']}`)).join('')
+    : '<span class="strategy-empty">周频持仓未触发明显日频放量下跌或破5日线。</span>';
+  const candidateText = warmCandidates.length
+    ? warmCandidates.map(s => strategyChip(`${s.name} ${fmt(s.pct_chg)}`, 'up', `周频排名 ${weeklyByCode[s.code]?.rank ?? '—'}；放量 ${s.vol_ratio ?? '—'}x`)).join('')
+    : '<span class="strategy-empty">周频候选今天没有形成清晰量价共振。</span>';
+
+  const weeklyMeta = weekly.available
+    ? `周频信号 ${weekly.data_date || weekly.last_date || '—'} · Top方向 ${(weekly.industry_leaders || []).map(x => `${x.name}×${x.count}`).join(' / ') || '—'}`
+    : '未读取到周频信号，仅显示日频统计';
+  const thesis = confirmed.length
+    ? `今日主线与周频强势方向有交集：${confirmed.map(g => g.l1).join(' / ')}。`
+    : `今日更像日内修复或风格切换：${dailyLeaders.slice(0, 2).map(g => g.l1).join(' / ')} 领先。`;
+  const caution = divergence.length
+    ? `周频强势但今日转弱：${divergence.map(g => `${g.l1} ${fmt(g.medianPct)}`).join(' / ')}。`
+    : `弱势压力集中在 ${dailyWeak.map(g => `${g.l1} ${fmt(g.medianPct)}`).join(' / ')}。`;
+
+  panel.innerHTML = `
+    <div class="strategy-head">
+      <div class="strategy-title">周频策略联动 · 日度确认</div>
+      <div class="strategy-meta">${weeklyMeta}</div>
+    </div>
+    <div class="strategy-grid">
+      <div class="strategy-card">
+        <div class="strategy-label">今日主线</div>
+        <div class="strategy-main">${thesis}</div>
+        <div class="strategy-sub">${leaderText}</div>
+      </div>
+      <div class="strategy-card">
+        <div class="strategy-label">周频确认</div>
+        <div class="strategy-list">${confirmText}</div>
+        <div class="strategy-sub" style="margin-top:8px;">${caution}</div>
+      </div>
+      <div class="strategy-card">
+        <div class="strategy-label">风险预警</div>
+        <div class="strategy-list">${riskText}</div>
+      </div>
+      <div class="strategy-card">
+        <div class="strategy-label">候选升温</div>
+        <div class="strategy-list">${candidateText}</div>
+      </div>
+    </div>`;
+}
+renderStrategyPanel();
+
+// 行业筛选下拉
+const indSel = document.getElementById('industryFilter');
+indSel.innerHTML = '<option value="">全部行业</option>' +
+  DATA.l1_order.map(l1 => `<option value="${l1}">${l1}</option>`).join('');
+
+function maDot(v) {
+  if (v === 1) return '<span class="dot up"></span>';
+  if (v === 0) return '<span class="dot down"></span>';
+  return '<span class="dot na"></span>';
+}
+
+function pctHtml(v) {
+  if (v === null || v === undefined) return '<span class="pct flat">—</span>';
+  const cls = v > 0 ? 'up' : v < 0 ? 'down' : 'flat';
+  const barColor = v > 0 ? 'var(--up)' : v < 0 ? 'var(--down)' : 'var(--border)';
+  const ratio = Math.min(Math.abs(v) / maxAbsPct, 1) * 100;
+  return `<div style="display:flex;align-items:center;justify-content:flex-end;gap:6px;">
+    <div class="pct-bar-track"><div class="pct-bar-fill" style="width:${ratio}%;background:${barColor};"></div></div>
+    <span class="pct ${cls}" style="min-width:54px;text-align:right;">${v > 0 ? '+' : ''}${v.toFixed(2)}%</span>
+  </div>`;
+}
+
+function volHtml(s) {
+  if (s.vol_ratio === null || s.vol_ratio === undefined) return '<span style="color:var(--text-muted);">—</span>';
+  const r = s.vol_ratio;
+  const upTag = s.pct_chg !== null && s.pct_chg > 0;
+  if (r >= 2) {
+    const cls = upTag ? 'up' : 'down';
+    const label = upTag ? '放量上涨' : '放量下跌';
+    return `<span class="chip ${cls}" style="margin:0;" title="今日成交额为前20日均值的 ${r.toFixed(1)} 倍">${label} ${r.toFixed(1)}x</span>`;
+  }
+  if (r >= 1.5) {
+    return `<span class="chip plain" style="margin:0;" title="今日成交额为前20日均值的 ${r.toFixed(1)} 倍">温和放量 ${r.toFixed(1)}x</span>`;
+  }
+  return `<span style="color:var(--text-muted);font-size:11px;">${r.toFixed(1)}x</span>`;
+}
+
+function ddHtml(s) {
+  if (s.is_period_high) return '<span class="tag-newhigh">阶段新高</span>';
+  if (s.drawdown === null || s.drawdown === undefined) return '<span class="dd-text" style="color:var(--text-muted);">—</span>';
+  const dd = s.drawdown;
+  const color = dd >= -5 ? 'var(--up)' : dd >= -15 ? 'var(--text)' : dd >= -30 ? 'var(--gold)' : 'var(--down)';
+  return `<span class="dd-text" style="color:${color};">${dd.toFixed(2)}%</span>`;
+}
+
+function pullbackHtml(value) {
+  if (value === null || value === undefined) return '<span class="dd-text" style="color:var(--text-muted);">—</span>';
+  const cls = value > 0 ? 'up' : value < 0 ? 'down' : 'flat';
+  return `<span class="pct ${cls}" title="6/23至市值表更新日的区间涨跌幅">${value > 0 ? '+' : ''}${value.toFixed(2)}%</span>`;
+}
+
+// ══ 点评：涨跌幅榜 + 5日线站稳名单 ══
+function pctChip(s) {
+  const cls = s.pct_chg > 0 ? 'up' : s.pct_chg < 0 ? 'down' : 'plain';
+  const sign = s.pct_chg > 0 ? '+' : '';
+  return `<span class="chip ${cls}">${s.name} ${sign}${s.pct_chg.toFixed(2)}%</span>`;
+}
+
+const COMMENTARY_EXCLUDE_L1 = ['软件应用'];
+const commentaryPool = stocks.filter(s => !COMMENTARY_EXCLUDE_L1.includes(s.l1));
+
+const withPct = commentaryPool.filter(s => s.pct_chg !== null && s.pct_chg !== undefined);
+const gainers = withPct.slice().sort((a, b) => b.pct_chg - a.pct_chg).slice(0, 5);
+const losers = withPct.slice().sort((a, b) => a.pct_chg - b.pct_chg).slice(0, 5);
+const above5 = commentaryPool.filter(s => s.ma_pos['5'] === 1);
+
+let commentaryHtml = '';
+commentaryHtml += `<div class="commentary-row">
+  <div class="commentary-label">涨幅最大</div>
+  <div>${gainers.map(pctChip).join('')}</div>
+</div>`;
+commentaryHtml += `<div class="commentary-row">
+  <div class="commentary-label">跌幅最大</div>
+  <div>${losers.map(pctChip).join('')}</div>
+</div>`;
+commentaryHtml += `<div class="commentary-row">
+  <div class="commentary-label">站上5日线</div>
+  <div>
+    <span class="commentary-text">共 ${above5.length} / ${commentaryPool.length} 只维持在5日均线上方：</span><br>
+    ${above5.length ? above5.map(s => `<span class="chip plain">${s.name}</span>`).join('') : '<span class="commentary-text">无</span>'}
+  </div>
+</div>`;
+commentaryHtml += `<div class="commentary-row"><div class="commentary-label"></div><div class="commentary-text">以上点评已剔除"软件应用"行业标的</div></div>`;
+document.getElementById('commentary').innerHTML = commentaryHtml;
+
+let sortKey = null, sortAsc = false, filterInd = '', filterText = '';
+
+function getFiltered() {
+  return stocks.filter(s => {
+    if (filterInd && s.l1 !== filterInd) return false;
+    if (filterText) {
+      const t = filterText.toLowerCase();
+      if (!s.name.toLowerCase().includes(t) && !s.code.toLowerCase().includes(t)) return false;
+    }
+    return true;
+  });
+}
+
+function render() {
+  const tbody = document.getElementById('tbody');
+  let list = getFiltered();
+
+  if (sortKey) {
+    list = list.slice().sort((a, b) => {
+      let av, bv;
+      if (sortKey === 'ma') {
+        av = (a.ma_pos['5']||0) + (a.ma_pos['20']||0) + (a.ma_pos['60']||0);
+        bv = (b.ma_pos['5']||0) + (b.ma_pos['20']||0) + (b.ma_pos['60']||0);
+      } else {
+        av = a[sortKey]; bv = b[sortKey];
+      }
+      if (av === null || av === undefined) av = -Infinity;
+      if (bv === null || bv === undefined) bv = -Infinity;
+      if (typeof av === 'string') return sortAsc ? av.localeCompare(bv) : bv.localeCompare(av);
+      return sortAsc ? av - bv : bv - av;
+    });
+    let html = '';
+    let seq = 1;
+    list.forEach(s => { html += rowHtml(s, seq++); });
+    tbody.innerHTML = html;
+    return;
+  }
+
+  // 未排序：按行业分组，保持原始顺序
+  let html = '';
+  let seq = 1;
+  const groups = {};
+  list.forEach(s => { (groups[s.l1] = groups[s.l1] || []).push(s); });
+  DATA.l1_order.forEach(l1 => {
+    const items = groups[l1];
+    if (!items || !items.length) return;
+    html += `<tr class="group-row"><td colspan="11">${l1}（${items.length}）</td></tr>`;
+    items.forEach(s => { html += rowHtml(s, seq++); });
+  });
+  tbody.innerHTML = html;
+}
+
+function rowHtml(s, seq) {
+  const maDots = maDot(s.ma_pos['5']) + maDot(s.ma_pos['20']) + maDot(s.ma_pos['60']);
+  let lagNote = '';
+  if (s.lag_reason === '停牌') {
+    lagNote = `<span class="tag-suspended" title="最新数据日期为 ${s.as_of}，此后无成交，判断为停牌">停牌</span>`;
+  } else if (s.as_of !== DATA.latest_date) {
+    lagNote = `<span title="该标的最新数据日期为 ${s.as_of}，晚于本页基准交易日（${s.lag_reason || '假期未同步'}）" style="color:var(--gold);cursor:help;">*</span>`;
+  }
+  return `<tr>
+    <td style="color:var(--text-muted);">${seq}</td>
+    <td><div class="name-cell">${s.name}${lagNote}</div><div class="code-cell">${s.code}</div></td>
+    <td class="col-industry" style="color:var(--text-secondary);font-size:11px;"><span class="industry-cell"><span>${s.l1}</span>${s.l2 ? `<span class="industry-sub">${s.l2}</span>` : ''}</span></td>
+    <td class="num">${pctHtml(s.pct_chg)}</td>
+    <td class="num">${s.turn_pct !== null ? s.turn_pct.toFixed(2)+'%' : '—'}</td>
+    <td class="num">${s.turn_avg20 !== null ? s.turn_avg20.toFixed(2)+'%' : '—'}</td>
+    <td class="num">${volHtml(s)}</td>
+    <td class="num">${s.amt_yi !== null ? s.amt_yi.toFixed(2) : '—'}</td>
+    <td style="text-align:center;">${maDots}</td>
+    <td class="num">${ddHtml(s)}</td>
+    <td class="num">${pullbackHtml(s.pullback_623)}</td>
+  </tr>`;
+}
+
+document.getElementById('searchBox').addEventListener('input', e => {
+  filterText = e.target.value.trim();
+  render();
+});
+indSel.addEventListener('change', e => {
+  filterInd = e.target.value;
+  render();
+});
+document.querySelectorAll('thead th[data-key]').forEach(th => {
+  th.addEventListener('click', () => {
+    const key = th.dataset.key;
+    if (key === 'idx') { sortKey = null; }
+    else if (sortKey === key) { sortAsc = !sortAsc; }
+    else { sortKey = key; sortAsc = false; }
+    document.querySelectorAll('thead th').forEach(x => x.classList.remove('sorted','asc'));
+    if (sortKey) {
+      th.classList.add('sorted');
+      if (sortAsc) th.classList.add('asc');
+    }
+    render();
+  });
+});
+
+render();
+</script>
+</body>
+</html>
