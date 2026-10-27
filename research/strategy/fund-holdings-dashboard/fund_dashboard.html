@@ -125,6 +125,8 @@ tr.jianc-row:hover td{background:#fdf2f1!important}
 .s-ind{color:var(--text-3);font-size:11px}
 
 .network-layout{display:grid;grid-template-columns:minmax(500px,2fr) minmax(290px,1fr);gap:14px}.network-info{padding:18px;line-height:1.8}.network-note{color:var(--text-2);font-size:12px;margin:0 0 14px}.network-legend{display:flex;gap:16px;flex-wrap:wrap;color:var(--text-2);font-size:11px}.network-badge{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:5px}@media(max-width:900px){.network-layout{grid-template-columns:1fr}.tabs{overflow-x:auto}}
+
+#t1-tbl.compact-cols tr > :nth-child(5),#t1-tbl.compact-cols tr > :nth-child(6),#t1-tbl.compact-cols tr > :nth-child(7){display:none}
 </style>
 </head>
 <body>
@@ -184,6 +186,7 @@ tr.jianc-row:hover td{background:#fdf2f1!important}
       <option value="9999">全部</option>
     </select>
   </div>
+  <button id="t1-cols-toggle" type="button" aria-pressed="false" style="margin-bottom:12px;padding:6px 12px;border:1px solid var(--bd);border-radius:6px;background:var(--bg-card);color:var(--accent);cursor:pointer;font:inherit">收起辅助列</button>
   <div id="t1-cards" class="cards"></div>
   <div class="tbl-wrap">
     <table id="t1-tbl">
@@ -1505,6 +1508,7 @@ function showNetStock(s){const q=document.getElementById('net-q').value,idx=NETW
   document.getElementById('meta-info').textContent =
     `数据区间：${qs[0]} ~ ${qs[qs.length-1]}  |  生成时间：2026-10-27 13:28`;
 
+  document.getElementById('t1-cols-toggle').addEventListener('click', function() { const hidden = document.getElementById('t1-tbl').classList.toggle('compact-cols'); this.textContent = hidden ? '展开辅助列' : '收起辅助列'; this.setAttribute('aria-pressed', String(hidden)); });
   populateQ('t1-q', () => { populateT1Industries(document.getElementById('t1-q').value); renderT1(); });
   populateT1Industries(latestQ);
   document.getElementById('t1-sort').addEventListener('change', () => { t1SortKey = document.getElementById('t1-sort').value; t1SortAsc = false; renderT1(); });
