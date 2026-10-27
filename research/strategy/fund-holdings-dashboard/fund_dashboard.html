@@ -77,6 +77,8 @@ table{width:100%;border-collapse:collapse}
 thead{position:sticky;top:0;z-index:10}
 th{background:var(--bg-th);color:var(--text-3);font-weight:700;font-size:10px;text-transform:uppercase;letter-spacing:.5px;padding:10px 12px;text-align:right;white-space:nowrap;cursor:pointer;user-select:none;border-bottom:1px solid var(--bd-th)}
 th:first-child,th.l{text-align:left}
+th.key-metric{background:#dce9fb;color:#174781;border-bottom:2px solid #3771c8;font-weight:800}
+th.key-metric:hover{color:#102f60;background:#cddff8}
 th:hover{color:var(--accent)}
 th.asc::after{content:' ↑';color:var(--accent)}
 th.desc::after{content:' ↓';color:var(--accent)}
@@ -191,8 +193,8 @@ tr.jianc-row:hover td{background:#fdf2f1!important}
           <th onclick="t1Sort('pv')">持仓市值(亿)</th>
           <th onclick="t1Sort('vc')">市值变动(亿)</th>
           <th onclick="t1Sort('fp')">占流通股比</th>
-          <th onclick="t1Sort('fw')">占基金持仓</th>
-          <th onclick="t1Sort('fwd')" title="较上季度变动（百分点）">环比变动(pp)</th>
+          <th class="key-metric" onclick="t1Sort('fw')">占基金持仓</th>
+          <th class="key-metric" onclick="t1Sort('fwd')" title="较上季度变动（百分点）">环比变动(pp)</th>
           <th onclick="t1Sort('fc')">持有基金数</th>
           <th onclick="t1Sort('fcc')">本季增减 / 信号</th>
         </tr>
