@@ -191,7 +191,7 @@ tr.jianc-row:hover td{background:#fdf2f1!important}
     </select>
   </div>
   <button id="t1-cols-toggle" type="button" aria-pressed="true" style="margin-bottom:12px;padding:6px 12px;border:1px solid var(--bd);border-radius:6px;background:var(--bg-card);color:var(--accent);cursor:pointer;font:inherit">展开辅助列</button>
-  <p id="t1-estimate-note" class="network-note" hidden>10/27收盘估算：固定3Q26已披露持股数量，仅按收盘价重估；占比变化对比3Q26季末，不代表基金买卖。持有基金数、基金增减和占流通股比仍为3Q26披露值；市值变动为相对季末的价格重估。</p>
+  <p id="t1-estimate-note" class="network-note" hidden>10/27收盘估算：固定3Q26已披露持股数量，仅按收盘价重估；占比变化对比3Q26季末，不代表基金买卖。持仓股数、股数变动比例、持有基金数、基金增减和占流通股比仍为3Q26披露值；市值变动为相对季末的价格重估。</p>
   <div id="t1-cards" class="cards"></div>
   <div class="tbl-wrap">
     <table id="t1-tbl" class="compact-cols">
@@ -206,6 +206,8 @@ tr.jianc-row:hover td{background:#fdf2f1!important}
           <th onclick="t1Sort('fp')">占流通股比</th>
           <th class="key-metric" onclick="t1Sort('fw')">占基金持仓</th>
           <th class="key-metric" onclick="t1Sort('fwd')" title="较上季度变动（百分点）">环比变动(pp)</th>
+          <th onclick="t1Sort('sh')" title="原Excel N列，单位：万股；估算视图仍为3Q26披露持股数量">持仓股数(万股)</th>
+          <th onclick="t1Sort('chg_pct')" title="原Excel O列，按持股数量口径计算的季度变动比例；不是持仓占比的百分点变化">股数变动比例(%)</th>
           <th onclick="t1Sort('fc')">持有基金数</th>
           <th onclick="t1Sort('fcc')">本季增减 / 信号</th>
         </tr>
@@ -724,6 +726,8 @@ function renderT1() {
       <td>${r.fp != null ? (r.fp*100).toFixed(2)+'%' : '—'}</td>
       <td class="l">${fwCell}</td>
       <td class="${clsPct(r.fwd)}">${r.fwd != null ? sign(r.fwd)+r.fwd.toFixed(2)+'pp' : '—'}</td>
+      <td>${r.sh != null ? r.sh.toLocaleString('zh-CN', {minimumFractionDigits:2,maximumFractionDigits:2}) : '—'}</td>
+      <td class="${clsPct(r.chg_pct)}">${r.chg_pct != null ? sign(r.chg_pct)+(r.chg_pct*100).toFixed(2)+'%' : '—'}</td>
       <td>${r.fc != null ? r.fc : '—'}</td>
       <td class="${fccCls} l">${fccCell}</td>
     </tr>`;
