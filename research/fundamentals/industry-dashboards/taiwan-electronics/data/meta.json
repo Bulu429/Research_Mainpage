@@ -1,0 +1,218 @@
+{
+  "title": "台股电子产业链月度看板",
+  "subtitle": "AI服务器/PCB/封测/IC设计",
+  "asof_page": "2026-11-04",
+  "asof_prices": "2026-11-03",
+  "currency_unit": "亿新台币",
+  "sources": [
+    "TWSE/TPEx 公开月营收",
+    "FinMind 公开行情（市值=收盘价×已发行普通股）"
+  ],
+  "segment_order": [
+    "服务器ODM/EMS",
+    "PCB/载板",
+    "CCL/材料",
+    "PCB钻针",
+    "电源/散热",
+    "晶圆代工",
+    "封测",
+    "IC设计",
+    "存储",
+    "硅片",
+    "连接器",
+    "光通信/CPO",
+    "半导体设备/检测"
+  ],
+  "company_count": 36,
+  "segment_count": 13,
+  "latest_complete_month": "2026-09",
+  "target_month": "2026-10",
+  "disclosure": {
+    "target_month": "2026-10",
+    "latest_complete_month": "2026-09",
+    "status": "not_started",
+    "status_label": "全市场未齐",
+    "complete_month_disclosed": 36,
+    "complete_month_total": 36,
+    "target_disclosed": 0,
+    "target_total": 36,
+    "target_missing_codes": [
+      "2330",
+      "2454",
+      "2317",
+      "2308",
+      "3711",
+      "2383",
+      "3037",
+      "2408",
+      "2303",
+      "2382",
+      "3017",
+      "6669",
+      "3443",
+      "3653",
+      "8046",
+      "5274",
+      "3231",
+      "2301",
+      "2368",
+      "4958",
+      "3189",
+      "6488",
+      "6274",
+      "2449",
+      "3661",
+      "3044",
+      "5347",
+      "6213",
+      "2356",
+      "3533",
+      "6515",
+      "3324",
+      "5269",
+      "2354",
+      "8021",
+      "3363"
+    ],
+    "target_missing_names": [
+      "台积电 TSMC",
+      "联发科 MediaTek",
+      "鸿海(富士康) Foxconn",
+      "台达电 Delta",
+      "日月光投控 ASE",
+      "台光电 TUC",
+      "欣兴电子 Unimicron",
+      "南亚科 Nanya Tech",
+      "联电 UMC",
+      "广达 Quanta",
+      "奇鋐 AVC",
+      "纬颖 Wiwynn",
+      "创意电子 GUC",
+      "健策 Jentech",
+      "南亚电路板 Nan Ya PCB",
+      "信骅 Aspeed",
+      "纬创 Wistron",
+      "光宝 Lite-On",
+      "金像电 GCE",
+      "臻鼎-KY",
+      "景硕 Kinsus",
+      "环球晶",
+      "台燿 Ventec",
+      "京元电子 KYEC",
+      "世芯-KY",
+      "健鼎 Tripod",
+      "世界先进",
+      "联茂 ITEQ",
+      "英业达 Inventec",
+      "嘉泽端子 Lotes",
+      "颖崴 Winnoz",
+      "双鸿 Auras",
+      "祥硕 ASMedia",
+      "鸿准 Foxconn Industrial",
+      "尖点",
+      "上诠(FOCI)"
+    ],
+    "note": "2026-10 名单内截至 2026-11-04 尚无公开月营收（0/36）；最新可比完整月为 2026-09（36/36）。"
+  },
+  "kpis": {
+    "mcap_sum": 927654,
+    "ytd_median": 154.10628019323673,
+    "ytd_max_name": "南亚科 Nanya Tech",
+    "ytd_max": 1344.639718804921,
+    "yoy_improved": 34,
+    "yoy_worsened": 2
+  },
+  "segments": [
+    {
+      "segment": "服务器ODM/EMS",
+      "count": 5,
+      "mcap_sum": 65373,
+      "ytd_median": 12.82051282051282,
+      "yoy_median": 76.68901002964485
+    },
+    {
+      "segment": "PCB/载板",
+      "count": 6,
+      "mcap_sum": 38769,
+      "ytd_median": 410.58423369347736,
+      "yoy_median": 54.481441177579015
+    },
+    {
+      "segment": "CCL/材料",
+      "count": 3,
+      "mcap_sum": 21194,
+      "ytd_median": 637.4161073825503,
+      "yoy_median": 114.79820140340468
+    },
+    {
+      "segment": "PCB钻针",
+      "count": 1,
+      "mcap_sum": 563,
+      "ytd_median": 1040.0894187779434,
+      "yoy_median": 98.33236118149915
+    },
+    {
+      "segment": "电源/散热",
+      "count": 5,
+      "mcap_sum": 59817,
+      "ytd_median": 204.55635491606716,
+      "yoy_median": 23.226930582064025
+    },
+    {
+      "segment": "晶圆代工",
+      "count": 3,
+      "mcap_sum": 610612,
+      "ytd_median": 115.49295774647885,
+      "yoy_median": 27.215377995124747
+    },
+    {
+      "segment": "封测",
+      "count": 3,
+      "mcap_sum": 32387,
+      "ytd_median": 273.8532110091743,
+      "yoy_median": 45.52228936841058
+    },
+    {
+      "segment": "IC设计",
+      "count": 5,
+      "mcap_sum": 77902,
+      "ytd_median": 172.22222222222223,
+      "yoy_median": 97.77847715325761
+    },
+    {
+      "segment": "存储",
+      "count": 1,
+      "mcap_sum": 14180,
+      "ytd_median": 1344.639718804921,
+      "yoy_median": 576.622775031737
+    },
+    {
+      "segment": "硅片",
+      "count": 1,
+      "mcap_sum": 3618,
+      "ytd_median": 79.79002624671917,
+      "yoy_median": -13.126055194406469
+    },
+    {
+      "segment": "连接器",
+      "count": 1,
+      "mcap_sum": 1952,
+      "ytd_median": -9.635416666666663,
+      "yoy_median": 16.1263226648345
+    },
+    {
+      "segment": "光通信/CPO",
+      "count": 1,
+      "mcap_sum": 472,
+      "ytd_median": 68.21862348178138,
+      "yoy_median": 28.375732734933138
+    },
+    {
+      "segment": "半导体设备/检测",
+      "count": 1,
+      "mcap_sum": 815,
+      "ytd_median": -24.508519003931838,
+      "yoy_median": 11.199827203159714
+    }
+  ]
+}
