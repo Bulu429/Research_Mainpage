@@ -1,8 +1,8 @@
 {
   "title": "台股电子产业链月度看板",
   "subtitle": "AI服务器/PCB/封测/IC设计",
-  "asof_page": "2026-11-04",
-  "asof_prices": "2026-11-03",
+  "asof_page": "2026-11-15",
+  "asof_prices": "2026-11-13",
   "currency_unit": "亿新台币",
   "sources": [
     "TWSE/TPEx 公开月营收",
@@ -25,11 +25,11 @@
   ],
   "company_count": 36,
   "segment_count": 13,
-  "latest_complete_month": "2026-09",
-  "target_month": "2026-10",
+  "latest_complete_month": "2026-10",
+  "target_month": "2026-11",
   "disclosure": {
-    "target_month": "2026-10",
-    "latest_complete_month": "2026-09",
+    "target_month": "2026-11",
+    "latest_complete_month": "2026-10",
     "status": "not_started",
     "status_label": "全市场未齐",
     "complete_month_disclosed": 36,
@@ -112,107 +112,107 @@
       "尖点",
       "上诠(FOCI)"
     ],
-    "note": "2026-10 名单内截至 2026-11-04 尚无公开月营收（0/36）；最新可比完整月为 2026-09（36/36）。"
+    "note": "2026-11 名单内截至 2026-11-15 尚无公开月营收（0/36）；最新可比完整月为 2026-10（36/36）。"
   },
   "kpis": {
-    "mcap_sum": 927654,
-    "ytd_median": 154.10628019323673,
-    "ytd_max_name": "南亚科 Nanya Tech",
-    "ytd_max": 1344.639718804921,
-    "yoy_improved": 34,
-    "yoy_worsened": 2
+    "mcap_sum": 939231,
+    "ytd_median": 53.39265850945495,
+    "ytd_max_name": "联茂 ITEQ",
+    "ytd_max": 369.6035242290749,
+    "yoy_improved": 26,
+    "yoy_worsened": 10
   },
   "segments": [
     {
       "segment": "服务器ODM/EMS",
       "count": 5,
-      "mcap_sum": 65373,
-      "ytd_median": 12.82051282051282,
-      "yoy_median": 76.68901002964485
+      "mcap_sum": 61957,
+      "ytd_median": 4.5553145336225676,
+      "yoy_median": 80.93821997353727
     },
     {
       "segment": "PCB/载板",
       "count": 6,
-      "mcap_sum": 38769,
-      "ytd_median": 410.58423369347736,
-      "yoy_median": 54.481441177579015
+      "mcap_sum": 35979,
+      "ytd_median": 233.3386683738796,
+      "yoy_median": 68.64529615903899
     },
     {
       "segment": "CCL/材料",
       "count": 3,
-      "mcap_sum": 21194,
-      "ytd_median": 637.4161073825503,
-      "yoy_median": 114.79820140340468
+      "mcap_sum": 19958,
+      "ytd_median": 156.23100303951367,
+      "yoy_median": 126.99547336594958
     },
     {
       "segment": "PCB钻针",
       "count": 1,
-      "mcap_sum": 563,
-      "ytd_median": 1040.0894187779434,
-      "yoy_median": 98.33236118149915
+      "mcap_sum": 566,
+      "ytd_median": 102.63157894736841,
+      "yoy_median": 93.51533808227693
     },
     {
       "segment": "电源/散热",
       "count": 5,
-      "mcap_sum": 59817,
-      "ytd_median": 204.55635491606716,
-      "yoy_median": 23.226930582064025
+      "mcap_sum": 58345,
+      "ytd_median": 41.590214067278296,
+      "yoy_median": 34.351109495316805
     },
     {
       "segment": "晶圆代工",
       "count": 3,
-      "mcap_sum": 610612,
-      "ytd_median": 115.49295774647885,
-      "yoy_median": 27.215377995124747
+      "mcap_sum": 624705,
+      "ytd_median": 51.61290322580645,
+      "yoy_median": 20.527286974286977
     },
     {
       "segment": "封测",
       "count": 3,
-      "mcap_sum": 32387,
-      "ytd_median": 273.8532110091743,
-      "yoy_median": 45.52228936841058
+      "mcap_sum": 31080,
+      "ytd_median": 44.8943661971831,
+      "yoy_median": 47.12520138680502
     },
     {
       "segment": "IC设计",
       "count": 5,
-      "mcap_sum": 77902,
-      "ytd_median": 172.22222222222223,
-      "yoy_median": 97.77847715325761
+      "mcap_sum": 86989,
+      "ytd_median": 65.28925619834712,
+      "yoy_median": 126.95750136110938
     },
     {
       "segment": "存储",
       "count": 1,
-      "mcap_sum": 14180,
-      "ytd_median": 1344.639718804921,
-      "yoy_median": 576.622775031737
+      "mcap_sum": 13007,
+      "ytd_median": 95.33678756476685,
+      "yoy_median": 487.72943534104417
     },
     {
       "segment": "硅片",
       "count": 1,
-      "mcap_sum": 3618,
-      "ytd_median": 79.79002624671917,
-      "yoy_median": -13.126055194406469
+      "mcap_sum": 3327,
+      "ytd_median": 55.172413793103445,
+      "yoy_median": 11.190897518901265
     },
     {
       "segment": "连接器",
       "count": 1,
-      "mcap_sum": 1952,
-      "ytd_median": -9.635416666666663,
-      "yoy_median": 16.1263226648345
+      "mcap_sum": 2149,
+      "ytd_median": 47.49034749034748,
+      "yoy_median": 12.464972984688742
     },
     {
       "segment": "光通信/CPO",
       "count": 1,
-      "mcap_sum": 472,
-      "ytd_median": 68.21862348178138,
-      "yoy_median": 28.375732734933138
+      "mcap_sum": 428,
+      "ytd_median": -17.704918032786885,
+      "yoy_median": 70.35191969737586
     },
     {
       "segment": "半导体设备/检测",
       "count": 1,
-      "mcap_sum": 815,
-      "ytd_median": -24.508519003931838,
-      "yoy_median": 11.199827203159714
+      "mcap_sum": 741,
+      "ytd_median": -15.072933549432744,
+      "yoy_median": -19.313482371953214
     }
   ]
 }
